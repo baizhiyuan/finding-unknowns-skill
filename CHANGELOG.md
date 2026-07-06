@@ -4,6 +4,21 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0]
+
+### Changed
+- Restructured the skill into an executable-protocol format modelled on the
+  [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) skill paradigm:
+  Purpose / Use-When / Do-Not-Use-When / Why-This-Exists / Execution-Policy / phased
+  Steps / Agent-Delegation / Good-and-Bad Examples / Escalation-and-Stop-Conditions /
+  Final-Checklist / Advanced.
+- Added a blocking Phase 0 (quadrant routing must be announced before any technique runs)
+  and standardized per-round Cartographer report and question templates.
+- Added explicit resume semantics (the unknowns ledger is the state) and a defaults table
+  (prototype direction count, regret question bar, quiz size and rounds, soft round cap).
+- Added six worked Good/Bad examples with rationale, and split the final checklist into
+  lightweight and Cartographer lanes.
+
 ## [2.2.0]
 
 ### Changed
@@ -52,6 +67,7 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.0.0
 [2.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.2.0
 [2.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.1.0
 [2.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.0.0

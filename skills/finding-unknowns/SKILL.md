@@ -5,382 +5,419 @@ description: "Use at the start of an ambiguous or unfamiliar task to surface the
 
 # Finding Unknowns
 
-> The map is not the territory.
-
 *Distilled from Thariq Shihipar's essay "A Field Guide to Fable: Finding Your Unknowns"*
 *(@trq212 — https://x.com/trq212/status/2073100352921215386). Community skill; not affiliated*
 *with or endorsed by Anthropic.*
 
-The **map** is what the user gives you — the prompt, the skills, the context. The
-**territory** is where the work actually happens — the codebase, the real world, its
-constraints. The gap between them is **unknowns**. Every unknown forces you to guess what
-the user wants; the more work being done, the more guesses. The bottleneck on long-horizon
-work is no longer model capability — it is how well the user's unknowns get clarified.
+<Purpose>
+The map is not the territory. The map is what the user gives you — prompt, context, skills.
+The territory is where the work happens — the codebase, the real world, its constraints. The
+gap between them is unknowns, and every unknown forces you to guess the user's intent. This
+skill converts unknowns into knowns cheaply, before they get expensive to fix: eight
+lightweight discovery techniques dispatched by quadrant, four companion agents for the cases
+where isolation or independent judgement pays, and Cartographer mode — a coverage-gated,
+regret-weighted protocol for high-stakes work that refuses to let implementation start while
+the territory is unmapped.
+</Purpose>
 
-This skill is a toolbox for discovering unknowns cheaply, **before** they get expensive to
-fix. Do not run every technique every time; pick by quadrant and by stakes.
+<Use_When>
+- The user is starting work in a new domain or an unfamiliar part of the codebase
+- The task involves taste — "I'll know it when I see it" criteria that resist specification
+- The task is long-horizon and a wrong early assumption would compound
+- A previous attempt came back wrong and the spec, not the execution, is the suspect
+- The user says "blindspot pass", "unknown unknowns", "interview me", "brainstorm directions",
+  "quiz me", or "Cartographer mode"
+</Use_When>
 
-## When to use
+<Do_Not_Use_When>
+- The request is specific and trivial (typo, one-liner, obvious bug fix) — execute directly
+- The user has a detailed spec with file paths and acceptance criteria — go build it
+- The user wants a mathematically gated, resumable requirements spec with automatic handoff
+  into execution pipelines — use `oh-my-claudecode:deep-interview` instead
+- The user explicitly says "just do it" — respect that; offer one sentence of risk if
+  material, then proceed
+</Do_Not_Use_When>
 
-- Starting work in a **new domain** or an unfamiliar **part of the codebase**.
-- **Design / taste** work where the user will "know it when they see it" but can't spec it.
-- **Long-horizon** tasks where a wrong early assumption compounds.
-- A task came back wrong and the spec — not the execution — is the suspect.
+<Why_This_Exists>
+Model capability is no longer the bottleneck on long-horizon work; clarity is. Generic
+requirements gathering asks "what do you want?" — but users cannot answer for the unknowns
+they are not aware of. This skill's premise is that different kinds of unknowing need
+different instruments: blind spots need reconnaissance, tacit taste needs reaction to
+prototypes, nameable gaps need targeted questions, and comprehension needs examination. A
+single uniform interview under-serves all four.
+</Why_This_Exists>
 
-**Skip** for well-specified, trivial changes (typo, one-liner, obvious bug fix). Adding
-discovery process there is pure overhead.
+<Execution_Policy>
+- ALWAYS locate the unknown on the quadrant map (Phase 0) before choosing a technique
+- Establish the user's starting point — where they are in their thinking, their experience
+  with this problem and codebase. The same task needs different probing for an expert than
+  for a first-timer
+- Discovery ends at understanding. No discovery technique slides into implementation
+- Never ask the user a question the territory can answer — explore the codebase first
+- One question at a time in any interview. No bundles
+- Architecture-changing unknowns outrank trivia, always
+- "You have no significant unknowns here" is a valid and valuable result — say it plainly
+  rather than manufacturing concerns
+- Deviations get logged, not buried. Comprehension is the merge gate, not a green diff
+- Prefer single-file self-contained HTML artifacts for anything the user must react to or
+  review (prototypes, plans, quiz reports); markdown fallback for pure-terminal flows
+- Delegate to companion agents when installed and the case is non-trivial; run inline
+  otherwise. Every technique works standalone
+</Execution_Policy>
 
-## First move: locate the unknown
+<Steps>
 
-Before picking a technique, classify where the gap lives:
+## Phase 0: Locate the unknown (blocking prerequisite)
+
+Before any technique, classify where the gap lives and announce the routing:
 
 | | User is aware of it | User is not aware of it |
 |---|---|---|
-| **User knows it** | **Known Knowns** — in the prompt. *Write them down; they drift if implicit.* | **Unknown Knowns** — know-it-when-I-see-it criteria. *→ Brainstorm, References* |
-| **User doesn't know it** | **Known Unknowns** — nameable gaps. *→ Interview, Plan* | **Unknown Unknowns** — blind spots. *→ Blind-spot pass, Quiz* |
+| **User knows it** | **KK — Known Knowns**: in the prompt. Write them down; implicit knowns drift. | **UK — Unknown Knowns**: know-it-when-I-see-it criteria. → Technique 2, 4 |
+| **User doesn't know it** | **KU — Known Unknowns**: nameable gaps. → Technique 3, 5 | **UU — Unknown Unknowns**: blind spots. → Technique 1, 8 |
 
-Also ask for (or infer) the user's **starting point**: where they are in their thinking and
-their experience with this problem and codebase. The same task needs different probing for
-a domain expert than for a first-timer.
+Then choose the lane and say so:
 
----
+> **Routing:** {quadrant(s) identified} → {technique(s) or Cartographer mode} — {one-line reason}
 
-## Pre-implementation techniques
+Lane selection:
+- Low/medium stakes, one dominant quadrant → run the matching technique(s) from Phase 1–3
+- High stakes (hard to reverse, wide blast radius, unfamiliar territory + long horizon) →
+  offer Cartographer mode explicitly; do not silently escalate
 
-### 1. Blind-spot pass — for unknown unknowns
+## Phase 1: Pre-implementation techniques
 
-**When:** the user is entering territory they don't know well (new module, new domain), or
-asks for a "blindspot pass" / their "unknown unknowns". Delegate to `blindspot-scout` when
-a real codebase sweep is involved; run inline for small, conversational cases.
+### Technique 1 — Blind-spot pass (UU)
 
-**Procedure:**
-1. Establish the user's goal and experience level with this specific area — inferred
-   conservatively if unstated.
-2. Explore the territory yourself first: the module, its tests, its git history, its
-   conventions, prior art in the repo; for external domains, what practitioners consider
-   table stakes. Never ask the user for facts the territory can tell you.
-3. Report in five sections: **Landmines** (typical newcomer mistakes + repo-specific
+Delegate to `blindspot-scout` when a real codebase/domain sweep is involved; inline for
+small conversational cases.
+
+1. Establish goal + experience level (inferred conservatively if unstated).
+2. Explore the territory first: module, tests, git history, conventions, prior art; for
+   external domains, what practitioners consider table stakes.
+3. Report in exactly five sections: **Landmines** (typical newcomer mistakes + repo-specific
    potholes, cited), **Hidden context** (constraining decisions and invariants, with
-   evidence), **What good looks like** (2–3 real examples to calibrate against),
-   **Questions you should be asking** (3–5 expert questions with best-guess answers and
-   confidence), and a **Rewritten request** that shows the user the difference between
-   their map and the territory.
+   evidence), **What good looks like** (2–3 real examples), **Questions you should be
+   asking** (3–5 expert questions with best-guess answers + confidence), **Rewritten
+   request** (the user's request, upgraded by what you found).
 
-**Stop when:** the report is delivered. This technique ends at understanding — never roll
-into implementation.
+Stop when the report is delivered. Guardrail: prioritize architecture-changing findings;
+cite evidence for every non-obvious claim.
 
-**Guardrails:** prioritize architecture-changing findings over trivia. "You have no
-significant blindspots here" is a valid, valuable result — say it plainly rather than
-manufacturing concerns.
+### Technique 2 — Brainstorm & prototype (UK)
 
-```
-I'm adding a new auth provider but I know nothing about the auth modules in this
-codebase. Do a blindspot pass to surface my relevant unknown unknowns and help me
-prompt you better.
-```
+Delegate to `prototype-smith` for multi-direction artifacts.
 
-### 2. Brainstorm & prototype — for unknown knowns
+1. Gather raw material (data samples, constraints, references) so options are concrete.
+2. Produce N genuinely different directions (default 4) — different hierarchies, framings,
+   interaction models. Variations on one idea are a failure mode.
+3. One self-contained HTML artifact; each direction labelled with a one-sentence thesis
+   plus what it optimizes for and sacrifices.
+4. Close with a reaction guide: 3–5 questions helping the user articulate what they like.
 
-**When:** criteria are "I'll know it when I see it" — visual design, UX flows, report
-layouts, API ergonomics. Also as the default opening of any session to set scope with
-intent. Delegate to `prototype-smith` for multi-direction artifacts.
+Stop when the user has reacted; convert reactions into explicit criteria before real code.
+Guardrails: fake every backend; never modify the real application while prototyping.
 
-**Procedure:**
-1. Gather the raw material (data samples, constraints, references) so options are concrete.
-2. Produce N **genuinely different** directions (default 4) — different hierarchies,
-   framings, or interaction models. Variations on one idea are a failure mode; explore the
-   corners of the space.
-3. Present as one self-contained HTML artifact, each direction labelled with a one-sentence
-   thesis plus what it optimizes for and sacrifices.
-4. Close with a reaction guide: 3–5 questions that help the user articulate what they like.
+### Technique 3 — Interview (KU)
 
-**Stop when:** the user has reacted and named what resonates. Convert their reactions into
-explicit criteria before any real code is written.
+For high-stakes cases use Cartographer mode instead — it adds regret targeting and a gate.
 
-**Guardrails:** fake every backend; wiring is waste at this stage. Never modify the real
-application while prototyping. Small spec changes cause large implementation changes —
-surfacing taste here is 10× cheaper than during the build.
+1. Read everything already established; never ask what is answered or discoverable.
+2. Privately sort open ambiguities by blast radius: architecture-changers first (data
+   model, interfaces, approach), then behavior definers (edge cases, failure modes,
+   defaults), polish last — usually propose-and-move-on.
+3. Exactly one question per turn: context that makes it matter, 2–3 concrete options, your
+   recommendation. Accept "you decide" as an answer you then own.
+4. Every few questions, checkpoint: restate all decisions in one tight list.
 
-```
-Before wiring anything up, make a single HTML file mocking the new editor toolbar with
-fake data — 4 wildly different directions. I want to react to layout before you touch
-the real app.
-```
+Stop when remaining unknowns are cheaper to discover during implementation than to ask
+about — and say so. End with the final decision list. Guardrail: if an answer contradicts
+an earlier decision, flag the conflict immediately.
 
-### 3. Interview — for residual known unknowns
+### Technique 4 — References (UK)
 
-**When:** brainstorming/exploration is done but nameable gaps remain, or the user asks to
-be interviewed. (For high-stakes work, use Cartographer mode below instead — it adds
-regret-weighted targeting and a coverage gate.)
+1. Have the user point at the reference (path, repo, URL) and name the property they want:
+   semantics, structure, feel. `blindspot-scout` can do large reads.
+2. Read the underlying implementation, not a screenshot or summary.
+3. Extract the transferable essence — behavior, invariants, structure — and state what
+   will NOT transfer (language idioms, deps, scale assumptions).
+4. Confirm the extraction before reimplementing.
 
-**Procedure:**
-1. Read everything already established — request, spec, prototypes, relevant code. Never
-   ask what is already answered or discoverable from the codebase; go look instead.
-2. Privately list open ambiguities and sort by blast radius: **architecture-changers**
-   first (data model, interfaces, overall approach), then **behavior definers** (edge
-   cases, failure modes, defaults), **polish** last — usually propose-and-move-on rather
-   than ask.
-3. Ask exactly one question per turn, with the context that makes it matter and 2–3
-   concrete options plus your recommendation. Accept "you decide" as an answer you then own.
-4. Every few questions, checkpoint: restate all decisions so far in one tight list.
+Stop when the user confirms the extracted semantics. Guardrail: when the reference
+conflicts with host-codebase conventions, surface the conflict; don't silently pick a side.
 
-**Stop when:** remaining unknowns are cheaper to discover during implementation than to
-ask about now — and say so explicitly. End with the final decision list.
+### Technique 5 — Implementation plan (KU)
 
-**Guardrails:** one question means one — no bundles. If an answer contradicts an earlier
-decision, flag the conflict immediately instead of silently taking the newest answer.
+The plan's job is to put expensive-to-change decisions in front of the user while changing
+them is free — not to prove thoroughness. `prototype-smith` can render HTML.
 
-```
-Interview me one question at a time about anything ambiguous. Prioritize questions
-where my answer would change the architecture.
-```
+1. Three-line opener: what is being built, chosen approach, single riskiest assumption.
+2. **Decisions likely to change** first: data model, interfaces, API shapes, anything
+   user-facing — each with the choice, one alternative, and the cost of changing later.
+3. **Known unknowns and their defaults**: the default to be taken and the signal that
+   would trigger a pivot.
+4. **Mechanical work** last, compressed.
+5. End with the 2–4 decisions needing a yes/no or a pick.
 
-### 4. References — when the user can't describe it
+Stop when the user rules on the flagged decisions. Guardrails: reviewable in minutes;
+leave room for improvisation; present mid-planning pivots as their own decision.
 
-**When:** the user lacks the vocabulary, or describing would take longer than pointing.
-The richest reference is **source code** — a library, module, or component they like, even
-in another language. `blindspot-scout` can do the reading when the reference is large.
+## Phase 2: During implementation
 
-**Procedure:**
-1. Have the user point at the reference (path, repo, URL) and say what property they want
-   from it — semantics, structure, feel.
-2. Read the *underlying implementation*, not a surface description or screenshot.
-3. Extract the transferable essence: the behavior, invariants, and structure to carry over
-   — and state explicitly what will *not* transfer (language idioms, deps, scale
-   assumptions).
-4. Confirm the extraction with the user before reimplementing.
+### Technique 6 — Implementation notes
 
-**Stop when:** the user confirms the extracted semantics match what they meant.
-
-**Guardrails:** a paraphrase of a reference is a weaker spec than the reference. When the
-reference conflicts with the host codebase's conventions, surface the conflict — don't
-silently pick a side.
-
-```
-The Rust crate in vendor/rate-limiter implements the exact backoff behavior I want.
-Read it and reimplement the same semantics in our TypeScript API client.
-```
-
-### 5. Implementation plan — surface the risky decisions early
-
-**When:** discovery is done and the user thinks they're ready to build. The plan's job is
-not to prove thoroughness — it is to put the expensive-to-change decisions in front of the
-user while changing them is still free. `prototype-smith` can render it as HTML.
-
-**Procedure:**
-1. Open with three lines: what is being built, the chosen approach, the single riskiest
-   assumption.
-2. **Decisions likely to change** first: data model, new interfaces, API shapes, anything
-   user-facing — each with the choice made, one alternative, and the cost of changing later.
-3. **Known unknowns and their defaults**: where ambiguity remains, the default that will be
-   taken and the signal that would trigger a pivot.
-4. **Mechanical work** last, compressed — refactors, wiring, tests. Reviewing it wastes the
-   user's attention.
-5. End with the 2–4 specific decisions you want a yes/no or a pick on.
-
-**Stop when:** the user has ruled on the flagged decisions.
-
-**Guardrails:** keep it reviewable in minutes — skimmed plans hide bad decisions. Leave
-room for improvisation; over-specified plans fail exactly where the territory disagrees
-with the map. If a better approach appears mid-planning, present the pivot as its own
-decision.
-
-```
-Write an implementation plan in HTML. Lead with the decisions I'm most likely to tweak:
-data model changes, new type interfaces, anything user-facing. Bury the mechanical
-refactoring at the bottom — I trust you on that part.
-```
-
----
-
-## During implementation
-
-### 6. Implementation notes — log deviations, don't bury them
-
-**When:** implementing against any agreed plan or spec, especially long autonomous
-sessions. No amount of planning removes every unknown; some appear only once the code is
-open.
-
-**Procedure:**
-1. At build start, create `implementation-notes.md` with three headings: **Deviations**,
+1. At build start create `implementation-notes.md` with headings: **Deviations**,
    **Discovered edge cases**, **Questions for review**.
 2. When reality forces an unplanned choice: pick the conservative option (conservative =
-   most reversible, not simplest), log it under Deviations — what the plan said, what was
-   done, why, what revisiting would take — and keep going. Do not block the user on
-   reversible decisions.
-3. Log edge cases even when handled cleanly — they are exactly what the next plan should
-   account for.
-4. Anything irreversible or scope-changing goes under Questions for review AND stops work
-   at a safe checkpoint. Deviating conservatively is fine; deviating expensively needs a
-   human.
-5. At the end, append a five-line summary and reference the file in the handoff or PR.
+   most reversible, not simplest), log what the plan said / what was done / why / cost to
+   revisit — and keep going. Don't block the user on reversible decisions.
+3. Log edge cases even when handled cleanly.
+4. Irreversible or scope-changing choices go under Questions for review AND stop work at a
+   safe checkpoint.
+5. End with a five-line summary; reference the file in the handoff or PR.
 
-**Stop when:** the build ends and the summary is written.
+Guardrails: entries 2–3 lines; an unlogged deviation is worse than no notes — the file
+claims completeness.
 
-**Guardrails:** entries stay 2–3 lines; this is working memory, not documentation. An
-unlogged deviation is worse than no notes at all — the file claims completeness.
+## Phase 3: Post-implementation
 
----
+### Technique 7 — Pitch & explainer
 
-## Post-implementation
+Package prototype + spec/plan + implementation notes into one document. Lead with the
+demo; follow with decisions taken and the failure points an expert reviewer would probe
+(pulled from Deviations). Reviewers' objections are predictable from the unknowns already
+logged — answer them preemptively.
 
-### 7. Pitch & explainer — for buy-in
+### Technique 8 — Quiz (UU, post-hoc)
 
-**When:** the work needs approval from people who start with the same unknowns the user
-had.
+Delegate to `quiz-master` — an examiner that didn't write the change probes what its
+author glosses over.
 
-**Procedure:** package the prototype, the spec/plan, and the implementation notes into one
-document. Lead with the demo; follow with the decisions taken and the failure points an
-expert reviewer would probe (pull these from the notes' Deviations section). One document,
-droppable into chat.
+1. Report first: **Context**, **What changed** (grouped by intent, not file), **How it
+   interacts** (existing paths that now behave differently, including files the diff
+   doesn't show), **Intuition** (2–3 mental-model updates).
+2. Then 5–8 questions weighted toward deviations, edge cases, interaction effects; mix
+   recall and prediction. Never trivia about names.
+3. Grade honestly; for each miss give the answer AND classify it — gap in the user's
+   model, or change too clever. Say which.
 
-**Stop when:** the document is delivered. **Guardrail:** reviewers' objections are
-predictable from the unknowns you already logged — answer them preemptively rather than
-defensively.
+Stop when the user passes, or after two failed rounds → recommend simplifying or
+splitting the change, not re-quizzing. Guardrail: never mark correct out of politeness; an
+unexplained diff hunk absent from notes/ledger is an **unlogged deviation** — flag it.
 
-### 8. Quiz — comprehension is the merge gate
+## Phase C: Cartographer mode (high-stakes escalation)
 
-**When:** after a long session, before merge. A diff shows surface; behavior lives in how
-the change interacts with existing code paths. Delegate to `quiz-master` — an examiner
-that didn't write the change probes what its author glosses over.
+Gates on **coverage** (all four quadrants probed), persists across the **whole lifecycle**,
+and targets by **regret** — not fixed weights. Announce on entry:
 
-**Procedure:**
-1. Report first, four sections: **Context**, **What changed** (grouped by intent, not by
-   file), **How it interacts** (existing paths that now behave differently — including in
-   files the diff doesn't show), **Intuition** (the 2–3 mental-model updates to keep).
-2. Then 5–8 questions weighted toward deviations, edge cases, and interaction effects —
-   mixing recall with prediction ("if someone calls X with a stale token, what happens
-   now?"). Never trivia about names.
-3. Grade honestly. For each miss, give the right answer AND classify it: a gap in the
-   user's model, or a sign the change is too clever — say which.
+> Entering Cartographer mode. I will maintain unknowns-ledger.md, interview you one
+> question at a time targeting the highest-regret unknown, and will not proceed to
+> implementation until the coverage gate passes.
 
-**Stop when:** the user passes, or after two failed rounds — at which point the
-recommendation is to simplify or split the change, not to keep quizzing.
+### C0: Seed the ledger
 
-**Guardrails:** never mark the user correct out of politeness; a false pass defeats the
-technique. An unexplained change found in the diff but absent from notes and ledger is an
-**unlogged deviation** — flag it prominently.
+Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed):
 
----
+| id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | status | phase | resolution / default |
+|----|----------|---------|--------------------|----------|--------|--------|-------|----------------------|
 
-## Companion agents — delegate when depth pays
+- Run Technique 1 (blind-spot pass) → seed UU rows. Naming a blind spot makes it trackable.
+- Run Technique 2/4 where taste is involved → seed UK rows.
+- Write down KK; list KU.
+- `regret = cost-if-wrong × P(wrong)` — the only prioritization signal.
+- `status ∈ {open, probing, resolved, deferred}`; deferred REQUIRES a conservative default.
+  Rows are never deleted. `phase ∈ {pre, during, post}` records when the unknown surfaced.
 
-Four specialist agents ship with this skill (under `agents/`). Delegate via the Agent tool
-when they're installed; otherwise run the technique inline — everything above works
-standalone.
+### C1: Interview loop
 
+Repeat until the gate passes or the user exits:
+
+1. **Target**: the highest-regret open row (keeper picks when installed). Leave-open rule:
+   rows with regret < 1.0 get a conservative default logged and are not worth a question.
+2. **Ask** exactly one question aimed at that row, prefixed with the targeting rationale:
+
+```
+Round {n} | Target: {id} {unknown} | Regret: {r} ({cost}×{p}) | Why now: {one sentence}
+
+{question with 2–3 concrete options + recommendation}
+```
+
+3. **Re-score** the row's P(wrong) from the answer; recompute regret; update the ledger.
+4. **Report** after every round, in exactly this format:
+
+```
+Round {n} complete.
+
+Ledger: {open} open | {probing} probing | {resolved} resolved | {deferred} deferred
+Top regret: {id} ({regret}) — {unknown}
+
+Coverage gate:
+[{x| }] KK locked          [{x| }] KU resolved/deferred
+[{x| }] UK extracted       [{x| }] UU probed
+[{x| }] no open row with regret ≥ 1.0
+
+{gate passes ? "Gate PASSED — ready to build." : "Next target: {id} — {reason}"}
+```
+
+### C2: Gate check (blocking)
+
+Implementation may start only when ALL hold — this replaces "ambiguity ≤ threshold":
+
+- [ ] KK locked — knowns written down
+- [ ] KU resolved or deferred-with-default
+- [ ] UK extracted — at least one brainstorm/prototype/reference ran
+- [ ] UU probed — at least one blind-spot pass ran; findings are tracked rows
+- [ ] No open row has regret ≥ 1.0
+
+If UU was never probed the gate FAILS — that is its entire point. When `ledger-keeper` is
+installed its verdict is final; never pass the gate out of politeness.
+
+### C3: During & close-out
+
+- Keep the ledger open through the build: every mid-build discovery becomes a row
+  (quadrant + regret), conservative option chosen and logged (Technique 6 feeds the ledger).
+- Post: build the quiz FROM the ledger — one question per resolved high-regret row and per
+  named UU. Merge only when no open row has regret ≥ 1.0.
+
+</Steps>
+
+<Agent_Delegation>
 | Agent | Backs | Contract: give it → it returns |
 |-------|-------|-------------------------------|
-| `blindspot-scout` | Blind-spot pass, References | goal + experience level → five-section recon report (read-only; cannot implement) |
-| `prototype-smith` | Brainstorm, Plan | problem + data sources + N → one HTML artifact of N divergent directions + reaction guide (writes only throwaway files) |
-| `ledger-keeper` | Cartographer mode | task/answers/discoveries → updated ledger, regret scores, next target, gate verdict (touches only the ledger) |
-| `quiz-master` | Quiz, Pitch | diff + notes + ledger → HTML report + must-pass quiz (read-only; flags unlogged deviations) |
+| `blindspot-scout` | Technique 1, 4 | goal + experience level → five-section recon report (read-only; cannot implement) |
+| `prototype-smith` | Technique 2, 5 | problem + data sources + N → one HTML artifact of N divergent directions + reaction guide (writes only throwaway files) |
+| `ledger-keeper` | Cartographer | task/answers/discoveries → updated ledger, regret scores, next target, gate verdict (touches only the ledger) |
+| `quiz-master` | Technique 7, 8 | diff + notes + ledger → HTML report + must-pass quiz (read-only; flags unlogged deviations) |
 
-Delegation rules:
-- Real-codebase blind-spot pass → `blindspot-scout`; relay its report, don't re-explore.
-- Multi-direction artifacts → `prototype-smith` with data sources and N.
-- Cartographer mode → the main conversation interviews; `ledger-keeper` seeds, re-scores,
-  picks targets, and rules on the gate. **The gate verdict is the keeper's, not yours.**
-- Post-implementation quiz → `quiz-master`. Self-quizzing is graded too kindly.
+- Relay agent reports; do not re-run their exploration in the main context.
+- The gate verdict belongs to `ledger-keeper`; the quiz belongs to `quiz-master`. Do not
+  overrule either to be agreeable.
 - Trivial cases stay inline; agent overhead needs a payoff.
+</Agent_Delegation>
 
-## Cartographer mode — the rigorous escalation
-
-For high-stakes work, escalate from ad-hoc techniques to a **gated** process that refuses
-to start building until the territory is mapped. Inspired by OMC's deep-interview, but
-optimized differently: it gates on **coverage** (were all four quadrants probed — including
-a mandatory blind-spot pass for UU?), persists across the **whole lifecycle**, and targets
-questions by **regret**, not fixed weights.
-
-> Deep Interview measures *ambiguity reduction*. Cartographer measures *territory coverage,
-> weighted by blast radius, across the full lifecycle.*
-
-### The unknowns ledger
-
-One artifact for the whole task — `unknowns-ledger.md` (owned by `ledger-keeper` when
-available). Every unknown is a row; rows are never dropped, only resolved or deferred.
-
-| id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | **regret** | status | phase | resolution / conservative default |
-|----|----------|---------|--------------------|----------|-----------|--------|-------|-----------------------------------|
-| U1 | UU | (found by blind-spot pass) | 5 | 0.7 | **3.5** | open | pre | — |
-| U2 | KU | which auth path to extend | 4 | 0.5 | **2.0** | probing | pre | — |
-| U3 | UK | "done" = p95 < 200ms | 3 | 0.2 | 0.6 | resolved | pre | confirmed with user |
-
-- **`regret = cost-if-wrong × P(wrong)`** — the only prioritization signal.
-- `status` ∈ {open, probing, resolved, deferred}; `deferred` requires a logged conservative
-  default. `phase` ∈ {pre, during, post} records when the unknown surfaced.
-
-### Regret-weighted targeting
-
-Each round, target the **highest-regret open row** with exactly one question; re-score its
-`P(wrong)` after the answer. **Leave-open rule:** any row with `regret < 1.0` gets a
-conservative default logged and is not worth a question. Rigor means spending attention
-where a wrong guess is expensive — not interrogating everything.
-
-### The quadrant-coverage gate
-
-Building may start only when **all** hold (this replaces "ambiguity ≤ threshold"):
-
-- [ ] **KK locked** — knowns are written down (implicit knowns drift).
-- [ ] **KU resolved or deferred** — every named gap answered or defaulted.
-- [ ] **UK extracted** — at least one brainstorm / prototype / reference ran.
-- [ ] **UU probed** — at least one blind-spot pass ran; its findings are tracked rows.
-- [ ] **No open row has `regret ≥ 1.0`.**
-
-If UU was never probed, the gate FAILS — that is its entire point. Never pass the gate out
-of politeness; when `ledger-keeper` is available, its verdict is final.
-
-### Lifecycle loop
-
-1. **Pre** — seed the ledger (blind-spot pass → UU; brainstorm/references → UK; write down
-   KK/KU), then interview in regret order until the gate passes.
-2. **During** — keep the ledger open; every mid-build discovery becomes a row with quadrant
-   + regret; conservative option chosen and logged (technique #6 feeds the ledger).
-3. **Post** — build the quiz *from the ledger*: one question per resolved high-regret row
-   and per named UU. Merge only when no open row has `regret ≥ 1.0`.
-
-### Kick-off prompt
-
+<Examples>
+<Good>
+Routing announcement before any technique:
 ```
-Enter Cartographer mode for this task. Maintain unknowns-ledger.md with columns:
-id, quadrant (KK/KU/UK/UU), unknown, cost-if-wrong (1-5), P(wrong), regret (=cost×P),
-status, phase, resolution.
-
-1. Seed it: run a blind-spot pass to populate Unknown Unknowns, then list the Known
-   Unknowns and any tacit criteria.
-2. Interview me ONE question at a time, always targeting the highest-regret open row.
-   Re-score P(wrong) after each answer. Skip anything with regret < 1.0 — log a
-   conservative default instead.
-3. Show me the ledger + the four-quadrant coverage checklist each round. Don't let me
-   start building until all four quadrants are probed (especially UU) and no open row
-   has regret >= 1.0.
-Keep the ledger open through implementation and build the final quiz from it.
+Routing: UU + UK → blind-spot pass, then 4-direction prototype — you're new to this
+subsystem (UU) and the dashboard layout is know-it-when-you-see-it (UK).
 ```
+Why good: quadrant diagnosis is explicit, the technique choice follows from it, and the
+user can veto the routing before any work happens.
+</Good>
 
-## Global guardrails
+<Good>
+Regret-weighted targeting in Cartographer mode:
+```
+Round 3 | Target: U2 "which auth path to extend" | Regret: 2.0 (4×0.5) | Why now:
+highest-regret open row; a wrong guess here forces a rewrite of the middleware layer.
 
-- **Discovery ends at understanding.** No discovery technique slides into implementation.
-- **Architecture-changing unknowns outrank trivia** — always.
-- **"No significant unknowns here" is a valid result.** Don't manufacture questions.
-- **One question at a time** in any interview.
-- **Deviations get logged, not buried.**
-- **Comprehension is the merge gate, not a green diff.**
-- **HTML artifacts by default** for anything visual or reviewable (multiple directions,
-  plans leading with risk, quiz reports); markdown fallback for pure-terminal flows.
+Should this feature extend the existing JWT middleware in src/auth/ (found via scout,
+pattern: passport + JWT), or diverge with a separate flow?
+  a) Extend existing (recommended — consistent, less surface)
+  b) Separate flow (isolates risk, duplicates session logic)
+```
+Why good: names the row, shows the arithmetic, explains why now, cites scout evidence
+instead of asking the user to rediscover it, offers options with a recommendation.
+</Good>
 
-## Related skills — when to hand off
+<Good>
+Honest gate failure:
+```
+Coverage gate: [x] KK [x] KU [x] UK [ ] UU [x] regret
+Gate FAILED — no blind-spot pass has run. Clarity on the questions we thought to ask is
+not coverage of the ones we didn't. Run the scout before building.
+```
+Why good: refuses to conflate "all known questions answered" with "territory mapped" —
+the exact failure mode this mode exists to prevent.
+</Good>
 
-This skill is a compass, not an execution engine. Once the unknown is located, hand off
-when depth is warranted:
+<Bad>
+Bundled interview questions:
+```
+"What's the target audience? Also which tech stack, and how should auth work, and
+where does this deploy?"
+```
+Why bad: four questions at once produces shallow answers and makes regret re-scoring
+meaningless.
+</Bad>
 
-- **Math-gated, resumable spec with execution handoff** → `oh-my-claudecode:deep-interview`.
-  Prefer it over Cartographer when you want ambiguity thresholds, topology/ontology
-  tracking, and a `Skill()` bridge into autopilot/ralph/team.
-- **Divergent option generation** → `superpowers:brainstorming`.
-- **A rigorous written plan** → `superpowers:writing-plans` or `oh-my-claudecode:plan`.
-- **Spec already concrete** (file paths, acceptance criteria) → skip discovery; go to
-  `oh-my-claudecode:autopilot` / `ralph` / `team`.
-- **A light reframe is enough** → stay here.
+<Bad>
+Asking what the territory can answer:
+```
+"Does your project use pandas or polars for the data layer?"
+```
+Why bad: one Grep answers this. Interview questions are for information that exists only
+in the user's head.
+</Bad>
 
-Use finding-unknowns to discover *that* you're confused and *where*; use the heavier
-skills to resolve it rigorously. Don't merge them — compose them.
+<Bad>
+Sliding from discovery into implementation:
+```
+"While doing the blindspot pass I noticed the config parser was messy, so I refactored
+it and also started the feature since I was in there."
+```
+Why bad: discovery techniques end at understanding. Unrequested mutation during recon
+destroys the user's trust that a scout is safe to run.
+</Bad>
+</Examples>
+
+<Escalation_And_Stop_Conditions>
+- **User says "just build it" mid-discovery**: stop the technique, state in ≤3 lines the
+  highest-regret unresolved unknowns and the conservative defaults you will take, then
+  proceed. Respect the exit; make the risk visible once, not repeatedly.
+- **Interview stalls** (answers stop changing any row's regret): stop interviewing; the
+  remaining unknowns are cheaper to discover during implementation. Say so.
+- **Two failed quiz rounds**: recommend simplifying or splitting the change. Do not keep
+  quizzing.
+- **Scout finds nothing significant**: report "no significant blindspots" and end — do not
+  pad the report.
+- **Cartographer round 10 without gate progress**: surface the top-3 stuck rows and ask
+  the user to resolve, defer-with-default, or exit to lightweight techniques.
+- **Any technique asked to mutate product code**: refuse within the technique; discovery
+  is read-only except for its own artifacts (prototypes/, notes, ledger, reports).
+</Escalation_And_Stop_Conditions>
+
+<Final_Checklist>
+Lightweight lane:
+- [ ] Phase 0 routing was announced (quadrant → technique) before any technique ran
+- [ ] No discovery technique mutated product code
+- [ ] Interview questions were single, blast-radius-ordered, and non-discoverable
+- [ ] Artifacts delivered in reactable form (HTML default) with a reaction guide
+- [ ] Deviations logged at decision time, not reconstructed afterwards
+
+Cartographer lane (additionally):
+- [ ] Ledger exists with quadrant, cost, P(wrong), regret, status, phase per row
+- [ ] Every round reported the ledger summary + gate checklist in the standard format
+- [ ] Gate verdict came from ledger-keeper when installed; UU probe was not skipped
+- [ ] Deferred rows all carry conservative defaults; no rows were deleted
+- [ ] Quiz was generated from the ledger; merge recommendation followed the pass rule
+</Final_Checklist>
+
+<Advanced>
+## Resume
+
+The ledger IS the state. To resume an interrupted Cartographer session, re-read
+`unknowns-ledger.md` (and `implementation-notes.md` if the build started), announce the
+current gate status, and continue from the highest-regret open row. Do not re-seed.
+
+## Defaults (override by telling the skill)
+
+| Knob | Default | Meaning |
+|------|---------|---------|
+| Prototype directions N | 4 | genuinely different directions per brainstorm |
+| Regret question bar | 1.0 | rows below this get defaults, not questions |
+| Quiz size | 5–8 | questions per round |
+| Quiz rounds | 2 | before recommending simplify/split |
+| Cartographer soft cap | 10 rounds | then surface stuck rows |
+
+## Relationship to heavier tooling
+
+- Want mathematical ambiguity thresholds, topology/ontology tracking, resumable spec
+  state, and an execution bridge into autopilot/ralph/team → use
+  `oh-my-claudecode:deep-interview`. Cartographer trades that machinery for quadrant
+  coverage and lifecycle persistence; they are complementary, not competing.
+- Divergent option generation as a discipline → `superpowers:brainstorming`. Rigorous
+  written plans → `superpowers:writing-plans` / `oh-my-claudecode:plan`. Spec already
+  concrete → skip discovery and execute.
+</Advanced>
