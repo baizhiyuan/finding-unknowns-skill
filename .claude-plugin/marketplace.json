@@ -1,0 +1,11 @@
+{
+  "name": "finding-unknowns-skill",
+  "owner": { "name": "baizhiyuan" },
+  "plugins": [
+    {
+      "name": "finding-unknowns",
+      "source": "./",
+      "description": "Discover your unknowns before they get expensive: blind-spot pass, brainstorm, interview, references, plan, notes, pitch, quiz — plus Cartographer mode (coverage gate + unknowns ledger + regret weighting)."
+    }
+  ]
+}

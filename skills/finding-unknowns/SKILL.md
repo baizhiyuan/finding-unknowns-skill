@@ -7,8 +7,9 @@ description: Use at the start of an ambiguous or unfamiliar task to surface the 
 
 > The map is not the territory.
 
-*Distilled from the essay "The map is not the territory" by Thariq (@trq212):*
-*https://x.com/trq212/status/2073100352921215386*
+*Distilled from Thariq Shihipar's essay "A Field Guide to Fable: Finding Your Unknowns"*
+*(@trq212 — https://x.com/trq212/status/2073100352921215386). Community skill, not an*
+*official Anthropic project. Prior art: github.com/Neeeophytee/finding-unknowns-skills.*
 
 The **map** is what you give Claude — the prompt, the skills, the context. The
 **territory** is where the work actually happens — the codebase, the real world, its
@@ -157,6 +158,24 @@ intuition, what was done, and why — with a quiz at the bottom I must pass.
 ```
 
 ---
+
+## Guardrails
+
+These keep each technique honest — most importantly, discovery must not silently slide into
+implementation.
+
+- **Discovery ends at understanding.** Blind-spot pass, interview, brainstorm, and references
+  do *not* start building. Stop at the rewritten, better-informed request.
+- **Prioritize architecture-changing unknowns** over trivia — surface what would change the
+  approach, not every gap.
+- **"No significant unknowns here" is a valid result.** If the area is simpler than feared,
+  say so plainly instead of manufacturing questions.
+- **One question at a time** in interviews — batching produces shallow answers.
+- **Point at real code for references,** even in another language; a screenshot or paraphrase
+  is a weaker spec than the source.
+- **Deviations get logged, not buried.** Mid-build, record the deviation and the conservative
+  choice; don't quietly change direction.
+- **Don't merge until you pass the quiz.** Comprehension is the gate, not a green diff.
 
 ## Cartographer mode — the rigorous escalation
 

@@ -1,0 +1,8 @@
+{
+  "name": "finding-unknowns",
+  "description": "Surface your unknowns (unknown unknowns / unknown knowns) before, during, and after implementation — eight lightweight techniques plus Cartographer mode: a quadrant-coverage-gated, regret-weighted interview backed by a lifecycle-persistent unknowns ledger.",
+  "version": "2.0.0",
+  "author": { "name": "baizhiyuan" },
+  "homepage": "https://github.com/baizhiyuan/finding-unknowns-skill",
+  "license": "MIT"
+}

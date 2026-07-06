@@ -14,10 +14,12 @@
 > The quality of long-horizon work isn't bottlenecked by the model anymore — it's
 > bottlenecked by your ability to clarify your *unknowns*.
 
-> 📎 **Source.** This skill distills the essay _"The map is not the territory"_ by
-> **Thariq ([@trq212](https://x.com/trq212/status/2073100352921215386))**. All credit for
-> the underlying ideas and technique names goes to the original post; this repo just
-> packages them as an installable, reusable Claude Code skill.
+> 📎 **Source.** This skill distills **Thariq Shihipar**'s essay _"A Field Guide to Fable:
+> Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)). All
+> credit for the underlying ideas and technique names goes to the original post; this repo
+> just packages them as an installable, reusable Claude Code skill. **Community project — not
+> an official Anthropic repository.** See also the prior-art community repo
+> [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills).
 
 * * *
 
@@ -66,7 +68,14 @@ Before acting, locate where your unknowns live — the quadrant tells you which 
 
 ## 🚀 Quickstart
 
-**Option A — one-line install (clone + run):**
+**Option A — install as a plugin (marketplace):**
+
+```
+/plugin marketplace add baizhiyuan/finding-unknowns-skill
+/plugin install finding-unknowns@finding-unknowns-skill
+```
+
+**Option B — one-line install (clone + run):**
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -74,7 +83,10 @@ cd finding-unknowns-skill
 bash install.sh              # copies SKILL.md into ~/.claude/skills/finding-unknowns/
 ```
 
-**Option B — manual copy:**
+**Option C — passive drop-in (no skill/plugin):** copy [`CLAUDE.md`](CLAUDE.md) into your
+project root for always-on nudges without installing anything.
+
+**Option D — manual copy:**
 
 ```bash
 mkdir -p ~/.claude/skills/finding-unknowns
@@ -145,7 +157,7 @@ honest comparison so you know when to reach for which.
 
 ### At a glance
 
-| | **finding-unknowns** | **Deep Interview** (OMC) | **OMC execution** (autopilot / ralph / team) | **Superpowers** (brainstorming, writing-plans, TDD…) |
+| | **finding-unknowns** | **Deep Interview** ([OMC](https://github.com/Yeachan-Heo/oh-my-claudecode)) | **OMC execution** (autopilot / ralph / team) | **[Superpowers](https://github.com/obra/superpowers)** (brainstorming, writing-plans, TDD…) |
 |---|---|---|---|---|
 | **Altitude** | Meta / orienting | One deep phase: requirements | Execution & delivery | Discipline primitives |
 | **Lifecycle** | Pre · During · Post | Pre only | During · Post | Mostly single-phase |
@@ -201,14 +213,39 @@ Rules of thumb:
 
 * * *
 
+## 🌱 Prior art & how this version differs
+
+A parallel community repo, [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills),
+distills the same essay. It's excellent and took a **granular** path — eight separate,
+independently auto-triggering skills, each with its own guardrails, plus clean plugin
+packaging. This repo took a **depth** path instead. v2 borrows the best of theirs:
+
+| Idea | Their repo | Adopted here in v2 |
+|------|-----------|--------------------|
+| Per-technique guardrails ("discovery ends at understanding") | ✅ per skill | ✅ consolidated `## Guardrails` |
+| Plugin marketplace (`/plugin install`) | ✅ | ✅ `.claude-plugin/` |
+| Worked prompt examples | ✅ `EXAMPLES.md` | ✅ `EXAMPLES.md` |
+| Passive single-file drop-in | ✅ `CLAUDE.md` | ✅ `CLAUDE.md` |
+| Full attribution + "not official Anthropic" | ✅ | ✅ |
+| **Cartographer mode** (coverage gate + ledger + regret) | ❌ | ✅ **our addition** |
+| **SVG visuals + Deep Interview/OMC comparison** | ❌ | ✅ **our addition** |
+
+Net: theirs is the better pick if you want small auto-firing skills; this one if you want a
+single coherent lifecycle skill with an optional rigorous, gated deep mode.
+
+* * *
+
 ## 📁 Project structure
 
 ```
 finding-unknowns-skill/
+├── .claude-plugin/         # plugin + marketplace manifests (/plugin install)
 ├── skills/
 │   └── finding-unknowns/
-│       └── SKILL.md        # the skill itself — frontmatter + 8 techniques
-├── assets/                 # README SVGs (hero, quadrants, lifecycle)
+│       └── SKILL.md        # the skill — 8 techniques + guardrails + Cartographer mode
+├── assets/                 # README SVGs (hero, quadrants, lifecycle, cartographer)
+├── EXAMPLES.md             # copy-paste end-to-end prompts
+├── CLAUDE.md               # passive single-file drop-in (no install)
 ├── install.sh              # copies the skill into ~/.claude/skills/
 ├── LICENSE                 # MIT
 └── README.md               # you are here
@@ -216,12 +253,18 @@ finding-unknowns-skill/
 
 * * *
 
-## 🙌 Acknowledgements
+## 🙌 Acknowledgements & sources
 
-Ideas, framing, and technique names come from **Thariq
-([@trq212](https://x.com/trq212/status/2073100352921215386))**'s essay _"The map is not the
-territory."_ This repo packages those ideas as an installable Claude Code skill and adds the
-comparison to Deep Interview / OMC / Superpowers.
+- **Original ideas & technique names** — Thariq Shihipar, _"A Field Guide to Fable: Finding
+  Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
+- **Prior-art community repo** — [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills)
+  (the granular 8-skill structure, plugin packaging, and guardrail phrasing that inspired v2).
+- **oh-my-claudecode (OMC)** — [Yeachan-Heo/oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode),
+  source of the Deep Interview skill this project compares against.
+- **Superpowers** — [obra/superpowers](https://github.com/obra/superpowers), the brainstorming
+  / writing-plans / TDD primitives referenced in the routing guide.
+
+Community project — **not** an official Anthropic repository.
 
 * * *
 
