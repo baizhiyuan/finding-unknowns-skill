@@ -10,72 +10,62 @@
   <img src="https://img.shields.io/badge/license-MIT-22C55E" alt="MIT license">
 </p>
 
-> **The map is not the territory.**
-> The quality of long-horizon work isn't bottlenecked by the model anymore — it's
-> bottlenecked by your ability to clarify your *unknowns*.
+<p align="center"><em>The map is not the territory. The quality of long-horizon work is bounded by how well you clarify your <strong>unknowns</strong>.</em></p>
 
-> 📎 **Source.** This skill distills **Thariq Shihipar**'s essay _"A Field Guide to Fable:
-> Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)). All
-> credit for the underlying ideas and technique names goes to the original post; this repo
-> just packages them as an installable, reusable Claude Code skill. **Community project — not
-> an official Anthropic repository.** See also the prior-art community repo
-> [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills).
+`finding-unknowns` is a Claude Code skill that helps you surface what you do not yet know —
+before, during, and after implementation — so that ambiguity is resolved with cheap questions
+up front rather than expensive rework later.
 
-* * *
+> **Attribution.** This skill distills Thariq Shihipar's essay _"A Field Guide to Fable:
+> Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)). Credit
+> for the underlying ideas and technique names belongs to the original author; this repository
+> packages them as an installable Claude Code skill.
 
-## 💡 What this skill does
+---
 
-`finding-unknowns` is a toolbox for **discovering your unknowns cheaply — before they get
-expensive to fix.** The **map** is what you give Claude (prompt, context, skills). The
-**territory** is where the work actually happens (the codebase, the real world). The gap
-between them is unknowns, and every unknown forces Claude to guess what you want.
+## Overview
 
-This skill gives Claude _eight concrete techniques_ to surface those unknowns **before,
-during, and after** implementation — so you spend cheap words up front instead of expensive
-rework later.
+The **map** is what you give Claude (the prompt, context, and skills). The **territory** is
+where the work actually happens (the codebase and the real world). The gap between them is
+made of unknowns, and every unknown forces the model to guess your intent.
+
+This skill provides eight concrete techniques for surfacing those unknowns across the full
+task lifecycle, plus an optional rigorous mode ("Cartographer mode") for high-stakes work.
 
 <p align="center">
   <img src="assets/lifecycle.svg" alt="Three windows to catch unknowns: pre, during, post" width="92%">
 </p>
 
-* * *
+## Features
 
-## ✨ Key features
+- **Four-quadrant framing** — classify a gap as a known or unknown unknown before acting.
+- **Blind-spot pass** — surface the unknowns you were not aware you had, tuned to your context.
+- **Brainstorm and prototype** — react to several throwaway directions before committing code.
+- **Interview** — one question at a time, prioritising answers that change the architecture.
+- **References** — treat existing source code as the richest available specification.
+- **Implementation plan** — lead with the decisions most likely to change.
+- **Implementation notes** — record deviations during the build for later review.
+- **Pitch and quiz** — a review artifact for buy-in, and a comprehension check before merge.
+- **Cartographer mode** — a gated, regret-weighted interview backed by a persistent ledger.
 
-- 🧭 **Four-quadrant framing** — locate whether your gap is a _known unknown_ or an _unknown unknown_ before you act.
-- 🔦 **Blind-spot pass** — Claude teaches you the gaps you didn't know you had, tuned to who you are.
-- 🎨 **Brainstorm & prototype** — react to N wildly different HTML directions before anything gets wired up.
-- 🎤 **Interview me** — one question at a time, prioritizing answers that change the architecture.
-- 📎 **References** — point Claude at source code as the richest possible spec, even across languages.
-- 📋 **Implementation plan** — leads with the decisions you're most likely to tweak, buries the mechanical parts.
-- 📝 **Implementation notes** — logs deviations mid-build so you learn from each attempt.
-- 🎓 **Pitch & quiz** — a buy-in doc for reviewers, and a quiz you must pass before you merge.
+## The four quadrants
 
-* * *
-
-## 🧭 The four quadrants
-
-Before acting, locate where your unknowns live — the quadrant tells you which technique to reach for.
+Locate where an unknown lives; the quadrant indicates which technique to use.
 
 <p align="center">
   <img src="assets/quadrants.svg" alt="The four quadrants of unknowns" width="78%">
 </p>
 
-> Every explainer, brainstorm, interview, prototype, and reference is a cheap way to find
-> out what you didn't know — before it gets expensive to fix.
+## Installation
 
-* * *
-
-## 🚀 Quickstart
-
-**Option A — install as a plugin (marketplace):**
+**Option A — plugin marketplace:**
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-**Option B — one-line install (clone + run):**
+**Option B — clone and install:**
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -83,8 +73,8 @@ cd finding-unknowns-skill
 bash install.sh              # copies SKILL.md into ~/.claude/skills/finding-unknowns/
 ```
 
-**Option C — passive drop-in (no skill/plugin):** copy [`CLAUDE.md`](CLAUDE.md) into your
-project root for always-on nudges without installing anything.
+**Option C — passive drop-in (no installation):** copy [`CLAUDE.md`](CLAUDE.md) into a project
+root for lightweight, always-on guidance.
 
 **Option D — manual copy:**
 
@@ -93,181 +83,120 @@ mkdir -p ~/.claude/skills/finding-unknowns
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
 ```
 
-Then, at the start of any ambiguous task, **invoke it via the Skill tool**:
+## Usage
+
+At the start of an ambiguous or unfamiliar task, invoke the skill through the Skill tool:
 
 ```
 finding-unknowns
 ```
 
-Or just say a trigger phrase — _"do a blindspot pass"_, _"interview me"_, _"brainstorm 4 directions"_.
+Individual techniques can also be requested directly, for example: _"do a blind-spot pass"_,
+_"interview me"_, or _"brainstorm four directions"_. See [`EXAMPLES.md`](EXAMPLES.md) for
+complete, copy-paste prompts.
 
-* * *
+## The eight techniques
 
-## 🧩 The eight techniques
+| Phase  | Technique              | Use for                                          |
+|--------|------------------------|--------------------------------------------------|
+| Pre    | Blind-spot pass        | Unknown unknowns in a new domain or codebase     |
+| Pre    | Brainstorm & prototype | Unknown knowns — "I'll know it when I see it"     |
+| Pre    | Interview              | Residual ambiguity after brainstorming           |
+| Pre    | References             | When you cannot describe it — point at code      |
+| Pre    | Implementation plan    | Surface the risky decisions early                |
+| During | Implementation notes   | Edge cases that force a deviation                |
+| Post   | Pitch & explainer      | Buy-in and approvals                             |
+| Post   | Quiz                   | Confirm understanding before merge               |
 
-| Phase | Technique | For |
-|-------|-----------|-----|
-| Pre | 🔦 Blind-spot pass | Unknown unknowns in a new domain / codebase |
-| Pre | 🎨 Brainstorm & prototype | Unknown knowns — "I'll know it when I see it" |
-| Pre | 🎤 Interview me | Residual ambiguity after brainstorming |
-| Pre | 📎 References | When you can't describe it — point at code |
-| Pre | 📋 Implementation plan | Surface the risky decisions early |
-| During | 📝 Implementation notes | Edge cases that force a deviation |
-| Post | 🎓 Pitch & explainer | Buy-in and approvals |
-| Post | ✅ Quiz | Understand the change before you merge |
+Full prompts for each technique are documented in
+[`skills/finding-unknowns/SKILL.md`](skills/finding-unknowns/SKILL.md).
 
-Full copy-paste prompts for each live inside [`skills/finding-unknowns/SKILL.md`](skills/finding-unknowns/SKILL.md).
+## Cartographer mode
 
-* * *
-
-## 🗺️ Cartographer mode — the rigorous escalation
-
-The eight techniques are cheap, flexible probes. **Cartographer mode** is what you escalate
-to for high-stakes work: a *gated* interview that refuses to let you build until the territory
-is mapped. It's inspired by OMC's **Deep Interview**, but re-optimized along three axes that a
-clarity-scoring interview structurally misses.
+The eight techniques are lightweight probes. Cartographer mode is the rigorous escalation for
+high-stakes work: a gated interview that does not permit implementation until the problem space
+is adequately mapped. It is inspired by the Deep Interview skill in
+[oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode), and re-optimised along
+three axes that a clarity-scoring interview does not address.
 
 <p align="center">
   <img src="assets/cartographer.svg" alt="Cartographer mode: coverage gate, unknowns ledger, regret-weighted targeting" width="96%">
 </p>
 
-| Axis | Deep Interview | **Cartographer mode** |
-|------|----------------|------------------------|
-| **What it gates on** | Ambiguity ≤ threshold (clarity on known dimensions) | **Coverage** — have all four quadrants been probed, incl. a required blind-spot pass for Unknown Unknowns? |
-| **Blind spots (UU)** | Not modeled — reduces uncertainty on the map it already has | **First-class** — expanding the map is the point of the gate |
-| **Lifecycle** | Ends at the spec | **One ledger** seeded pre, appended during, closed out post |
-| **Prioritization** | Fixed dimension weights | **Regret** = cost-if-wrong × P(wrong); skip anything under 1.0 |
+| Axis              | Deep Interview                          | Cartographer mode                                                        |
+|-------------------|-----------------------------------------|--------------------------------------------------------------------------|
+| Gate criterion    | Ambiguity ≤ threshold (known dimensions) | Coverage — all four quadrants probed, including a required blind-spot pass |
+| Blind spots (UU)  | Not modelled                            | First-class; expanding the map is the purpose of the gate                |
+| Lifecycle         | Ends at the specification               | One ledger, seeded pre, appended during, closed post                     |
+| Prioritisation    | Fixed dimension weights                 | Regret = cost-if-wrong × P(wrong); items below 1.0 are deferred          |
 
-> Deep Interview measures *ambiguity reduction.* Cartographer measures *territory coverage,
-> weighted by blast radius, across the full lifecycle.*
+The mechanism is a persistent unknowns ledger (`id · quadrant · cost-if-wrong · P(wrong) ·
+regret · status · phase`). Each round targets the highest-regret open item with a single
+question, re-scores it, and does not permit implementation while any quadrant is un-probed or
+any open item carries `regret ≥ 1.0`. The full schema and kick-off prompt are in
+[`SKILL.md`](skills/finding-unknowns/SKILL.md).
 
-The mechanism is a persistent **unknowns ledger** (`id · quadrant · cost-if-wrong · P(wrong) ·
-regret · status · phase`). Each round targets the highest-regret open row with one question,
-re-scores it, and never lets you start building while any quadrant is un-probed or any open
-unknown carries `regret ≥ 1.0`. Kick-off prompt and full schema live in
-[`SKILL.md`](skills/finding-unknowns/SKILL.md#cartographer-mode--the-rigorous-escalation).
+## Relationship to other tools
 
-* * *
+`finding-unknowns` operates at a different altitude from heavier workflow skills. It is a
+lightweight orienting layer, not an execution engine.
 
-## 🔗 How it relates to Deep Interview, OMC, and other skills
+| Property     | finding-unknowns          | Deep Interview ([OMC](https://github.com/Yeachan-Heo/oh-my-claudecode)) | OMC execution (autopilot / ralph / team) | [Superpowers](https://github.com/obra/superpowers) |
+|--------------|---------------------------|-------------------------|------------------------|------------------------|
+| Altitude     | Meta / orienting          | One phase: requirements | Execution & delivery   | Discipline primitives  |
+| Lifecycle    | Pre · During · Post       | Pre only                | During · Post          | Mostly single-phase    |
+| Rigor        | Flexible                  | Ambiguity gating        | Verification-gated     | Checklist-driven        |
+| State        | Stateless                 | Persisted, resumable    | Persisted, multi-agent | Varies                 |
+| Best when    | You do not yet know your unknowns | You need a validated specification | The specification is clear | You need one disciplined move |
 
-`finding-unknowns` deliberately operates at a **different altitude** from the heavier
-workflow skills. It is a lightweight *orienting layer*, not an execution engine. Here's the
-honest comparison so you know when to reach for which.
-
-### At a glance
-
-| | **finding-unknowns** | **Deep Interview** ([OMC](https://github.com/Yeachan-Heo/oh-my-claudecode)) | **OMC execution** (autopilot / ralph / team) | **[Superpowers](https://github.com/obra/superpowers)** (brainstorming, writing-plans, TDD…) |
-|---|---|---|---|---|
-| **Altitude** | Meta / orienting | One deep phase: requirements | Execution & delivery | Discipline primitives |
-| **Lifecycle** | Pre · During · Post | Pre only | During · Post | Mostly single-phase |
-| **Rigor** | Flexible, human-taste | Mathematical ambiguity gating | Verification-gated | Rigid, checklist-driven |
-| **State / persistence** | None (stateless) | Persisted, resumable | Persisted, multi-agent | Varies |
-| **Output** | HTML/MD artifacts you react to | A gated spec (`.omc/specs/…`) | Shipped code + tests | Plans, tests, fixes |
-| **Best when** | You don't yet know your unknowns | You have a vague idea and need a bulletproof spec | The spec is clear; go build | You need one disciplined move |
-
-### Strengths & weaknesses
-
-- **finding-unknowns** — 🟢 broad, cheap, covers the *whole* lifecycle, great for taste/design work and for the moment you realize "I don't even know what to ask." 🔴 no rigor, no gating, no state — it won't *stop* you from proceeding while still confused.
-- **Deep Interview** — 🟢 unmatched depth on *one* thing: turning a fuzzy idea into a mathematically-validated spec, with topology/ontology tracking and a hard "don't proceed until ambiguity ≤ threshold" gate, then a clean handoff to execution. 🔴 heavyweight, pre-implementation only, single-track (Socratic Q&A) — overkill for a quick reframe, and silent on the *during*/*post* windows.
-- **OMC execution (autopilot/ralph/team)** — 🟢 actually delivers: parallel agents, verification loops, persistence. 🔴 assumes you already know what to build — feed it a vague goal and it confidently builds the wrong thing.
-- **Superpowers primitives** — 🟢 sharp, composable, battle-tested single moves (brainstorm, write-plan, TDD, debug). 🔴 each is one tool; none owns the "am I even solving the right problem?" question end-to-end.
-
-### Should you merge them? — Recommendation
-
-**No — don't fuse them into one mega-skill. Compose them instead.** They're complementary
-layers, not competitors, and merging would fight the "small, high-cohesion skills with
-distinct triggers" principle. The sweet spot is to treat **finding-unknowns as the
-front-door / dispatcher** that (1) helps you locate your unknown on the quadrant, then
-(2) hands off to the specialist when a technique needs depth:
+These tools are complementary rather than competing. The recommended pattern is to use
+`finding-unknowns` to locate an unknown, then escalate to the appropriate specialist:
 
 ```
-finding-unknowns  (orient: which quadrant is my unknown in?)
-        │
-        ├─ light reframe is enough?              → the 8 techniques
-        ├─ high-stakes, want a coverage gate?    → Cartographer mode (in this skill)
-        ├─ want math gating + resumable state
-        │   + auto-handoff to execution?         → OMC Deep Interview
-        ├─ needs divergent option generation?    → superpowers:brainstorming
-        ├─ needs a rigorous written plan?        → superpowers:writing-plans / omc-plan
-        └─ spec is clear, time to build?         → OMC autopilot / ralph / team
+finding-unknowns  (orient: which quadrant is this unknown in?)
+        ├─ a light reframe is sufficient          → the eight techniques
+        ├─ high-stakes, want a coverage gate       → Cartographer mode (this skill)
+        ├─ want ambiguity gating + resumable state → OMC Deep Interview
+        ├─ divergent option generation             → superpowers:brainstorming
+        ├─ a rigorous written plan                 → superpowers:writing-plans / omc-plan
+        └─ the specification is already concrete    → OMC autopilot / ralph / team
 ```
 
-Cartographer mode and Deep Interview now overlap, and that's fine — they optimize different
-things. Reach for **Cartographer** when you care about *coverage of the unknown space* (did we
-look for blind spots?) across the whole task. Reach for **Deep Interview** when you want its
-*machinery* — mathematical ambiguity thresholds, topology/ontology tracking, resumable state,
-and a clean `Skill()` handoff straight into autopilot/ralph/team.
-
-Rules of thumb:
-
-- **Reach for finding-unknowns first** when the task is fuzzy, unfamiliar, or taste-driven — it's the cheapest way to discover *that you're confused* and *where*.
-- **Escalate to Deep Interview** when the stakes justify a gated, resumable spec and you want math to tell you when you're actually ready.
-- **Skip straight to OMC execution** when the spec is already concrete (file paths, acceptance criteria).
-- **Use Superpowers primitives** inside any of the above whenever you need one disciplined move.
-
-> **TL;DR** — finding-unknowns is the *compass*; Deep Interview is the *deep drill*; OMC is
-> the *factory*. Keep the compass in your pocket, and let it point you at the right heavy
-> tool. A future version of this skill may add explicit `Skill()` hand-off hooks to make
-> that routing automatic.
-
-* * *
-
-## 🌱 Prior art & how this version differs
-
-A parallel community repo, [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills),
-distills the same essay. It's excellent and took a **granular** path — eight separate,
-independently auto-triggering skills, each with its own guardrails, plus clean plugin
-packaging. This repo took a **depth** path instead. v2 borrows the best of theirs:
-
-| Idea | Their repo | Adopted here in v2 |
-|------|-----------|--------------------|
-| Per-technique guardrails ("discovery ends at understanding") | ✅ per skill | ✅ consolidated `## Guardrails` |
-| Plugin marketplace (`/plugin install`) | ✅ | ✅ `.claude-plugin/` |
-| Worked prompt examples | ✅ `EXAMPLES.md` | ✅ `EXAMPLES.md` |
-| Passive single-file drop-in | ✅ `CLAUDE.md` | ✅ `CLAUDE.md` |
-| Full attribution + "not official Anthropic" | ✅ | ✅ |
-| **Cartographer mode** (coverage gate + ledger + regret) | ❌ | ✅ **our addition** |
-| **SVG visuals + Deep Interview/OMC comparison** | ❌ | ✅ **our addition** |
-
-Net: theirs is the better pick if you want small auto-firing skills; this one if you want a
-single coherent lifecycle skill with an optional rigorous, gated deep mode.
-
-* * *
-
-## 📁 Project structure
+## Project structure
 
 ```
 finding-unknowns-skill/
-├── .claude-plugin/         # plugin + marketplace manifests (/plugin install)
+├── .claude-plugin/         Plugin and marketplace manifests (/plugin install)
 ├── skills/
 │   └── finding-unknowns/
-│       └── SKILL.md        # the skill — 8 techniques + guardrails + Cartographer mode
-├── assets/                 # README SVGs (hero, quadrants, lifecycle, cartographer)
-├── EXAMPLES.md             # copy-paste end-to-end prompts
-├── CLAUDE.md               # passive single-file drop-in (no install)
-├── install.sh              # copies the skill into ~/.claude/skills/
-├── LICENSE                 # MIT
-└── README.md               # you are here
+│       └── SKILL.md        The skill: eight techniques, guardrails, Cartographer mode
+├── assets/                 README diagrams (SVG)
+├── EXAMPLES.md             Copy-paste, end-to-end prompts
+├── CLAUDE.md               Passive single-file drop-in
+├── install.sh              Installer for ~/.claude/skills/
+├── CONTRIBUTING.md         Contribution guidelines
+├── CHANGELOG.md            Release history
+├── LICENSE                 MIT
+└── README.md
 ```
 
-* * *
+## Contributing
 
-## 🙌 Acknowledgements & sources
+Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-- **Original ideas & technique names** — Thariq Shihipar, _"A Field Guide to Fable: Finding
-  Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
-- **Prior-art community repo** — [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills)
-  (the granular 8-skill structure, plugin packaging, and guardrail phrasing that inspired v2).
-- **oh-my-claudecode (OMC)** — [Yeachan-Heo/oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode),
-  source of the Deep Interview skill this project compares against.
-- **Superpowers** — [obra/superpowers](https://github.com/obra/superpowers), the brainstorming
-  / writing-plans / TDD primitives referenced in the routing guide.
+## Acknowledgements
 
-Community project — **not** an official Anthropic repository.
+- The ideas and technique names originate from Thariq Shihipar's essay _"A Field Guide to
+  Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
+- The Cartographer mode comparison references the Deep Interview skill from
+  [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) and the primitives in
+  [Superpowers](https://github.com/obra/superpowers).
 
-* * *
+## License
 
-## 📄 License
+Released under the MIT License. See [LICENSE](LICENSE).
 
-MIT — see [LICENSE](LICENSE). Contributions and updates welcome; this skill will keep evolving.
+## Disclaimer
+
+This is an independent community project. It is not affiliated with, authorised by, or endorsed
+by Anthropic.

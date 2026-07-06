@@ -8,8 +8,8 @@ description: Use at the start of an ambiguous or unfamiliar task to surface the 
 > The map is not the territory.
 
 *Distilled from Thariq Shihipar's essay "A Field Guide to Fable: Finding Your Unknowns"*
-*(@trq212 — https://x.com/trq212/status/2073100352921215386). Community skill, not an*
-*official Anthropic project. Prior art: github.com/Neeeophytee/finding-unknowns-skills.*
+*(@trq212 — https://x.com/trq212/status/2073100352921215386). Community skill; not affiliated*
+*with or endorsed by Anthropic.*
 
 The **map** is what you give Claude — the prompt, the skills, the context. The
 **territory** is where the work actually happens — the codebase, the real world, its

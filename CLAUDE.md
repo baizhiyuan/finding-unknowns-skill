@@ -32,6 +32,6 @@ nudge; the full skill (with copy-paste prompts and Cartographer mode) lives in
 
 ---
 
-*Distilled from Thariq Shihipar's "A Field Guide to Fable: Finding Your Unknowns"
-([@trq212](https://x.com/trq212/status/2073100352921215386)). Community project, not
-official Anthropic. Prior art: [Neeeophytee/finding-unknowns-skills](https://github.com/Neeeophytee/finding-unknowns-skills).*
+*Distilled from Thariq Shihipar's essay "A Field Guide to Fable: Finding Your Unknowns"
+([@trq212](https://x.com/trq212/status/2073100352921215386)). Community project; not
+affiliated with or endorsed by Anthropic.*
