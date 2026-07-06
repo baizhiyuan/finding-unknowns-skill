@@ -1,7 +1,7 @@
 {
   "name": "finding-unknowns",
   "description": "Surface your unknowns (unknown unknowns / unknown knowns) before, during, and after implementation — eight lightweight techniques, Cartographer mode (a quadrant-coverage-gated, regret-weighted interview backed by a lifecycle-persistent unknowns ledger), and four companion agents: blindspot-scout, prototype-smith, ledger-keeper, quiz-master.",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "author": { "name": "baizhiyuan" },
   "homepage": "https://github.com/baizhiyuan/finding-unknowns-skill",
   "license": "MIT"

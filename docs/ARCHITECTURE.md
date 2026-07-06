@@ -43,6 +43,13 @@ A command never restates procedure; it names the section to execute.
   rather than improvised.
 - **Examples**: Good/Bad pairs with rationale — the strongest behavioural steering.
 - **Escalation_And_Stop_Conditions** and a two-lane **Final_Checklist**.
+- **References**: `references/workflows.md` — dynamic-workflow (Workflow tool) scripts
+  for the three fan-out-heavy operations: multi-lens sweep with pipelined per-finding
+  adversarial verification, a perspective-diverse refutation panel for cost ≥ 4
+  resolutions, and a UU loop-until-dry probe. Each template encodes the
+  fan-out/verify/merge structure deterministically and returns schema-validated ledger
+  rows; a fallback ladder (Workflow → parallel Agent calls → inline) keeps the logic
+  normative even where the mechanism is unavailable.
 
 ### Layer 3 — Agents (specialists)
 

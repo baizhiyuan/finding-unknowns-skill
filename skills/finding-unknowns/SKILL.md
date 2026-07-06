@@ -224,6 +224,11 @@ Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed):
 - Run Technique 1 (blind-spot pass) → seed UU rows. Naming a blind spot makes it trackable.
   For high-stakes tasks, prefer a **multi-lens sweep**: parallel scouts with distinct lenses
   (e.g. domain-risk / engineering / statistics) — diversity catches what one lens cannot.
+  When the Workflow tool is available (and the user has opted into orchestration), run the
+  sweep as the `fu-multi-lens-sweep` script in `references/workflows.md`: scouts fan out,
+  each finding is adversarially verified as its lens completes (pipeline, no barrier), and
+  the result is schema-validated ledger rows — no lens or verification step can be
+  silently dropped. Without Workflow, follow the fallback ladder in that file.
 - Run Technique 2/4 where taste is involved → seed UK rows.
 - Write down KK; list KU.
 - **Domain checklist hook**: after seeding, check the ledger against a domain checklist
@@ -273,7 +278,11 @@ by its route. Repeat until the gate passes or the user exits:
      exists, the row stays `resolved-provisional` and the ledger records the one
      discriminating check that would separate the explanations. (Example: a strong
      backtest IC resolves "is the signal real?" only provisionally — leakage produces the
-     same IC; the discriminating check is a pipeline audit.)
+     same IC; the discriminating check is a pipeline audit.) With Workflow available, use
+     the `fu-verify-panel` script (`references/workflows.md`): three refuters with distinct
+     lenses (alternative-explanation / evidence-independence / reproduction); the
+     resolution survives only if ≥2 fail to refute, and refuters' discriminating checks
+     land in the ledger verbatim.
    - **Cross-reference rule**: a cost ≥ 4 resolution backed by a single evidence source is
      `resolved-provisional`, never `resolved`. Two independent sources (different
      instruments — e.g. an experiment AND an audit) are required for full resolution.
@@ -317,7 +326,10 @@ appear satisfied, run one explicit "what's missing?" pass before announcing PASS
 domain-checklist re-scan plus three questions: which quadrant was probed most shallowly?
 which resolution is single-source or provisional? what would an expert reviewer ask that
 no row covers? Anything surfaced becomes a new row and the gate re-evaluates. A PASS
-without the critic pass is invalid.
+without the critic pass is invalid. If the critic names UU as the shallow quadrant and
+Workflow is available, run `fu-uu-until-dry` (`references/workflows.md`): differently
+angled probes loop until two consecutive rounds surface nothing new — bounded by
+information, not by a fixed count.
 
 ### C2.5: Close-out report (structured, Deep-Research style)
 
@@ -367,6 +379,12 @@ deviation waiting to happen.
   parallel scouts, each with ONE named lens (e.g. domain-risk / engineering / statistics)
   stated in its prompt. Merge their findings into the ledger; duplicate findings across
   lenses are confirmation, not waste.
+- **Workflow orchestration (preferred at Cartographer stakes when available)**: the three
+  fan-out-heavy operations — multi-lens sweep, cost ≥ 4 verification panel, UU
+  loop-until-dry — have ready-to-run Workflow scripts in `references/workflows.md`, with
+  structured (schema-validated) outputs that feed the ledger mechanically. Workflow use
+  requires the user's orchestration opt-in; the file's fallback ladder covers plain-Agent
+  and fully-inline environments. The logic is normative; the mechanism is not.
 </Agent_Delegation>
 
 <Examples>

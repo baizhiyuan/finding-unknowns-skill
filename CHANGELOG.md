@@ -4,6 +4,29 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0]
+
+### Added — dynamic-workflow orchestration (Workflow tool integration)
+- **`references/workflows.md`**: three ready-to-run Workflow scripts for the skill's
+  fan-out-heavy operations, adopting Deep Research's orchestration discipline:
+  - `fu-multi-lens-sweep` — parallel lens scouts, each finding adversarially verified the
+    moment its lens completes (pipeline, no barrier), deduped across ALL seen findings,
+    returned as schema-validated ledger rows (cross-lens duplicates recorded as
+    confirmation).
+  - `fu-verify-panel` — perspective-diverse refutation panel (alternative-explanation /
+    evidence-independence / reproduction) for cost >= 4 resolutions; survives only if >=2
+    refuters fail; refuters' discriminating checks land in the ledger verbatim.
+  - `fu-uu-until-dry` — UU probe loop bounded by information (two consecutive dry
+    rounds), not by a fixed round count.
+- **Fallback ladder** (normative): Workflow -> parallel Agent calls -> fully inline; the
+  invariants (named lenses, adversarial check before resolve, dedup vs seen, empty
+  results are results) survive every rung.
+- SKILL.md wires the templates at C0 (multi-lens sweep), C1 step 3.5 (verification
+  panel), and the completeness critic (UU deep probe); Agent_Delegation documents the
+  orchestration option, its opt-in requirement, and cost anchors.
+- README architecture table, project structure, Cartographer section, and
+  docs/ARCHITECTURE.md updated.
+
 ## [3.4.0]
 
 ### Changed — evidence discipline adopted from deep-research patterns, validated live

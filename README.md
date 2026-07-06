@@ -66,6 +66,7 @@ for the full design reference.
 | Skill | `SKILL.md` | The protocol: quadrant routing, eight techniques, Cartographer mode, guardrails |
 | Agents | four specialists | Isolated execution profiles with explicit I/O contracts |
 | Artifacts | ledger, notes, prototypes, report | Persistent state; the ledger is the resume point |
+| Workflows | `references/workflows.md` | Optional dynamic-workflow scripts for the fan-out-heavy operations; degrade to plain agents or inline |
 
 <p align="center">
   <img src="assets/framework.svg" alt="Framework: one skill orchestrating four specialist agents" width="96%">
@@ -181,6 +182,13 @@ question, re-scores it, and does not permit implementation while any quadrant is
 any open item carries `regret ≥ 1.0`. The full schema and kick-off prompt are in
 [`SKILL.md`](skills/finding-unknowns/SKILL.md).
 
+When the host exposes Claude Code's **Workflow tool** (dynamic workflows) and the user has
+opted into orchestration, the three fan-out-heavy operations run as deterministic scripts —
+multi-lens sweep with per-finding adversarial verification (pipelined, no barrier), a
+three-lens refutation panel for cost ≥ 4 resolutions, and a UU probe loop that stops only
+after two consecutive dry rounds. Templates and the graceful fallback ladder live in
+[`references/workflows.md`](skills/finding-unknowns/references/workflows.md).
+
 ## Relationship to other tools
 
 `finding-unknowns` operates at a different altitude from heavier workflow skills. It is a
@@ -219,7 +227,9 @@ finding-unknowns-skill/
 │   └── change-quiz.md        /change-quiz — report + merge quiz
 ├── skills/
 │   └── finding-unknowns/
-│       └── SKILL.md        The protocol: routing, eight techniques, Cartographer mode
+│       ├── SKILL.md        The protocol: routing, eight techniques, Cartographer mode
+│       └── references/
+│           └── workflows.md  Workflow-orchestration templates (multi-lens sweep, verify panel, UU loop)
 ├── agents/
 │   ├── blindspot-scout.md  Read-only reconnaissance (sonnet)
 │   ├── prototype-smith.md  Divergent throwaway prototyping (sonnet)
