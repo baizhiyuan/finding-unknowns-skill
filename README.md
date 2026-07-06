@@ -189,6 +189,10 @@ three-lens refutation panel for cost ≥ 4 resolutions, and a UU probe loop that
 after two consecutive dry rounds. Templates and the graceful fallback ladder live in
 [`references/workflows.md`](skills/finding-unknowns/references/workflows.md).
 
+<p align="center">
+  <img src="assets/workflows.svg" alt="Dynamic-workflow orchestration: multi-lens sweep, verify panel, UU loop-until-dry, fallback ladder" width="96%">
+</p>
+
 ## Relationship to other tools
 
 `finding-unknowns` operates at a different altitude from heavier workflow skills. It is a

@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="430" viewBox="0 0 1000 430" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
   <defs>
     <marker id="fa" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#5B6172"/></marker>
     <linearGradient id="facc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A63D2"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient>
   </defs>
-  <rect width="1000" height="430" rx="16" fill="#0F111A"/>
+  <rect width="1000" height="560" rx="16" fill="#0F111A"/>
   <rect x="0" y="0" width="1000" height="5" rx="2" fill="url(#facc)"/>
   <text x="500" y="42" font-size="21" font-weight="700" fill="#F4F5F7" text-anchor="middle">Framework: one skill orchestrating four specialist agents</text>
 
@@ -13,36 +13,48 @@
   <text x="500" y="128" font-size="12.5" fill="#A99BC9" text-anchor="middle">locates the unknown on the quadrant,</text>
   <text x="500" y="146" font-size="12.5" fill="#A99BC9" text-anchor="middle">runs techniques inline or delegates</text>
 
+  <!-- workflow orchestration band (optional) -->
+  <rect x="40" y="196" width="950" height="86" rx="12" fill="#101822" stroke="#2DD4BF" stroke-dasharray="6 4"/>
+  <text x="62" y="224" font-size="14" font-weight="700" fill="#9BEBDD">Workflow orchestration (optional, opt-in) — references/workflows.md</text>
+  <g font-size="12" fill="#7FC5BA">
+    <text x="62" y="250">fu-multi-lens-sweep · scouts fan out, each finding verified as its lens completes (pipeline, no barrier)</text>
+    <text x="62" y="268">fu-verify-panel · 3-lens refutation for cost ≥ 4 rows&#160;&#160;&#160;&#160;fu-uu-until-dry · probe until two dry rounds</text>
+  </g>
+  <text x="928" y="250" font-size="11.5" fill="#58948A" text-anchor="end" font-style="italic">fallback ladder:</text>
+  <text x="928" y="268" font-size="11.5" fill="#58948A" text-anchor="end" font-style="italic">Workflow → Agent calls → inline</text>
+
   <!-- agents -->
-  <rect x="40" y="230" width="215" height="130" rx="12" fill="#241521" stroke="#F59E0B"/>
-  <text x="147" y="260" font-size="15" font-weight="700" fill="#F6C572" text-anchor="middle">blindspot-scout</text>
-  <text x="147" y="284" font-size="12" fill="#C9A46B" text-anchor="middle">read-only recon</text>
-  <text x="147" y="304" font-size="12" fill="#C9A46B" text-anchor="middle">landmines · hidden context</text>
-  <text x="147" y="330" font-size="11.5" fill="#8A7350" text-anchor="middle" font-style="italic">blind-spot pass · references</text>
+  <rect x="40" y="330" width="215" height="130" rx="12" fill="#241521" stroke="#F59E0B"/>
+  <text x="147" y="360" font-size="15" font-weight="700" fill="#F6C572" text-anchor="middle">blindspot-scout</text>
+  <text x="147" y="384" font-size="12" fill="#C9A46B" text-anchor="middle">read-only recon</text>
+  <text x="147" y="404" font-size="12" fill="#C9A46B" text-anchor="middle">landmines · hidden context</text>
+  <text x="147" y="430" font-size="11.5" fill="#8A7350" text-anchor="middle" font-style="italic">blind-spot pass · references</text>
 
-  <rect x="285" y="230" width="215" height="130" rx="12" fill="#160F26" stroke="#8A63D2"/>
-  <text x="392" y="260" font-size="15" font-weight="700" fill="#C9B6F2" text-anchor="middle">prototype-smith</text>
-  <text x="392" y="284" font-size="12" fill="#A99BC9" text-anchor="middle">throwaway HTML only</text>
-  <text x="392" y="304" font-size="12" fill="#A99BC9" text-anchor="middle">N divergent directions</text>
-  <text x="392" y="330" font-size="11.5" fill="#7A6BA0" text-anchor="middle" font-style="italic">brainstorm · plan</text>
+  <rect x="285" y="330" width="215" height="130" rx="12" fill="#160F26" stroke="#8A63D2"/>
+  <text x="392" y="360" font-size="15" font-weight="700" fill="#C9B6F2" text-anchor="middle">prototype-smith</text>
+  <text x="392" y="384" font-size="12" fill="#A99BC9" text-anchor="middle">throwaway HTML only</text>
+  <text x="392" y="404" font-size="12" fill="#A99BC9" text-anchor="middle">N divergent directions</text>
+  <text x="392" y="430" font-size="11.5" fill="#7A6BA0" text-anchor="middle" font-style="italic">brainstorm · plan</text>
 
-  <rect x="530" y="230" width="215" height="130" rx="12" fill="#0F1622" stroke="#5B8DEF"/>
-  <text x="637" y="260" font-size="15" font-weight="700" fill="#AFC6F6" text-anchor="middle">ledger-keeper</text>
-  <text x="637" y="284" font-size="12" fill="#8FA6D0" text-anchor="middle">regret scoring · gate verdict</text>
-  <text x="637" y="304" font-size="12" fill="#8FA6D0" text-anchor="middle">unknowns-ledger.md</text>
-  <text x="637" y="330" font-size="11.5" fill="#64769B" text-anchor="middle" font-style="italic">Cartographer mode</text>
+  <rect x="530" y="330" width="215" height="130" rx="12" fill="#0F1622" stroke="#5B8DEF"/>
+  <text x="637" y="360" font-size="15" font-weight="700" fill="#AFC6F6" text-anchor="middle">ledger-keeper</text>
+  <text x="637" y="384" font-size="12" fill="#8FA6D0" text-anchor="middle">regret scoring · gate verdict</text>
+  <text x="637" y="404" font-size="12" fill="#8FA6D0" text-anchor="middle">unknowns-ledger.md</text>
+  <text x="637" y="430" font-size="11.5" fill="#64769B" text-anchor="middle" font-style="italic">Cartographer mode</text>
 
-  <rect x="775" y="230" width="215" height="130" rx="12" fill="#0F1C1A" stroke="#2DD4BF"/>
-  <text x="882" y="260" font-size="15" font-weight="700" fill="#9BEBDD" text-anchor="middle">quiz-master</text>
-  <text x="882" y="284" font-size="12" fill="#7FC5BA" text-anchor="middle">fresh-eyes examiner</text>
-  <text x="882" y="304" font-size="12" fill="#7FC5BA" text-anchor="middle">report + must-pass quiz</text>
-  <text x="882" y="330" font-size="11.5" fill="#58948A" text-anchor="middle" font-style="italic">quiz · pitch</text>
+  <rect x="775" y="330" width="215" height="130" rx="12" fill="#0F1C1A" stroke="#2DD4BF"/>
+  <text x="882" y="360" font-size="15" font-weight="700" fill="#9BEBDD" text-anchor="middle">quiz-master</text>
+  <text x="882" y="384" font-size="12" fill="#7FC5BA" text-anchor="middle">fresh-eyes examiner</text>
+  <text x="882" y="404" font-size="12" fill="#7FC5BA" text-anchor="middle">report + must-pass quiz</text>
+  <text x="882" y="430" font-size="11.5" fill="#58948A" text-anchor="middle" font-style="italic">quiz · pitch</text>
 
-  <!-- edges -->
-  <line x1="420" y1="166" x2="170" y2="228" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="470" y1="166" x2="400" y2="228" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="540" y1="166" x2="625" y2="228" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="590" y1="166" x2="855" y2="228" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
+  <!-- edges: skill -> workflow band -> agents -->
+  <line x1="500" y1="166" x2="500" y2="194" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
+  <line x1="200" y1="282" x2="160" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
+  <line x1="410" y1="282" x2="395" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
+  <line x1="620" y1="282" x2="633" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
+  <line x1="830" y1="282" x2="870" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
 
-  <text x="500" y="400" font-size="13" fill="#94A3B8" text-anchor="middle">Every technique also works inline — agents add isolation, divergence, honest scoring, and fresh eyes when depth pays.</text>
+  <text x="500" y="505" font-size="13" fill="#94A3B8" text-anchor="middle">Every technique also works inline — agents add isolation, divergence, honest scoring, and fresh eyes when depth pays.</text>
+  <text x="500" y="528" font-size="13" fill="#94A3B8" text-anchor="middle">The workflow band is a mechanism, not a requirement: the same fan-out/verify/merge logic survives every rung of the ladder.</text>
 </svg>
