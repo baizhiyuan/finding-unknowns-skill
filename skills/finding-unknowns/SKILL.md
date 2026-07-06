@@ -159,6 +159,37 @@ intuition, what was done, and why — with a quiz at the bottom I must pass.
 
 ---
 
+## Companion agents — delegate when depth pays
+
+This skill ships with four specialist agents (installed alongside it, under `agents/`).
+Each backs specific techniques with an execution profile the main conversation can't match:
+read-only sweeps that don't pollute your context, builders sandboxed to throwaway files, and
+an examiner that didn't write the code it questions. **Delegate via the Agent tool when the
+agent exists; if it isn't installed, run the technique inline — every technique above works
+standalone.**
+
+| Agent | Backs | Why a subagent |
+|-------|-------|----------------|
+| `blindspot-scout` | Blind-spot pass, References | Wide read-only recon; burns its own context, not yours; structurally cannot start implementing |
+| `prototype-smith` | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; diverges into N directions in one pass |
+| `ledger-keeper` | Cartographer mode | Keeps regret scoring honest — a separate bookkeeper won't inflate its own gate verdict |
+| `quiz-master` | Quiz, Pitch | Fresh eyes: an examiner that didn't author the diff probes what the author glosses over |
+
+Delegation rules:
+
+- **Blind-spot pass on a real codebase** → prefer `blindspot-scout`; pass the user's goal
+  and experience level. Relay its five-section report; do not re-run its exploration.
+- **Brainstorm N directions / mock a UI / risky-decisions-first plan** → prefer
+  `prototype-smith`; give it the data sources and N.
+- **Cartographer mode** → the main conversation interviews (one question at a time, per the
+  kick-off prompt); call `ledger-keeper` to seed, re-score after each answer, pick the next
+  highest-regret target, and rule on the coverage gate. The gate verdict is the keeper's, not
+  yours.
+- **Post-implementation quiz** → prefer `quiz-master`. Self-quizzing is graded too kindly;
+  the whole point is an examiner who didn't write the change.
+- **Trivial cases stay inline.** A quick reframe, a one-file reference read, or a task the
+  user wants answered conversationally does not justify agent overhead.
+
 ## Guardrails
 
 These keep each technique honest — most importantly, discovery must not silently slide into

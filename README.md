@@ -12,9 +12,11 @@
 
 <p align="center"><em>The map is not the territory. The quality of long-horizon work is bounded by how well you clarify your <strong>unknowns</strong>.</em></p>
 
-`finding-unknowns` is a Claude Code skill that helps you surface what you do not yet know —
-before, during, and after implementation — so that ambiguity is resolved with cheap questions
-up front rather than expensive rework later.
+`finding-unknowns` is a Claude Code skill-and-agent framework that helps you surface what you
+do not yet know — before, during, and after implementation — so that ambiguity is resolved
+with cheap questions up front rather than expensive rework later. A single orchestrating
+skill provides eight discovery techniques and a rigorous gated mode; four companion agents
+back the techniques where isolation, divergence, or independent judgement pays.
 
 > **Attribution.** This skill distills Thariq Shihipar's essay _"A Field Guide to Fable:
 > Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)). Credit
@@ -47,6 +49,30 @@ task lifecycle, plus an optional rigorous mode ("Cartographer mode") for high-st
 - **Implementation notes** — record deviations during the build for later review.
 - **Pitch and quiz** — a review artifact for buy-in, and a comprehension check before merge.
 - **Cartographer mode** — a gated, regret-weighted interview backed by a persistent ledger.
+- **Companion agents** — four specialists (`blindspot-scout`, `prototype-smith`,
+  `ledger-keeper`, `quiz-master`) the skill delegates to when depth pays.
+
+## Architecture
+
+The skill is the orchestrator: it locates an unknown on the four-quadrant map, then either
+runs a technique inline or delegates it to the specialist agent with the right execution
+profile. Every technique works standalone — the agents are an enhancement, not a dependency.
+
+<p align="center">
+  <img src="assets/framework.svg" alt="Framework: one skill orchestrating four specialist agents" width="96%">
+</p>
+
+| Agent | Backs | Execution profile |
+|-------|-------|-------------------|
+| `blindspot-scout` | Blind-spot pass, References | Read-only reconnaissance; explores in its own context window and structurally cannot start implementing |
+| `prototype-smith` | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; produces N genuinely divergent directions in one pass |
+| `ledger-keeper` | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret and rules on the coverage gate without grading its own work |
+| `quiz-master` | Quiz, Pitch & explainer | Fresh-eyes examiner that did not author the change; probes what the author would gloss over |
+
+The separation follows one principle: **discovery, scoring, and examination should not be
+performed by the same context that implements.** A scout that cannot edit files cannot
+drift into building; a bookkeeper that did not conduct the interview will not inflate its
+gate verdict; an examiner that did not write the diff asks harder questions.
 
 ## The four quadrants
 
@@ -70,7 +96,7 @@ Locate where an unknown lives; the quadrant indicates which technique to use.
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
 cd finding-unknowns-skill
-bash install.sh              # copies SKILL.md into ~/.claude/skills/finding-unknowns/
+bash install.sh              # installs the skill and the four companion agents
 ```
 
 **Option C — passive drop-in (no installation):** copy [`CLAUDE.md`](CLAUDE.md) into a project
@@ -170,6 +196,11 @@ finding-unknowns-skill/
 ├── skills/
 │   └── finding-unknowns/
 │       └── SKILL.md        The skill: eight techniques, guardrails, Cartographer mode
+├── agents/
+│   ├── blindspot-scout.md  Read-only reconnaissance (blind-spot pass, references)
+│   ├── prototype-smith.md  Divergent throwaway prototyping (brainstorm, plans)
+│   ├── ledger-keeper.md    Cartographer bookkeeping (regret scoring, coverage gate)
+│   └── quiz-master.md      Independent examiner (report + must-pass quiz)
 ├── assets/                 README diagrams (SVG)
 ├── EXAMPLES.md             Copy-paste, end-to-end prompts
 ├── CLAUDE.md               Passive single-file drop-in
