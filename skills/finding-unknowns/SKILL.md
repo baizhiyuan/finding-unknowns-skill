@@ -1,6 +1,6 @@
 ---
 name: finding-unknowns
-description: Use at the start of an ambiguous or unfamiliar task to surface the user's unknowns (unknown unknowns, unknown knowns) before, during, and after implementation — via blind-spot pass, brainstorm/prototype, interview, references, implementation plan, implementation notes, pitch, and quiz. Invoke manually when scope is unclear or the domain/codebase is new.
+description: Use at the start of an ambiguous or unfamiliar task to surface the user's unknowns (unknown unknowns, unknown knowns) before, during, and after implementation — via blind-spot pass, brainstorm/prototype, interview, references, implementation plan, implementation notes, pitch, and quiz. For high-stakes work, escalate to Cartographer mode: a rigorous, quadrant-coverage-gated, regret-weighted interview backed by a lifecycle-persistent unknowns ledger. Invoke manually when scope is unclear or the domain/codebase is new.
 ---
 
 # Finding Unknowns
@@ -157,6 +157,98 @@ intuition, what was done, and why — with a quiz at the bottom I must pass.
 ```
 
 ---
+
+## Cartographer mode — the rigorous escalation
+
+The eight techniques above are cheap, flexible probes. **Cartographer mode** is what you
+escalate to when the work is high-stakes and you want *rigor* — a gated interview that
+refuses to let you build until the territory is mapped. It is inspired by OMC's
+`deep-interview`, but optimized along three axes that a clarity-scoring interview
+structurally misses:
+
+1. **It gates on coverage, not ambiguity.** A clarity score only reduces uncertainty on the
+   dimensions the model already knows to ask about — it is blind to **Unknown Unknowns**.
+   Cartographer gates on *"have we probed all four quadrants?"*, with blind-spot hunting as a
+   first-class part of the gate, not an afterthought.
+2. **It persists across the whole lifecycle.** A requirements interview ends at the spec.
+   Cartographer maintains one **unknowns ledger** that the pre-interview seeds, the build
+   phase appends to, and the final quiz closes out.
+3. **It targets by regret, not by fixed weights.** Instead of weighting dimensions with
+   constants, Cartographer scores each unknown by *cost-if-wrong* and spends questions only
+   where a wrong guess is expensive. Cheap unknowns are logged with a conservative default
+   and left open.
+
+> Deep Interview measures *ambiguity reduction*. Cartographer measures *territory coverage,
+> weighted by blast radius, across the full lifecycle.*
+
+### The unknowns ledger
+
+Maintain one artifact for the whole task — `unknowns-ledger.md` (or an HTML table). Every
+unknown is a row; it is never silently dropped, only resolved or consciously deferred.
+
+| id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | **regret** | status | phase | resolution / conservative default |
+|----|----------|---------|--------------------|----------|-----------|--------|-------|-----------------------------------|
+| U1 | UU | (blind spot found by pass) | 5 | 0.7 | **3.5** | open | pre | — |
+| U2 | KU | which auth path to extend | 4 | 0.5 | **2.0** | probing | pre | — |
+| U3 | UK | "done" means p95 < 200ms | 3 | 0.2 | 0.6 | resolved | pre | confirmed with user |
+
+- `quadrant` ∈ {KK, KU, UK, UU} — see the four-quadrant table above.
+- **`regret = cost-if-wrong × P(wrong)`.** This is the *only* prioritization signal.
+- `status` ∈ {open, probing, resolved, deferred}. `deferred` requires a conservative default.
+
+### Regret-weighted targeting
+
+Each round, target the **highest-regret open unknown** — not the weakest "dimension." Ask
+one question aimed at it, then re-score its `P(wrong)`. A question that can't lower regret
+for any open item is wasted; don't ask it.
+
+**Leave-open rule:** if an unknown's `regret < 1.0`, do not spend a question on it. Log a
+conservative default in the ledger and proceed. Rigor means spending attention where a wrong
+guess is *expensive*, not interrogating everything.
+
+### The quadrant-coverage gate
+
+You are ready to build when **all four conditions hold** — this replaces "ambiguity ≤ threshold":
+
+- [ ] **KK locked** — the knowns are written down (they drift if left implicit).
+- [ ] **KU resolved or deferred** — every named gap is either answered or has a logged default.
+- [ ] **UK extracted** — at least one brainstorm/prototype/reference ran to surface tacit,
+      "know-it-when-I-see-it" criteria.
+- [ ] **UU probed** — at least one explicit **blind-spot pass** ran, and anything it found is
+      now a tracked ledger row (a UU you've named is no longer unknown-unknown).
+- [ ] **No open unknown has `regret ≥ 1.0`.**
+
+If UU was never probed, you are *not* ready — that is the coverage gate's whole point.
+
+### Lifecycle loop
+
+1. **Pre — seed & interview.** Populate KK. Run a blind-spot pass to seed UU. Brainstorm /
+   reference to surface UK. Then interview in regret order, one question at a time, updating
+   the ledger after each answer. Stop when the coverage gate passes.
+2. **During — append.** Keep the ledger open. When the build surfaces a new unknown (an edge
+   case, a wrong assumption), add a row with its quadrant + regret, pick the conservative
+   option, keep going. (This is technique #6 feeding the ledger.)
+3. **Post — close out.** Generate the quiz (technique #8) *from the ledger* — one question per
+   resolved high-regret item and per named UU. Mark rows resolved. Merge only when no open
+   row has `regret ≥ 1.0`.
+
+### Kick-off prompt
+
+```
+Enter Cartographer mode for this task. Maintain an unknowns-ledger.md with columns:
+id, quadrant (KK/KU/UK/UU), unknown, cost-if-wrong (1-5), P(wrong), regret (=cost×P),
+status, phase, resolution.
+
+1. Seed it: run a blind-spot pass to populate Unknown Unknowns, then list the Known
+   Unknowns and any tacit criteria.
+2. Interview me ONE question at a time, always targeting the highest-regret open row.
+   Re-score P(wrong) after each answer. Skip anything with regret < 1.0 — log a
+   conservative default instead.
+3. Show me the ledger + the four-quadrant coverage checklist each round. Don't let me
+   start building until all four quadrants are probed (especially UU) and no open row
+   has regret >= 1.0.
+Keep the ledger open through implementation and build the final quiz from it.
+```
 
 ## Why HTML artifacts
 

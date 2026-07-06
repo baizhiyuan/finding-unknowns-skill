@@ -108,6 +108,35 @@ Full copy-paste prompts for each live inside [`skills/finding-unknowns/SKILL.md`
 
 * * *
 
+## 🗺️ Cartographer mode — the rigorous escalation
+
+The eight techniques are cheap, flexible probes. **Cartographer mode** is what you escalate
+to for high-stakes work: a *gated* interview that refuses to let you build until the territory
+is mapped. It's inspired by OMC's **Deep Interview**, but re-optimized along three axes that a
+clarity-scoring interview structurally misses.
+
+<p align="center">
+  <img src="assets/cartographer.svg" alt="Cartographer mode: coverage gate, unknowns ledger, regret-weighted targeting" width="96%">
+</p>
+
+| Axis | Deep Interview | **Cartographer mode** |
+|------|----------------|------------------------|
+| **What it gates on** | Ambiguity ≤ threshold (clarity on known dimensions) | **Coverage** — have all four quadrants been probed, incl. a required blind-spot pass for Unknown Unknowns? |
+| **Blind spots (UU)** | Not modeled — reduces uncertainty on the map it already has | **First-class** — expanding the map is the point of the gate |
+| **Lifecycle** | Ends at the spec | **One ledger** seeded pre, appended during, closed out post |
+| **Prioritization** | Fixed dimension weights | **Regret** = cost-if-wrong × P(wrong); skip anything under 1.0 |
+
+> Deep Interview measures *ambiguity reduction.* Cartographer measures *territory coverage,
+> weighted by blast radius, across the full lifecycle.*
+
+The mechanism is a persistent **unknowns ledger** (`id · quadrant · cost-if-wrong · P(wrong) ·
+regret · status · phase`). Each round targets the highest-regret open row with one question,
+re-scores it, and never lets you start building while any quadrant is un-probed or any open
+unknown carries `regret ≥ 1.0`. Kick-off prompt and full schema live in
+[`SKILL.md`](skills/finding-unknowns/SKILL.md#cartographer-mode--the-rigorous-escalation).
+
+* * *
+
 ## 🔗 How it relates to Deep Interview, OMC, and other skills
 
 `finding-unknowns` deliberately operates at a **different altitude** from the heavier
@@ -143,12 +172,20 @@ front-door / dispatcher** that (1) helps you locate your unknown on the quadrant
 ```
 finding-unknowns  (orient: which quadrant is my unknown in?)
         │
-        ├─ needs a bulletproof, gated spec?      → Deep Interview
+        ├─ light reframe is enough?              → the 8 techniques
+        ├─ high-stakes, want a coverage gate?    → Cartographer mode (in this skill)
+        ├─ want math gating + resumable state
+        │   + auto-handoff to execution?         → OMC Deep Interview
         ├─ needs divergent option generation?    → superpowers:brainstorming
         ├─ needs a rigorous written plan?        → superpowers:writing-plans / omc-plan
-        ├─ spec is clear, time to build?         → OMC autopilot / ralph / team
-        └─ light reframe is enough?              → stay in finding-unknowns
+        └─ spec is clear, time to build?         → OMC autopilot / ralph / team
 ```
+
+Cartographer mode and Deep Interview now overlap, and that's fine — they optimize different
+things. Reach for **Cartographer** when you care about *coverage of the unknown space* (did we
+look for blind spots?) across the whole task. Reach for **Deep Interview** when you want its
+*machinery* — mathematical ambiguity thresholds, topology/ontology tracking, resumable state,
+and a clean `Skill()` handoff straight into autopilot/ralph/team.
 
 Rules of thumb:
 

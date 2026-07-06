@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="440" viewBox="0 0 980 440" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#5B6172"/></marker>
+    <linearGradient id="acc2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A63D2"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient>
+  </defs>
+  <rect width="980" height="440" rx="16" fill="#0F111A"/>
+  <rect x="0" y="0" width="980" height="5" rx="2" fill="url(#acc2)"/>
+  <text x="490" y="42" font-size="21" font-weight="700" fill="#F4F5F7" text-anchor="middle">Cartographer mode — coverage &amp; regret, not just clarity</text>
+
+  <!-- left: quadrant coverage gate -->
+  <text x="60" y="86" font-size="14" font-weight="700" fill="#C7CAD1">① Quadrant-coverage gate</text>
+  <g font-size="12.5">
+    <rect x="60" y="98" width="180" height="52" rx="9" fill="#151A28" stroke="#3A3F52"/>
+    <text x="74" y="120" fill="#E5E7EB" font-weight="600">KK locked</text>
+    <text x="74" y="139" fill="#8A909E">knowns written down</text>
+    <rect x="60" y="158" width="180" height="52" rx="9" fill="#0F1B22" stroke="#2DD4BF"/>
+    <text x="74" y="180" fill="#9BEBDD" font-weight="600">KU resolved / deferred</text>
+    <text x="74" y="199" fill="#6FB3AA">named gaps answered</text>
+    <rect x="60" y="218" width="180" height="52" rx="9" fill="#1A1526" stroke="#8A63D2"/>
+    <text x="74" y="240" fill="#D9C7F5" font-weight="600">UK extracted</text>
+    <text x="74" y="259" fill="#A99BC9">brainstorm/prototype ran</text>
+    <rect x="60" y="278" width="180" height="52" rx="9" fill="#241521" stroke="#F59E0B"/>
+    <text x="74" y="300" fill="#F6C572" font-weight="600">UU probed ★</text>
+    <text x="74" y="319" fill="#C9A46B">blind-spot pass required</text>
+  </g>
+  <text x="60" y="360" font-size="12" fill="#94A3B8">Gate = all four probed</text>
+  <text x="60" y="378" font-size="12" fill="#94A3B8">(not "ambiguity ≤ threshold")</text>
+
+  <!-- middle: ledger -->
+  <text x="330" y="86" font-size="14" font-weight="700" fill="#C7CAD1">② Lifecycle unknowns ledger</text>
+  <rect x="330" y="98" width="330" height="232" rx="10" fill="#12151F" stroke="#3A3F52"/>
+  <g font-size="11.5" fill="#94A3B8">
+    <text x="344" y="120" font-weight="700" fill="#C7CAD1">id  quadrant   regret   status</text>
+    <line x1="344" y1="128" x2="646" y2="128" stroke="#2A2E3D"/>
+    <text x="344" y="148" fill="#F0B75A">U1   UU          3.5      open</text>
+    <text x="344" y="170" fill="#C9B6F2">U2   KU          2.0      probing</text>
+    <text x="344" y="192" fill="#6FB3AA">U3   UK          0.6      resolved</text>
+    <text x="344" y="214" fill="#8A909E">U4   KK          —        locked</text>
+  </g>
+  <text x="344" y="248" font-size="11.5" fill="#C7CAD1" font-weight="600">regret = cost-if-wrong × P(wrong)</text>
+  <text x="344" y="272" font-size="11.5" fill="#8A909E">seeded pre · appended during ·</text>
+  <text x="344" y="290" font-size="11.5" fill="#8A909E">closed out post (quiz built from it)</text>
+  <text x="344" y="316" font-size="11" fill="#5E9E93" font-style="italic">never silently dropped — only resolved/deferred</text>
+
+  <!-- right: regret targeting -->
+  <text x="700" y="86" font-size="14" font-weight="700" fill="#C7CAD1">③ Regret-weighted targeting</text>
+  <rect x="700" y="98" width="222" height="232" rx="10" fill="#12151F" stroke="#3A3F52"/>
+  <text x="716" y="126" font-size="12.5" fill="#E5E7EB">Ask about the</text>
+  <text x="716" y="146" font-size="12.5" fill="#F0B75A" font-weight="700">highest-regret open row</text>
+  <text x="716" y="166" font-size="12.5" fill="#E5E7EB">first — one question,</text>
+  <text x="716" y="186" font-size="12.5" fill="#E5E7EB">then re-score P(wrong).</text>
+  <line x1="716" y1="204" x2="906" y2="204" stroke="#2A2E3D"/>
+  <text x="716" y="228" font-size="12" fill="#8A909E">regret &lt; 1.0 →</text>
+  <text x="716" y="248" font-size="12" fill="#7FC5BA">log conservative default,</text>
+  <text x="716" y="266" font-size="12" fill="#7FC5BA">leave open, move on.</text>
+  <text x="716" y="300" font-size="11.5" fill="#94A3B8" font-style="italic">spend attention where a</text>
+  <text x="716" y="317" font-size="11.5" fill="#94A3B8" font-style="italic">wrong guess is expensive</text>
+
+  <line x1="240" y1="304" x2="330" y2="220" stroke="#5B6172" stroke-width="1.5" marker-end="url(#a2)"/>
+  <line x1="660" y1="200" x2="700" y2="200" stroke="#5B6172" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <text x="490" y="410" font-size="13" fill="#94A3B8" text-anchor="middle">Deep Interview reduces ambiguity on the map it has. Cartographer expands the map — weighted by blast radius, across the whole lifecycle.</text>
+</svg>
