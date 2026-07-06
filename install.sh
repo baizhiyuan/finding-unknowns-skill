@@ -20,6 +20,14 @@ for agent in "$SRC"/agents/*.md; do
   echo "Installed agent  -> $AGENT_DEST/$(basename "$agent")"
 done
 
+# Slash commands
+CMD_DEST="$CONFIG_DIR/commands"
+mkdir -p "$CMD_DEST"
+for cmd in "$SRC"/commands/*.md; do
+  cp "$cmd" "$CMD_DEST/$(basename "$cmd")"
+  echo "Installed command -> $CMD_DEST/$(basename "$cmd")"
+done
+
 echo
 echo "Done. Invoke the skill via the Skill tool: finding-unknowns"
 echo "Agents (blindspot-scout, prototype-smith, ledger-keeper, quiz-master)"

@@ -54,20 +54,29 @@ task lifecycle, plus an optional rigorous mode ("Cartographer mode") for high-st
 
 ## Architecture
 
-The skill is the orchestrator: it locates an unknown on the four-quadrant map, then either
-runs a technique inline or delegates it to the specialist agent with the right execution
-profile. Every technique works standalone — the agents are an enhancement, not a dependency.
+The framework is layered — commands dispatch, the skill decides, agents execute, documents
+persist. Procedure lives in exactly one place (`SKILL.md`); every other layer either enters
+it or carries out a contract from it. Every technique works standalone — commands and
+agents are enhancements, not dependencies. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+for the full design reference.
+
+| Layer | Contents | Role |
+|-------|----------|------|
+| Commands | `/finding-unknowns` `/blindspot` `/cartographer` `/change-quiz` | Thin entry points; name a skill section, pass arguments |
+| Skill | `SKILL.md` | The protocol: quadrant routing, eight techniques, Cartographer mode, guardrails |
+| Agents | four specialists | Isolated execution profiles with explicit I/O contracts |
+| Artifacts | ledger, notes, prototypes, report | Persistent state; the ledger is the resume point |
 
 <p align="center">
   <img src="assets/framework.svg" alt="Framework: one skill orchestrating four specialist agents" width="96%">
 </p>
 
-| Agent | Backs | Execution profile |
-|-------|-------|-------------------|
-| `blindspot-scout` | Blind-spot pass, References | Read-only reconnaissance; explores in its own context window and structurally cannot start implementing |
-| `prototype-smith` | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; produces N genuinely divergent directions in one pass |
-| `ledger-keeper` | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret and rules on the coverage gate without grading its own work |
-| `quiz-master` | Quiz, Pitch & explainer | Fresh-eyes examiner that did not author the change; probes what the author would gloss over |
+| Agent | Model | Backs | Execution profile |
+|-------|-------|-------|-------------------|
+| `blindspot-scout` | sonnet | Blind-spot pass, References | Read-only reconnaissance; explores in its own context window and structurally cannot start implementing |
+| `prototype-smith` | sonnet | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; produces N genuinely divergent directions in one pass |
+| `ledger-keeper` | opus | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret and rules on the coverage gate without grading its own work — verdicts get the strongest model |
+| `quiz-master` | sonnet | Quiz, Pitch & explainer | Fresh-eyes examiner that did not author the change; probes what the author would gloss over |
 
 The separation follows one principle: **discovery, scoring, and examination should not be
 performed by the same context that implements.** A scout that cannot edit files cannot
@@ -117,9 +126,18 @@ At the start of an ambiguous or unfamiliar task, invoke the skill through the Sk
 finding-unknowns
 ```
 
-Individual techniques can also be requested directly, for example: _"do a blind-spot pass"_,
-_"interview me"_, or _"brainstorm four directions"_. See [`EXAMPLES.md`](EXAMPLES.md) for
-complete, copy-paste prompts.
+With the plugin installed, slash commands provide direct entry points:
+
+| Command | Enters at |
+|---------|-----------|
+| `/finding-unknowns <task>` | Phase 0 — quadrant routing, then the matching technique |
+| `/blindspot <goal or area>` | Blind-spot pass (reconnaissance only) |
+| `/cartographer <task>` | Cartographer mode — ledger, interview loop, coverage gate |
+| `/change-quiz [diff range]` | Change report + must-pass comprehension quiz |
+
+Individual techniques can also be requested in plain language, for example: _"do a
+blind-spot pass"_, _"interview me"_, or _"brainstorm four directions"_. See
+[`EXAMPLES.md`](EXAMPLES.md) for complete, copy-paste prompts.
 
 ## The eight techniques
 
@@ -193,18 +211,26 @@ finding-unknowns  (orient: which quadrant is this unknown in?)
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/         Plugin and marketplace manifests (/plugin install)
+├── commands/               Slash-command entry points (thin dispatchers)
+│   ├── finding-unknowns.md   /finding-unknowns — Phase 0 routing
+│   ├── blindspot.md          /blindspot — blind-spot pass
+│   ├── cartographer.md       /cartographer — Cartographer mode
+│   └── change-quiz.md        /change-quiz — report + merge quiz
 ├── skills/
 │   └── finding-unknowns/
-│       └── SKILL.md        The skill: eight techniques, guardrails, Cartographer mode
+│       └── SKILL.md        The protocol: routing, eight techniques, Cartographer mode
 ├── agents/
-│   ├── blindspot-scout.md  Read-only reconnaissance (blind-spot pass, references)
-│   ├── prototype-smith.md  Divergent throwaway prototyping (brainstorm, plans)
-│   ├── ledger-keeper.md    Cartographer bookkeeping (regret scoring, coverage gate)
-│   └── quiz-master.md      Independent examiner (report + must-pass quiz)
+│   ├── blindspot-scout.md  Read-only reconnaissance (sonnet)
+│   ├── prototype-smith.md  Divergent throwaway prototyping (sonnet)
+│   ├── ledger-keeper.md    Regret scoring and coverage-gate verdicts (opus)
+│   └── quiz-master.md      Independent examiner (sonnet)
+├── docs/
+│   └── ARCHITECTURE.md     Design reference: layers, contracts, principles
 ├── assets/                 README diagrams (SVG)
+├── AGENTS.md               Repository guide for coding agents and contributors
 ├── EXAMPLES.md             Copy-paste, end-to-end prompts
 ├── CLAUDE.md               Passive single-file drop-in
-├── install.sh              Installer for ~/.claude/skills/
+├── install.sh              Installer (skill + agents + commands)
 ├── CONTRIBUTING.md         Contribution guidelines
 ├── CHANGELOG.md            Release history
 ├── LICENSE                 MIT

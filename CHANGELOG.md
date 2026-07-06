@@ -4,6 +4,23 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0]
+
+### Added
+- `commands/` layer with four slash-command entry points that dispatch into named skill
+  sections: `/finding-unknowns`, `/blindspot`, `/cartographer`, `/change-quiz`.
+- `docs/ARCHITECTURE.md` — design reference covering the four layers, artifact contracts,
+  and design principles.
+- `AGENTS.md` — repository guide for coding agents and contributors, with invariants and
+  validation commands.
+
+### Changed
+- Agent model tiers: `ledger-keeper` upgraded to opus (verdict-giving roles get the
+  strongest model); other agents remain sonnet.
+- `install.sh` now installs commands alongside the skill and agents.
+- README architecture section rewritten around the layered command → skill → agent →
+  artifact model.
+
 ## [3.0.0]
 
 ### Changed
@@ -67,6 +84,7 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.1.0
 [3.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.0.0
 [2.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.2.0
 [2.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.1.0
