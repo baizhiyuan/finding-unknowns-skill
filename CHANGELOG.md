@@ -4,6 +4,21 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0]
+
+### Changed
+- Rewrote all four companion agents as full behavioural contracts following the
+  oh-my-claudecode agent paradigm: Role with explicit responsibility boundaries,
+  Why-This-Matters, Success-Criteria, Constraints, an investigation/operations protocol,
+  an exact Output-Format, a Final-Response-Contract (the last message is the
+  deliverable), named Failure-Modes-To-Avoid, Good/Bad examples with rationale, and a
+  Final-Checklist. Agents grew from ~50 to ~130 lines each.
+- blindspot-scout gains pre-commitment prediction (predict likely landmine categories
+  before exploring); prototype-smith gains a divergence check (theses must conflict on
+  at least one axis); ledger-keeper gains named operations (SEED / RE-SCORE / TARGET /
+  GATE / CLOSE-OUT) with explicit verdict formatting; quiz-master gains diff-to-ledger
+  cross-referencing with mandatory unlogged-deviation flagging.
+
 ## [3.1.0]
 
 ### Added
@@ -84,6 +99,7 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.2.0
 [3.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.1.0
 [3.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.0.0
 [2.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.2.0
