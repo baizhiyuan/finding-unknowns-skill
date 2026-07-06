@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0]
+
+### Changed
+- Rewrote every technique in the skill as an operational block — When / Procedure /
+  Stop-when / Guardrails — replacing prompt-only descriptions. Interviews now sort by
+  blast radius; plans lead with tweakable decisions and admit their unknowns; quizzes
+  grade honestly with a two-round stop rule; notes distinguish reversible from
+  irreversible deviations.
+- Added explicit input/output contracts to the companion-agent delegation table.
+- Consolidated guardrails into per-technique guardrails plus a short global list.
+
 ## [2.1.0]
 
 ### Added
@@ -41,6 +52,7 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[2.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.2.0
 [2.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.1.0
 [2.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v2.0.0
 [1.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v1.0.0
