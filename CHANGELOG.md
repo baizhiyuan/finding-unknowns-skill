@@ -4,6 +4,27 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0]
+
+### Changed — driven by a live field test (quant × deep-learning research task)
+- **Cartographer's interview loop generalised into a clearing loop (router).** The ledger
+  gains a `route` column (interview / territory-verify / experiment / audit); regret
+  decides order, route decides instrument. Field test showed the three highest-regret
+  unknowns all had non-interview routes — territory rows are now never asked of the user,
+  and pending experiment/audit rows suspend the loop instead of spawning extra rounds.
+- **Domain checklist hook at seeding**: the ledger is checked against a user-profile
+  domain checklist (quant example: funding costs, liquidation distance, capacity, per-leg
+  attribution, fee/slippage realism, regime dependence) and missing rows are added.
+- **Multi-lens scout sweeps**: for high-stakes tasks, several `blindspot-scout` instances
+  may run in parallel, each constrained to one named lens; the scout gains a Phase 0 lens
+  check.
+- **AFK / timeout handling** added to escalation rules: unanswered interview questions
+  leave the row open and re-askable, with the gate suspended — answers are never invented.
+- **Cost anchors** added to agent delegation (~50–100k subagent tokens for a codebase
+  blind-spot pass) so "trivial cases stay inline" has a measurable bar.
+- `ledger-keeper` updated accordingly: route-aware TARGET output, domain-checklist duty at
+  SEED, and a new "route blindness" failure mode.
+
 ## [3.2.0]
 
 ### Changed
@@ -99,6 +120,7 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.3.0
 [3.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.2.0
 [3.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.1.0
 [3.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.0.0

@@ -90,6 +90,13 @@ state store, no re-seeding.
    did not.
 5. **Regret-priced attention.** Questions are spent where cost-if-wrong × P(wrong) is
    high; everything else gets a logged conservative default.
+6. **Route-typed clearing.** Regret decides which unknown to clear first; the row's route
+   decides the instrument — interview (user's head), territory (verify in code/data),
+   experiment (measure), or audit (review an external artifact). The Cartographer loop is
+   a router, not an interview: territory rows are never asked of the user, and pending
+   experiment/audit rows suspend the loop instead of spawning useless extra rounds.
+   (Field-test finding: in a real quant×DL session, the three highest-regret rows all had
+   non-interview routes.)
 
 ## Relationship to upstream paradigms
 

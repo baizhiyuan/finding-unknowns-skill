@@ -30,7 +30,15 @@ model: opus
 
   <Success_Criteria>
     - The ledger exists with every column: id, quadrant (KK/KU/UK/UU), unknown,
-      cost-if-wrong (1-5), P(wrong), regret, status, phase, resolution/default
+      cost-if-wrong (1-5), P(wrong), regret, route, status, phase, resolution/default
+    - Every row carries a route — HOW it gets cleared: `interview` (answer exists only in
+      the user's head), `territory` (verifiable from code/data — never ask the user),
+      `experiment` (needs a backtest/prototype/measurement), or `audit` (needs review of
+      an external artifact). Regret decides order; route decides instrument
+    - The domain checklist hook was applied at seeding: the ledger was checked against a
+      domain checklist derived from the user's profile (e.g. quant trading: funding costs,
+      liquidation distance, capacity, per-leg attribution, fee/slippage realism, regime
+      dependence) and missing rows were added
     - regret = cost-if-wrong × P(wrong), recomputed on every update — the only
       prioritisation signal
     - Every score carries a one-clause justification; every deferred row carries a
@@ -62,7 +70,12 @@ model: opus
        P(wrong), recompute regret, and append new rows for newly surfaced unknowns
        (phase = when discovered: pre/during/post).
     3. TARGET — name the single highest-regret open row with one sentence on why it is
-       the bottleneck; apply the leave-open rule to everything under 1.0.
+       the bottleneck, PLUS its route so the caller dispatches correctly (interview →
+       ask the user; territory → run the check; experiment/audit → record the clearing
+       action and leave the row probing). Apply the leave-open rule to everything under
+       1.0. If only probing rows with pending experiments/audits remain, say so — the
+       correct recommendation is "suspend and execute clearing actions", not another
+       interview round.
     4. GATE — evaluate the five conditions and rule:
        [ ] KK locked   [ ] KU resolved/deferred-with-default   [ ] UK extracted
        [ ] UU probed (blind-spot pass ran; findings tracked)   [ ] no open row ≥ 1.0
@@ -77,8 +90,8 @@ model: opus
 
     <operation-specific body:>
     - SEED/RE-SCORE: the changed rows with scores and one-clause justifications
-    - TARGET: `<id> — <unknown> — regret <r> (<cost>×<p>)` + one-sentence rationale;
-      list of sub-1.0 rows given defaults this round
+    - TARGET: `<id> — <unknown> — regret <r> (<cost>×<p>) — route: <route>` +
+      one-sentence rationale; list of sub-1.0 rows given defaults this round
     - GATE: the five-condition checklist with [x]/[ ] and **VERDICT: PASS/FAIL** —
       when FAIL, name the failing conditions and the cheapest action to clear each
     - CLOSE-OUT: quiz-input list (row id, unknown, resolution, why it was high-regret)
@@ -103,6 +116,10 @@ model: opus
       One file. Only one.
     - Verdict inversion: recommending a question for a 0.4-regret row while a 2.5-regret
       row sits open. Regret orders everything.
+    - Route blindness: recommending an interview question for a territory-answerable row
+      (one Grep would answer it), or looping extra interview rounds while the only open
+      work is a pending experiment or audit. The route column exists precisely to prevent
+      both.
   </Failure_Modes_To_Avoid>
 
   <Examples>

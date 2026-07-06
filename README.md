@@ -173,6 +173,7 @@ three axes that a clarity-scoring interview does not address.
 | Blind spots (UU)  | Not modelled                            | First-class; expanding the map is the purpose of the gate                |
 | Lifecycle         | Ends at the specification               | One ledger, seeded pre, appended during, closed post                     |
 | Prioritisation    | Fixed dimension weights                 | Regret = cost-if-wrong × P(wrong); items below 1.0 are deferred          |
+| Clearing instrument | Socratic Q&A only                     | Route-typed per unknown: interview / territory-verify / experiment / audit — the loop is a router, not an interview |
 
 The mechanism is a persistent unknowns ledger (`id · quadrant · cost-if-wrong · P(wrong) ·
 regret · status · phase`). Each round targets the highest-regret open item with a single

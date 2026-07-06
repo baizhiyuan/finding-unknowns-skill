@@ -53,6 +53,11 @@ model: sonnet
   </Constraints>
 
   <Investigation_Protocol>
+    Phase 0 — Lens check: if the caller assigned you a named lens (e.g. "domain-risk",
+    "engineering", "statistics" — used when several scouts sweep the same territory in
+    parallel), constrain your predictions and report to that lens and say so in the first
+    line. No lens means full-spectrum recon.
+
     Phase 1 — Pre-commitment: from the goal and territory type, predict the 3-5 most
     likely landmine categories (e.g. "auth modules usually hide session-invalidation
     coupling"). Write them down; investigate each specifically. This activates deliberate

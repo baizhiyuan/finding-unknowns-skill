@@ -218,45 +218,71 @@ and targets by **regret** — not fixed weights. Announce on entry:
 
 Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed):
 
-| id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | status | phase | resolution / default |
-|----|----------|---------|--------------------|----------|--------|--------|-------|----------------------|
+| id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | **route** | status | phase | resolution / default |
+|----|----------|---------|--------------------|----------|--------|-----------|--------|-------|----------------------|
 
 - Run Technique 1 (blind-spot pass) → seed UU rows. Naming a blind spot makes it trackable.
+  For high-stakes tasks, prefer a **multi-lens sweep**: parallel scouts with distinct lenses
+  (e.g. domain-risk / engineering / statistics) — diversity catches what one lens cannot.
 - Run Technique 2/4 where taste is involved → seed UK rows.
 - Write down KK; list KU.
+- **Domain checklist hook**: after seeding, check the ledger against a domain checklist
+  derived from the user's profile, and add any missing rows. Example (quant trading):
+  funding/borrow costs · liquidation distance · capacity/liquidity · per-leg attribution ·
+  fee/slippage realism · regime dependence. A checklist row you can immediately mark
+  resolved costs one line; a missing one costs a blown-up backtest.
 - `regret = cost-if-wrong × P(wrong)` — the only prioritization signal.
+- **`route` — HOW the row gets cleared** (regret decides order; route decides instrument):
+  - `interview` — the answer exists only in the user's head (preferences, intent, context)
+  - `territory` — verifiable by reading/checking code or data (assign to a scout or a check;
+    NEVER ask the user — the no-discoverable-questions rule applies per row)
+  - `experiment` — needs a backtest/prototype/measurement to settle
+  - `audit` — needs review of an external artifact (a pipeline, a dependency, a document)
 - `status ∈ {open, probing, resolved, deferred}`; deferred REQUIRES a conservative default.
   Rows are never deleted. `phase ∈ {pre, during, post}` records when the unknown surfaced.
 
-### C1: Interview loop
+### C1: Clearing loop
 
-Repeat until the gate passes or the user exits:
+The engine is a **router, not an interview**: each round clears the highest-regret open row
+by its route. Repeat until the gate passes or the user exits:
 
 1. **Target**: the highest-regret open row (keeper picks when installed). Leave-open rule:
-   rows with regret < 1.0 get a conservative default logged and are not worth a question.
-2. **Ask** exactly one question aimed at that row, prefixed with the targeting rationale:
+   rows with regret < 1.0 get a conservative default logged and are not worth a round.
+2. **Dispatch by route**:
+   - `interview` → ask exactly one question, prefixed with the targeting rationale:
 
-```
-Round {n} | Target: {id} {unknown} | Regret: {r} ({cost}×{p}) | Why now: {one sentence}
+     ```
+     Round {n} | Target: {id} {unknown} | Regret: {r} ({cost}×{p}) | Route: interview |
+     Why now: {one sentence}
 
-{question with 2–3 concrete options + recommendation}
-```
+     {question with 2–3 concrete options + recommendation}
+     ```
 
-3. **Re-score** the row's P(wrong) from the answer; recompute regret; update the ledger.
+   - `territory` → run the check now (Grep/Read/scout); report the evidence found.
+   - `experiment` → do NOT block the loop: record the experiment spec (what to run, what
+     result clears the row) as the row's clearing action; the row stays `probing`.
+   - `audit` → likewise: name the artifact, what to look for, and the expected effort;
+     the row stays `probing` until the audit result arrives.
+3. **Re-score** the row's P(wrong) from the answer/evidence; recompute regret. Answers may
+   spawn NEW rows (quadrant + regret + route) — that chain is the ledger working correctly.
 4. **Report** after every round, in exactly this format:
 
 ```
 Round {n} complete.
 
 Ledger: {open} open | {probing} probing | {resolved} resolved | {deferred} deferred
-Top regret: {id} ({regret}) — {unknown}
+Top regret: {id} ({regret}) — {unknown} [route: {route}]
 
 Coverage gate:
 [{x| }] KK locked          [{x| }] KU resolved/deferred
 [{x| }] UK extracted       [{x| }] UU probed
 [{x| }] no open row with regret ≥ 1.0
 
-{gate passes ? "Gate PASSED — ready to build." : "Next target: {id} — {reason}"}
+{gate passes ? "Gate PASSED — ready to build."
+ : "Next target: {id} — {reason}"
+ : when only probing rows with pending experiments/audits remain:
+   "Gate BLOCKED on external work: {list of clearing actions}. No further rounds add
+    value — execute the clearing actions, then resume (the ledger is the state)."}
 ```
 
 ### C2: Gate check (blocking)
@@ -292,7 +318,13 @@ installed its verdict is final; never pass the gate out of politeness.
 - Relay agent reports; do not re-run their exploration in the main context.
 - The gate verdict belongs to `ledger-keeper`; the quiz belongs to `quiz-master`. Do not
   overrule either to be agreeable.
-- Trivial cases stay inline; agent overhead needs a payoff.
+- Trivial cases stay inline; agent overhead needs a payoff. Cost anchors: a codebase
+  blind-spot pass typically costs ~50–100k subagent tokens and a few minutes — worth it
+  when a wrong assumption forces a redesign; not worth it for a one-file question.
+- For high-stakes tasks, `blindspot-scout` may be run as a multi-lens sweep: several
+  parallel scouts, each with ONE named lens (e.g. domain-risk / engineering / statistics)
+  stated in its prompt. Merge their findings into the ledger; duplicate findings across
+  lenses are confirmation, not waste.
 </Agent_Delegation>
 
 <Examples>
@@ -374,6 +406,13 @@ destroys the user's trust that a scout is safe to run.
   pad the report.
 - **Cartographer round 10 without gate progress**: surface the top-3 stuck rows and ask
   the user to resolve, defer-with-default, or exit to lightweight techniques.
+- **Interview question times out / user is away**: the row stays `open` (no re-score
+  without an answer), mark it "re-askable", report the round with the gate suspended, and
+  deliver whatever territory/experiment routes can proceed without the user. Never invent
+  an answer on the user's behalf.
+- **Only probing rows with pending experiments/audits remain**: stop looping — further
+  rounds add no information. State the clearing actions and suspend; resume from the
+  ledger when results arrive.
 - **Any technique asked to mutate product code**: refuse within the technique; discovery
   is read-only except for its own artifacts (prototypes/, notes, ledger, reports).
 </Escalation_And_Stop_Conditions>
@@ -387,7 +426,10 @@ Lightweight lane:
 - [ ] Deviations logged at decision time, not reconstructed afterwards
 
 Cartographer lane (additionally):
-- [ ] Ledger exists with quadrant, cost, P(wrong), regret, status, phase per row
+- [ ] Ledger exists with quadrant, cost, P(wrong), regret, route, status, phase per row
+- [ ] The domain checklist hook ran at seeding; missing domain rows were added
+- [ ] Every row was cleared via its route — no territory-answerable question was asked of
+      the user, and no experiment/audit row blocked the loop with useless extra rounds
 - [ ] Every round reported the ledger summary + gate checklist in the standard format
 - [ ] Gate verdict came from ledger-keeper when installed; UU probe was not skipped
 - [ ] Deferred rows all carry conservative defaults; no rows were deleted
