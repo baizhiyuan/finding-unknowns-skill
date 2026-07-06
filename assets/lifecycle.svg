@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="arw" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0 0 L7 3 L0 6 Z" fill="#5B6172"/>
+    </marker>
+  </defs>
+  <rect width="960" height="360" rx="16" fill="#0F111A"/>
+  <text x="480" y="40" font-size="20" font-weight="700" fill="#F4F5F7" text-anchor="middle">One task, three windows to catch unknowns</text>
+
+  <!-- PRE -->
+  <rect x="40" y="72" width="270" height="230" rx="14" fill="#160F26" stroke="#8A63D2"/>
+  <text x="60" y="104" font-size="17" font-weight="700" fill="#C9B6F2">① Pre-implementation</text>
+  <g font-size="13.5" fill="#CBB9EE">
+    <text x="60" y="138">🔦 Blind-spot pass</text>
+    <text x="60" y="164">🎨 Brainstorm &amp; prototype</text>
+    <text x="60" y="190">🎤 Interview me</text>
+    <text x="60" y="216">📎 References</text>
+    <text x="60" y="242">📋 Implementation plan</text>
+  </g>
+  <text x="60" y="278" font-size="12" fill="#8A78B0" font-style="italic">Cheap now = no rework later</text>
+
+  <!-- DURING -->
+  <rect x="345" y="72" width="270" height="230" rx="14" fill="#0F1622" stroke="#5B8DEF"/>
+  <text x="365" y="104" font-size="17" font-weight="700" fill="#AFC6F6">② During</text>
+  <g font-size="13.5" fill="#B9CDF3">
+    <text x="365" y="150">📝 Implementation notes</text>
+    <text x="365" y="176" font-size="12.5" fill="#8FA6D0">log deviations as they surface,</text>
+    <text x="365" y="194" font-size="12.5" fill="#8FA6D0">pick the conservative option,</text>
+    <text x="365" y="212" font-size="12.5" fill="#8FA6D0">keep going.</text>
+  </g>
+  <text x="365" y="278" font-size="12" fill="#7387AE" font-style="italic">Unknowns still lurk mid-build</text>
+
+  <!-- POST -->
+  <rect x="650" y="72" width="270" height="230" rx="14" fill="#0F1C1A" stroke="#2DD4BF"/>
+  <text x="670" y="104" font-size="17" font-weight="700" fill="#9BEBDD">③ Post</text>
+  <g font-size="13.5" fill="#A6E6DB">
+    <text x="670" y="150">🎓 Pitch &amp; explainer</text>
+    <text x="670" y="176" font-size="12.5" fill="#7FC5BA">→ buy-in from reviewers</text>
+    <text x="670" y="206">✅ Quiz</text>
+    <text x="670" y="232" font-size="12.5" fill="#7FC5BA">→ pass before you merge</text>
+  </g>
+  <text x="670" y="278" font-size="12" fill="#5E9E93" font-style="italic">Confirm you understand it</text>
+
+  <line x1="310" y1="187" x2="345" y2="187" stroke="#5B6172" stroke-width="2" marker-end="url(#arw)"/>
+  <line x1="615" y1="187" x2="650" y2="187" stroke="#5B6172" stroke-width="2" marker-end="url(#arw)"/>
+
+  <text x="480" y="338" font-size="13" fill="#94A3B8" text-anchor="middle">Every technique is a cheap probe that converts an unknown into a known.</text>
+</svg>

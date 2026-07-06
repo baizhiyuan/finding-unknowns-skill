@@ -7,6 +7,9 @@ description: Use at the start of an ambiguous or unfamiliar task to surface the 
 
 > The map is not the territory.
 
+*Distilled from the essay "The map is not the territory" by Thariq (@trq212):*
+*https://x.com/trq212/status/2073100352921215386*
+
 The **map** is what you give Claude — the prompt, the skills, the context. The
 **territory** is where the work actually happens — the codebase, the real world, its
 constraints. The gap between them is **unknowns**. Every unknown forces Claude to guess
@@ -179,3 +182,21 @@ expert in. It shows the techniques chained:
 Every explainer, brainstorm, interview, prototype, and reference is a cheap way to find
 out what you didn't know — before it gets expensive to fix. Start your next project by
 asking Claude to help you find your unknowns.
+
+## Related skills — when to hand off
+
+This skill is a lightweight **compass**, not an execution engine. It shines at the moment
+you realize you're confused but don't yet know where. Once your unknown is located, hand off
+to the specialist when depth is warranted:
+
+- **Bulletproof, gated spec needed** → `oh-my-claudecode:deep-interview` (Socratic Q&A with
+  mathematical ambiguity gating; refuses to proceed until clarity ≥ threshold, then hands off
+  to execution). Prefer it over the lightweight "interview me" technique when stakes are high.
+- **Divergent option generation** → `superpowers:brainstorming`.
+- **A rigorous written plan** → `superpowers:writing-plans` or `oh-my-claudecode:plan`.
+- **Spec is already concrete (file paths, acceptance criteria)** → skip discovery; go to
+  `oh-my-claudecode:autopilot` / `ralph` / `team`.
+- **A light reframe is enough** → stay here.
+
+Rule of thumb: use finding-unknowns to discover *that* you're confused and *where*; use the
+heavier skills to resolve it rigorously. Don't merge them — compose them.

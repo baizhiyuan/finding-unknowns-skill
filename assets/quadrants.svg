@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="500" viewBox="0 0 760 500" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="760" height="500" rx="16" fill="#0F111A"/>
+  <text x="380" y="42" font-size="22" font-weight="700" fill="#F4F5F7" text-anchor="middle">The Four Quadrants of Unknowns</text>
+  <text x="380" y="68" font-size="14" fill="#94A3B8" text-anchor="middle">Locate where your gap lives before you pick a technique</text>
+
+  <!-- axis labels -->
+  <text x="285" y="104" font-size="13" fill="#C7CAD1" text-anchor="middle" font-weight="600">You ARE aware</text>
+  <text x="555" y="104" font-size="13" fill="#C7CAD1" text-anchor="middle" font-weight="600">You are NOT aware</text>
+  <text x="44" y="215" font-size="13" fill="#C7CAD1" text-anchor="middle" font-weight="600" transform="rotate(-90 44 215)">You KNOW it</text>
+  <text x="44" y="385" font-size="13" fill="#C7CAD1" text-anchor="middle" font-weight="600" transform="rotate(-90 44 385)">You DON'T know it</text>
+
+  <!-- known knowns -->
+  <rect x="150" y="120" width="270" height="170" rx="12" fill="#151A28" stroke="#3A3F52"/>
+  <text x="170" y="150" font-size="16" font-weight="700" fill="#E5E7EB">Known Knowns</text>
+  <text x="170" y="178" font-size="13" fill="#94A3B8">What's already in your prompt.</text>
+  <text x="170" y="262" font-size="12" fill="#6B7280">→ just state it</text>
+
+  <!-- unknown knowns -->
+  <rect x="440" y="120" width="270" height="170" rx="12" fill="#1A1526" stroke="#8A63D2"/>
+  <text x="460" y="150" font-size="16" font-weight="700" fill="#D9C7F5">Unknown Knowns</text>
+  <text x="460" y="178" font-size="13" fill="#A99BC9">"I'll know it when I see it"</text>
+  <text x="460" y="196" font-size="13" fill="#A99BC9">criteria you can't spec upfront.</text>
+  <text x="460" y="262" font-size="12" fill="#C9B6F2">→ Brainstorm · Prototype · References</text>
+
+  <!-- known unknowns -->
+  <rect x="150" y="300" width="270" height="170" rx="12" fill="#0F1B22" stroke="#2DD4BF"/>
+  <text x="170" y="330" font-size="16" font-weight="700" fill="#9BEBDD">Known Unknowns</text>
+  <text x="170" y="358" font-size="13" fill="#84B8B1">Gaps you can already name.</text>
+  <text x="170" y="442" font-size="12" fill="#5FD3C2">→ Interview · Implementation plan</text>
+
+  <!-- unknown unknowns -->
+  <rect x="440" y="300" width="270" height="170" rx="12" fill="#241521" stroke="#F59E0B"/>
+  <text x="460" y="330" font-size="16" font-weight="700" fill="#F6C572">Unknown Unknowns</text>
+  <text x="460" y="358" font-size="13" fill="#C9A46B">Blind spots you haven't</text>
+  <text x="460" y="376" font-size="13" fill="#C9A46B">even considered yet.</text>
+  <text x="460" y="442" font-size="12" fill="#F0B75A">→ Blind-spot pass · Quiz</text>
+</svg>
