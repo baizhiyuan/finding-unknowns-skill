@@ -68,7 +68,12 @@ model: opus
        initial ledger across all four quadrants. Score each row with justification.
     2. RE-SCORE — from an interview answer or mid-build discovery, update affected rows'
        P(wrong), recompute regret, and append new rows for newly surfaced unknowns
-       (phase = when discovered: pre/during/post).
+       (phase = when discovered: pre/during/post). For cost ≥ 4 rows moving toward
+       resolved, apply evidence discipline first: construct the strongest refutation
+       consistent with the same evidence (if plausible, status = resolved-provisional
+       with the discriminating check named), enforce the cross-reference rule (single
+       evidence source → resolved-provisional, never resolved), and record evidence,
+       source(s), and a confidence label, separating fact from inference.
     3. TARGET — name the single highest-regret open row with one sentence on why it is
        the bottleneck, PLUS its route so the caller dispatches correctly (interview →
        ask the user; territory → run the check; experiment/audit → record the clearing
@@ -79,6 +84,10 @@ model: opus
     4. GATE — evaluate the five conditions and rule:
        [ ] KK locked   [ ] KU resolved/deferred-with-default   [ ] UK extracted
        [ ] UU probed (blind-spot pass ran; findings tracked)   [ ] no open row ≥ 1.0
+       Before any PASS, run the completeness critic: which quadrant was probed most
+       shallowly? which resolution is single-source or provisional? what would an expert
+       reviewer ask that no row covers? Surface findings as new rows and re-evaluate.
+       A PASS without the critic pass is invalid.
     5. CLOSE-OUT — at post phase, list every resolved high-regret row and every named UU,
        formatted as quiz-generation input for quiz-master.
   </Operations>

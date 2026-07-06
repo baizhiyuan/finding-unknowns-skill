@@ -4,6 +4,27 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0]
+
+### Changed — evidence discipline adopted from deep-research patterns, validated live
+- **Adversarial verification before resolving high-cost rows (cost ≥ 4)**: construct the
+  strongest alternative explanation consistent with the same evidence; if plausible, the
+  row becomes `resolved-provisional` with a named discriminating check. (Live validation:
+  a strong RankIC result resolved "is the DL signal real?" only provisionally — leakage
+  produces the same IC; the discriminating check is the producer-pipeline audit.)
+- **Cross-reference rule**: single-source resolutions of cost ≥ 4 rows are never fully
+  resolved; two independent instruments (e.g. experiment AND audit) are required.
+- **Confidence labelling**: every resolution records evidence, source(s), and a
+  high/medium/low confidence label, with fact separated from inference.
+- **Completeness critic before gate PASS**: an explicit "what's missing?" pass (shallowest
+  quadrant, provisional resolutions, the unasked expert question) — a PASS without it is
+  invalid.
+- **Structured close-out report (C2.5)**: executive summary / findings-by-row with
+  evidence + confidence / gaps & provisional items / methodology — acknowledging gaps is a
+  deliverable, not an apology.
+- New ledger status `resolved-provisional`; `ledger-keeper` RE-SCORE and GATE operations
+  updated accordingly.
+
 ## [3.3.0]
 
 ### Changed — driven by a live field test (quant × deep-learning research task)
@@ -120,6 +141,7 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.4.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.4.0
 [3.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.3.0
 [3.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.2.0
 [3.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.1.0

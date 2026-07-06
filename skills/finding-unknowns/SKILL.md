@@ -238,8 +238,10 @@ Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed):
     NEVER ask the user — the no-discoverable-questions rule applies per row)
   - `experiment` — needs a backtest/prototype/measurement to settle
   - `audit` — needs review of an external artifact (a pipeline, a dependency, a document)
-- `status ∈ {open, probing, resolved, deferred}`; deferred REQUIRES a conservative default.
-  Rows are never deleted. `phase ∈ {pre, during, post}` records when the unknown surfaced.
+- `status ∈ {open, probing, resolved-provisional, resolved, deferred}`; deferred REQUIRES a
+  conservative default; resolved-provisional (single-source or refutable evidence, cost ≥ 4)
+  REQUIRES a named discriminating check. Rows are never deleted. `phase ∈ {pre, during,
+  post}` records when the unknown surfaced.
 
 ### C1: Clearing loop
 
@@ -265,6 +267,18 @@ by its route. Repeat until the gate passes or the user exits:
      the row stays `probing` until the audit result arrives.
 3. **Re-score** the row's P(wrong) from the answer/evidence; recompute regret. Answers may
    spawn NEW rows (quadrant + regret + route) — that chain is the ledger working correctly.
+3.5 **Verify before resolving (evidence discipline, for rows with cost ≥ 4)**:
+   - **Adversarial check**: before marking the row resolved, construct the strongest
+     alternative explanation consistent with the SAME evidence. If a plausible refutation
+     exists, the row stays `resolved-provisional` and the ledger records the one
+     discriminating check that would separate the explanations. (Example: a strong
+     backtest IC resolves "is the signal real?" only provisionally — leakage produces the
+     same IC; the discriminating check is a pipeline audit.)
+   - **Cross-reference rule**: a cost ≥ 4 resolution backed by a single evidence source is
+     `resolved-provisional`, never `resolved`. Two independent sources (different
+     instruments — e.g. an experiment AND an audit) are required for full resolution.
+   - Record per resolution: the evidence, its source(s), and a confidence label
+     (high/medium/low). Separate fact from inference explicitly.
 4. **Report** after every round, in exactly this format:
 
 ```
@@ -297,6 +311,34 @@ Implementation may start only when ALL hold — this replaces "ambiguity ≤ thr
 
 If UU was never probed the gate FAILS — that is its entire point. When `ledger-keeper` is
 installed its verdict is final; never pass the gate out of politeness.
+
+**Completeness critic (final sub-step before declaring PASS)**: when all five conditions
+appear satisfied, run one explicit "what's missing?" pass before announcing PASS — a
+domain-checklist re-scan plus three questions: which quadrant was probed most shallowly?
+which resolution is single-source or provisional? what would an expert reviewer ask that
+no row covers? Anything surfaced becomes a new row and the gate re-evaluates. A PASS
+without the critic pass is invalid.
+
+### C2.5: Close-out report (structured, Deep-Research style)
+
+When the gate passes — or when suspending on external work — deliver a structured report,
+not a prose summary:
+
+```
+# {task}: Unknowns Report
+*Rounds: {n} | Rows: {total} ({resolved}/{provisional}/{deferred}/{open}) | Gate: {verdict}*
+
+## Executive summary        — 3–5 sentences: what is now known, what still blocks
+## Findings by row          — per high-regret row: evidence, source(s), confidence
+##                            (high/med/low), fact vs inference labelled
+## Gaps & provisional items — every resolved-provisional row with its discriminating
+##                            check; every deferral with its conservative default
+## Methodology              — which routes ran (interview/territory/experiment/audit),
+##                            which agents/lenses, what was NOT examined
+```
+
+Acknowledging gaps is a deliverable, not an apology — an unlisted gap is an unlogged
+deviation waiting to happen.
 
 ### C3: During & close-out
 
