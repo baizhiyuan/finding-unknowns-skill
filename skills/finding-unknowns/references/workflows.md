@@ -200,7 +200,9 @@ invariant is structural here: implementer and verifier are always distinct agent
 SCORE-QUADRANTS is a single strongest-tier agent call (ledger-keeper) per round: one
 context reading the whole ledger scores more consistently than a panel, and it is cheap.
 Reserve fan-out for discovery (Templates 1, 3) and verification (Template 2), where
-perspective diversity pays.
+perspective diversity pays. Per the skill's model routing, this call omits `model` so it
+inherits the session's strength (Deep Research's synthesis-centre pattern); only the scout
+fan-out runs on the cheaper `blindspot-scout` tier.
 
 ---
 

@@ -60,13 +60,19 @@ the same context that implements.**
 | Agent | Model | Tools | Why isolated |
 |-------|-------|-------|--------------|
 | `blindspot-scout` | sonnet | read-only | Wide recon in its own context window; structurally cannot drift into implementing |
-| `prototype-smith` | sonnet | writes throwaway files only | Diverges into N directions in one pass; sandboxed away from the real application |
-| `ledger-keeper` | opus | ledger file only | Scoring and gate verdicts need consistency and independence — a bookkeeper that did not conduct the interview will not inflate its verdict |
-| `quiz-master` | sonnet | read-only + report | An examiner that did not author the diff probes what the author glosses over |
+| `prototype-smith` | inherit | writes throwaway files only | Diverges into N directions in one pass; sandboxed away from the real application |
+| `ledger-keeper` | inherit | ledger file only | Scoring and gate verdicts need consistency and independence — a bookkeeper that did not conduct the interview will not inflate its verdict |
+| `quiz-master` | inherit | read-only + report | An examiner that did not author the diff probes what the author glosses over |
 
-Model tiers follow the cost/judgment routing used by mature skill frameworks: the one
-agent whose output is a *verdict* (regret scores, gate pass/fail) gets the strongest
-model; recon, prototyping, and examination are standard-tier work.
+Model routing (v3.7.0) follows the cost/judgment split used by mature frameworks — OMC
+(opus for judgment, sonnet for execution, haiku for breadth) and Deep Research (strongest
+model at the synthesis centre, cheaper fan-out) — with one adaptation: the top tier is
+**`inherit`, not a pinned model.** The judgment and creative agents (scoring/gate verdict,
+divergent brainstorm, independent grading) inherit the session model so they run at the
+user's chosen strength and are never downgraded (Fable stays Fable, Opus stays Opus).
+`blindspot-scout` is the one deliberate cost tier — `sonnet` — because recon fans out in
+parallel (multi-lens sweeps run 3–5 at once) to feed a strong synthesiser; it is
+overridable to `inherit` for maximum-quality single-lens passes.
 
 Every agent declares an explicit I/O contract (inputs it needs, artifact it returns) in
 its frontmatter description and body. The skill relays agent reports; it does not re-run

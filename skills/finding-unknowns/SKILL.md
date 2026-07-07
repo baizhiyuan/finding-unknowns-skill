@@ -55,7 +55,9 @@ single uniform interview under-serves all four.
   for a first-timer
 - Discovery ends at understanding. No discovery technique slides into implementation
 - Never ask the user a question the territory can answer — explore the codebase first
-- One question at a time in any interview. No bundles
+- Interview via AskUserQuestion (clickable options). Up to 3 *independent* questions per
+  round, ordered by blast-radius/regret; never bundle *dependent* questions — where one
+  answer would change the next question's framing, ask those one at a time
 - Architecture-changing unknowns outrank trivia, always
 - "You have no significant unknowns here" is a valid and valuable result — say it plainly
   rather than manufacturing concerns
@@ -127,8 +129,10 @@ For high-stakes cases use Cartographer mode instead — it adds regret targeting
 2. Privately sort open ambiguities by blast radius: architecture-changers first (data
    model, interfaces, approach), then behavior definers (edge cases, failure modes,
    defaults), polish last — usually propose-and-move-on.
-3. Exactly one question per turn: context that makes it matter, 2–3 concrete options, your
-   recommendation. Accept "you decide" as an answer you then own.
+3. Ask via AskUserQuestion — up to 3 independent questions per round, each with context
+   that makes it matter, 2–3 concrete options, and your recommendation. Bundle only
+   questions whose answers do not depend on each other; ask a dependent follow-up in the
+   next round. Accept "you decide" as an answer you then own.
 4. Every few questions, checkpoint: restate all decisions in one tight list.
 
 Stop when remaining unknowns are cheaper to discover during implementation than to ask
@@ -294,16 +298,19 @@ the rows:
 The engine is a **router, not an interview**: each round clears the highest-regret open row
 by its route. Repeat until the gate passes or the user exits:
 
-1. **Target**: the highest-regret open row (keeper picks when installed). Leave-open rule:
+1. **Target**: the highest-regret open row (keeper picks when installed) — or, for the
+   `interview` route, the top 1–3 *independent* rows to clear in one round. Leave-open rule:
    rows with regret < 1.0 get a conservative default logged and are not worth a round.
 2. **Dispatch by route**:
-   - `interview` → ask exactly one question, prefixed with the targeting rationale:
+   - `interview` → ask via AskUserQuestion, prefixed with the targeting rationale. Ask 1–3
+     *independent* interview-route rows in one round (highest regret first); keep dependent
+     rows for later rounds:
 
      ```
-     Round {n} | Target: {id} {unknown} | Regret: {r} ({cost}×{p}) | Route: interview |
-     Why now: {one sentence}
+     Round {n} | Targets: {id(s)} {unknown(s)} | Regret: {r each} ({cost}×{p}) |
+     Route: interview | Why now: {one sentence per target}
 
-     {question with 2–3 concrete options + recommendation}
+     {1–3 questions, each with 2–3 concrete options + recommendation}
      ```
 
    - `territory` → run the check now (Grep/Read/scout); report the evidence found.
@@ -484,6 +491,28 @@ different contexts — a second agent, or the user.
   structured (schema-validated) outputs that feed the ledger mechanically. Workflow use
   requires the user's orchestration opt-in; the file's fallback ladder covers plain-Agent
   and fully-inline environments. The logic is normative; the mechanism is not.
+
+### Model routing
+
+Route by role, the way OMC does (opus for judgment/reasoning, sonnet for execution, haiku
+for cheap breadth) and Deep Research does (the strongest model synthesises at the centre;
+cheaper sub-agents fan out). The twist: the top tier is **`inherit`, not a pinned model** —
+respect the model the session is already running (Fable / Opus / Sonnet) and never downgrade
+its reasoning strength.
+
+| Role | Agent | Model | Why |
+|------|-------|-------|-----|
+| Orchestrator / task centre | (the main conversation) | the session model | your chosen strength runs the interview, routing, and synthesis |
+| Judgment — scoring & gate verdict | `ledger-keeper` | `inherit` | the verdict must be as strong as the session, not capped at opus |
+| Creative — divergent brainstorm | `prototype-smith` | `inherit` | idea quality is the skill's core value |
+| Judgment — independent grading | `quiz-master` | `inherit` | examination is judgment work |
+| Breadth — reconnaissance | `blindspot-scout` | `sonnet` (overridable to `inherit`) | fans out in parallel (multi-lens sweep = 3–5 instances); cheap breadth feeding a strong synthesiser |
+
+`inherit` uses Claude Code's native subagent model-selection: a `[1m]` session resolves to
+its base tier for subagents — reasoning strength preserved, the 1M context (which subagents
+do not need) is not. In Workflow scripts the same rule holds: scout stages carry
+`agentType: 'blindspot-scout'` (→ sonnet); scoring and verification stages omit `model` so
+they inherit the session's strength.
 </Agent_Delegation>
 
 <Examples>
@@ -524,13 +553,14 @@ the exact failure mode this mode exists to prevent.
 </Good>
 
 <Bad>
-Bundled interview questions:
+Bundling dependent questions in one prose blob:
 ```
-"What's the target audience? Also which tech stack, and how should auth work, and
-where does this deploy?"
+"What's the target audience? And given that, which tech stack, and given the stack, how
+should auth work, and where does that deploy?"
 ```
-Why bad: four questions at once produces shallow answers and makes regret re-scoring
-meaningless.
+Why bad: each answer changes the next question's framing, so asking them together forces
+shallow answers and makes regret re-scoring meaningless. Independent questions are fine to
+batch (up to 3) via AskUserQuestion's clickable options — chained ones are not.
 </Bad>
 
 <Bad>
@@ -620,6 +650,7 @@ current gate status, and continue from the highest-regret open row. Do not re-se
 | Cartographer hard cap | 20 rounds | proceed, noting residual ambiguity |
 | Ambiguity threshold | 0.25 | override via settings or --quick 0.35 / --deep 0.15 |
 | Consensus iterations | 3 | planner↔reviewer loops in Phase E option 1 |
+| Questions per round | ≤3 independent | interview-route rows batched per round (dependent ones one at a time) |
 
 ## Threshold configuration
 

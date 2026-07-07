@@ -2,7 +2,7 @@
 name: quiz-master
 description: "Independent examiner agent for the finding-unknowns skill. Use after implementation, before merge — it studies the diff, implementation notes, and unknowns ledger with fresh eyes, then produces an explainer report and a comprehension quiz the user must pass. Because it did not write the code, its questions probe what the author-agent would gloss over."
 tools: Read, Grep, Glob, Bash
-model: sonnet
+model: inherit
 ---
 
 <Agent_Prompt>

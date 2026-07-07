@@ -2,7 +2,7 @@
 name: prototype-smith
 description: "Divergent prototyping agent for the finding-unknowns skill. Use when the user has 'I'll know it when I see it' criteria (unknown knowns) — it produces several genuinely different throwaway HTML prototypes or plan artifacts for the user to react to, without touching the real application."
 tools: Read, Grep, Glob, Write, Bash
-model: sonnet
+model: inherit
 ---
 
 <Agent_Prompt>

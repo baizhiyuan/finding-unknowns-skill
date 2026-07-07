@@ -77,9 +77,9 @@ for the full design reference.
 | Agent | Model | Backs | Execution profile |
 |-------|-------|-------|-------------------|
 | `blindspot-scout` | sonnet | Blind-spot pass, References | Read-only reconnaissance; explores in its own context window and structurally cannot start implementing |
-| `prototype-smith` | sonnet | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; produces N genuinely divergent directions in one pass |
-| `ledger-keeper` | opus | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret, scores per-quadrant clarity into a weighted ambiguity figure, and rules on the dual coverage+ambiguity gate without grading its own work — verdicts get the strongest model |
-| `quiz-master` | sonnet | Quiz, Pitch & explainer | Fresh-eyes examiner that did not author the change; probes what the author would gloss over |
+| `prototype-smith` | inherit | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; produces N genuinely divergent directions in one pass |
+| `ledger-keeper` | inherit | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret, scores per-quadrant clarity into a weighted ambiguity figure, and rules on the dual coverage+ambiguity gate without grading its own work |
+| `quiz-master` | inherit | Quiz, Pitch & explainer | Fresh-eyes examiner that did not author the change; probes what the author would gloss over |
 
 The separation follows one principle: **discovery, scoring, and examination should not be
 performed by the same context that implements.** A scout that cannot edit files cannot
@@ -204,9 +204,17 @@ which value is in effect.
 | `/cartographer --deep <task>` | 0.15 | high-stakes, hard-to-reverse work |
 
 **Other defaults** (prototype directions, the regret question bar, quiz size and rounds,
-the Cartographer round caps) are documented in the **Defaults** table inside
-[`SKILL.md`](skills/finding-unknowns/SKILL.md) and can be overridden by telling the skill
-in plain language.
+the Cartographer round caps, up to 3 independent interview questions per round) are
+documented in the **Defaults** table inside [`SKILL.md`](skills/finding-unknowns/SKILL.md)
+and can be overridden by telling the skill in plain language.
+
+**Model routing.** Following OMC (opus for judgment, sonnet for execution, haiku for
+breadth) and Deep Research (strongest model at the synthesis centre, cheaper fan-out), the
+judgment and creative agents — `ledger-keeper`, `prototype-smith`, `quiz-master` — use
+`model: inherit`: they run at the model your session is already using and are never
+downgraded (Fable stays Fable, Opus stays Opus). `blindspot-scout` stays on `sonnet`
+because reconnaissance fans out in parallel; set it to `inherit` in its agent frontmatter
+for maximum-quality single-lens passes.
 
 ## Usage
 

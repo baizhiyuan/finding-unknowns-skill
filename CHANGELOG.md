@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0]
+
+### Changed — inheritance-aware model routing + batched interview
+- **Model routing rebuilt around `inherit`.** The judgment and creative agents —
+  `ledger-keeper` (scoring + gate verdict), `prototype-smith` (divergent brainstorm), and
+  `quiz-master` (independent grading) — move from pinned tiers (`opus`/`sonnet`) to
+  `model: inherit`, so they run at the session's own strength and are never downgraded
+  (Fable stays Fable, Opus stays Opus). `blindspot-scout` stays `sonnet` — the one
+  deliberate cost tier, because recon fans out in parallel — and is documented as
+  overridable to `inherit`. Grounded in OMC's role tiers (opus=judgment, sonnet=execution,
+  haiku=breadth) and Deep Research's "strongest model at the synthesis centre, cheaper
+  fan-out" pattern; the adaptation is that the top tier is the inherited session model, not
+  a hardcoded one — respecting Claude Code's native model-selection.
+- **Interview is no longer one-question-at-a-time.** Cartographer's `interview` route and
+  Technique 3 now ask via AskUserQuestion with up to **3 independent** questions per round
+  (regret/blast-radius ordered), while still forbidding the bundling of *dependent*
+  questions (where one answer changes the next). Per-round quadrant ambiguity is unchanged.
+  `ledger-keeper`'s TARGET may return a 1–3 independent batch; the round template, the
+  Defaults table, and the Bad example were updated accordingly.
+- Docs (README + ARCHITECTURE) gained a Model-routing section; the three translated READMEs
+  were regenerated to match.
+
 ## [3.6.0]
 
 ### Added — quadrant ambiguity scoring, mandatory interactive loop, cross-validated execution bridge
@@ -199,6 +221,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.7.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.7.0
 [3.6.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.6.0
 [3.5.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.5.0
 [3.4.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.4.0
