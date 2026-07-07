@@ -1,4 +1,4 @@
-<p align="center"><strong>English</strong> | <a href="README.zh.md">简体中文</a> | <a href="README.ja.md">日本語</a> | <a href="README.ko.md">한국어</a></p>
+<p align="center"><strong>English</strong> | <a href="README.zh.md">简体中文</a></p>
 
 <p align="center">
   <img src="assets/hero.svg" alt="finding-unknowns — a Claude Code skill" width="100%">
@@ -52,7 +52,7 @@ task lifecycle, plus an optional rigorous mode ("Cartographer mode") for high-st
 - **Pitch and quiz** — a review artifact for buy-in, and a comprehension check before merge.
 - **Cartographer mode** — an ambiguity-scored, coverage-gated, regret-weighted protocol backed by a persistent ledger, ending in an approval-gated execution bridge.
 - **Companion agents** — four specialists (`blindspot-scout`, `prototype-smith`,
-  `ledger-keeper`, `quiz-master`) the skill delegates to when depth pays.
+  `ledger-keeper`, `quiz-master`) to which the skill delegates when additional depth is warranted.
 
 ## Architecture
 
@@ -100,9 +100,9 @@ Locate where an unknown lives; the quadrant indicates which technique to use.
   Skill tool (or `~/.claude/skills/`); the slash commands need the plugin or a manual copy.
 - **No runtime, no dependencies.** The skill, agents, and commands are plain Markdown.
   Nothing is compiled or installed beyond copying files.
-- **Optional enhancements, all degrade gracefully:** the four companion agents (delegated
-  to when depth pays), and the Workflow tool for dynamic-workflow orchestration — every
-  technique also runs fully inline with neither installed.
+- **Optional enhancements, all degrade gracefully:** the four companion agents (used when
+  additional depth is warranted), and the Workflow tool for dynamic-workflow orchestration —
+  every technique also runs fully inline with neither installed.
 - **`bash`** for `install.sh` (Option B). Options A, C, and D need no shell.
 
 ## Installation
@@ -135,8 +135,8 @@ cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/ref
 
 ## Updating
 
-To pull the latest release (currently **v3.6.0**) into an existing installation, use the
-path that matches how you installed.
+To update an existing installation to the latest release (**v3.7.0**), follow the procedure
+matching the original installation method.
 
 **Updating Option A — plugin marketplace:**
 
@@ -167,13 +167,12 @@ cp agents/*.md   ~/.claude/agents/
 cp commands/*.md ~/.claude/commands/
 ```
 
-After updating, verify the installed version matches the release (this grep is the
-post-update sanity check — the lightweight equivalent of a `doctor` command):
+After updating, verify that the installed version matches the release:
 
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
-  || grep -c 'Cross-validated execution bridge' ~/.claude/skills/finding-unknowns/SKILL.md
-# expect: 3.6.0 (plugin) — or a non-zero match count confirming the v3.6.0 Phase E section
+  || grep -c '### Model routing' ~/.claude/skills/finding-unknowns/SKILL.md
+# expect: 3.7.0 (plugin) — or a non-zero count confirming the v3.7.0 Model routing section
 ```
 
 ## Configuration
@@ -192,8 +191,7 @@ Override it per project or per user in `.claude/settings.json` (project override
 }
 ```
 
-Cartographer announces the resolved threshold and its source on entry, so you always see
-which value is in effect.
+On entry, Cartographer reports the resolved threshold and its source.
 
 **Depth presets.** A flag on the command overrides any settings value:
 
@@ -204,17 +202,18 @@ which value is in effect.
 | `/cartographer --deep <task>` | 0.15 | high-stakes, hard-to-reverse work |
 
 **Other defaults** (prototype directions, the regret question bar, quiz size and rounds,
-the Cartographer round caps, up to 3 independent interview questions per round) are
+the Cartographer round caps, up to three independent interview questions per round) are
 documented in the **Defaults** table inside [`SKILL.md`](skills/finding-unknowns/SKILL.md)
-and can be overridden by telling the skill in plain language.
+and may be overridden through a natural-language instruction to the skill.
 
-**Model routing.** Following OMC (opus for judgment, sonnet for execution, haiku for
-breadth) and Deep Research (strongest model at the synthesis centre, cheaper fan-out), the
-judgment and creative agents — `ledger-keeper`, `prototype-smith`, `quiz-master` — use
-`model: inherit`: they run at the model your session is already using and are never
-downgraded (Fable stays Fable, Opus stays Opus). `blindspot-scout` stays on `sonnet`
-because reconnaissance fans out in parallel; set it to `inherit` in its agent frontmatter
-for maximum-quality single-lens passes.
+**Model routing.** The judgment and creative agents — `ledger-keeper`, `prototype-smith`,
+and `quiz-master` — are declared with `model: inherit`, so they run at the session's active
+model rather than a fixed tier. `blindspot-scout` is pinned to `sonnet`, since
+reconnaissance runs as a parallel fan-out; it may be set to `inherit` in its frontmatter for
+single-lens passes. The scheme follows the role-based convention of OMC (strongest model for
+judgment, mid-tier for execution, lowest for breadth) and Deep Research (strongest model at
+the synthesis centre, cheaper models for fan-out). See
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the rationale.
 
 ## Usage
 
@@ -342,23 +341,21 @@ finding-unknowns-skill/
 │           └── workflows.md  Workflow-orchestration templates (multi-lens sweep, verify panel, UU loop)
 ├── agents/
 │   ├── blindspot-scout.md  Read-only reconnaissance (sonnet)
-│   ├── prototype-smith.md  Divergent throwaway prototyping (sonnet)
-│   ├── ledger-keeper.md    Regret scoring and coverage-gate verdicts (opus)
-│   └── quiz-master.md      Independent examiner (sonnet)
+│   ├── prototype-smith.md  Divergent throwaway prototyping (inherit)
+│   ├── ledger-keeper.md    Regret scoring and coverage-gate verdicts (inherit)
+│   └── quiz-master.md      Independent examiner (inherit)
 ├── docs/
 │   └── ARCHITECTURE.md     Design reference: layers, contracts, principles
 ├── assets/                 README diagrams (SVG)
 ├── AGENTS.md               Repository guide for coding agents and contributors
 ├── EXAMPLES.md             Copy-paste, end-to-end prompts
 ├── CLAUDE.md               Passive single-file drop-in
-├── install.sh              Installer (skill + agents + commands)
+├── install.sh              Installer (skill + references + agents + commands)
 ├── CONTRIBUTING.md         Contribution guidelines
 ├── CHANGELOG.md            Release history
 ├── LICENSE                 MIT
 ├── README.md               English (canonical)
-├── README.zh.md            简体中文 translation
-├── README.ja.md            日本語 translation
-└── README.ko.md            한국어 translation
+└── README.zh.md            简体中文 translation
 ```
 
 ## Contributing
