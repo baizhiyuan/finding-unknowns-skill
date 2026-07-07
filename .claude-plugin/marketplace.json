@@ -5,7 +5,7 @@
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "Discover your unknowns before they get expensive: blind-spot pass, brainstorm, interview, references, plan, notes, pitch, quiz — plus Cartographer mode (coverage gate + unknowns ledger + regret weighting)."
+      "description": "Discover your unknowns before they get expensive: blind-spot pass, brainstorm, interview, references, plan, notes, pitch, quiz — plus Cartographer mode (coverage gate + unknowns ledger + regret weighting + per-quadrant ambiguity scoring + cross-validated execution bridge)."
     }
   ]
 }

@@ -1,6 +1,6 @@
 ---
 name: finding-unknowns
-description: "Use at the start of an ambiguous or unfamiliar task to surface the user's unknowns (unknown unknowns, unknown knowns) before, during, and after implementation — via blind-spot pass, brainstorm/prototype, interview, references, implementation plan, implementation notes, pitch, and quiz. For high-stakes work, escalate to Cartographer mode — a rigorous, quadrant-coverage-gated, regret-weighted interview backed by a lifecycle-persistent unknowns ledger. Invoke manually when scope is unclear or the domain/codebase is new."
+description: "Use at the start of an ambiguous or unfamiliar task to surface the user's unknowns (unknown unknowns, unknown knowns) before, during, and after implementation — via blind-spot pass, brainstorm/prototype, interview, references, implementation plan, implementation notes, pitch, and quiz. For high-stakes work, escalate to Cartographer mode — an interactive, per-quadrant ambiguity-scored, quadrant-coverage-gated, regret-weighted protocol backed by a lifecycle-persistent unknowns ledger, ending in a cross-validated, approval-gated execution bridge. Invoke manually when scope is unclear or the domain/codebase is new."
 ---
 
 # Finding Unknowns
@@ -32,8 +32,9 @@ the territory is unmapped.
 <Do_Not_Use_When>
 - The request is specific and trivial (typo, one-liner, obvious bug fix) — execute directly
 - The user has a detailed spec with file paths and acceptance criteria — go build it
-- The user wants a mathematically gated, resumable requirements spec with automatic handoff
-  into execution pipelines — use `oh-my-claudecode:deep-interview` instead
+- The user wants ontology/entity-convergence tracking or OMC-native state/pipeline
+  machinery (autopilot/ralph/team handoff) — use `oh-my-claudecode:deep-interview` instead;
+  Cartographer covers ambiguity gating and an approval-gated bridge without that runtime
 - The user explicitly says "just do it" — respect that; offer one sentence of risk if
   material, then proceed
 </Do_Not_Use_When>
@@ -207,16 +208,56 @@ unexplained diff hunk absent from notes/ledger is an **unlogged deviation** — 
 
 ## Phase C: Cartographer mode (high-stakes escalation)
 
-Gates on **coverage** (all four quadrants probed), persists across the **whole lifecycle**,
-and targets by **regret** — not fixed weights. Announce on entry:
+Gates on **coverage** (all four quadrants probed) AND **clarity** (per-quadrant ambiguity
+scored every round, weighted total at or below threshold), persists across the **whole
+lifecycle**, and orders work by **regret**. Two axes, two jobs: regret prices *rows*
+(which unknown to clear next); ambiguity scores *quadrants* (whether the user can see how
+clear the map actually is). The interactive loop is mandatory — scores are shown after
+every round so the user can steer instead of discovering drift at the end.
 
-> Entering Cartographer mode. I will maintain unknowns-ledger.md, interview you one
-> question at a time targeting the highest-regret unknown, and will not proceed to
-> implementation until the coverage gate passes.
+**Resolve the clarity threshold first (blocking).** Read
+`findingUnknowns.ambiguityThreshold` from `./.claude/settings.json` (project) then
+`~/.claude/settings.json` (user); project wins; default **0.25**. Presets when invoked
+with a depth flag: `--quick` 0.35 · `--standard` 0.25 · `--deep` 0.15. Announce on entry,
+first line exactly:
+
+> Clarity threshold: {X}% (source: {project settings | user settings | default | flag})
+>
+> Entering Cartographer mode. I will maintain unknowns-ledger.md, clear the highest-regret
+> unknown each round by its route, score all four quadrants' clarity after every round, and
+> will not proceed to implementation until the coverage gate passes AND weighted ambiguity
+> is at or below {X}%.
+
+**Round 0 — topology gate (one question, before any scoring).** Enumerate the task's 1–6
+top-level components (outcomes that can succeed or fail independently — not sub-features)
+and confirm via one question: "I read this as N components: … Add, remove, merge, split,
+or defer any?" Lock the confirmed list into the ledger header. Quadrant scores are then
+tracked per component where components differ materially; the reported score for a
+quadrant is its weakest active component's score — depth-first clarity on the
+best-described component must not hide sibling fog. Deferrals need a user-confirmed
+reason and are excluded from ambiguity math but stay listed.
+
+**Quadrant clarity model.** Each quadrant scores 0.0–1.0 with a one-clause justification
+and a named gap when below 0.9:
+
+| Quadrant | Scores high when |
+|----------|------------------|
+| KK | stated knowns are written down, internally consistent, and confirmed against the territory |
+| KU | known gaps are enumerated, each with a route and a resolution or logged default |
+| UK | taste/recognition criteria have been elicited — prototype reactions or reference extractions converted into explicit criteria |
+| UU | blind-spot probes ran and are going dry; findings are tracked rows |
+
+`ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)` — UU carries the most weight
+because unprobed blind spots are the failure mode this skill exists to prevent. Scoring is
+`ledger-keeper`'s SCORE-QUADRANTS operation when installed; inline otherwise. Consistency
+beats flair: justify from ledger evidence, never from how productive the round felt.
 
 ### C0: Seed the ledger
 
-Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed):
+Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed). The file opens
+with a header block — clarity threshold + source, the Round 0 locked topology (components,
+statuses, deferral reasons), and a per-round quadrant score history table — followed by
+the rows:
 
 | id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | **route** | status | phase | resolution / default |
 |----|----------|---------|--------------------|----------|--------|-----------|--------|-------|----------------------|
@@ -288,6 +329,18 @@ by its route. Repeat until the gate passes or the user exits:
      instruments — e.g. an experiment AND an audit) are required for full resolution.
    - Record per resolution: the evidence, its source(s), and a confidence label
      (high/medium/low). Separate fact from inference explicitly.
+3.8 **Score the quadrants** (every round, no exceptions): re-score all four quadrants per
+   the clarity model in the Phase C header (`ledger-keeper` SCORE-QUADRANTS when
+   installed). Append the scores to the ledger's score history. The next round's target
+   is the highest-regret open row, tie-broken toward the weakest quadrant.
+3.9 **Challenge modes** (each used exactly once, then back to normal clearing):
+   - Round 4+, **Contrarian**: the next interview question challenges a core assumption —
+     "what if the opposite were true / this constraint doesn't exist?"
+   - Round 6+, **Simplifier**: probe removable complexity — "what's the simplest version
+     that would still be valuable?"
+   - Round 8+ if ambiguity still > 0.30, **Ontologist**: "what IS this, really — which
+     component is the core and which are supporting views?" (may revise the Round 0
+     topology; re-lock it if so)
 4. **Report** after every round, in exactly this format:
 
 ```
@@ -296,10 +349,19 @@ Round {n} complete.
 Ledger: {open} open | {probing} probing | {resolved} resolved | {deferred} deferred
 Top regret: {id} ({regret}) — {unknown} [route: {route}]
 
+| Quadrant | Score | Weight | Gap |
+|----------|-------|--------|-----|
+| KK | {s} | 0.20 | {gap or "clear"} |
+| KU | {s} | 0.25 | {gap or "clear"} |
+| UK | {s} | 0.25 | {gap or "clear"} |
+| UU | {s} | 0.30 | {gap or "clear"} |
+| **Ambiguity** | **{a}%** | threshold {X}% | {weakest quadrant × component + why it's next} |
+
 Coverage gate:
 [{x| }] KK locked          [{x| }] KU resolved/deferred
 [{x| }] UK extracted       [{x| }] UU probed
 [{x| }] no open row with regret ≥ 1.0
+[{x| }] ambiguity {a}% ≤ threshold {X}%
 
 {gate passes ? "Gate PASSED — ready to build."
  : "Next target: {id} — {reason}"
@@ -308,15 +370,23 @@ Coverage gate:
     value — execute the clearing actions, then resume (the ledger is the state)."}
 ```
 
-### C2: Gate check (blocking)
+### C2: Gate check (blocking, dual-axis)
 
-Implementation may start only when ALL hold — this replaces "ambiguity ≤ threshold":
+Implementation may start only when ALL hold — coverage AND clarity:
 
 - [ ] KK locked — knowns written down
 - [ ] KU resolved or deferred-with-default
 - [ ] UK extracted — at least one brainstorm/prototype/reference ran
 - [ ] UU probed — at least one blind-spot pass ran; findings are tracked rows
 - [ ] No open row has regret ≥ 1.0
+- [ ] Weighted ambiguity ≤ threshold (per-quadrant scores from the latest round)
+
+The two axes catch different failures: coverage catches "we never looked there";
+ambiguity catches "we looked, but the user still can't tell how clear it is". Passing one
+does not imply the other. Round limits: soft warning at round 10 (show scores, offer
+continue/proceed-with-risk), hard cap at round 20 (proceed noting the residual ambiguity).
+Early exit from round 3+ is allowed — display the current score table and open gaps once,
+transparently, then respect the exit.
 
 If UU was never probed the gate FAILS — that is its entire point. When `ledger-keeper` is
 installed its verdict is final; never pass the gate out of politeness.
@@ -351,6 +421,35 @@ not a prose summary:
 
 Acknowledging gaps is a deliverable, not an apology — an unlisted gap is an unlogged
 deviation waiting to happen.
+
+**Crystallized spec.** On gate PASS, also write `unknowns-spec-{slug}.md` next to the
+ledger — the handoff artifact for Phase E: goal (one sentence, covering every active
+topology component), constraints, non-goals, testable acceptance criteria, the final
+quadrant clarity table (scores + ambiguity % + threshold + source), an assumptions
+exposed → resolved table, and a ledger snapshot reference. The spec is marked
+**pending approval** — writing it grants no execution permission.
+
+### E: Cross-validated execution bridge (approval-gated)
+
+Never auto-execute. After the spec, ask ONE question — "Spec ready (ambiguity {a}%).
+How to proceed?" — with these options:
+
+1. **Consensus-refine, then separate execution approval (recommended).** A planner-role
+   agent drafts the implementation plan from spec + ledger; an INDEPENDENT reviewer-role
+   agent (architect/critic framing: "find what breaks this plan against the spec and the
+   ledger's deferred defaults") reviews it; loop until the reviewer approves, ≤3
+   iterations. Then STOP with the consensus plan marked pending approval — execution is a
+   separate explicit yes.
+2. **Execute via Workflow orchestration** (requires the user's orchestration opt-in): run
+   `fu-execute-verified` from `references/workflows.md` — tasks pipeline through an
+   implement agent and an independent refute-framed verify agent; a task closes only on
+   its verifier's pass. Fallback ladder as ever: Workflow → parallel Agent calls → inline
+   implement-then-independent-review.
+3. **Refine further** — return to the C1 loop.
+
+Normative invariant (extends "separation of judgment"): **the context that authored a
+spec or plan never self-approves its execution.** Author and approver are always
+different contexts — a second agent, or the user.
 
 ### C3: During & close-out
 
@@ -493,6 +592,12 @@ Cartographer lane (additionally):
 - [ ] Every round reported the ledger summary + gate checklist in the standard format
 - [ ] Gate verdict came from ledger-keeper when installed; UU probe was not skipped
 - [ ] Deferred rows all carry conservative defaults; no rows were deleted
+- [ ] First announcement line stated the clarity threshold and its source
+- [ ] Round 0 topology was confirmed by the user before any quadrant scoring
+- [ ] Every round's report included the four-quadrant score table with weighted ambiguity
+- [ ] Gate checked both axes: coverage conditions AND ambiguity ≤ threshold
+- [ ] On PASS, unknowns-spec-{slug}.md was written and marked pending approval
+- [ ] Execution bridge asked before any execution; plan author ≠ plan approver throughout
 - [ ] Quiz was generated from the ledger; merge recommendation followed the pass rule
 </Final_Checklist>
 
@@ -511,14 +616,28 @@ current gate status, and continue from the highest-regret open row. Do not re-se
 | Regret question bar | 1.0 | rows below this get defaults, not questions |
 | Quiz size | 5–8 | questions per round |
 | Quiz rounds | 2 | before recommending simplify/split |
-| Cartographer soft cap | 10 rounds | then surface stuck rows |
+| Cartographer soft cap | 10 rounds | then surface stuck rows / show scores |
+| Cartographer hard cap | 20 rounds | proceed, noting residual ambiguity |
+| Ambiguity threshold | 0.25 | override via settings or --quick 0.35 / --deep 0.15 |
+| Consensus iterations | 3 | planner↔reviewer loops in Phase E option 1 |
+
+## Threshold configuration
+
+Optional, read at Cartographer entry (project overrides user; degrade silently to the
+default — no OMC runtime required):
+
+```json
+{ "findingUnknowns": { "ambiguityThreshold": 0.25 } }
+```
 
 ## Relationship to heavier tooling
 
-- Want mathematical ambiguity thresholds, topology/ontology tracking, resumable spec
-  state, and an execution bridge into autopilot/ralph/team → use
-  `oh-my-claudecode:deep-interview`. Cartographer trades that machinery for quadrant
-  coverage and lifecycle persistence; they are complementary, not competing.
+- Cartographer's ambiguity gating, topology gate, and challenge modes are adapted from
+  `oh-my-claudecode:deep-interview` (itself Ouroboros-inspired), re-based on the four
+  quadrants. Deep-interview still wins when you want ontology/entity-convergence tracking,
+  OMC state persistence, or automatic handoff into autopilot/ralph/team; Cartographer adds
+  what deep-interview lacks — quadrant coverage, regret-priced rows, route-typed clearing,
+  and lifecycle persistence through build and review. Complementary, not competing.
 - Divergent option generation as a discipline → `superpowers:brainstorming`. Rigorous
   written plans → `superpowers:writing-plans` / `oh-my-claudecode:plan`. Spec already
   concrete → skip discovery and execute.

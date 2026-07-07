@@ -4,6 +4,41 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0]
+
+### Added — quadrant ambiguity scoring, mandatory interactive loop, cross-validated execution bridge
+Driven by a second field test: discovery was strong, but the user could not see or steer
+the model's certainty — work drifted into a fuzzy zone. The cure is deep-interview's
+transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
+
+- **Per-quadrant clarity scores (0.0–1.0)** with justification + named gap, re-scored
+  every round; weighted ambiguity `1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)` (UU
+  heaviest). Threshold default 0.25, configurable via settings or
+  `--quick 0.35 / --standard 0.25 / --deep 0.15`; announced with its source as the first
+  line on Cartographer entry.
+- **Round 0 topology gate**: 1–6 top-level components confirmed with the user before any
+  scoring; quadrant scores report the weakest active component so one well-described
+  component cannot hide sibling fog.
+- **The interactive loop is mandatory in Cartographer mode**: every round ends with the
+  four-quadrant score table + weighted ambiguity + weakest-target rationale, so the user
+  steers instead of discovering drift at the end. Route discipline is unchanged — only
+  interview-route rows become user questions.
+- **Challenge modes** (Contrarian R4 / Simplifier R6 / Ontologist R8, once each).
+- **Dual gate**: coverage conditions AND ambiguity ≤ threshold; round limits (soft 10,
+  hard 20, early exit from R3 with transparent risk display).
+- **Crystallized spec** `unknowns-spec-{slug}.md` on gate PASS, marked pending approval.
+- **Phase E — cross-validated execution bridge** (approval-gated, never auto-executes):
+  consensus-refine (independent planner + reviewer agents, ≤3 iterations, separate
+  execution approval) or `fu-execute-verified` — a new Workflow template pairing every
+  implementer with a refute-framed independent verifier plus one repair round. Normative
+  invariant: the context that authored a spec/plan never self-approves its execution.
+- `ledger-keeper` gains SCORE-QUADRANTS (single-call scoring, ledger-evidence-only
+  justifications, "score drift" named as a failure mode); GATE becomes six conditions.
+
+### Deferred (consciously)
+- deep-interview's ontology/entity-convergence tracking — the topology gate covers the
+  convergence need at far lower complexity; revisit if component drift shows up in tests.
+
 ## [3.5.0]
 
 ### Added — dynamic-workflow orchestration (Workflow tool integration)
@@ -164,6 +199,8 @@ All notable changes to this project are documented in this file. The format is b
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[3.6.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.6.0
+[3.5.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.5.0
 [3.4.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.4.0
 [3.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.3.0
 [3.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.2.0

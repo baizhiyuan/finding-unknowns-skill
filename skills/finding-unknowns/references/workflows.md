@@ -150,6 +150,58 @@ for (let i = 0; i < ROUNDS.length && dry < 2; i++) {
 return { fresh, dryStop: dry >= 2 }
 ```
 
+## Template 4 — Cross-validated execution (backs Phase E option 2)
+
+Approved tasks pipeline through an implementer and an INDEPENDENT refute-framed verifier;
+a task closes only on its verifier's pass. Failed tasks return with the verifier's
+objections for exactly one repair round. Only run this after the user has explicitly
+approved execution — the template implements, unlike everything else in this skill.
+
+```javascript
+export const meta = {
+  name: 'fu-execute-verified',
+  description: 'Implement approved tasks with independent per-task verification',
+  phases: [{ title: 'Implement' }, { title: 'Verify' }, { title: 'Repair' }],
+}
+// args: { specPath, tasks: [{ id, description, acceptance }] }
+const VERDICT = { type: 'object', required: ['pass', 'objections'],
+  properties: { pass: { type: 'boolean' }, objections: { type: 'array', items: { type: 'string' } } } }
+const implementPrompt = t =>
+  `Implement task ${t.id} from the spec at ${args.specPath}: ${t.description}. ` +
+  `Acceptance criteria: ${t.acceptance}. Honor the spec's constraints, non-goals, and the ` +
+  `ledger's deferred defaults. Return a summary of files changed and how each criterion is met.`
+const verifyPrompt = (t, summary) =>
+  `You did NOT write this change. Task ${t.id}: ${t.description}. Acceptance: ${t.acceptance}. ` +
+  `Implementer's summary: ${summary}. Read the actual changes and try to FAIL them: unmet ` +
+  `criteria, spec violations, silent scope creep, broken neighbors. Default pass=false if uncertain.`
+const results = await pipeline(
+  args.tasks,
+  t => agent(implementPrompt(t), { label: `impl:${t.id}`, phase: 'Implement' }),
+  async (summary, t) => {
+    let v = await agent(verifyPrompt(t, summary), { label: `verify:${t.id}`, phase: 'Verify', schema: VERDICT })
+    if (v && !v.pass) {
+      const fix = await agent(implementPrompt(t) +
+        ` A verifier rejected the first attempt with: ${v.objections.join('; ')}. Fix exactly these.`,
+        { label: `repair:${t.id}`, phase: 'Repair' })
+      v = await agent(verifyPrompt(t, fix), { label: `reverify:${t.id}`, phase: 'Verify', schema: VERDICT })
+    }
+    return { id: t.id, pass: !!v?.pass, objections: v?.objections ?? ['verifier unavailable'] }
+  })
+return { results: results.filter(Boolean),
+  open: results.filter(Boolean).filter(r => !r.pass) }
+```
+
+Tasks still failing after the repair round go back to the user with the objections — they
+are open ledger rows, not things to force through. The author-never-self-approves
+invariant is structural here: implementer and verifier are always distinct agent contexts.
+
+## Note — quadrant scoring is NOT a fan-out
+
+SCORE-QUADRANTS is a single strongest-tier agent call (ledger-keeper) per round: one
+context reading the whole ledger scores more consistently than a panel, and it is cheap.
+Reserve fan-out for discovery (Templates 1, 3) and verification (Template 2), where
+perspective diversity pays.
+
 ---
 
 ## Fallback ladder

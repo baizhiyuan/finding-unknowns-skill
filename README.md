@@ -48,7 +48,7 @@ task lifecycle, plus an optional rigorous mode ("Cartographer mode") for high-st
 - **Implementation plan** — lead with the decisions most likely to change.
 - **Implementation notes** — record deviations during the build for later review.
 - **Pitch and quiz** — a review artifact for buy-in, and a comprehension check before merge.
-- **Cartographer mode** — a gated, regret-weighted interview backed by a persistent ledger.
+- **Cartographer mode** — an ambiguity-scored, coverage-gated, regret-weighted protocol backed by a persistent ledger, ending in an approval-gated execution bridge.
 - **Companion agents** — four specialists (`blindspot-scout`, `prototype-smith`,
   `ledger-keeper`, `quiz-master`) the skill delegates to when depth pays.
 
@@ -76,7 +76,7 @@ for the full design reference.
 |-------|-------|-------|-------------------|
 | `blindspot-scout` | sonnet | Blind-spot pass, References | Read-only reconnaissance; explores in its own context window and structurally cannot start implementing |
 | `prototype-smith` | sonnet | Brainstorm & prototype, Implementation plan | Sandboxed to new throwaway files; produces N genuinely divergent directions in one pass |
-| `ledger-keeper` | opus | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret and rules on the coverage gate without grading its own work — verdicts get the strongest model |
+| `ledger-keeper` | opus | Cartographer mode | Independent bookkeeper for the unknowns ledger; scores regret, scores per-quadrant clarity into a weighted ambiguity figure, and rules on the dual coverage+ambiguity gate without grading its own work — verdicts get the strongest model |
 | `quiz-master` | sonnet | Quiz, Pitch & explainer | Fresh-eyes examiner that did not author the change; probes what the author would gloss over |
 
 The separation follows one principle: **discovery, scoring, and examination should not be
@@ -133,7 +133,7 @@ With the plugin installed, slash commands provide direct entry points:
 |---------|-----------|
 | `/finding-unknowns <task>` | Phase 0 — quadrant routing, then the matching technique |
 | `/blindspot <goal or area>` | Blind-spot pass (reconnaissance only) |
-| `/cartographer <task>` | Cartographer mode — ledger, interview loop, coverage gate |
+| `/cartographer <task>` | Cartographer mode — ledger, score-gated clearing loop, dual gate, execution bridge |
 | `/change-quiz [diff range]` | Change report + must-pass comprehension quiz |
 
 Individual techniques can also be requested in plain language, for example: _"do a
@@ -161,8 +161,11 @@ Full prompts for each technique are documented in
 The eight techniques are lightweight probes. Cartographer mode is the rigorous escalation for
 high-stakes work: a gated interview that does not permit implementation until the problem space
 is adequately mapped. It is inspired by the Deep Interview skill in
-[oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode), and re-optimised along
-three axes that a clarity-scoring interview does not address.
+[oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode): since v3.6.0 it
+*adopts* Deep Interview's transparency machinery — per-quadrant clarity scores rolled into
+a weighted ambiguity figure with a configurable threshold, a Round 0 topology confirmation,
+and challenge modes — while keeping the axes a clarity-scoring interview alone does not
+address.
 
 <p align="center">
   <img src="assets/cartographer.svg" alt="Cartographer mode: coverage gate, unknowns ledger, regret-weighted targeting" width="96%">
@@ -170,23 +173,29 @@ three axes that a clarity-scoring interview does not address.
 
 | Axis              | Deep Interview                          | Cartographer mode                                                        |
 |-------------------|-----------------------------------------|--------------------------------------------------------------------------|
-| Gate criterion    | Ambiguity ≤ threshold (known dimensions) | Coverage — all four quadrants probed, including a required blind-spot pass |
-| Blind spots (UU)  | Not modelled                            | First-class; expanding the map is the purpose of the gate                |
+| Gate criterion    | Ambiguity ≤ threshold (goal/constraint/criteria dimensions) | Dual: coverage (all four quadrants probed, blind-spot pass required) AND per-quadrant weighted ambiguity ≤ threshold |
+| Blind spots (UU)  | Not modelled                            | First-class; heaviest weight (0.30) in the ambiguity formula             |
 | Lifecycle         | Ends at the specification               | One ledger, seeded pre, appended during, closed post                     |
-| Prioritisation    | Fixed dimension weights                 | Regret = cost-if-wrong × P(wrong); items below 1.0 are deferred          |
+| Prioritisation    | Fixed dimension weights                 | Regret = cost-if-wrong × P(wrong) orders rows; ambiguity scores quadrants |
 | Clearing instrument | Socratic Q&A only                     | Route-typed per unknown: interview / territory-verify / experiment / audit — the loop is a router, not an interview |
+| Execution handoff | Bridges into OMC pipelines              | Approval-gated bridge: independent planner+reviewer consensus, or Workflow execution with per-task refute-framed verification |
 
 The mechanism is a persistent unknowns ledger (`id · quadrant · cost-if-wrong · P(wrong) ·
-regret · status · phase`). Each round targets the highest-regret open item with a single
-question, re-scores it, and does not permit implementation while any quadrant is un-probed or
-any open item carries `regret ≥ 1.0`. The full schema and kick-off prompt are in
-[`SKILL.md`](skills/finding-unknowns/SKILL.md).
+regret · route · status · phase`) whose header records the clarity threshold, the locked
+topology, and a per-round quadrant score history. Each round clears the highest-regret open
+row by its route, then re-scores all four quadrants and shows the user the score table —
+`ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`, threshold 0.25 by default
+(`--quick` 0.35 / `--deep` 0.15). Implementation may not start while any quadrant is
+un-probed, any open row carries `regret ≥ 1.0`, or ambiguity sits above threshold; a gate
+PASS crystallizes a pending-approval spec that feeds the cross-validated execution bridge.
+The full schema and kick-off prompt are in [`SKILL.md`](skills/finding-unknowns/SKILL.md).
 
 When the host exposes Claude Code's **Workflow tool** (dynamic workflows) and the user has
-opted into orchestration, the three fan-out-heavy operations run as deterministic scripts —
+opted into orchestration, the fan-out-heavy operations run as deterministic scripts —
 multi-lens sweep with per-finding adversarial verification (pipelined, no barrier), a
-three-lens refutation panel for cost ≥ 4 resolutions, and a UU probe loop that stops only
-after two consecutive dry rounds. Templates and the graceful fallback ladder live in
+three-lens refutation panel for cost ≥ 4 resolutions, a UU probe loop that stops only
+after two consecutive dry rounds, and post-approval execution that pairs every implementer
+with an independent refute-framed verifier. Templates and the graceful fallback ladder live in
 [`references/workflows.md`](skills/finding-unknowns/references/workflows.md).
 
 <p align="center">

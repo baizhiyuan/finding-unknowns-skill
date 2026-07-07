@@ -5,10 +5,10 @@
   </defs>
   <rect width="980" height="440" rx="16" fill="#0F111A"/>
   <rect x="0" y="0" width="980" height="5" rx="2" fill="url(#acc2)"/>
-  <text x="490" y="42" font-size="21" font-weight="700" fill="#F4F5F7" text-anchor="middle">Cartographer mode — coverage &amp; regret, not just clarity</text>
+  <text x="490" y="42" font-size="21" font-weight="700" fill="#F4F5F7" text-anchor="middle">Cartographer mode — coverage + clarity, priced by regret</text>
 
   <!-- left: quadrant coverage gate -->
-  <text x="60" y="86" font-size="14" font-weight="700" fill="#C7CAD1">① Quadrant-coverage gate</text>
+  <text x="60" y="86" font-size="14" font-weight="700" fill="#C7CAD1">① Dual gate: coverage + ambiguity</text>
   <g font-size="12.5">
     <rect x="60" y="98" width="180" height="52" rx="9" fill="#151A28" stroke="#3A3F52"/>
     <text x="74" y="120" fill="#E5E7EB" font-weight="600">KK locked</text>
@@ -23,8 +23,8 @@
     <text x="74" y="300" fill="#F6C572" font-weight="600">UU probed ★</text>
     <text x="74" y="319" fill="#C9A46B">blind-spot pass required</text>
   </g>
-  <text x="60" y="360" font-size="12" fill="#94A3B8">Gate = all four probed</text>
-  <text x="60" y="378" font-size="12" fill="#94A3B8">(not "ambiguity ≤ threshold")</text>
+  <text x="60" y="360" font-size="12" fill="#94A3B8">Gate = all four probed AND</text>
+  <text x="60" y="378" font-size="12" fill="#94A3B8">ambiguity ≤ threshold (per-quadrant scores)</text>
 
   <!-- middle: ledger -->
   <text x="330" y="86" font-size="14" font-weight="700" fill="#C7CAD1">② Lifecycle unknowns ledger</text>
@@ -59,5 +59,5 @@
   <line x1="240" y1="304" x2="330" y2="220" stroke="#5B6172" stroke-width="1.5" marker-end="url(#a2)"/>
   <line x1="660" y1="200" x2="700" y2="200" stroke="#5B6172" stroke-width="1.5" marker-end="url(#a2)"/>
 
-  <text x="490" y="410" font-size="13" fill="#94A3B8" text-anchor="middle">Deep Interview reduces ambiguity on the map it has. Cartographer expands the map — weighted by blast radius, across the whole lifecycle.</text>
+  <text x="490" y="410" font-size="13" fill="#94A3B8" text-anchor="middle">Cartographer expands the map (coverage), scores its clarity every round (ambiguity), and prices attention by blast radius (regret).</text>
 </svg>

@@ -76,7 +76,8 @@ their exploration.
 
 | Artifact | Producer | Consumer | Lifetime |
 |----------|----------|----------|----------|
-| `unknowns-ledger.md` | ledger-keeper (or skill inline) | interview loop, gate, quiz | whole task; IS the resume state |
+| `unknowns-ledger.md` | ledger-keeper (or skill inline) | clearing loop, gate, quiz | whole task; IS the resume state (header: threshold, locked topology, per-round quadrant score history) |
+| `unknowns-spec-{slug}.md` | Cartographer gate PASS | Phase E execution bridge | one task; pending-approval handoff artifact |
 | `implementation-notes.md` | build phase | quiz-master, next attempt | one build |
 | `prototypes/*.html` | prototype-smith | user reaction | throwaway |
 | `change-report.html` | quiz-master | merge decision | one review |
@@ -92,9 +93,12 @@ state store, no re-seeding.
    contexts that did not produce the work being judged.
 3. **Graceful degradation.** Every technique works inline with no agents and no
    commands installed; each layer is an enhancement, not a dependency.
-4. **Coverage over confidence.** Cartographer gates on whether the four quadrants were
-   probed — clarity on the questions you thought to ask is not coverage of the ones you
-   did not.
+4. **Coverage over confidence — and clarity made visible.** Cartographer gates on two
+   axes: whether the four quadrants were probed (coverage), and a per-quadrant clarity
+   score rolled into a weighted ambiguity figure that must reach threshold (clarity,
+   adapted from oh-my-claudecode's deep-interview). Coverage catches "we never looked
+   there"; the score table shown every round catches "we looked, but the user can't tell
+   how clear the map is" — the fuzzy-drift failure mode a field test surfaced.
 5. **Regret-priced attention.** Questions are spent where cost-if-wrong × P(wrong) is
    high; everything else gets a logged conservative default.
 6. **Route-typed clearing.** Regret decides which unknown to clear first; the row's route
@@ -104,6 +108,11 @@ state store, no re-seeding.
    experiment/audit rows suspend the loop instead of spawning useless extra rounds.
    (Field-test finding: in a real quant×DL session, the three highest-regret rows all had
    non-interview routes.)
+7. **Author never self-approves.** The crystallized spec ends in an approval-gated
+   execution bridge: plans are cross-validated by an independent reviewer agent, and
+   execution (inline or via the `fu-execute-verified` Workflow template) pairs every
+   implementer with a refute-framed verifier from a different context. No context grades
+   its own work.
 
 ## Relationship to upstream paradigms
 
