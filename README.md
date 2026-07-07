@@ -1,3 +1,5 @@
+<p align="center"><strong>English</strong> | <a href="README.zh.md">简体中文</a> | <a href="README.ja.md">日本語</a> | <a href="README.ko.md">한국어</a></p>
+
 <p align="center">
   <img src="assets/hero.svg" alt="finding-unknowns — a Claude Code skill" width="100%">
 </p>
@@ -92,9 +94,20 @@ Locate where an unknown lives; the quadrant indicates which technique to use.
   <img src="assets/quadrants.svg" alt="The four quadrants of unknowns" width="78%">
 </p>
 
+## Requirements
+
+- **Claude Code** — the CLI, desktop app, or an IDE extension. The skill loads through the
+  Skill tool (or `~/.claude/skills/`); the slash commands need the plugin or a manual copy.
+- **No runtime, no dependencies.** The skill, agents, and commands are plain Markdown.
+  Nothing is compiled or installed beyond copying files.
+- **Optional enhancements, all degrade gracefully:** the four companion agents (delegated
+  to when depth pays), and the Workflow tool for dynamic-workflow orchestration — every
+  technique also runs fully inline with neither installed.
+- **`bash`** for `install.sh` (Option B). Options A, C, and D need no shell.
+
 ## Installation
 
-**Option A — plugin marketplace:**
+**Option A — plugin marketplace (recommended):**
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
@@ -154,13 +167,46 @@ cp agents/*.md   ~/.claude/agents/
 cp commands/*.md ~/.claude/commands/
 ```
 
-After updating, confirm the installed version matches the release:
+After updating, verify the installed version matches the release (this grep is the
+post-update sanity check — the lightweight equivalent of a `doctor` command):
 
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || grep -c 'Cross-validated execution bridge' ~/.claude/skills/finding-unknowns/SKILL.md
 # expect: 3.6.0 (plugin) — or a non-zero match count confirming the v3.6.0 Phase E section
 ```
+
+## Configuration
+
+The skill runs with **zero configuration** — every knob below is optional and has a
+sensible default.
+
+**Clarity threshold (Cartographer mode).** The weighted-ambiguity gate defaults to `0.25`.
+Override it per project or per user in `.claude/settings.json` (project overrides user):
+
+```json
+{
+  "findingUnknowns": {
+    "ambiguityThreshold": 0.25
+  }
+}
+```
+
+Cartographer announces the resolved threshold and its source on entry, so you always see
+which value is in effect.
+
+**Depth presets.** A flag on the command overrides any settings value:
+
+| Flag | Threshold | Use for |
+|------|-----------|---------|
+| `/cartographer --quick <task>` | 0.35 | quick orientation, lower-stakes work |
+| `/cartographer --standard <task>` | 0.25 (default) | most tasks |
+| `/cartographer --deep <task>` | 0.15 | high-stakes, hard-to-reverse work |
+
+**Other defaults** (prototype directions, the regret question bar, quiz size and rounds,
+the Cartographer round caps) are documented in the **Defaults** table inside
+[`SKILL.md`](skills/finding-unknowns/SKILL.md) and can be overridden by telling the skill
+in plain language.
 
 ## Usage
 
@@ -301,7 +347,10 @@ finding-unknowns-skill/
 ├── CONTRIBUTING.md         Contribution guidelines
 ├── CHANGELOG.md            Release history
 ├── LICENSE                 MIT
-└── README.md
+├── README.md               English (canonical)
+├── README.zh.md            简体中文 translation
+├── README.ja.md            日本語 translation
+└── README.ko.md            한국어 translation
 ```
 
 ## Contributing
