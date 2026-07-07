@@ -115,8 +115,51 @@ root for lightweight, always-on guidance.
 **Option D — manual copy:**
 
 ```bash
-mkdir -p ~/.claude/skills/finding-unknowns
+mkdir -p ~/.claude/skills/finding-unknowns/references
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
+cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
+```
+
+## Updating
+
+To pull the latest release (currently **v3.6.0**) into an existing installation, use the
+path that matches how you installed.
+
+**Updating Option A — plugin marketplace:**
+
+```
+/plugin marketplace update finding-unknowns-skill
+/plugin update finding-unknowns@finding-unknowns-skill
+```
+
+**Updating Option B — clone and install:** re-run the installer after pulling. `install.sh`
+overwrites in place (skill, `references/`, the four agents, and the slash commands), so it
+doubles as the updater.
+
+```bash
+cd finding-unknowns-skill
+git pull origin main
+bash install.sh              # re-copies skill + references + agents + commands
+```
+
+**Updating Option D — manual copy:** overwrite the same files (the `references/` directory
+carries the Workflow-orchestration templates and must be updated too).
+
+```bash
+cd finding-unknowns-skill && git pull origin main
+mkdir -p ~/.claude/skills/finding-unknowns/references
+cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
+cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
+cp agents/*.md   ~/.claude/agents/
+cp commands/*.md ~/.claude/commands/
+```
+
+After updating, confirm the installed version matches the release:
+
+```bash
+grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
+  || grep -c 'Cross-validated execution bridge' ~/.claude/skills/finding-unknowns/SKILL.md
+# expect: 3.6.0 (plugin) — or a non-zero match count confirming the v3.6.0 Phase E section
 ```
 
 ## Usage

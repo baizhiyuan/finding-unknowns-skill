@@ -12,6 +12,13 @@ mkdir -p "$SKILL_DEST"
 cp "$SRC/skills/finding-unknowns/SKILL.md" "$SKILL_DEST/SKILL.md"
 echo "Installed skill  -> $SKILL_DEST/SKILL.md"
 
+# Skill references (workflow-orchestration templates)
+if [ -d "$SRC/skills/finding-unknowns/references" ]; then
+  mkdir -p "$SKILL_DEST/references"
+  cp "$SRC"/skills/finding-unknowns/references/*.md "$SKILL_DEST/references/"
+  echo "Installed refs   -> $SKILL_DEST/references/"
+fi
+
 # Companion agents
 AGENT_DEST="$CONFIG_DIR/agents"
 mkdir -p "$AGENT_DEST"
