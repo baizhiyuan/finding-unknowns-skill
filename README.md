@@ -1,3 +1,5 @@
+
+
 <p align="center"><strong>English</strong> | <a href="README.zh.md">简体中文</a></p>
 
 <p align="center">
@@ -128,9 +130,11 @@ root for lightweight, always-on guidance.
 **Option D — manual copy:**
 
 ```bash
-mkdir -p ~/.claude/skills/finding-unknowns/references
+mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/agents ~/.claude/commands
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
 cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
+cp agents/*.md ~/.claude/agents/
+cp commands/*.md ~/.claude/commands/
 ```
 
 ## Updating
