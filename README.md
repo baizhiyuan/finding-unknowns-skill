@@ -493,7 +493,7 @@ finding-unknowns-skill/
 │       └── SKILL.md         Stakes triage, handoff packet
 ├── agents/                  blindspot-scout (sonnet) · prototype-smith · ledger-keeper · quiz-master (inherit)
 ├── docs/ARCHITECTURE.md     Design reference: layers, contracts, principles
-├── assets/                  README diagrams (SVG)
+├── assets/                  README diagrams (SVG); assets/zh/ = Chinese versions
 ├── AGENTS.md                Repository guide for coding agents and contributors
 ├── EXAMPLES.md              Copy-paste, end-to-end prompts
 ├── CLAUDE.md                Passive single-file drop-in

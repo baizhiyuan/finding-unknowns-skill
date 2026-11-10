@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.0.0 —— 动手之前先摸清疆域；代理交还工作时，判断留在自己手里" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.0.0 —— 动手之前先摸清疆域；代理交还工作时，判断留在自己手里" width="100%">
 </p>
 
 <p align="center">
@@ -157,13 +157,13 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 ### 八种技术
 
 <p align="center">
-  <img src="assets/lifecycle.svg" alt="生命周期：事前、事中、事后三个捕捉未知的窗口，各窗口对应的技术，以及收尾的交接环节" width="92%">
+  <img src="assets/zh/lifecycle.svg" alt="生命周期：事前、事中、事后三个捕捉未知的窗口，各窗口对应的技术，以及收尾的交接环节" width="92%">
 </p>
 
 第 0 阶段是阻塞性的：先判断缺口落在哪个象限，用一句话记下你的先验预期，宣布路线——然后才运行技术。
 
 <p align="center">
-  <img src="assets/quadrants.svg" alt="四个象限：已知的已知、已知的未知、未知的已知、未知的未知，以及各自对应的技术" width="78%">
+  <img src="assets/zh/quadrants.svg" alt="四个象限：已知的已知、已知的未知、未知的已知、未知的未知，以及各自对应的技术" width="78%">
 </p>
 
 | 技术 | 阶段 | 象限 | 用于 |
@@ -184,7 +184,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 面向高风险工作的严格升级版。完整协议见 [`references/cartographer.md`](skills/finding-unknowns/references/cartographer.md)，按需读取。
 
 <p align="center">
-  <img src="assets/cartographer.svg" alt="Cartographer 模式：第 0 轮拓扑确认、未知台账播种、按遗憾值和路由清理的循环、每轮象限评分、带不可逆性底线的双重门控、需审批的执行桥接" width="96%">
+  <img src="assets/zh/cartographer.svg" alt="Cartographer 模式：第 0 轮拓扑确认、未知台账播种、按遗憾值和路由清理的循环、每轮象限评分、带不可逆性底线的双重门控、需审批的执行桥接" width="96%">
 </p>
 
 | 组成 | 是什么 | 用于 |
@@ -209,7 +209,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 当宿主提供 Claude Code 的 **Workflow 工具**、且你选择启用时，扇出密集的操作会以确定性脚本运行，脚本见 [`references/workflows.md`](skills/finding-unknowns/references/workflows.md)。
 
 <p align="center">
-  <img src="assets/workflows.svg" alt="Workflow 编排：流水线式验证的多视角扫描、三视角反驳评审、UU 循环直至无新发现、交叉验证执行，以及三级降级阶梯" width="96%">
+  <img src="assets/zh/workflows.svg" alt="Workflow 编排：流水线式验证的多视角扫描、三视角反驳评审、UU 循环直至无新发现、交叉验证执行，以及三级降级阶梯" width="96%">
 </p>
 
 | 模板 | 是什么 | 用于 |
@@ -233,7 +233,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 ### 把推理留在自己手里
 
 <p align="center">
-  <img src="assets/handoff.svg" alt="keep-the-reasoning：卸载 → 顺从 → 认知投降的光谱，以及从证据到摘要的固定顺序交接包" width="96%">
+  <img src="assets/zh/handoff.svg" alt="keep-the-reasoning：卸载 → 顺从 → 认知投降的光谱，以及从证据到摘要的固定顺序交接包" width="96%">
 </p>
 
 | 步骤 | 是什么 | 用于 |
@@ -250,7 +250,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 **命令负责分发，技能负责决策，代理负责执行，文档负责持久化。** 每个技能的流程只在一处定义；命令和代理只是增强，而非依赖。
 
 <p align="center">
-  <img src="assets/framework.svg" alt="框架分层：五个斜杠命令分发到两个技能，技能再委派给四个专职代理，代理写入持久化产物" width="96%">
+  <img src="assets/zh/framework.svg" alt="框架分层：五个斜杠命令分发到两个技能，技能再委派给四个专职代理，代理写入持久化产物" width="96%">
 </p>
 
 | 代理 | 模型 | 工具 | 支撑 | 为何隔离 |
@@ -495,7 +495,7 @@ finding-unknowns-skill/
 │       └── SKILL.md         风险分级、交接包
 ├── agents/                  blindspot-scout（sonnet）· prototype-smith · ledger-keeper · quiz-master（inherit）
 ├── docs/ARCHITECTURE.md     设计参考：分层、契约、原则
-├── assets/                  README 示意图（SVG）
+├── assets/                  README 示意图（SVG）；assets/zh/ 为中文版
 ├── AGENTS.md                面向编码代理与贡献者的仓库指南
 ├── EXAMPLES.md              可直接复制的端到端提示词
 ├── CLAUDE.md                被动接入用的单文件版本

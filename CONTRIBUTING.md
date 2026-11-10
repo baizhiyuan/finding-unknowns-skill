@@ -19,6 +19,8 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 - **Prose quality.** Techniques should be actionable and concise. Prefer concrete, copy-paste
   prompts over abstract description.
 - **Diagrams.** SVG assets in `assets/` must be well-formed XML and should render on GitHub.
+  `assets/zh/` holds the Simplified Chinese versions used by `README.zh.md`; when you change
+  a diagram, update its Chinese counterpart in the same change.
   Validate with any standard XML parser before committing.
 - **Attribution.** Preserve the attribution to the original essay. Do not represent this
   project as affiliated with Anthropic.
@@ -32,7 +34,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:
 
 ```bash
 # Validate SVG assets
-for f in assets/*.svg; do python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('$f')"; done
+for f in assets/*.svg assets/zh/*.svg; do python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('$f')"; done
 
 # Validate plugin manifests
 python3 -c "import json; json.load(open('.claude-plugin/plugin.json')); json.load(open('.claude-plugin/marketplace.json'))"

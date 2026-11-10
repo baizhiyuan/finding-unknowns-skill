@@ -39,7 +39,7 @@ It is about maintaining the project — for what the skill does at runtime, read
    ```bash
    python3 -c "import yaml,glob; [yaml.safe_load(open(p).read().split('---',2)[1]) for p in glob.glob('skills/*/SKILL.md')+glob.glob('agents/*.md')+glob.glob('commands/*.md')]"
    python3 -c "import json; json.load(open('.claude-plugin/plugin.json')); json.load(open('.claude-plugin/marketplace.json'))"
-   for f in assets/*.svg; do python3 -c "import xml.dom.minidom; xml.dom.minidom.parse('$f')"; done
+   for f in assets/*.svg assets/zh/*.svg; do python3 -c "import xml.dom.minidom; xml.dom.minidom.parse('$f')"; done
    bash -n install.sh
    ```
 2. Bump `version` in `.claude-plugin/plugin.json` (SemVer) and add a `CHANGELOG.md` entry.
