@@ -9,12 +9,14 @@ Direct entry into Cartographer mode, skipping lightweight-lane routing.
 
 ## Dispatch
 
-1. Read the full skill instructions from `skills/finding-unknowns/SKILL.md` in this plugin
-   (or `~/.claude/skills/finding-unknowns/SKILL.md` for manual installs).
-2. Jump to **Phase C: Cartographer mode** and follow it exactly — resolve and announce the
+1. Read `skills/finding-unknowns/SKILL.md` in this plugin (or
+   `~/.claude/skills/finding-unknowns/SKILL.md` for manual installs), then read
+   `references/cartographer.md` next to it in full — that file is the normative protocol.
+2. Follow **Cartographer mode** exactly — resolve and announce the
    clarity threshold (first line), run the Round 0 topology gate, seed the ledger (C0),
    run the score-gated clearing loop (C1) with the standard round-report template
-   (four-quadrant score table every round), enforce the dual coverage+ambiguity gate (C2),
+   (four-quadrant score table every round), enforce the dual coverage+ambiguity gate and
+   the irreversibility floor (C2), write the spec with its verification contract (C2.5),
    and end at the approval-gated execution bridge (Phase E). Delegate ledger bookkeeping
    and quadrant scoring to the `ledger-keeper` agent when installed.
 3. Depth flags map to threshold presets: `--quick` 0.35 · `--standard` 0.25 (default) ·

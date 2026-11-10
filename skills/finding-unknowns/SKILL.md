@@ -1,6 +1,14 @@
 ---
 name: finding-unknowns
-description: "Use at the start of an ambiguous or unfamiliar task to surface the user's unknowns (unknown unknowns, unknown knowns) before, during, and after implementation — via blind-spot pass, brainstorm/prototype, interview, references, implementation plan, implementation notes, pitch, and quiz. For high-stakes work, escalate to Cartographer mode — an interactive, per-quadrant ambiguity-scored, quadrant-coverage-gated, regret-weighted protocol backed by a lifecycle-persistent unknowns ledger, ending in a cross-validated, approval-gated execution bridge. Invoke manually when scope is unclear or the domain/codebase is new."
+description: "Surface the user's unknowns before, during, and after implementation — quadrant routing into eight cheap techniques (blind-spot pass, prototype, interview, references, plan, notes, pitch, quiz), escalating to Cartographer mode (coverage-gated, regret-ordered unknowns ledger with an approval-gated execution bridge) for high-stakes work. For ambiguous or unfamiliar tasks; not for concrete specs or trivial fixes."
+aliases: []
+metadata:
+  credits:
+    techniques: "Thariq Shihipar — A Field Guide to Fable: Finding Your Unknowns"
+    url: "https://x.com/trq212/status/2073100352921215386"
+    ambiguity-gating: "oh-my-claudecode deep-interview (Ouroboros-inspired)"
+    verification-contract: "Addy Osmani — Critical thinking when agents do the work"
+    execution-rules: "evaluator-optimizer / orchestrator-workers (Anthropic, Building effective agents); return-the-unit and edge heuristics from @hanakoxbt, Loops and Graphs"
 ---
 
 # Finding Unknowns
@@ -32,9 +40,11 @@ the territory is unmapped.
 <Do_Not_Use_When>
 - The request is specific and trivial (typo, one-liner, obvious bug fix) — execute directly
 - The user has a detailed spec with file paths and acceptance criteria — go build it
-- The user wants ontology/entity-convergence tracking or OMC-native state/pipeline
-  machinery (autopilot/ralph/team handoff) — use `oh-my-claudecode:deep-interview` instead;
-  Cartographer covers ambiguity gating and an approval-gated bridge without that runtime
+- The user wants ontology/entity-convergence tracking, OMC state persistence, or
+  OMC-native handoff into ralplan/autopilot/ralph/team — use
+  `oh-my-claudecode:deep-interview` instead (see Relationship to sibling tooling)
+- The work is done and the risk is the *handoff* — the user accepting agent output
+  without engaging — use the sibling skill `keep-the-reasoning`
 - The user explicitly says "just do it" — respect that; offer one sentence of risk if
   material, then proceed
 </Do_Not_Use_When>
@@ -50,6 +60,9 @@ single uniform interview under-serves all four.
 
 <Execution_Policy>
 - ALWAYS locate the unknown on the quadrant map (Phase 0) before choosing a technique
+- Hypothesis before discovery: record what the user (or you) expects *before* a scout,
+  interview, or prototype runs. Findings that contradict the prior are the most valuable
+  output — surface them as surprises, never quietly absorb them
 - Establish the user's starting point — where they are in their thinking, their experience
   with this problem and codebase. The same task needs different probing for an expert than
   for a first-timer
@@ -59,13 +72,17 @@ single uniform interview under-serves all four.
   round, ordered by blast-radius/regret; never bundle *dependent* questions — where one
   answer would change the next question's framing, ask those one at a time
 - Architecture-changing unknowns outrank trivia, always
+- Gate on blast radius, not confidence: an unknown guarding an irreversible step
+  (migration, deletion, production data, money, publication) always reaches the user,
+  however confident the evidence looks
 - "You have no significant unknowns here" is a valid and valuable result — say it plainly
   rather than manufacturing concerns
 - Deviations get logged, not buried. Comprehension is the merge gate, not a green diff
 - Prefer single-file self-contained HTML artifacts for anything the user must react to or
   review (prototypes, plans, quiz reports); markdown fallback for pure-terminal flows
 - Delegate to companion agents when installed and the case is non-trivial; run inline
-  otherwise. Every technique works standalone
+  otherwise. Every technique works standalone. Where an installed sibling skill already
+  owns a mechanism (see Relationship to sibling tooling), prefer it over re-implementing
 </Execution_Policy>
 
 <Steps>
@@ -79,6 +96,9 @@ Before any technique, classify where the gap lives and announce the routing:
 | **User knows it** | **KK — Known Knowns**: in the prompt. Write them down; implicit knowns drift. | **UK — Unknown Knowns**: know-it-when-I-see-it criteria. → Technique 2, 4 |
 | **User doesn't know it** | **KU — Known Unknowns**: nameable gaps. → Technique 3, 5 | **UU — Unknown Unknowns**: blind spots. → Technique 1, 8 |
 
+Capture the prior in one line — what the user expects the answer or outcome to be (ask
+only if it is not inferable; "no idea yet" is a valid prior and itself routes to UU).
+
 Then choose the lane and say so:
 
 > **Routing:** {quadrant(s) identified} → {technique(s) or Cartographer mode} — {one-line reason}
@@ -86,7 +106,8 @@ Then choose the lane and say so:
 Lane selection:
 - Low/medium stakes, one dominant quadrant → run the matching technique(s) from Phase 1–3
 - High stakes (hard to reverse, wide blast radius, unfamiliar territory + long horizon) →
-  offer Cartographer mode explicitly; do not silently escalate
+  offer Cartographer mode explicitly; do not silently escalate. Before entering, read
+  `references/cartographer.md`
 
 ## Phase 1: Pre-implementation techniques
 
@@ -95,14 +116,17 @@ Lane selection:
 Delegate to `blindspot-scout` when a real codebase/domain sweep is involved; inline for
 small conversational cases.
 
-1. Establish goal + experience level (inferred conservatively if unstated).
+1. Establish goal + experience level (inferred conservatively if unstated) + the prior
+   from Phase 0.
 2. Explore the territory first: module, tests, git history, conventions, prior art; for
    external domains, what practitioners consider table stakes.
-3. Report in exactly five sections: **Landmines** (typical newcomer mistakes + repo-specific
+3. Report in five sections — preceded by **Surprises** when a prior was given:
+   **Landmines** (typical newcomer mistakes + repo-specific
    potholes, cited), **Hidden context** (constraining decisions and invariants, with
    evidence), **What good looks like** (2–3 real examples), **Questions you should be
    asking** (3–5 expert questions with best-guess answers + confidence), **Rewritten
-   request** (the user's request, upgraded by what you found).
+   request** (the user's request, upgraded by what you found). **Surprises** lists every
+   finding that contradicts the prior, or says "prior consistent with the territory"
 
 Stop when the report is delivered. Guardrail: prioritize architecture-changing findings;
 cite evidence for every non-obvious claim.
@@ -161,6 +185,10 @@ them is free — not to prove thoroughness. `prototype-smith` can render HTML.
    user-facing — each with the choice, one alternative, and the cost of changing later.
 3. **Known unknowns and their defaults**: the default to be taken and the signal that
    would trigger a pivot.
+3.5 **Definition of verified**: for each acceptance criterion, the check that will prove
+   it (a test, screenshot, log or trace — something that can fail), and one line on what
+   that check does NOT prove. Written now, because after the build any outcome can be
+   rationalized. Checks the implementer must not edit are named here.
 4. **Mechanical work** last, compressed.
 5. End with the 2–4 decisions needing a yes/no or a pick.
 
@@ -182,7 +210,9 @@ leave room for improvisation; present mid-planning pivots as their own decision.
 5. End with a five-line summary; reference the file in the handoff or PR.
 
 Guardrails: entries 2–3 lines; an unlogged deviation is worse than no notes — the file
-claims completeness.
+claims completeness. When `oh-my-claudecode:show-me-your-work` is installed and the run is
+long or autonomous, its append-only decision trail may serve as the Deviations log —
+reference its path from the notes rather than duplicating entries.
 
 ## Phase 3: Post-implementation
 
@@ -200,7 +230,9 @@ author glosses over.
 
 1. Report first: **Context**, **What changed** (grouped by intent, not file), **How it
    interacts** (existing paths that now behave differently, including files the diff
-   doesn't show), **Intuition** (2–3 mental-model updates).
+   doesn't show), **Decisions & assumptions** (defaults chosen, scope cut, requirements
+   reinterpreted — the places a structurally-clean diff hides judgment), **Intuition**
+   (2–3 mental-model updates).
 2. Then 5–8 questions weighted toward deviations, edge cases, interaction effects; mix
    recall and prediction. Never trivia about names.
 3. Grade honestly; for each miss give the answer AND classify it — gap in the user's
@@ -210,260 +242,35 @@ Stop when the user passes, or after two failed rounds → recommend simplifying 
 splitting the change, not re-quizzing. Guardrail: never mark correct out of politeness; an
 unexplained diff hunk absent from notes/ledger is an **unlogged deviation** — flag it.
 
-## Phase C: Cartographer mode (high-stakes escalation)
+## Phase C: Cartographer mode (high-stakes escalation) — summary
 
-Gates on **coverage** (all four quadrants probed) AND **clarity** (per-quadrant ambiguity
-scored every round, weighted total at or below threshold), persists across the **whole
-lifecycle**, and orders work by **regret**. Two axes, two jobs: regret prices *rows*
-(which unknown to clear next); ambiguity scores *quadrants* (whether the user can see how
-clear the map actually is). The interactive loop is mandatory — scores are shown after
-every round so the user can steer instead of discovering drift at the end.
+**Blocking: read `references/cartographer.md` in full before entering.** This section is
+the map; that file is the normative protocol (ledger schema, round template, gate,
+close-out report, spec, verification contract, execution rules).
 
-**Resolve the clarity threshold first (blocking).** Read
-`findingUnknowns.ambiguityThreshold` from `./.claude/settings.json` (project) then
-`~/.claude/settings.json` (user); project wins; default **0.25**. Presets when invoked
-with a depth flag: `--quick` 0.35 · `--standard` 0.25 · `--deep` 0.15. Announce on entry,
-first line exactly:
+What it is: a coverage-gated, clarity-scored, regret-ordered discovery loop backed by
+`unknowns-ledger.md`, persisting from pre-build through review. Its shape:
 
-> Clarity threshold: {X}% (source: {project settings | user settings | default | flag})
->
-> Entering Cartographer mode. I will maintain unknowns-ledger.md, clear the highest-regret
-> unknown each round by its route, score all four quadrants' clarity after every round, and
-> will not proceed to implementation until the coverage gate passes AND weighted ambiguity
-> is at or below {X}%.
-
-**Round 0 — topology gate (one question, before any scoring).** Enumerate the task's 1–6
-top-level components (outcomes that can succeed or fail independently — not sub-features)
-and confirm via one question: "I read this as N components: … Add, remove, merge, split,
-or defer any?" Lock the confirmed list into the ledger header. Quadrant scores are then
-tracked per component where components differ materially; the reported score for a
-quadrant is its weakest active component's score — depth-first clarity on the
-best-described component must not hide sibling fog. Deferrals need a user-confirmed
-reason and are excluded from ambiguity math but stay listed.
-
-**Quadrant clarity model.** Each quadrant scores 0.0–1.0 with a one-clause justification
-and a named gap when below 0.9:
-
-| Quadrant | Scores high when |
-|----------|------------------|
-| KK | stated knowns are written down, internally consistent, and confirmed against the territory |
-| KU | known gaps are enumerated, each with a route and a resolution or logged default |
-| UK | taste/recognition criteria have been elicited — prototype reactions or reference extractions converted into explicit criteria |
-| UU | blind-spot probes ran and are going dry; findings are tracked rows |
-
-`ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)` — UU carries the most weight
-because unprobed blind spots are the failure mode this skill exists to prevent. Scoring is
-`ledger-keeper`'s SCORE-QUADRANTS operation when installed; inline otherwise. Consistency
-beats flair: justify from ledger evidence, never from how productive the round felt.
-
-### C0: Seed the ledger
-
-Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed). The file opens
-with a header block — clarity threshold + source, the Round 0 locked topology (components,
-statuses, deferral reasons), and a per-round quadrant score history table — followed by
-the rows:
-
-| id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | **route** | status | phase | resolution / default |
-|----|----------|---------|--------------------|----------|--------|-----------|--------|-------|----------------------|
-
-- Run Technique 1 (blind-spot pass) → seed UU rows. Naming a blind spot makes it trackable.
-  For high-stakes tasks, prefer a **multi-lens sweep**: parallel scouts with distinct lenses
-  (e.g. domain-risk / engineering / statistics) — diversity catches what one lens cannot.
-  When the Workflow tool is available (and the user has opted into orchestration), run the
-  sweep as the `fu-multi-lens-sweep` script in `references/workflows.md`: scouts fan out,
-  each finding is adversarially verified as its lens completes (pipeline, no barrier), and
-  the result is schema-validated ledger rows — no lens or verification step can be
-  silently dropped. Without Workflow, follow the fallback ladder in that file.
-- Run Technique 2/4 where taste is involved → seed UK rows.
-- Write down KK; list KU.
-- **Domain checklist hook**: after seeding, check the ledger against a domain checklist
-  derived from the user's profile, and add any missing rows. Example (quant trading):
-  funding/borrow costs · liquidation distance · capacity/liquidity · per-leg attribution ·
-  fee/slippage realism · regime dependence. A checklist row you can immediately mark
-  resolved costs one line; a missing one costs a blown-up backtest.
-- `regret = cost-if-wrong × P(wrong)` — the only prioritization signal.
-- **`route` — HOW the row gets cleared** (regret decides order; route decides instrument):
-  - `interview` — the answer exists only in the user's head (preferences, intent, context)
-  - `territory` — verifiable by reading/checking code or data (assign to a scout or a check;
-    NEVER ask the user — the no-discoverable-questions rule applies per row)
-  - `experiment` — needs a backtest/prototype/measurement to settle
-  - `audit` — needs review of an external artifact (a pipeline, a dependency, a document)
-- `status ∈ {open, probing, resolved-provisional, resolved, deferred}`; deferred REQUIRES a
-  conservative default; resolved-provisional (single-source or refutable evidence, cost ≥ 4)
-  REQUIRES a named discriminating check. Rows are never deleted. `phase ∈ {pre, during,
-  post}` records when the unknown surfaced.
-
-### C1: Clearing loop
-
-The engine is a **router, not an interview**: each round clears the highest-regret open row
-by its route. Repeat until the gate passes or the user exits:
-
-1. **Target**: the highest-regret open row (keeper picks when installed) — or, for the
-   `interview` route, the top 1–3 *independent* rows to clear in one round. Leave-open rule:
-   rows with regret < 1.0 get a conservative default logged and are not worth a round.
-2. **Dispatch by route**:
-   - `interview` → ask via AskUserQuestion, prefixed with the targeting rationale. Ask 1–3
-     *independent* interview-route rows in one round (highest regret first); keep dependent
-     rows for later rounds:
-
-     ```
-     Round {n} | Targets: {id(s)} {unknown(s)} | Regret: {r each} ({cost}×{p}) |
-     Route: interview | Why now: {one sentence per target}
-
-     {1–3 questions, each with 2–3 concrete options + recommendation}
-     ```
-
-   - `territory` → run the check now (Grep/Read/scout); report the evidence found.
-   - `experiment` → do NOT block the loop: record the experiment spec (what to run, what
-     result clears the row) as the row's clearing action; the row stays `probing`.
-   - `audit` → likewise: name the artifact, what to look for, and the expected effort;
-     the row stays `probing` until the audit result arrives.
-3. **Re-score** the row's P(wrong) from the answer/evidence; recompute regret. Answers may
-   spawn NEW rows (quadrant + regret + route) — that chain is the ledger working correctly.
-3.5 **Verify before resolving (evidence discipline, for rows with cost ≥ 4)**:
-   - **Adversarial check**: before marking the row resolved, construct the strongest
-     alternative explanation consistent with the SAME evidence. If a plausible refutation
-     exists, the row stays `resolved-provisional` and the ledger records the one
-     discriminating check that would separate the explanations. (Example: a strong
-     backtest IC resolves "is the signal real?" only provisionally — leakage produces the
-     same IC; the discriminating check is a pipeline audit.) With Workflow available, use
-     the `fu-verify-panel` script (`references/workflows.md`): three refuters with distinct
-     lenses (alternative-explanation / evidence-independence / reproduction); the
-     resolution survives only if ≥2 fail to refute, and refuters' discriminating checks
-     land in the ledger verbatim.
-   - **Cross-reference rule**: a cost ≥ 4 resolution backed by a single evidence source is
-     `resolved-provisional`, never `resolved`. Two independent sources (different
-     instruments — e.g. an experiment AND an audit) are required for full resolution.
-   - Record per resolution: the evidence, its source(s), and a confidence label
-     (high/medium/low). Separate fact from inference explicitly.
-3.8 **Score the quadrants** (every round, no exceptions): re-score all four quadrants per
-   the clarity model in the Phase C header (`ledger-keeper` SCORE-QUADRANTS when
-   installed). Append the scores to the ledger's score history. The next round's target
-   is the highest-regret open row, tie-broken toward the weakest quadrant.
-3.9 **Challenge modes** (each used exactly once, then back to normal clearing):
-   - Round 4+, **Contrarian**: the next interview question challenges a core assumption —
-     "what if the opposite were true / this constraint doesn't exist?"
-   - Round 6+, **Simplifier**: probe removable complexity — "what's the simplest version
-     that would still be valuable?"
-   - Round 8+ if ambiguity still > 0.30, **Ontologist**: "what IS this, really — which
-     component is the core and which are supporting views?" (may revise the Round 0
-     topology; re-lock it if so)
-4. **Report** after every round, in exactly this format:
-
-```
-Round {n} complete.
-
-Ledger: {open} open | {probing} probing | {resolved} resolved | {deferred} deferred
-Top regret: {id} ({regret}) — {unknown} [route: {route}]
-
-| Quadrant | Score | Weight | Gap |
-|----------|-------|--------|-----|
-| KK | {s} | 0.20 | {gap or "clear"} |
-| KU | {s} | 0.25 | {gap or "clear"} |
-| UK | {s} | 0.25 | {gap or "clear"} |
-| UU | {s} | 0.30 | {gap or "clear"} |
-| **Ambiguity** | **{a}%** | threshold {X}% | {weakest quadrant × component + why it's next} |
-
-Coverage gate:
-[{x| }] KK locked          [{x| }] KU resolved/deferred
-[{x| }] UK extracted       [{x| }] UU probed
-[{x| }] no open row with regret ≥ 1.0
-[{x| }] ambiguity {a}% ≤ threshold {X}%
-
-{gate passes ? "Gate PASSED — ready to build."
- : "Next target: {id} — {reason}"
- : when only probing rows with pending experiments/audits remain:
-   "Gate BLOCKED on external work: {list of clearing actions}. No further rounds add
-    value — execute the clearing actions, then resume (the ledger is the state)."}
-```
-
-### C2: Gate check (blocking, dual-axis)
-
-Implementation may start only when ALL hold — coverage AND clarity:
-
-- [ ] KK locked — knowns written down
-- [ ] KU resolved or deferred-with-default
-- [ ] UK extracted — at least one brainstorm/prototype/reference ran
-- [ ] UU probed — at least one blind-spot pass ran; findings are tracked rows
-- [ ] No open row has regret ≥ 1.0
-- [ ] Weighted ambiguity ≤ threshold (per-quadrant scores from the latest round)
-
-The two axes catch different failures: coverage catches "we never looked there";
-ambiguity catches "we looked, but the user still can't tell how clear it is". Passing one
-does not imply the other. Round limits: soft warning at round 10 (show scores, offer
-continue/proceed-with-risk), hard cap at round 20 (proceed noting the residual ambiguity).
-Early exit from round 3+ is allowed — display the current score table and open gaps once,
-transparently, then respect the exit.
-
-If UU was never probed the gate FAILS — that is its entire point. When `ledger-keeper` is
-installed its verdict is final; never pass the gate out of politeness.
-
-**Completeness critic (final sub-step before declaring PASS)**: when all five conditions
-appear satisfied, run one explicit "what's missing?" pass before announcing PASS — a
-domain-checklist re-scan plus three questions: which quadrant was probed most shallowly?
-which resolution is single-source or provisional? what would an expert reviewer ask that
-no row covers? Anything surfaced becomes a new row and the gate re-evaluates. A PASS
-without the critic pass is invalid. If the critic names UU as the shallow quadrant and
-Workflow is available, run `fu-uu-until-dry` (`references/workflows.md`): differently
-angled probes loop until two consecutive rounds surface nothing new — bounded by
-information, not by a fixed count.
-
-### C2.5: Close-out report (structured, Deep-Research style)
-
-When the gate passes — or when suspending on external work — deliver a structured report,
-not a prose summary:
-
-```
-# {task}: Unknowns Report
-*Rounds: {n} | Rows: {total} ({resolved}/{provisional}/{deferred}/{open}) | Gate: {verdict}*
-
-## Executive summary        — 3–5 sentences: what is now known, what still blocks
-## Findings by row          — per high-regret row: evidence, source(s), confidence
-##                            (high/med/low), fact vs inference labelled
-## Gaps & provisional items — every resolved-provisional row with its discriminating
-##                            check; every deferral with its conservative default
-## Methodology              — which routes ran (interview/territory/experiment/audit),
-##                            which agents/lenses, what was NOT examined
-```
-
-Acknowledging gaps is a deliverable, not an apology — an unlisted gap is an unlogged
-deviation waiting to happen.
-
-**Crystallized spec.** On gate PASS, also write `unknowns-spec-{slug}.md` next to the
-ledger — the handoff artifact for Phase E: goal (one sentence, covering every active
-topology component), constraints, non-goals, testable acceptance criteria, the final
-quadrant clarity table (scores + ambiguity % + threshold + source), an assumptions
-exposed → resolved table, and a ledger snapshot reference. The spec is marked
-**pending approval** — writing it grants no execution permission.
-
-### E: Cross-validated execution bridge (approval-gated)
-
-Never auto-execute. After the spec, ask ONE question — "Spec ready (ambiguity {a}%).
-How to proceed?" — with these options:
-
-1. **Consensus-refine, then separate execution approval (recommended).** A planner-role
-   agent drafts the implementation plan from spec + ledger; an INDEPENDENT reviewer-role
-   agent (architect/critic framing: "find what breaks this plan against the spec and the
-   ledger's deferred defaults") reviews it; loop until the reviewer approves, ≤3
-   iterations. Then STOP with the consensus plan marked pending approval — execution is a
-   separate explicit yes.
-2. **Execute via Workflow orchestration** (requires the user's orchestration opt-in): run
-   `fu-execute-verified` from `references/workflows.md` — tasks pipeline through an
-   implement agent and an independent refute-framed verify agent; a task closes only on
-   its verifier's pass. Fallback ladder as ever: Workflow → parallel Agent calls → inline
-   implement-then-independent-review.
-3. **Refine further** — return to the C1 loop.
-
-Normative invariant (extends "separation of judgment"): **the context that authored a
-spec or plan never self-approves its execution.** Author and approver are always
-different contexts — a second agent, or the user.
-
-### C3: During & close-out
-
-- Keep the ledger open through the build: every mid-build discovery becomes a row
-  (quadrant + regret), conservative option chosen and logged (Technique 6 feeds the ledger).
-- Post: build the quiz FROM the ledger — one question per resolved high-regret row and per
-  named UU. Merge only when no open row has regret ≥ 1.0.
+1. **Announce the clarity threshold** (first line; flag > project > user > default 0.25) and
+   confirm the **Round 0 topology** (1–6 independently-failing components).
+2. **C0 Seed** the ledger from all four quadrants — blind-spot pass (UU), prototypes or
+   references (UK), knowns (KK), named gaps (KU) — plus a domain checklist. Each row
+   carries a prior, `regret = cost × P(wrong)`, a **route** (interview · territory ·
+   experiment · audit), and a **reversibility** (reversible · wide · irreversible).
+3. **C1 Clearing loop** — a router, not an interview: clear the highest-regret row by its
+   route; adversarially verify cost ≥ 4 resolutions; re-score all four quadrants every
+   round and show the score table so the user can steer.
+4. **C2 Dual gate** — coverage (all quadrants probed) AND clarity (weighted ambiguity ≤
+   threshold), plus the **irreversibility floor**: no irreversible row is ever defaulted
+   silently or resolved without the user. Completeness critic before any PASS.
+5. **C2.5 Close-out** — structured unknowns report + crystallized spec with a
+   **verification contract** ("verified" defined before building; every check can fail
+   and states what it does NOT prove; checks locked against the implementer).
+6. **E Execution bridge** — approval-gated. Execution runs tasks as loops inside a graph:
+   edges must name what crosses, failures return per unit with SCOPE, derived
+   constraints flow forward (learning edge), and lanes close tasks by reversibility —
+   the irreversible lane always waits for the user. The author never self-approves.
+7. **C3** — the ledger stays open through the build; the quiz is generated from it.
 
 </Steps>
 
@@ -481,6 +288,10 @@ different contexts — a second agent, or the user.
 - Trivial cases stay inline; agent overhead needs a payoff. Cost anchors: a codebase
   blind-spot pass typically costs ~50–100k subagent tokens and a few minutes — worth it
   when a wrong assumption forces a redesign; not worth it for a one-file question.
+- For cost ≥ 4 verification of a *diff or design* (rather than a ledger claim),
+  `oh-my-claudecode:interrogate` — three reviewers on different models, findings only
+  with a reproducing run — is a stronger instrument than a same-model refuter panel; use
+  it when installed.
 - For high-stakes tasks, `blindspot-scout` may be run as a multi-lens sweep: several
   parallel scouts, each with ONE named lens (e.g. domain-risk / engineering / statistics)
   stated in its prompt. Merge their findings into the ledger; duplicate findings across
@@ -488,7 +299,8 @@ different contexts — a second agent, or the user.
 - **Workflow orchestration (preferred at Cartographer stakes when available)**: the three
   fan-out-heavy operations — multi-lens sweep, cost ≥ 4 verification panel, UU
   loop-until-dry — have ready-to-run Workflow scripts in `references/workflows.md`, with
-  structured (schema-validated) outputs that feed the ledger mechanically. Workflow use
+  structured (schema-validated) outputs that feed the ledger mechanically; a fourth,
+  `fu-execute-verified`, runs approved execution under Phase E's rules. Workflow use
   requires the user's orchestration opt-in; the file's fallback ladder covers plain-Agent
   and fully-inline environments. The logic is normative; the mechanism is not.
 
@@ -544,12 +356,26 @@ instead of asking the user to rediscover it, offers options with a recommendatio
 <Good>
 Honest gate failure:
 ```
-Coverage gate: [x] KK [x] KU [x] UK [ ] UU [x] regret
+Coverage gate: [x] KK [x] KU [x] UK [ ] UU [x] regret [x] irreversible [x] ambiguity
 Gate FAILED — no blind-spot pass has run. Clarity on the questions we thought to ask is
 not coverage of the ones we didn't. Run the scout before building.
 ```
 Why good: refuses to conflate "all known questions answered" with "territory mapped" —
 the exact failure mode this mode exists to prevent.
+</Good>
+
+<Good>
+Irreversibility floor overriding a low regret score:
+```
+U7 "backfill rewrites historical rows in place" | cost 5 × P(wrong) 0.15 = regret 0.75 |
+reversibility: irreversible → below the 1.0 bar, but NOT defaulted. Asking:
+The backfill overwrites 2.1M rows with no snapshot. Proceed how?
+  a) Snapshot first, then backfill (recommended — makes the step reversible)
+  b) Backfill in place (accept the risk)
+```
+Why good: regret alone would have silently defaulted this row because the agent felt
+confident; the floor routes it to the user, and the recommended option converts an
+irreversible step into a reversible one — the cheapest risk reduction there is.
 </Good>
 
 <Bad>
@@ -586,7 +412,9 @@ destroys the user's trust that a scout is safe to run.
 <Escalation_And_Stop_Conditions>
 - **User says "just build it" mid-discovery**: stop the technique, state in ≤3 lines the
   highest-regret unresolved unknowns and the conservative defaults you will take, then
-  proceed. Respect the exit; make the risk visible once, not repeatedly.
+  proceed. Respect the exit; make the risk visible once, not repeatedly. The one thing an
+  exit never waives: an unknown guarding an irreversible step gets its own one-line
+  confirmation (or its step waits for the user) before that step runs.
 - **Interview stalls** (answers stop changing any row's regret): stop interviewing; the
   remaining unknowns are cheaper to discover during implementation. Say so.
 - **Two failed quiz rounds**: recommend simplifying or splitting the change. Do not keep
@@ -609,67 +437,57 @@ destroys the user's trust that a scout is safe to run.
 <Final_Checklist>
 Lightweight lane:
 - [ ] Phase 0 routing was announced (quadrant → technique) before any technique ran
+- [ ] The prior was captured before discovery; contradicting findings surfaced as surprises
 - [ ] No discovery technique mutated product code
-- [ ] Interview questions were single, blast-radius-ordered, and non-discoverable
+- [ ] Interview questions were blast-radius-ordered, non-discoverable, ≤3 per round, and
+      never bundled when dependent
 - [ ] Artifacts delivered in reactable form (HTML default) with a reaction guide
+- [ ] Plans defined "verified" up front: a failable check per criterion + what it misses
 - [ ] Deviations logged at decision time, not reconstructed afterwards
 
-Cartographer lane (additionally):
-- [ ] Ledger exists with quadrant, cost, P(wrong), regret, route, status, phase per row
-- [ ] The domain checklist hook ran at seeding; missing domain rows were added
-- [ ] Every row was cleared via its route — no territory-answerable question was asked of
-      the user, and no experiment/audit row blocked the loop with useless extra rounds
-- [ ] Every round reported the ledger summary + gate checklist in the standard format
-- [ ] Gate verdict came from ledger-keeper when installed; UU probe was not skipped
-- [ ] Deferred rows all carry conservative defaults; no rows were deleted
-- [ ] First announcement line stated the clarity threshold and its source
-- [ ] Round 0 topology was confirmed by the user before any quadrant scoring
-- [ ] Every round's report included the four-quadrant score table with weighted ambiguity
-- [ ] Gate checked both axes: coverage conditions AND ambiguity ≤ threshold
-- [ ] On PASS, unknowns-spec-{slug}.md was written and marked pending approval
-- [ ] Execution bridge asked before any execution; plan author ≠ plan approver throughout
-- [ ] Quiz was generated from the ledger; merge recommendation followed the pass rule
+Cartographer lane: additionally run the checklist at the end of
+`references/cartographer.md`.
 </Final_Checklist>
 
 <Advanced>
 ## Resume
 
-The ledger IS the state. To resume an interrupted Cartographer session, re-read
-`unknowns-ledger.md` (and `implementation-notes.md` if the build started), announce the
-current gate status, and continue from the highest-regret open row. Do not re-seed.
+The ledger IS the state — see `references/cartographer.md` § Resume. Do not re-seed.
 
 ## Defaults (override by telling the skill)
 
 | Knob | Default | Meaning |
 |------|---------|---------|
 | Prototype directions N | 4 | genuinely different directions per brainstorm |
-| Regret question bar | 1.0 | rows below this get defaults, not questions |
+| Regret question bar | 1.0 | rows below this get defaults, not questions — never applies to irreversible rows |
 | Quiz size | 5–8 | questions per round |
 | Quiz rounds | 2 | before recommending simplify/split |
 | Cartographer soft cap | 10 rounds | then surface stuck rows / show scores |
 | Cartographer hard cap | 20 rounds | proceed, noting residual ambiguity |
-| Ambiguity threshold | 0.25 | override via settings or --quick 0.35 / --deep 0.15 |
+| Ambiguity threshold | 0.25 | settings `findingUnknowns.ambiguityThreshold`, or --quick 0.35 / --deep 0.15 |
 | Consensus iterations | 3 | planner↔reviewer loops in Phase E option 1 |
+| Execution attempt cap | 3 per task | then the task becomes a plan-suspect ledger row |
 | Questions per round | ≤3 independent | interview-route rows batched per round (dependent ones one at a time) |
 
-## Threshold configuration
+## Relationship to sibling tooling
 
-Optional, read at Cartographer entry (project overrides user; degrade silently to the
-default — no OMC runtime required):
+Prefer an installed sibling when it owns the mechanism; this skill owns the *unknowns
+lens* — quadrant routing, regret-priced rows, route-typed clearing, the reversibility
+floor, and lifecycle persistence from discovery through review.
 
-```json
-{ "findingUnknowns": { "ambiguityThreshold": 0.25 } }
-```
+| Need | Sibling (when installed) | Relationship |
+|------|--------------------------|--------------|
+| Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repo) | the handoff half — Phase 3 and Phase E's back end hand over to it |
+| Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` | Cartographer's ambiguity gating, topology gate and challenge modes are adapted from it; its `--frontier` mode is the closest analogue of batched independent questions + territory routing. Both are approval-gated. Use it when you want the OMC runtime |
+| Fog test + decision tickets on a tracker | `oh-my-claudecode:ask-navigator` | ticket types map onto routes (research ≈ territory, loft ≈ experiment, grilling ≈ interview); use it when decisions must live in an issue tracker rather than a ledger file |
+| Adversarial review of a diff/design | `oh-my-claudecode:interrogate` | stronger than a same-model panel for cost ≥ 4 code claims (C1 step 3.5) |
+| Throwaway prototype to settle a design | `oh-my-claudecode:loft` | an alternative backend for Technique 2 |
+| Decision trail for autonomous work | `oh-my-claudecode:show-me-your-work` | may serve as Technique 6's Deviations log |
+| Prove a change's blast radius | `oh-my-claudecode:blast-radius` | runs the checks; this skill only ranks by blast radius |
+| Restate the brief before starting | `oh-my-claudecode:in-your-own-words` / `sharpen` | lighter than Technique 1 when the gap is wording, not territory |
+| Learner-paced explanation | `oh-my-claudecode:teach` | Technique 8 grades and gates merge; teach only paces |
 
-## Relationship to heavier tooling
-
-- Cartographer's ambiguity gating, topology gate, and challenge modes are adapted from
-  `oh-my-claudecode:deep-interview` (itself Ouroboros-inspired), re-based on the four
-  quadrants. Deep-interview still wins when you want ontology/entity-convergence tracking,
-  OMC state persistence, or automatic handoff into autopilot/ralph/team; Cartographer adds
-  what deep-interview lacks — quadrant coverage, regret-priced rows, route-typed clearing,
-  and lifecycle persistence through build and review. Complementary, not competing.
-- Divergent option generation as a discipline → `superpowers:brainstorming`. Rigorous
-  written plans → `superpowers:writing-plans` / `oh-my-claudecode:plan`. Spec already
-  concrete → skip discovery and execute.
+Divergent option generation as a discipline → `superpowers:brainstorming`. Rigorous
+written plans → `superpowers:writing-plans` / `oh-my-claudecode:plan`. Spec already
+concrete → skip discovery and execute.
 </Advanced>

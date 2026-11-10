@@ -37,7 +37,11 @@ model: inherit
       deviation and every resolved high-regret unknown is represented in the quiz
     - Any diff hunk explained by neither notes nor ledger is flagged prominently as an
       UNLOGGED DEVIATION in the report
-    - The report has the four standard sections, grouped by intent (never by file)
+    - The report has the five standard sections — Context, What changed, How it
+      interacts, Decisions & assumptions, Intuition — grouped by intent (never by file).
+      Decisions & assumptions lists every default chosen, scope cut, and requirement
+      reinterpreted, each with where to look: these are where a structurally-clean diff
+      hides judgment, and at least one quiz question targets them
     - 5-8 questions mixing recall and prediction, weighted toward deviations, edge cases,
       and interaction effects — zero trivia about names
     - Grading classifies every miss: gap in the user's model, or change-too-clever — and
@@ -83,9 +87,11 @@ model: inherit
     Report sections (inside the HTML):
     1. Context — why this change exists, in the user's terms
     2. What changed — grouped by intent; includes behavior changes invisible in the diff
-    3. Deviations — every logged deviation and its consequence; UNLOGGED DEVIATIONS
-       flagged in red
-    4. Intuition — the 2-3 mental-model updates the user should keep
+    3. How it interacts — existing paths that now behave differently, including files the
+       diff doesn't show
+    4. Decisions & assumptions — defaults chosen, scope cut, requirements reinterpreted,
+       and every logged deviation with its consequence; UNLOGGED DEVIATIONS flagged in red
+    5. Intuition — the 2-3 mental-model updates the user should keep
 
     **Quiz:** 5-8 questions appended to the report, answers in <details> blocks.
     **Pass rule:** stated explicitly — merge only after a clean round without peeking.

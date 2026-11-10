@@ -1,60 +1,169 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
-  <defs>
-    <marker id="fa" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#5B6172"/></marker>
-    <linearGradient id="facc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A63D2"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient>
-  </defs>
-  <rect width="1000" height="560" rx="16" fill="#0F111A"/>
-  <rect x="0" y="0" width="1000" height="5" rx="2" fill="url(#facc)"/>
-  <text x="500" y="42" font-size="21" font-weight="700" fill="#F4F5F7" text-anchor="middle">Framework: one skill orchestrating four specialist agents</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1066" viewBox="0 0 1200 1066">
+<title>One plugin, two skills, four specialists</title>
+<defs>
+<marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#D97757"/></marker><marker id="ak" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#B1ADA1"/></marker><marker id="ad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#B5442E"/></marker><marker id="ao" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#788C5D"/></marker><marker id="as" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#6A9BCC"/></marker><marker id="ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#141413"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="115%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.10"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.5"/></pattern>
+<linearGradient id="fadeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="fade"><rect x="0" y="0" width="1200" height="150" fill="url(#fadeg)"/></mask>
+</defs>
+<rect x="0.5" y="0.5" width="1199" height="1065" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="1" y="1" width="1198" height="150" rx="18" fill="url(#dots)" mask="url(#fade)" opacity="0.7"/>
+<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" letter-spacing="1.5">// 02 · ARCHITECTURE</text>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">One plugin, two skills, four specialists</text>
+<text x="40" y="120" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Slash commands enter a skill; skills delegate to agents; everything leaves a file you can audit.</text>
 
-  <!-- skill hub -->
-  <rect x="360" y="70" width="280" height="96" rx="14" fill="#1A1526" stroke="#8A63D2" stroke-width="1.5"/>
-  <text x="500" y="104" font-size="17" font-weight="700" fill="#D9C7F5" text-anchor="middle">finding-unknowns (skill)</text>
-  <text x="500" y="128" font-size="12.5" fill="#A99BC9" text-anchor="middle">locates the unknown on the quadrant,</text>
-  <text x="500" y="146" font-size="12.5" fill="#A99BC9" text-anchor="middle">runs techniques inline or delegates</text>
-
-  <!-- workflow orchestration band (optional) -->
-  <rect x="40" y="192" width="950" height="112" rx="12" fill="#101822" stroke="#2DD4BF" stroke-dasharray="6 4"/>
-  <text x="62" y="218" font-size="14" font-weight="700" fill="#9BEBDD">Workflow orchestration (optional, opt-in) — references/workflows.md</text>
-  <g font-size="12" fill="#7FC5BA">
-    <text x="62" y="242">fu-multi-lens-sweep · scouts fan out, each finding verified as its lens completes (pipeline, no barrier)</text>
-    <text x="62" y="264">fu-verify-panel · 3-lens refutation for cost ≥ 4 rows</text>
-    <text x="62" y="286">fu-uu-until-dry · probe until two dry rounds</text>
-  </g>
-  <text x="928" y="264" font-size="11.5" fill="#58948A" text-anchor="end" font-style="italic">fallback ladder: Workflow → Agent calls → inline</text>
-
-  <!-- agents -->
-  <rect x="40" y="330" width="215" height="130" rx="12" fill="#241521" stroke="#F59E0B"/>
-  <text x="147" y="360" font-size="15" font-weight="700" fill="#F6C572" text-anchor="middle">blindspot-scout</text>
-  <text x="147" y="384" font-size="12" fill="#C9A46B" text-anchor="middle">read-only recon</text>
-  <text x="147" y="404" font-size="12" fill="#C9A46B" text-anchor="middle">landmines · hidden context</text>
-  <text x="147" y="430" font-size="11.5" fill="#8A7350" text-anchor="middle" font-style="italic">blind-spot pass · references</text>
-
-  <rect x="285" y="330" width="215" height="130" rx="12" fill="#160F26" stroke="#8A63D2"/>
-  <text x="392" y="360" font-size="15" font-weight="700" fill="#C9B6F2" text-anchor="middle">prototype-smith</text>
-  <text x="392" y="384" font-size="12" fill="#A99BC9" text-anchor="middle">throwaway HTML only</text>
-  <text x="392" y="404" font-size="12" fill="#A99BC9" text-anchor="middle">N divergent directions</text>
-  <text x="392" y="430" font-size="11.5" fill="#7A6BA0" text-anchor="middle" font-style="italic">brainstorm · plan</text>
-
-  <rect x="530" y="330" width="215" height="130" rx="12" fill="#0F1622" stroke="#5B8DEF"/>
-  <text x="637" y="360" font-size="15" font-weight="700" fill="#AFC6F6" text-anchor="middle">ledger-keeper</text>
-  <text x="637" y="384" font-size="12" fill="#8FA6D0" text-anchor="middle">regret scoring · gate verdict</text>
-  <text x="637" y="404" font-size="12" fill="#8FA6D0" text-anchor="middle">unknowns-ledger.md</text>
-  <text x="637" y="430" font-size="11.5" fill="#64769B" text-anchor="middle" font-style="italic">Cartographer mode</text>
-
-  <rect x="775" y="330" width="215" height="130" rx="12" fill="#0F1C1A" stroke="#2DD4BF"/>
-  <text x="882" y="360" font-size="15" font-weight="700" fill="#9BEBDD" text-anchor="middle">quiz-master</text>
-  <text x="882" y="384" font-size="12" fill="#7FC5BA" text-anchor="middle">fresh-eyes examiner</text>
-  <text x="882" y="404" font-size="12" fill="#7FC5BA" text-anchor="middle">report + must-pass quiz</text>
-  <text x="882" y="430" font-size="11.5" fill="#58948A" text-anchor="middle" font-style="italic">quiz · pitch</text>
-
-  <!-- edges: skill -> workflow band -> agents -->
-  <line x1="500" y1="166" x2="500" y2="190" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="200" y1="304" x2="160" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="410" y1="304" x2="395" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="620" y1="304" x2="633" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-  <line x1="830" y1="304" x2="870" y2="328" stroke="#5B6172" stroke-width="1.5" marker-end="url(#fa)"/>
-
-  <text x="500" y="505" font-size="13" fill="#94A3B8" text-anchor="middle">Every technique also works inline — agents add isolation, divergence, honest scoring, and fresh eyes when depth pays.</text>
-  <text x="500" y="528" font-size="13" fill="#94A3B8" text-anchor="middle">The workflow band is a mechanism, not a requirement: the same fan-out/verify/merge logic survives every rung of the ladder.</text>
+<text x="40" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" letter-spacing="1.2">[ 01 ] ENTRY · SLASH COMMANDS</text>
+<rect x="40" y="172" width="166.5" height="32" rx="16.0" fill="#F5DDD1"/><text x="123.2" y="192.4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="middle">$ /finding-unknowns</text>
+<text x="123.2" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Phase 0 routing</text>
+<rect x="218.5" y="172" width="114.0" height="32" rx="16.0" fill="#F5DDD1"/><text x="275.5" y="192.4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="middle">$ /blindspot</text>
+<text x="275.5" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Technique 1</text>
+<rect x="344.5" y="172" width="136.5" height="32" rx="16.0" fill="#F5DDD1"/><text x="412.8" y="192.4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="middle">$ /cartographer</text>
+<text x="412.8" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Cartographer mode</text>
+<rect x="493.0" y="172" width="129.0" height="32" rx="16.0" fill="#F5DDD1"/><text x="557.5" y="192.4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="middle">$ /change-quiz</text>
+<text x="557.5" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Technique 8</text>
+<rect x="660" y="172" width="191.8" height="32" rx="16.0" fill="#141413"/><text x="755.9" y="192.6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="600" text-anchor="middle">$ /keep-the-reasoning</text>
+<text x="755.9" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Step 0 · stakes triage</text>
+<path d="M123.2 232 L123.2 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
+<path d="M275.5 232 L275.5 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
+<path d="M412.8 232 L412.8 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
+<path d="M557.5 232 L557.5 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
+<path d="M755.9 232 L755.9 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
+<text x="40" y="276" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" letter-spacing="1.2">[ 02 ] SKILLS</text>
+<clipPath id="c1"><rect x="40" y="288" width="560" height="402" rx="12"/></clipPath><rect x="40" y="288" width="560" height="402" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="40" y="288" width="560" height="3" fill="#D97757" clip-path="url(#c1)"/>
+<text x="60" y="324" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#141413" font-weight="700">finding-unknowns</text>
+<rect x="254" y="302" width="131.5" height="26" rx="13.0" fill="#F5DDD1"/><text x="319.8" y="319.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="600" text-anchor="middle">BEFORE &amp; DURING</text>
+<text x="580" y="322" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">8 techniques · 1 escalation lane</text>
+<clipPath id="c2"><rect x="60" y="346" width="520" height="70" rx="10"/></clipPath><rect x="60" y="346" width="520" height="70" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
+<circle cx="92" cy="381.0" r="20" fill="#F5DDD1"/>
+<text x="92" y="385.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">0</text>
+<text x="124" y="372" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Phase 0 · Quadrant routing</text>
+<text x="124" y="393" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">KK · KU · UK · UU → pick technique(s); capture the prior; announce</text>
+<text x="124" y="409" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">the lane</text>
+<path d="M92 417 L92 429" fill="none" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c3"><rect x="60" y="430" width="520" height="70" rx="10"/></clipPath><rect x="60" y="430" width="520" height="70" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
+<circle cx="92" cy="465.0" r="20" fill="#F5DDD1"/>
+<text x="92" y="469.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="700" text-anchor="middle">1–8</text>
+<text x="124" y="456" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Techniques 1–8</text>
+<text x="124" y="477" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">blind-spot · prototype · interview · references · plan · notes ·</text>
+<text x="124" y="493" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">pitch · quiz</text>
+<path d="M92 501 L92 513" fill="none" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c4"><rect x="60" y="514" width="520" height="70" rx="10"/></clipPath><rect x="60" y="514" width="520" height="70" rx="10" fill="#FAF9F5" stroke="#D97757" stroke-width="1.5"/>
+<circle cx="92" cy="549.0" r="20" fill="#D97757"/>
+<text x="92" y="553.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">C</text>
+<text x="124" y="540" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Cartographer mode</text>
+<text x="124" y="561" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">high stakes: ledger, regret, dual gate ·</text>
+<text x="124" y="577" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">references/cartographer.md</text>
+<path d="M92 585 L92 597" fill="none" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c5"><rect x="60" y="598" width="520" height="70" rx="10"/></clipPath><rect x="60" y="598" width="520" height="70" rx="10" fill="#FAF9F5" stroke="#D97757" stroke-width="1.5"/>
+<circle cx="92" cy="633.0" r="20" fill="#D97757"/>
+<text x="92" y="637.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">E</text>
+<text x="124" y="624" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Phase E · Execution</text>
+<text x="124" y="645" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">approval-gated task graph · references/workflows.md</text>
+<text x="300" y="509.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="1" fill="#141413"></text>
+<clipPath id="c6"><rect x="660" y="288" width="240" height="402" rx="12"/></clipPath><rect x="660" y="288" width="240" height="402" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="660" y="288" width="240" height="3" fill="#788C5D" clip-path="url(#c6)"/>
+<text x="678" y="324" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">keep-the-reasoning</text>
+<rect x="678" y="336" width="97.0" height="26" rx="13.0" fill="#E4EBDA"/><text x="726.5" y="353.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#5B6B45" font-weight="600" text-anchor="middle">AT HANDOFF</text>
+<clipPath id="c7"><rect x="674" y="380" width="212" height="80" rx="10"/></clipPath><rect x="674" y="380" width="212" height="80" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
+<text x="688" y="402" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B45" font-weight="700" letter-spacing="1">STEP 0</text>
+<text x="688" y="422" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#141413" font-weight="700">Stakes triage</text>
+<text x="688" y="438" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">offload vs keep the reasoning</text>
+<path d="M780.0 461 L780.0 471" fill="none" stroke="#788C5D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ao)"/>
+<clipPath id="c8"><rect x="674" y="472" width="212" height="80" rx="10"/></clipPath><rect x="674" y="472" width="212" height="80" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
+<text x="688" y="494" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B45" font-weight="700" letter-spacing="1">STEP 1</text>
+<text x="688" y="514" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#141413" font-weight="700">Front end</text>
+<text x="688" y="530" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">prior captured; “verified”</text>
+<text x="688" y="545" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">defined up front</text>
+<path d="M780.0 553 L780.0 563" fill="none" stroke="#788C5D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ao)"/>
+<clipPath id="c9"><rect x="674" y="564" width="212" height="80" rx="10"/></clipPath><rect x="674" y="564" width="212" height="80" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
+<text x="688" y="586" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B45" font-weight="700" letter-spacing="1">STEP 3</text>
+<text x="688" y="606" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#141413" font-weight="700">Handoff packet</text>
+<text x="688" y="622" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">evidence first … summary last</text>
+<text x="678" y="654" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" font-style="italic">Step 1 is satisfied by finding-</text>
+<text x="678" y="669" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" font-style="italic">unknowns’ priors and contract.</text>
+<path d="M580 465.0 C620 465.0 626 465.0 656 465.0" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<path d="M580 633.0 C620 633.0 626 633.0 656 633.0" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<rect x="590" y="431.0" width="64" height="28" rx="6" fill="#FAF9F5"/>
+<text x="622" y="444.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="700" text-anchor="middle">Phase 3</text>
+<text x="622" y="457.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#5E5D59" text-anchor="middle">hands off</text>
+<rect x="590" y="599.0" width="64" height="28" rx="6" fill="#FAF9F5"/>
+<text x="622" y="612.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="700" text-anchor="middle">Phase E</text>
+<text x="622" y="625.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#5E5D59" text-anchor="middle">hands off</text>
+<text x="40" y="736" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" letter-spacing="1.2">[ 03 ] AGENTS · DELEGATED WHEN THE CASE PAYS</text>
+<clipPath id="c10"><rect x="40" y="744" width="200" height="98" rx="12"/></clipPath><rect x="40" y="744" width="200" height="98" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><rect x="40" y="744" width="3" height="98" fill="#6A9BCC" clip-path="url(#c10)"/>
+<text x="58" y="772" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">blindspot-scout</text>
+<rect x="58" y="784" width="61.4" height="22" rx="11.0" fill="#DDE9F4"/><text x="88.7" y="799.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#3F6C99" font-weight="600" text-anchor="middle">sonnet</text>
+<text x="58" y="816" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">read-only recon</text>
+<text x="58" y="833" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600">backs  Technique 1, 4</text>
+<clipPath id="c11"><rect x="260" y="744" width="200" height="98" rx="12"/></clipPath><rect x="260" y="744" width="200" height="98" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><rect x="260" y="744" width="3" height="98" fill="#D4A27F" clip-path="url(#c11)"/>
+<text x="278" y="772" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">prototype-smith</text>
+<rect x="278" y="784" width="68.3" height="22" rx="11.0" fill="#F5DDD1"/><text x="312.1" y="799.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="600" text-anchor="middle">inherit</text>
+<text x="278" y="816" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">throwaway prototypes</text>
+<text x="278" y="833" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600">backs  Technique 2, 5</text>
+<clipPath id="c12"><rect x="480" y="744" width="200" height="98" rx="12"/></clipPath><rect x="480" y="744" width="200" height="98" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><rect x="480" y="744" width="3" height="98" fill="#D97757" clip-path="url(#c12)"/>
+<text x="498" y="772" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">ledger-keeper</text>
+<rect x="498" y="784" width="68.3" height="22" rx="11.0" fill="#F5DDD1"/><text x="532.1" y="799.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="600" text-anchor="middle">inherit</text>
+<text x="498" y="816" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">ledger + gate verdict</text>
+<text x="498" y="833" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600">backs  Cartographer</text>
+<clipPath id="c13"><rect x="700" y="744" width="200" height="98" rx="12"/></clipPath><rect x="700" y="744" width="200" height="98" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><rect x="700" y="744" width="3" height="98" fill="#788C5D" clip-path="url(#c13)"/>
+<text x="718" y="772" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">quiz-master</text>
+<rect x="718" y="784" width="68.3" height="22" rx="11.0" fill="#F5DDD1"/><text x="752.1" y="799.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="600" text-anchor="middle">inherit</text>
+<text x="718" y="816" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">read-only examiner</text>
+<text x="718" y="833" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600">backs  Technique 7, 8</text>
+<path d="M320 692 L320 722" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4" marker-end="url(#ak)"/>
+<text x="332" y="710" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" font-style="italic">delegates when isolation or independent judgement pays</text>
+<text x="40" y="882" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" letter-spacing="1.2">[ 04 ] ARTIFACTS · WHAT STAYS ON DISK</text>
+<clipPath id="c14"><rect x="40.0" y="890" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="40.0" y="890" width="366.6666666666667" height="46" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
+<text x="54.0" y="918" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">unknowns-ledger.md</text>
+<text x="392.6666666666667" y="918" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">ledger-keeper · stays open</text>
+<clipPath id="c15"><rect x="416.6666666666667" y="890" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="416.6666666666667" y="890" width="366.6666666666667" height="46" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
+<text x="430.6666666666667" y="918" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">unknowns-spec-*.md</text>
+<text x="769.3333333333334" y="918" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">+ verification contract</text>
+<clipPath id="c16"><rect x="793.3333333333334" y="890" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="793.3333333333334" y="890" width="366.6666666666667" height="46" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
+<text x="807.3333333333334" y="918" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">implementation-notes.md</text>
+<text x="1146.0" y="918" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">Technique 6 · deviations</text>
+<clipPath id="c17"><rect x="40.0" y="946" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="40.0" y="946" width="366.6666666666667" height="46" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
+<text x="54.0" y="974" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">prototypes/*.html</text>
+<text x="392.6666666666667" y="974" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">prototype-smith</text>
+<clipPath id="c18"><rect x="416.6666666666667" y="946" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="416.6666666666667" y="946" width="366.6666666666667" height="46" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
+<text x="430.6666666666667" y="974" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">change-report.html</text>
+<text x="769.3333333333334" y="974" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">quiz-master · must-pass quiz</text>
+<clipPath id="c19"><rect x="793.3333333333334" y="946" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="793.3333333333334" y="946" width="366.6666666666667" height="46" rx="10" fill="#F5DDD1" stroke="#D97757" stroke-width="1"/>
+<text x="807.3333333333334" y="974" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">handoff packet</text>
+<text x="1146.0" y="974" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">keep-the-reasoning · Step 3</text>
+<clipPath id="c20"><rect x="920" y="158" width="240" height="684" rx="14"/></clipPath><rect x="920" y="158" width="240" height="684" rx="14" fill="#141413" stroke="#141413" stroke-width="1"/>
+<text x="940" y="192" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#D4A27F" font-weight="700" letter-spacing="1.4">DEFERS TO,</text>
+<text x="940" y="210" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#D4A27F" font-weight="700" letter-spacing="1.4">WHEN INSTALLED</text>
+<text x="940" y="230" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1" font-style="italic">oh-my-claudecode siblings</text>
+<circle cx="944" cy="261.0" r="3.5" fill="#D97757"/>
+<text x="958" y="265.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">interrogate</text>
+<text x="958" y="283.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">adversarial review of a diff or</text>
+<text x="958" y="298.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">design</text>
+<circle cx="944" cy="342.7142857142857" r="3.5" fill="#D97757"/>
+<text x="958" y="346.7142857142857" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">loft</text>
+<text x="958" y="364.7142857142857" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">throwaway prototype backend</text>
+<circle cx="944" cy="424.42857142857144" r="3.5" fill="#D97757"/>
+<text x="958" y="428.42857142857144" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">show-me-your-work</text>
+<text x="958" y="446.42857142857144" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">decision trail → Deviations log</text>
+<circle cx="944" cy="506.1428571428571" r="3.5" fill="#D97757"/>
+<text x="958" y="510.1428571428571" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">blast-radius</text>
+<text x="958" y="528.1428571428571" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">proves the wide lane’s</text>
+<text x="958" y="543.1428571428571" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">dependents</text>
+<circle cx="944" cy="587.8571428571429" r="3.5" fill="#D97757"/>
+<text x="958" y="591.8571428571429" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">deep-interview</text>
+<text x="958" y="609.8571428571429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">OMC state, ontology, ralplan</text>
+<text x="958" y="624.8571428571429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">handoff</text>
+<circle cx="944" cy="669.5714285714286" r="3.5" fill="#D97757"/>
+<text x="958" y="673.5714285714286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">ask-navigator</text>
+<text x="958" y="691.5714285714286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">decisions as tracker tickets</text>
+<circle cx="944" cy="751.2857142857142" r="3.5" fill="#D97757"/>
+<text x="958" y="755.2857142857142" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">teach</text>
+<text x="958" y="773.2857142857142" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">learner-paced explanation</text>
+<rect x="40" y="1014" width="1120" height="36" rx="10" fill="#141413"/>
+<text x="60" y="1037" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#D4A27F" font-weight="700" letter-spacing="1.4">PRINCIPLES</text>
+<text x="168" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#FAF9F5" font-weight="700">author never self-approves</text>
+<circle cx="390" cy="1032" r="3" fill="#D97757"/>
+<text x="404" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#FAF9F5" font-weight="700">gate on blast radius, not confidence</text>
+<circle cx="684" cy="1032" r="3" fill="#D97757"/>
+<text x="698" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#FAF9F5" font-weight="700">the irreversible lane always waits for the user</text>
 </svg>

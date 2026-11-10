@@ -4,6 +4,97 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0]
+
+### Breaking — progressive-disclosure layout
+- `SKILL.md` slimmed from 675 to ~490 lines: it keeps routing, the eight techniques, and a
+  Cartographer **summary**; the full normative Cartographer protocol (C0–C3, Phase E,
+  resume, threshold config, Cartographer checklist) moves to
+  `skills/finding-unknowns/references/cartographer.md`, read on demand before entering the
+  mode. Anything that read Phase C from `SKILL.md` directly (custom commands, forks) must
+  now read the reference file. `/cartographer` is updated.
+
+### Added — `keep-the-reasoning`, a sibling skill for the handoff
+- New skill `skills/keep-the-reasoning/SKILL.md` + `/keep-the-reasoning` command,
+  distilled from Addy Osmani's "Critical thinking when agents do the work". Where
+  finding-unknowns covers the unknowns *before* work, this covers the human's judgment
+  *at acceptance*: stakes triage (offload vs keep-the-reasoning), hypothesis before
+  asking, "verified" defined up front, and a fixed-order handoff packet — evidence first,
+  what each check proved and did NOT prove, decisions & assumptions, prior vs result,
+  fresh-context counterargument, a never-empty "not checked", summary last. Also:
+  surrender signals, rejection-becomes-a-rule, orchestration-tax warning, opt-in
+  practice mode. No OMC skill covered this human-side posture.
+
+### Added — from the two source articles, critically adapted
+- **Irreversibility floor** (ledger `reversibility` column: reversible · wide ·
+  irreversible). Regret contains P(wrong), a confidence estimate; for irreversible rows
+  confidence never substitutes for the user — never silently defaulted under the 1.0
+  bar, resolved only with recorded user confirmation. New seventh gate condition.
+- **Priors**: every row records the user's/agent's expectation before evidence-based
+  scoring; contradictions surface as surprises (blindspot-scout gains a Surprises
+  section when given a prior; Phase 0 captures the prior).
+- **Verification contract** in the crystallized spec and in Technique 5: per criterion
+  a failable check, its artifact, what it proves, what it does NOT prove, and its lane;
+  checks locked against the implementer.
+- **Phase E execution rules** — the loop lives inside a task, the graph between tasks;
+  edges must name what crosses (unnamed edges dropped); mechanical steps are code nodes;
+  failures return per unit with `UNIT · VERDICT · REASON · EVIDENCE · SCOPE`; attempt cap
+  (default 3) turns a task into a plan-suspect ledger row; a learning edge feeds derived
+  constraints to every task not yet started; lanes close tasks by reversibility (the
+  irreversible lane always waits for the user); the human sits at both ends — spec +
+  contract at the front, irreversible lane + merge at the back — not in the middle.
+- `fu-execute-verified` rewritten accordingly, then hardened after an independent
+  adversarial review (1 CRITICAL, 6 HIGH, reproduced against a stubbed runtime): argument
+  validation fails closed (unknown/missing lane, empty checks, duplicate ids, unknown
+  deps, cycles, touched paths overlapping check files, irreversible tasks without
+  post-checks); unnamed edges are dropped only from reversible upstreams and only after
+  `confirmDroppedEdges`; per-task scheduling replaces wave barriers; path locks serialize
+  tasks with overlapping `touches`; a separate check-runner context reports exit codes
+  and check-file hashes, compared in code against a pre-run baseline (tampering stops
+  the task); the irreversible lane runs only dry-run checks, waits for the user, and
+  closes on post-checks after a resume with `executed`; `closed` lets a run resume
+  without re-implementing; retries carry a code-built reason and the verifier sees the
+  previous return; null agent results become `infra-error` instead of plan defects;
+  derived constraints are deduped, conflicting ones halt the run, and already-closed
+  tasks are listed for re-check. The template states which guarantees are enforced in
+  code and which only by prompt. A second review round closed the remaining fail-open
+  edges: paths normalized and globs rejected before locking; no task may touch any
+  task's check files, with one baseline hashed before any implementer runs; check
+  results matched to contract checks by exact string; check files mandatory for `wide`
+  and `irreversible` tasks and missing baseline hashes treated as infra errors;
+  `pending` lets a resume return tasks still awaiting the user without re-implementing
+  them; writes outside every declared path stop the run (`scope-violation`); an
+  implementer that never returns is an infra error, not a plan defect; a verdict whose
+  constraint conflicts with the spec halts its own task. A third round fixed the scope
+  check's false halts: paths already dirty before the run (the ledger, spec, notes, WIP)
+  are baselined and excluded, `changedPaths` is mandatory, `.`/`..` paths are rejected,
+  duplicate check results take the worst exit code, and contradictory resume lists are
+  rejected. Exercised by a 50-scenario harness against a stubbed agent runtime (task
+  inputs are never mutated), plus the reviewer's own adversarial scenarios.
+- Exits (early exit, round-20 cap, "just build it") never waive the irreversibility
+  floor; reversibility is classified upward when unsure and downgrades need the user;
+  the task graph itself is user-approved before execution; the no-subagent rung never
+  auto-closes a lane; the ledger's resolution column is append-only so priors survive.
+- quiz-master's report gains **Decisions & assumptions** (defaults, scope cuts,
+  reinterpreted requirements); Technique 8 matches.
+- Not adopted, deliberately: "approve only the last step" (a human reviewing only a
+  final artifact they never framed is rubber-stamping — contradicted by the Osmani
+  source) and "confidence is the only input the model can influence" (agents can also
+  edit their own checks — hence the locked contract). Unsupported magic numbers (3–6
+  lanes) were not imported.
+
+### Changed — re-synced with oh-my-claudecode 5.8.1
+- Relationship section rewritten as a sibling table: defer to `interrogate`, `loft`,
+  `show-me-your-work`, `blast-radius`, `in-your-own-words`/`sharpen`, `teach`,
+  `ask-navigator` when installed instead of duplicating them.
+- Corrected the deep-interview comparison: it is approval-gated (not "automatic handoff"),
+  and its `--frontier` mode is the closest analogue of batched independent questions +
+  territory routing.
+- Frontmatter adopts OMC's current shape: one-sentence description, `aliases`, and a
+  `metadata.credits` block.
+- Fixed stale "one question at a time" wording left over from before 3.7.0 across the
+  docs.
+
 ## [3.7.0]
 
 ### Changed — inheritance-aware model routing + batched interview

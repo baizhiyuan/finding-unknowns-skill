@@ -1,11 +1,13 @@
 {
   "name": "finding-unknowns-skill",
-  "owner": { "name": "baizhiyuan" },
+  "owner": {
+    "name": "baizhiyuan"
+  },
   "plugins": [
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "Discover your unknowns before they get expensive: blind-spot pass, brainstorm, interview, references, plan, notes, pitch, quiz — plus Cartographer mode (coverage gate + unknowns ledger + regret weighting + per-quadrant ambiguity scoring + cross-validated execution bridge)."
+      "description": "Discover your unknowns before they get expensive (blind-spot pass, prototype, interview, references, plan, notes, pitch, quiz, Cartographer mode) — and keep the reasoning when agents hand work back (keep-the-reasoning handoff packets)."
     }
   ]
 }
