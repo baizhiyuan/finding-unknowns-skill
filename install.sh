@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the skills (finding-unknowns, keep-the-reasoning), their references, the
+# Install the skills (finding-unknowns, keep-the-reasoning, theory-vs-result), their references, the
 # companion agents, and the slash commands into the global Claude Code config directory.
 set -euo pipefail
 
@@ -37,6 +37,6 @@ for cmd in "$SRC"/commands/*.md; do
 done
 
 echo
-echo "Done. Skills: finding-unknowns, keep-the-reasoning (invoke via the Skill tool)."
-echo "Agents (blindspot-scout, prototype-smith, ledger-keeper, quiz-master)"
+echo "Done. Skills: finding-unknowns, keep-the-reasoning, theory-vs-result (invoke via the Skill tool)."
+echo "Agents (blindspot-scout, prototype-smith, ledger-keeper, quiz-master, mechanism-auditor)"
 echo "are available to the Agent tool and are delegated to automatically by the skill."

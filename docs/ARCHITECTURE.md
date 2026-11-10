@@ -12,6 +12,7 @@ skills/
   finding-unknowns/  Before/during work — routing, techniques, Cartographer mode, guardrails
     references/      cartographer.md (normative Cartographer protocol), workflows.md
   keep-the-reasoning/  The handoff — stakes triage, handoff packet
+  theory-vs-result/  Measured results — prediction card, Theory → Measured → Consistent? → Mechanism cards
 agents/              Specialists — isolated execution profiles the main context lacks
 docs/                Reference documentation (this file)
 ```
@@ -28,19 +29,29 @@ point, passing `$ARGUMENTS` as the task:
 | `/cartographer` | Phase C (Cartographer mode) |
 | `/change-quiz` | Technique 8 (quiz) |
 | `/keep-the-reasoning` | Step 0 of the `keep-the-reasoning` skill (stakes triage; Step 3 if the work is done) |
+| `/theory-vs-result` | Step 0 of the `theory-vs-result` skill (triage; stops after Step 1 if nothing is measured yet; Step 2 if the result is in hand) |
 
 Keeping commands thin means each protocol has exactly one source of truth: its `SKILL.md`.
 A command never restates procedure; it names the section to execute.
 
 ### Layer 2 — The skills (protocol)
 
-There are two sibling skills. `finding-unknowns` covers the unknowns *before and during*
+There are three sibling skills. `finding-unknowns` covers the unknowns *before and during*
 work. `keep-the-reasoning` covers the human's judgment *at acceptance*: stakes triage
 (offload vs keep the reasoning), a hypothesis before asking, "verified" defined up front,
 and a fixed-order handoff packet (evidence first; what each check proved and did NOT
 prove; decisions and assumptions; prior vs result; a fresh-context counterargument; a
 never-empty "not checked"; summary last). `finding-unknowns` Phase 3 and the Phase E back
 end hand over to it.
+
+The third, `theory-vs-result`, covers *measured results*: a result is reported as a
+fixed card — Theory → Measured → Consistent? → Mechanism — with the prediction written
+before the data (else `post-hoc`), a noise floor, fairness checks, a consistency verdict,
+and mechanism evidence tiers (verified · supported · inferred · untested). The *rule
+verdict* (PASS · FAIL · UNCERTAIN · descriptive only) is kept apart from the *direction
+verdict* (alive · alive-but-constrained · weakened · dead), and a new or tightened
+threshold is explained in plain language and approved before it is frozen. It meets
+`finding-unknowns` at the `experiment` route and `keep-the-reasoning` at packet section 4.
 
 `SKILL.md` is written as an executable protocol, not a description. Its structure:
 
@@ -79,6 +90,7 @@ the same context that implements.**
 | `prototype-smith` | inherit | writes throwaway files only | Diverges into N directions in one pass; sandboxed away from the real application |
 | `ledger-keeper` | inherit | ledger file only | Scoring and gate verdicts need consistency and independence — a bookkeeper that did not conduct the interview will not inflate its verdict |
 | `quiz-master` | inherit | read-only + report | An examiner that did not author the diff probes what the author glosses over |
+| `mechanism-auditor` | inherit | read-only | The context that predicted an effect and measured it believes its own mechanism; a fresh referee re-derives the numbers and downgrades unearned verdicts and tiers |
 
 Model routing (v3.7.0) follows the cost/judgment split used by mature frameworks — OMC
 (opus for judgment, sonnet for execution, haiku for breadth) and Deep Research (strongest
@@ -147,6 +159,10 @@ state store, no re-seeding.
    section when given a prior) rather than being absorbed quietly.
 10. **Checks the implementer cannot edit.** The verification contract is locked against the
     implementer, since agents can also edit their own checks.
+11. **Prediction before measurement; two verdicts never merged.** A theory written after the
+    data is labelled `post-hoc`. The verdict under the pre-agreed rule is final for that run;
+    the judgment about the direction is separate, and a mechanism can keep a direction alive
+    but cannot overturn a rule verdict.
 
 ### Phase E execution rules
 
@@ -178,6 +194,8 @@ are enforced in code and which only by prompt.
 ## Relationship to upstream paradigms
 
 - Technique content derives from Thariq Shihipar's essay (see README attribution).
+- `theory-vs-result` is distilled from a long-running empirical research practice, generalized for any
+  measured claim.
 - `keep-the-reasoning` and the verification contract draw on Addy Osmani's "Critical
   thinking when agents do the work" (https://x.com/addyosmani/status/2117512471930167377).
   The Phase E execution rules draw on Anthropic's "Building effective agents"

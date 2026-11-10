@@ -137,6 +137,8 @@ by its route. Repeat until the gate passes or the user exits:
    - `territory` → run the check now (Grep/Read/scout); report the evidence found.
    - `experiment` → do NOT block the loop: record the experiment spec (what to run, what
      result clears the row) as the row's clearing action; the row stays `probing`.
+     When results return, report them as `theory-vs-result` cards and write the row's
+     resolution from the card (its consistency verdict and mechanism tier).
    - `audit` → likewise: name the artifact, what to look for, and the expected effort;
      the row stays `probing` until the audit result arrives.
 3. **Re-score** the row's P(wrong) from the answer/evidence; recompute regret. Answers may

@@ -4,9 +4,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-4.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.0.0">
-  <img src="https://img.shields.io/badge/skills-2-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="2 skills">
-  <img src="https://img.shields.io/badge/agents-4-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="4 agents">
+  <img src="https://img.shields.io/badge/version-4.1.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.1.0">
+  <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 skills">
+  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
 </p>
 
@@ -40,7 +40,7 @@ Then:
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-Prefer a clone? `install.sh` installs both skills, `references/`, the four agents, and the slash commands:
+Prefer a clone? `install.sh` installs all three skills, `references/`, the five agents, and the slash commands:
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -53,10 +53,11 @@ No install at all? Copy [`CLAUDE.md`](CLAUDE.md) into a project root for lightwe
 <summary><b>Manual copy (skills only)</b></summary>
 
 ```bash
-mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning
+mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning ~/.claude/skills/theory-vs-result
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
 cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
 cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
+cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 ```
 
 </details>
@@ -81,10 +82,11 @@ Phase 0 places the gap on the quadrant map, captures your prior, and routes to t
 
 - **High stakes** (hard to reverse, wide blast radius, unfamiliar territory + long horizon) → `/cartographer --deep "…"`
 - **Work is done, the risk is accepting it** → `/keep-the-reasoning "…"`
+- **A result is in (or about to be measured), the risk is misreading it** → `/theory-vs-result "…"`
 
 ### Updating
 
-Update the same way you installed. Latest release: **v4.0.0**.
+Update the same way you installed. Latest release: **v4.1.0**.
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -103,14 +105,15 @@ Update the same way you installed. Latest release: **v4.0.0**.
 cd finding-unknowns-skill && git pull origin main && bash install.sh
 ```
 
-**Manual copy** — overwrite the same files. `references/` carries the Cartographer protocol and the Workflow templates and must be updated too; v4 also adds the `keep-the-reasoning` skill.
+**Manual copy** — overwrite the same files. `references/` carries the Cartographer protocol and the Workflow templates and must be updated too; v4 added the `keep-the-reasoning` skill and v4.1 adds `theory-vs-result`.
 
 ```bash
 cd finding-unknowns-skill && git pull origin main
-mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning
+mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning ~/.claude/skills/theory-vs-result
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
 cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
 cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
+cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 cp agents/*.md   ~/.claude/agents/
 cp commands/*.md ~/.claude/commands/
 ```
@@ -119,8 +122,8 @@ cp commands/*.md ~/.claude/commands/
 
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
-  || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md
-# expect: 4.0.0 (plugin) — or both files listed (they exist only from v4.0.0 on)
+  || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
+# expect: 4.1.0 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
 ```
 
 </details>
@@ -134,23 +137,25 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 - **Coverage-gated Cartographer mode** — for high stakes: a regret-ordered unknowns ledger, clarity scores shown every round, and a seven-condition gate that won't let implementation start while the territory is unmapped.
 - **Irreversibility floor** — gate on blast radius, not confidence. An unknown guarding an irreversible step always reaches you, however confident the evidence looks.
 - **Keep the reasoning at the handoff** — an evidence-first packet that says what each check did NOT prove and what went unchecked, so accepting agent work never slides into cognitive surrender.
+- **Theory before data** — every measured result arrives as Theory → Measured → Consistent? → Mechanism: the prediction written first, the noise floor stated, the mechanism tagged with how well it is evidenced, and the rule verdict kept apart from the verdict on the idea.
 - **Independent judgment** — the author never self-approves. Discovery, scoring, and examination run in contexts that did not do the implementing.
 - **Zero dependencies** — plain Markdown. Agents and Workflow scripts add depth; every technique also runs fully inline.
 
-> **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own).
+> **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own). `theory-vs-result` is distilled from a long-running empirical research practice and generalized for any measured claim: a number is not a finding until you know what was expected, whether the gap beats noise, and why it came out that way.
 
 ---
 
 ## Features
 
-### The two skills
+### The three skills
 
 | Skill | What it is | Use for |
 |-------|------------|---------|
 | **`finding-unknowns`** | Phase 0 quadrant routing → eight techniques → optional Cartographer mode | Before and during work: surfacing the unknowns that would otherwise become guesses |
 | **`keep-the-reasoning`** | Stakes triage, "verified" defined up front, a fixed-order handoff packet | The handoff: accepting agent work without surrendering judgment |
+| **`theory-vs-result`** | Prediction card first, then Theory → Measured → Consistent? → Mechanism cards, with two separate verdicts | Measured results: backtests, benchmarks, A/B tests, ablations, training runs — never a number without its prediction and its reason |
 
-`finding-unknowns` hands over to `keep-the-reasoning` at the end of Phase 3 and of the Cartographer execution bridge.
+`finding-unknowns` hands over to `keep-the-reasoning` at the end of Phase 3 and of the Cartographer execution bridge. Returning `experiment`-route results are reported through `theory-vs-result`, whose summary table also serves as the handoff packet's "prior vs result" section.
 
 ### The eight techniques
 
@@ -243,6 +248,19 @@ When the host exposes Claude Code's **Workflow tool** and you opt in, the fan-ou
 
 When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, verification contract, and the quiz-master's Decisions & assumptions instead of repeating them.
 
+### Theory vs result
+
+| Step | What it is | Use for |
+|------|------------|---------|
+| **Result triage** | `note` (one number, nothing rides on it) · `report` (someone will act on it, or it misses) · `decision` (adopt/ship, a pre-agreed rule, money) | Scaling the card to what rides on the number |
+| **Prediction card** | Claim, mechanism chain, direction + magnitude + *where* it should show, noise floor, falsifier, decision rule — written before the data, else labelled `post-hoc` | Giving a result something to disagree with |
+| **Fair measurement** | Matched baseline, one variable changed, same seeds, the metric you are actually paid for, data budget respected | Not crediting a change with what the sample did |
+| **Result card** | Theory → Measured → Consistent? → Mechanism (理论预期 → 实测 → 是否一致 → 机理); consistency is `consistent` · `partly` · `inconsistent` · `can't tell`; mechanism tier is `verified` · `supported` · `inferred` · `untested` | Keeping facts, inferences, and untested stories visibly apart |
+| **Mismatch walk** | Pipeline → comparison → metric → theory → environment; name the broken link and the smallest check that separates the explanations | Neither dismissing a direction on one run nor rescuing it with a story |
+| **Two verdicts** | Rule verdict (`PASS` · `FAIL` · `UNCERTAIN` · `descriptive only`) vs direction verdict (`alive` · `alive-but-constrained` · `weakened` · `dead`) | A mechanism can keep a direction alive; it never turns a `FAIL` into a `PASS` |
+
+A new or tightened threshold is first explained in plain language — what it protects against, why this number, what failing it means — and frozen only after you approve; it applies from then on, never retroactively. For report and decision lanes, the cards go to the read-only `mechanism-auditor` agent, which downgrades tiers the evidence does not earn and proposes an alternative mechanism that fits the same numbers.
+
 ### Agents & model routing
 
 **Commands dispatch, skills decide, agents execute, documents persist.** Procedure lives in one place per skill; commands and agents are enhancements, not dependencies.
@@ -257,6 +275,7 @@ When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, ver
 | **`prototype-smith`** | inherit | writes throwaway files only | Prototype, Plan | N genuinely divergent directions in one pass, sandboxed from the real app |
 | **`ledger-keeper`** | inherit | ledger file only | Cartographer | Regret, clarity scores, and the gate verdict — without grading its own interview |
 | **`quiz-master`** | inherit | read-only + report | Pitch, Quiz | Fresh-eyes examiner that did not author the change; flags unlogged deviations |
+| **`mechanism-auditor`** | inherit | read-only | `theory-vs-result` | Referee that did not write the theory or run the measurement; downgrades unearned verdicts and tiers |
 
 **Model routing** — judgment and creative agents use `model: inherit`, so they run at the session's own strength and are never downgraded. `blindspot-scout` is the one deliberate cost tier (`sonnet`) because recon fans out in parallel; set it to `inherit` for single-lens passes. Follows OMC's role tiers and Deep Research's "strongest model at the synthesis centre, cheaper fan-out" — with the top tier inherited rather than pinned.
 
@@ -273,7 +292,8 @@ These run **inside a Claude Code session**. Each command is a thin dispatcher in
 | `/cartographer` | Slash command → Phase C | Ledger, scored clearing loop, dual gate, execution bridge | `/cartographer --deep "migrate billing"` |
 | `/change-quiz` | Slash command → Technique 8 | Change report + must-pass comprehension quiz | `/change-quiz main..HEAD` |
 | `/keep-the-reasoning` | Slash command → `keep-the-reasoning` Step 0 (Step 3 if the work is done) | Stakes triage, then the handoff packet | `/keep-the-reasoning "ship the migration?"` |
-| `finding-unknowns` / `keep-the-reasoning` | Skill tool | The same skills, no plugin commands needed | invoke via the Skill tool |
+| `/theory-vs-result` | Slash command → `theory-vs-result` Step 0 (stops after the prediction card if nothing is measured yet; a result already in hand is marked `post-hoc`) | Triage, then the Theory → Measured → Consistent? → Mechanism cards | `/theory-vs-result "did the new loss beat baseline?"` |
+| `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill tool | The same skills, no plugin commands needed | invoke via the Skill tool |
 | plain language | Prompt | Request one technique directly | _"do a blind-spot pass"_, _"interview me"_, _"brainstorm four directions"_ |
 
 **Notes:**
@@ -299,7 +319,7 @@ Other defaults — prototype directions (4), regret question bar (1.0, never app
 
 ## Demo
 
-> _Illustrative transcripts, written to the output templates in the two `SKILL.md` files and `references/cartographer.md` — not recordings of real sessions._
+> _Illustrative transcripts, written to the output templates in the three `SKILL.md` files and `references/cartographer.md` — not recordings of real sessions._
 
 **Phase 0 routing** — announced before any technique runs, so you can veto it.
 
@@ -365,6 +385,26 @@ The anti-pattern it replaces: _"Done! The migration is ready and all tests pass 
 
 </details>
 
+<details>
+<summary><b>A theory-vs-result card — the prediction, the miss, and the broken link</b></summary>
+
+```
+[R1] Does the read-through cache cut API p95?
+Theory      : 80% of reads repeat within 60s → hit rate ~0.8 → p95 roughly halves.
+              Writes should not change.
+Measured    : p95 412 → 371 ms (−10%), 5 reruns, spread ±15 ms; hit rate 0.31; write p95 flat.
+Consistent? : partly — direction yes, magnitude no; writes flat as predicted.
+Mechanism   : broken link = "80% repeat". The cache key includes the session ID, so
+              repeats from different sessions miss [supported: the key format explains
+              a 0.31 hit rate].
+              Next check: replay one hour of logs with a session-free key; the predicted
+              hit rate is ≥0.7.
+```
+
+The anti-pattern it replaces: _"p95 only dropped 10%, the cache doesn't work."_
+
+</details>
+
 ---
 
 ## How it Compares
@@ -386,6 +426,7 @@ Deep Interview (as of OMC 5.8.1) is approval-gated; its `--frontier` mode is the
 | Need | Sibling (when installed) |
 |------|--------------------------|
 | Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repository) |
+| Reporting a measured result against its prediction | `theory-vs-result` (this repository) |
 | Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` |
 | Fog test and decision tickets on a tracker | `oh-my-claudecode:ask-navigator` |
 | Adversarial review of a diff or design | `oh-my-claudecode:interrogate` |
@@ -415,7 +456,8 @@ finding-unknowns  (orient: which quadrant is this unknown in?)
         ├─ divergent option generation               → superpowers:brainstorming
         ├─ a rigorous written plan                   → superpowers:writing-plans / omc-plan
         ├─ the specification is already concrete     → OMC autopilot / ralph / team
-        └─ the work is done, the risk is the handoff → keep-the-reasoning
+        ├─ the work is done, the risk is the handoff → keep-the-reasoning
+        └─ a result is in, the risk is misreading it → theory-vs-result
 ```
 
 </details>
@@ -454,6 +496,7 @@ Not done yet:
 - **[Cartographer protocol](skills/finding-unknowns/references/cartographer.md)** — the normative ledger, gate, close-out, and Phase E rules
 - **[Workflow templates](skills/finding-unknowns/references/workflows.md)** — the four scripts, code-vs-prompt table, fallback ladder
 - **[keep-the-reasoning SKILL.md](skills/keep-the-reasoning/SKILL.md)** — stakes triage, handoff packet, surrender signals
+- **[theory-vs-result SKILL.md](skills/theory-vs-result/SKILL.md)** — prediction card, result cards, mechanism tiers, the two verdicts
 - **[Examples](EXAMPLES.md)** — copy-paste, end-to-end prompts
 - **[Changelog](CHANGELOG.md)** — release history
 - **[AGENTS.md](AGENTS.md)** — repository guide and invariants for coding agents and contributors
@@ -465,7 +508,7 @@ Not done yet:
 
 - **Claude Code** — the CLI, desktop app, or an IDE extension.
 - **No runtime, no dependencies** — skills, agents, and commands are plain Markdown; nothing is compiled.
-- **Optional, all degrade gracefully** — the four companion agents and the Workflow tool; every technique also runs inline.
+- **Optional, all degrade gracefully** — the five companion agents and the Workflow tool; every technique also runs inline.
 - **`bash`** — only for `install.sh`.
 
 ## Project Layout
@@ -481,16 +524,19 @@ finding-unknowns-skill/
 │   ├── blindspot.md           /blindspot — blind-spot pass
 │   ├── cartographer.md        /cartographer — Cartographer mode
 │   ├── change-quiz.md         /change-quiz — report + merge quiz
-│   └── keep-the-reasoning.md  /keep-the-reasoning — the handoff
+│   ├── keep-the-reasoning.md  /keep-the-reasoning — the handoff
+│   └── theory-vs-result.md    /theory-vs-result — measured results
 ├── skills/
 │   ├── finding-unknowns/
 │   │   ├── SKILL.md         Routing, eight techniques, Cartographer summary
 │   │   └── references/
 │   │       ├── cartographer.md  Full Cartographer protocol (normative), read on demand
 │   │       └── workflows.md     Workflow templates + fallback ladder
-│   └── keep-the-reasoning/
-│       └── SKILL.md         Stakes triage, handoff packet
-├── agents/                  blindspot-scout (sonnet) · prototype-smith · ledger-keeper · quiz-master (inherit)
+│   ├── keep-the-reasoning/
+│   │   └── SKILL.md         Stakes triage, handoff packet
+│   └── theory-vs-result/
+│       └── SKILL.md         Prediction card, Theory → Measured → Consistent? → Mechanism cards
+├── agents/                  blindspot-scout (sonnet) · prototype-smith · ledger-keeper · quiz-master · mechanism-auditor (inherit)
 ├── docs/ARCHITECTURE.md     Design reference: layers, contracts, principles
 ├── assets/                  README diagrams (SVG); assets/zh/ = Chinese versions
 ├── AGENTS.md                Repository guide for coding agents and contributors
@@ -509,6 +555,7 @@ Released under the [MIT License](LICENSE).
 
 - Technique ideas and names: Thariq Shihipar, _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
 - `keep-the-reasoning` and the verification contract: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
+- `theory-vs-result`: distilled from a long-running empirical research practice, generalized for any measured claim.
 - Phase E execution rules: Anthropic's _"Building effective agents"_ (evaluator-optimizer, orchestrator-workers) and @hanakoxbt's _"Loops and Graphs"_ ([source](https://x.com/hanakoxbt/status/2091515787366306154)).
 - Cartographer's ambiguity gating, topology gate, and challenge modes are adapted from the deep-interview skill in [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode); the comparison also references [Superpowers](https://github.com/obra/superpowers).
 

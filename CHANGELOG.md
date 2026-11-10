@@ -4,6 +4,37 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0]
+
+### Added — `theory-vs-result`, a third sibling skill for measured results
+- New skill `skills/theory-vs-result/SKILL.md` + `/theory-vs-result` command, distilled
+  from a long-running empirical research practice and generalized for any
+  measured claim (backtest, benchmark, A/B test, ablation, training run, load test, debugging
+  hypothesis). Every result is reported as a fixed four-part card — **Theory → Measured →
+  Consistent? → Mechanism** (理论预期 → 实测 → 是否一致 → 机理): prediction written before
+  data (else labelled `post-hoc`) with direction, magnitude, location and a noise floor;
+  fairness checks; a consistency verdict (consistent · partly · inconsistent · can't tell);
+  mechanism evidence tiers (verified · supported · inferred · untested); a mismatch walk
+  pipeline → comparison → metric → theory → environment; the *rule verdict* (PASS · FAIL ·
+  UNCERTAIN · descriptive only) kept separate from the *direction verdict* (alive ·
+  alive-but-constrained · weakened · dead); and any new or tightened threshold explained in
+  plain language and approved before it is frozen.
+- New agent `mechanism-auditor` (read-only, `model: inherit`): the fresh-context audit of
+  the cards. Re-derives headline numbers, checks fairness and noise, downgrades unearned
+  verdicts and tiers, proposes an alternative mechanism that fits the same numbers, and
+  names the cheapest discriminating check. Never re-runs experiments or reads unused data.
+
+### Changed
+- `keep-the-reasoning`: packet section 4 (Prior vs result) uses the theory-vs-result
+  summary table for measured claims; Relationship_To_Sibling_Tooling cross-links it.
+- `finding-unknowns`: `references/cartographer.md` reports returning `experiment`-route
+  results as theory-vs-result cards and writes the row resolution from the card; the
+  sibling-tooling table lists the new skill.
+- README, README.zh, ARCHITECTURE, AGENTS, CLAUDE.md and EXAMPLES updated for the third
+  skill and fifth agent.
+- Not yet updated: the diagrams in `assets/*.svg` (and `assets/zh/`) still show two
+  skills and four agents.
+
 ## [4.0.0]
 
 ### Breaking — progressive-disclosure layout

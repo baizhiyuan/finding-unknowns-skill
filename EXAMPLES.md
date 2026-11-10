@@ -90,3 +90,27 @@ Before I accept it: triage the stakes, define what "verified" means for this, th
 the handoff packet. Evidence first, what each check did NOT prove, the decisions and
 assumptions you made, and what you did not check.
 ```
+
+## Theory vs result — report a model evaluation
+
+```
+/theory-vs-result the evaluation we just ran: new model vs baseline, 5 training runs each
+
+Report it as Theory → Measured → Consistent? → Mechanism. If no prediction was written
+before the run, mark the theory post-hoc. Lead with the metric we actually ship on, give the
+run-to-run spread as the noise floor, and tell me which parts held (direction, size, where).
+If it is inconsistent, walk pipeline → comparison → metric → theory → environment and name
+the broken link and the smallest check. Keep the rule verdict (PASS/FAIL/UNCERTAIN)
+separate from whether the idea is still alive, and finish with a non-empty "not checked".
+```
+
+## Theory vs result — write the prediction before a benchmark
+
+```
+Before I run the cache benchmark, write the prediction card: the claim, the chain of
+assumptions (each link that can fail), the expected direction, size and where it should
+show up (and where it should not), the noise floor from past reruns, and the result that
+would prove us wrong. If I want a pass/fail line, explain it in plain words first: what it
+protects against, why that number, and what failing it would mean. Don't freeze it until
+I approve.
+```
