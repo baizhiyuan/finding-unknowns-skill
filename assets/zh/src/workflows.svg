@@ -228,7 +228,7 @@
 <text x="326" y="1382" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#C15F3C">fu-verify-panel</text>
 <text x="326" y="1406" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="700" fill="#141413">模板 2 · 用于代价 ≥ 4 的条目</text>
 <text x="326" y="1432" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="400" fill="#5E5D59">三个子代理从不同角度尝试推翻结论，</text>
-<text x="326" y="1453" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="400" fill="#5E5D59">至少两个推翻不了，结论才成立。</text>
+<text x="326" y="1453" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="400" fill="#5E5D59">三个都推翻不了，结论才成立。</text>
 <clipPath id="cc21"><rect x="572" y="1352" width="254" height="144" rx="12"/></clipPath>
 <rect x="572" y="1352" width="254" height="144" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
 <rect x="572" y="1352" width="3" height="144" fill="#D4A27F" clip-path="url(#cc21)"/>

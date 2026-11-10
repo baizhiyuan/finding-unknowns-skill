@@ -132,7 +132,7 @@ model: sonnet
     tokens" with no file references, then adds "I also cleaned up some imports while I
     was there."
     Why bad: generic knowledge instead of territory, and a mutation that breaks the
-    read-only guarantee.
+    read-only rule.
     </Bad>
   </Examples>
 

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.1.0 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v4.1.1 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-4.1.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.1.0">
+  <img src="https://img.shields.io/badge/version-4.1.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.1.1">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 skills">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
@@ -86,7 +86,7 @@ Phase 0 places the gap on the quadrant map, captures your prior, and routes to t
 
 ### Updating
 
-Update the same way you installed. Latest release: **v4.1.0**.
+Update the same way you installed. Latest release: **v4.1.1**.
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -123,7 +123,7 @@ cp commands/*.md ~/.claude/commands/
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# expect: 4.1.0 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
+# expect: 4.1.1 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
 ```
 
 </details>
@@ -271,11 +271,13 @@ A new or tightened threshold is first explained in plain language — what it pr
 
 | Agent | Model | Tools | Backs | Why isolated |
 |-------|-------|-------|-------|--------------|
-| **`blindspot-scout`** | sonnet | read-only | Blind-spot pass, References | Wide recon in its own context window; structurally cannot implement |
-| **`prototype-smith`** | inherit | writes throwaway files only | Prototype, Plan | N genuinely divergent directions in one pass, sandboxed from the real app |
+| **`blindspot-scout`** | sonnet | no Write/Edit; Bash for inspection | Blind-spot pass, References | Wide recon in its own context window; it has no file-editing tools, and Bash is limited to inspection by instruction |
+| **`prototype-smith`** | inherit | Write + Bash; throwaway files only | Prototype, Plan | N genuinely divergent directions in one pass; instructed to write only under its prototype folder and never touch the real app |
 | **`ledger-keeper`** | inherit | ledger file only | Cartographer | Regret, clarity scores, and the gate verdict — without grading its own interview |
-| **`quiz-master`** | inherit | read-only + report | Pitch, Quiz | Fresh-eyes examiner that did not author the change; flags unlogged deviations |
-| **`mechanism-auditor`** | inherit | read-only | `theory-vs-result` | Referee that did not write the theory or run the measurement; downgrades unearned verdicts and tiers |
+| **`quiz-master`** | inherit | no Write/Edit; Bash for inspection and its report | Pitch, Quiz | Fresh-eyes examiner that did not author the change; flags unlogged deviations |
+| **`mechanism-auditor`** | inherit | no Write/Edit; Bash for inspection | `theory-vs-result` | Referee that did not write the theory or run the measurement; downgrades unearned verdicts and tiers |
+
+Tool lists remove file-editing tools where noted, which the runtime enforces. The remaining limits (what Bash may do, which files may be written) are instructions to the agent, not a sandbox.
 
 **Model routing** — judgment and creative agents use `model: inherit`, so they run at the session's own strength and are never downgraded. `blindspot-scout` is the one deliberate cost tier (`sonnet`) because recon fans out in parallel; set it to `inherit` for single-lens passes. Follows OMC's role tiers and Deep Research's "strongest model at the synthesis centre, cheaper fan-out" — with the top tier inherited rather than pinned.
 
@@ -477,7 +479,7 @@ What field tests and reviews changed:
   - **Round 1** — an independent adversarial review found 1 CRITICAL and 6 HIGH, reproduced against a stubbed runtime, including argument validation that let an unknown or missing lane through. Validation now fails closed.
   - **Round 2** — closed the remaining fail-open edges: paths normalized and globs rejected before locking, mandatory check files for `wide`/`irreversible` tasks, writes outside every declared path stop the run.
   - **Round 3** — fixed the scope check's false halts: paths already dirty before the run are baselined and excluded.
-  - Exercised by a 50-scenario harness against a stubbed agent runtime, plus the reviewer's own adversarial scenarios.
+  - Exercised by [`tests/workflows/run.mjs`](tests/workflows/run.mjs), 69 scenarios against a stubbed agent runtime that read the templates straight from `workflows.md`, run in CI on every push to `main` and every pull request.
 - **Deliberately not adopted.** "Approve only the last step" — a human reviewing only a final artifact they never framed is rubber-stamping. "Confidence is the only input the model can influence" — agents can also edit their own checks, hence the locked contract.
 
 ### Roadmap

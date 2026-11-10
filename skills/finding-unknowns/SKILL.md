@@ -277,10 +277,10 @@ What it is: a coverage-gated, clarity-scored, regret-ordered discovery loop back
 <Agent_Delegation>
 | Agent | Backs | Contract: give it → it returns |
 |-------|-------|-------------------------------|
-| `blindspot-scout` | Technique 1, 4 | goal + experience level → five-section recon report (read-only; cannot implement) |
+| `blindspot-scout` | Technique 1, 4 | goal + experience level → five-section recon report (no file-editing tools; Bash for inspection only, by instruction) |
 | `prototype-smith` | Technique 2, 5 | problem + data sources + N → one HTML artifact of N divergent directions + reaction guide (writes only throwaway files) |
 | `ledger-keeper` | Cartographer | task/answers/discoveries → updated ledger, regret scores, next target, gate verdict (touches only the ledger) |
-| `quiz-master` | Technique 7, 8 | diff + notes + ledger → HTML report + must-pass quiz (read-only; flags unlogged deviations) |
+| `quiz-master` | Technique 7, 8 | diff + notes + ledger → HTML report + must-pass quiz (no file-editing tools; flags unlogged deviations) |
 
 - Relay agent reports; do not re-run their exploration in the main context.
 - The gate verdict belongs to `ledger-keeper`; the quiz belongs to `quiz-master`. Do not

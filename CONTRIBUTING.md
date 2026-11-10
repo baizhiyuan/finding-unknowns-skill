@@ -6,7 +6,9 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 ## Getting started
 
 1. Fork the repository and create a feature branch from `main`.
-2. Make your changes. The skill content lives in `skills/finding-unknowns/SKILL.md`.
+2. Make your changes. Each skill lives in `skills/<name>/SKILL.md` (finding-unknowns,
+   keep-the-reasoning, theory-vs-result); Cartographer's full protocol is in
+   `skills/finding-unknowns/references/`. See [`AGENTS.md`](AGENTS.md) for what to keep in sync.
 3. If you change the skill, keep the passive drop-in [`CLAUDE.md`](CLAUDE.md) and
    [`EXAMPLES.md`](EXAMPLES.md) consistent with it.
 4. Update [`CHANGELOG.md`](CHANGELOG.md) under an "Unreleased" heading.
@@ -46,11 +48,8 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:
 ## Local validation
 
 ```bash
-# Validate SVG assets
-for f in assets/*.svg assets/zh/*.svg; do python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('$f')"; done
-
-# Validate plugin manifests
-python3 -c "import json; json.load(open('.claude-plugin/plugin.json')); json.load(open('.claude-plugin/marketplace.json'))"
+python3 scripts/validate.py      # repository consistency checks (also run in CI)
+node tests/workflows/run.mjs     # behavioural tests for the Workflow templates
 ```
 
 ## License

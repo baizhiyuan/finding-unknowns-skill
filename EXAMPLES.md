@@ -62,21 +62,39 @@ the bottom I have to pass before I merge.
 
 ## Cartographer mode — high-stakes, full rigor
 
+The skill already holds the protocol, so the short form is enough:
+
+```
+/cartographer --standard "refactor the equity/PnL accounting"
+```
+
+If you prefer to spell the expectations out in a prompt:
+
 ```
 Enter Cartographer mode for this refactor of the equity/PnL accounting.
 
 Maintain unknowns-ledger.md with columns: id, quadrant (KK/KU/UK/UU), unknown,
-cost-if-wrong (1-5), P(wrong), regret (=cost×P), reversibility (reversible/wide/irreversible),
-prior, status, phase, resolution.
+cost-if-wrong (1-5), P(wrong), regret (=cost×P), route (interview/territory/experiment/audit),
+reversibility (reversible/wide/irreversible), status, phase, resolution. Record each row's
+prior in the resolution column first ("prior: …") and append to it, never overwrite.
 
-1. Seed it: run a blind-spot pass to populate Unknown Unknowns, then list Known Unknowns
-   and any tacit "done means..." criteria.
-2. Interview me via AskUserQuestion, up to 3 independent questions per round (dependent
-   ones one at a time), always targeting the highest-regret open rows. Re-score P(wrong)
-   after each answer. Skip anything with regret < 1.0 — log a conservative default instead,
-   except for rows marked irreversible, which always come to me.
-3. Show the ledger + four-quadrant coverage checklist each round. Do NOT let me start until
-   all four quadrants are probed (especially UU) and no open row has regret >= 1.0.
+0. First confirm with me, in one question, the 1-6 parts of this task that can fail
+   independently.
+1. Seed it: run a blind-spot pass to populate Unknown Unknowns, write down the Known Knowns,
+   list Known Unknowns and any tacit "done means..." criteria, and check the ledger against
+   a domain checklist.
+2. Clear rows by route, highest regret first: territory rows are checked in the code or
+   data, never asked of me; experiment rows become prediction cards; audit rows name the
+   artifact to review; only interview rows come to me, up to 3 independent questions per
+   round (dependent ones one at a time).
+   Rows under regret 1.0 get a logged conservative default, except irreversible rows,
+   which always come to me. Before resolving any row with cost-if-wrong >= 4, give the
+   strongest alternative explanation of the same evidence; one source is only provisional.
+3. Each round, show the ledger summary, the four-quadrant scores and the gate checklist.
+   Do NOT let me start until the knowns are written down, known gaps are resolved or have a
+   logged default, taste criteria are explicit, UU has been probed, no open row has
+   regret >= 1.0, every irreversible row is confirmed by me, and ambiguity is at or below
+   the threshold.
 
 Keep the ledger open through implementation and build the final merge quiz from it.
 ```

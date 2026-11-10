@@ -1,7 +1,7 @@
 {
   "name": "finding-unknowns",
   "description": "Surface your unknowns before they get expensive, and keep your judgment when agents hand work back. finding-unknowns: eight discovery techniques plus Cartographer mode (coverage-gated, regret-ordered unknowns ledger with reversibility floor, verification contract, and graph-ordered, approval-gated execution). keep-the-reasoning: stakes-triaged handoff packets — evidence first, decisions listed, what checks did not prove. theory-vs-result: every measured result reported as Theory → Measured → Consistent? → Mechanism — prediction before data, noise floor, evidence-tiered mechanism, rule verdict kept apart from direction verdict. Five companion agents: blindspot-scout, prototype-smith, ledger-keeper, quiz-master, mechanism-auditor.",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "author": {
     "name": "baizhiyuan"
   },

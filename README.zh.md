@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.1.0：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.1.1：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-4.1.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.1.0">
+  <img src="https://img.shields.io/badge/version-4.1.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.1.1">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 个技能">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
@@ -88,7 +88,7 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 
 ### 更新
 
-按当初的安装方式更新即可。最新版本为 **v4.1.0**。
+按当初的安装方式更新即可。最新版本为 **v4.1.1**。
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -125,7 +125,7 @@ cp commands/*.md ~/.claude/commands/
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# 预期：4.1.0（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
+# 预期：4.1.1（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
 ```
 
 </details>
@@ -273,11 +273,13 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 
 | 子代理 | 模型 | 工具 | 用于 | 为何独立运行 |
 |------|------|------|------|----------|
-| **`blindspot-scout`** | sonnet | 只读 | 盲区排查、参考实现 | 在独立的上下文窗口中大范围侦察；只有只读工具，因此无法动手实现 |
-| **`prototype-smith`** | inherit | 只写一次性文件 | 方案原型、实施计划 | 一次给出 N 个真正不同的方向，不触碰真实应用 |
+| **`blindspot-scout`** | sonnet | 无编辑工具；Bash 仅用于查看 | 盲区排查、参考实现 | 在独立的上下文窗口中大范围侦察；没有编辑文件的工具，Bash 仅按指令用于查看 |
+| **`prototype-smith`** | inherit | 可写文件，可使用 Bash；只写一次性文件 | 方案原型、实施计划 | 一次给出 N 个真正不同的方向；按指令只在原型目录中写文件，不触碰真实应用 |
 | **`ledger-keeper`** | inherit | 仅限台账文件 | Cartographer 模式 | 负责风险值、清晰度评分和开工条件判定，不会给自己主持的访谈打分 |
-| **`quiz-master`** | inherit | 只读 + 报告 | 变更说明、理解测验 | 没有参与编写这次改动，能以旁观者的视角出题；会指出没有记录的偏离 |
-| **`mechanism-auditor`** | inherit | 只读 | `theory-vs-result` | 既没有写理论、也没有做测量的复核者；会下调缺乏证据支撑的判定和等级 |
+| **`quiz-master`** | inherit | 无编辑工具；Bash 用于查看和写报告 | 变更说明、理解测验 | 没有参与编写这次改动，能以旁观者的视角出题；会指出没有记录的偏离 |
+| **`mechanism-auditor`** | inherit | 无编辑工具；Bash 仅用于查看 | `theory-vs-result` | 既没有写理论、也没有做测量的复核者；会下调缺乏证据支撑的判定和等级 |
+
+工具列表中去掉编辑工具的限制由运行环境强制执行；其余限制（Bash 能做什么、可以写哪些文件）是对子代理的指令，并不是沙盒。
 
 **模型路由。** 负责判断和创意工作的子代理使用 `model: inherit`，与当前会话使用同一模型，不会被降级。`blindspot-scout` 是唯一刻意降低成本的子代理（`sonnet`），因为侦察需要大量并行调用；只做单一视角的排查时，可以改为 `inherit`。这一安排参照了 OMC 的角色分级，以及 Deep Research 的做法（由最强的模型负责综合，较便宜的模型负责并行展开）；不同之处在于，最高一级的模型从会话继承，而不是写死。
 
@@ -479,7 +481,7 @@ finding-unknowns  （定向：这个未知落在哪个象限？）
   - **第 1 轮。** 独立的对抗性审查发现了 1 个 CRITICAL 和 6 个 HIGH 级问题，并在模拟运行时中复现，其中包括参数校验会放过未知或缺失的类别（lane）。现在校验一旦有误即停止。
   - **第 2 轮。** 修补了其余出错时仍会放行的漏洞：加锁前先规范化路径并拒绝通配符；`wide`/`irreversible` 任务必须声明检查文件；向所有声明路径之外写入会停止运行。
   - **第 3 轮。** 修复了范围检查导致的误停：运行前就已有改动的路径会记入基线并予以排除。
-  - 以上改动由一套包含 50 个场景、针对模拟智能体运行时的测试集验证，另外还有审查者自己设计的对抗性场景。
+  - 以上改动由 [`tests/workflows/run.mjs`](tests/workflows/run.mjs) 验证：共 69 个场景，在模拟的智能体运行时上直接读取 `workflows.md` 中的模板运行，每次向 `main` 推送和每个拉取请求都会在 CI 中执行。
 - **刻意没有采纳的做法。** 一是“只批准最后一步”。审查者如果从未参与界定问题、只看最终产物，批准就只是走形式。二是认为“把握大小是模型唯一能影响的输入”。实际上智能体还能修改自己的检查，因此验收标准必须锁定。
 
 ### 路线图

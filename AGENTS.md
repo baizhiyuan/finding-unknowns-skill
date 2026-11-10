@@ -38,12 +38,13 @@ It is about maintaining the project — for what the skill does at runtime, read
 
 ## After any change
 
-1. Validate:
+1. Validate (the same two commands run in CI on every push to `main` and every pull request):
    ```bash
-   python3 -c "import yaml,glob; [yaml.safe_load(open(p).read().split('---',2)[1]) for p in glob.glob('skills/*/SKILL.md')+glob.glob('agents/*.md')+glob.glob('commands/*.md')]"
-   python3 -c "import json; json.load(open('.claude-plugin/plugin.json')); json.load(open('.claude-plugin/marketplace.json'))"
-   for f in assets/*.svg assets/zh/*.svg assets/zh/src/*.svg; do python3 -c "import xml.dom.minidom; xml.dom.minidom.parse('$f')"; done
-   bash -n install.sh
+   python3 scripts/validate.py      # frontmatter, JSON, SVG safety, links, fences, en/zh
+                                    # README parity, version/count drift, install.sh
+   node tests/workflows/run.mjs     # Workflow templates, extracted from workflows.md
    ```
+   When you change a Workflow template, add a scenario to `tests/workflows/run.mjs` that
+   fails on the old code and passes on the new.
 2. Bump `version` in `.claude-plugin/plugin.json` (SemVer) and add a `CHANGELOG.md` entry.
 3. Use Conventional Commits (`feat:`, `fix:`, `docs:`, …).

@@ -140,7 +140,7 @@
 <text x="330" y="1151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu-verify-panel</text>
 <text x="330" y="1169" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" font-weight="600">Template 2 · cost ≥ 4 rows</text>
 <text x="330" y="1192.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#141413">Three refuters with distinct lenses. A</text>
-<text x="330" y="1207.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#141413">resolution survives only if at least 2</text>
+<text x="330" y="1207.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#141413">resolution survives only if all three</text>
 <text x="330" y="1223.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#141413">fail to refute it.</text>
 <clipPath id="c20"><rect x="588" y="1126" width="262" height="132" rx="12"/></clipPath><rect x="588" y="1126" width="262" height="132" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><rect x="588" y="1126" width="3" height="132" fill="#D4A27F" clip-path="url(#c20)"/>
 <text x="604" y="1151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu-uu-until-dry</text>
