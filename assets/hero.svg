@@ -7,10 +7,10 @@
 <clipPath id="clr"><circle cx="930" cy="215" r="105"/></clipPath>
 <clipPath id="frame"><rect width="1200" height="420" rx="18"/></clipPath>
 </defs>
-<rect width="1200" height="420" rx="18" fill="#141413"/>
+<rect width="1200" height="420" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <g clip-path="url(#frame)">
 <rect width="1200" height="420" fill="url(#dots)"/>
-<g fill="none" stroke="#B1ADA1" stroke-opacity="0.16" stroke-width="1.2">
+<g fill="none" stroke="#B1ADA1" stroke-opacity="0.55" stroke-width="1.2">
 <path d="M640 360C700 300 760 330 830 300S960 340 1040 290S1150 260 1210 300"/>
 <path d="M660 330C720 270 770 300 840 270S960 310 1030 260S1140 230 1210 270"/>
 <path d="M690 300C740 245 790 270 850 240S960 280 1020 230S1120 200 1210 240"/>
@@ -18,10 +18,10 @@
 <ellipse cx="930" cy="215" rx="230" ry="150"/><ellipse cx="930" cy="215" rx="170" ry="108"/>
 </g>
 <g clip-path="url(#clr)"><rect x="800" y="100" width="260" height="230" fill="url(#dotsb)" opacity="0.5"/></g>
-<g filter="url(#fog)" fill="#B1ADA1">
-<ellipse cx="1090" cy="120" rx="130" ry="70" opacity="0.2"/><ellipse cx="1010" cy="330" rx="150" ry="55" opacity="0.18"/>
-<ellipse cx="780" cy="130" rx="110" ry="50" opacity="0.16"/><ellipse cx="1130" cy="260" rx="90" ry="70" opacity="0.2"/>
-<ellipse cx="760" cy="320" rx="100" ry="45" opacity="0.14"/>
+<g filter="url(#fog)" fill="#F0EEE6">
+<ellipse cx="1090" cy="120" rx="130" ry="70" opacity="0.75"/><ellipse cx="1010" cy="330" rx="150" ry="55" opacity="0.75"/>
+<ellipse cx="780" cy="130" rx="110" ry="50" opacity="0.75"/><ellipse cx="1130" cy="260" rx="90" ry="70" opacity="0.75"/>
+<ellipse cx="760" cy="320" rx="100" ry="45" opacity="0.75"/>
 </g>
 <circle cx="930" cy="215" r="105" fill="none" stroke="#D97757" stroke-width="1.5" stroke-dasharray="3 6"/>
 <circle cx="930" cy="215" r="70" fill="none" stroke="#D97757" stroke-opacity="0.5" stroke-width="1"/>
@@ -29,18 +29,18 @@
 <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#D97757" text-anchor="middle"><text x="930" y="88">N</text></g>
 <ellipse cx="930" cy="262" rx="26" ry="7" fill="#D97757" opacity="0.28"/>
 <path d="M930 262C900 222 890 205 890 186a40 40 0 0 1 80 0c0 19-10 36-40 76z" fill="#D97757"/>
-<circle cx="930" cy="186" r="15" fill="#141413"/><circle cx="930" cy="186" r="5" fill="#D97757"/>
+<circle cx="930" cy="186" r="15" fill="#FAF9F5"/><circle cx="930" cy="186" r="5" fill="#D97757"/>
 </g>
-<text x="56" y="70" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#D97757" letter-spacing="1.5">[ CLAUDE CODE SKILL · v4.0.0 ]</text>
-<text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#FAF9F5">finding-unknowns</text>
-<text x="56" y="198" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#F0EEE6">Map the territory before you build.</text>
-<text x="56" y="226" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#B1ADA1">Keep the reasoning when agents hand it back.</text>
-<rect x="56" y="262" width="126" height="30" rx="12" fill="#262624" stroke="#D97757" stroke-opacity="0.6"/><text x="119.0" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#F5DDD1" text-anchor="middle">8 techniques</text>
-<rect x="192" y="262" width="169" height="30" rx="12" fill="#262624" stroke="#D97757" stroke-opacity="0.6"/><text x="276.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#F5DDD1" text-anchor="middle">Cartographer mode</text>
-<rect x="371" y="262" width="91" height="30" rx="12" fill="#262624" stroke="#D97757" stroke-opacity="0.6"/><text x="416.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#F5DDD1" text-anchor="middle">4 agents</text>
-<rect x="472" y="262" width="195" height="30" rx="12" fill="#262624" stroke="#D97757" stroke-opacity="0.6"/><text x="569.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#F5DDD1" text-anchor="middle">+ keep-the-reasoning</text>
-<rect x="56" y="332" width="520" height="40" rx="8" fill="#262624" stroke="#3a3a37"/>
+<text x="56" y="70" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#C15F3C" letter-spacing="1.5">[ CLAUDE CODE SKILL · v4.0.0 ]</text>
+<text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#141413">finding-unknowns</text>
+<text x="56" y="198" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#141413">Map the territory before you build.</text>
+<text x="56" y="226" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">Keep the reasoning when agents hand it back.</text>
+<rect x="56" y="262" width="126" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="119.0" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">8 techniques</text>
+<rect x="192" y="262" width="169" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="276.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">Cartographer mode</text>
+<rect x="371" y="262" width="91" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="416.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">4 agents</text>
+<rect x="472" y="262" width="195" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="569.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">+ keep-the-reasoning</text>
+<rect x="56" y="332" width="520" height="40" rx="8" fill="#F0EEE6" stroke="#E3DFD3"/>
 <circle cx="76" cy="352" r="4" fill="#B5442E"/><circle cx="92" cy="352" r="4" fill="#D4A27F"/><circle cx="108" cy="352" r="4" fill="#788C5D"/>
 <text x="128" y="357" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#D97757">$</text>
-<text x="144" y="357" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#FAF9F5">/cartographer --deep &quot;migrate billing&quot;</text>
+<text x="144" y="357" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413">/cartographer --deep &quot;migrate billing&quot;</text>
 </svg>

@@ -22,7 +22,7 @@
 <text x="412.8" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Cartographer mode</text>
 <rect x="493.0" y="172" width="129.0" height="32" rx="16.0" fill="#F5DDD1"/><text x="557.5" y="192.4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="middle">$ /change-quiz</text>
 <text x="557.5" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Technique 8</text>
-<rect x="660" y="172" width="191.8" height="32" rx="16.0" fill="#141413"/><text x="755.9" y="192.6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="600" text-anchor="middle">$ /keep-the-reasoning</text>
+<rect x="660" y="172" width="191.8" height="32" rx="16.0" fill="#F5DDD1" stroke="#D97757" stroke-width="1"/><text x="755.9" y="192.6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="600" text-anchor="middle">$ /keep-the-reasoning</text>
 <text x="755.9" y="224" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="middle">Step 0 · stakes triage</text>
 <path d="M123.2 232 L123.2 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
 <path d="M275.5 232 L275.5 256" fill="none" stroke="#B1ADA1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ak)"/>
@@ -131,39 +131,39 @@
 <clipPath id="c19"><rect x="793.3333333333334" y="946" width="366.6666666666667" height="46" rx="10"/></clipPath><rect x="793.3333333333334" y="946" width="366.6666666666667" height="46" rx="10" fill="#F5DDD1" stroke="#D97757" stroke-width="1"/>
 <text x="807.3333333333334" y="974" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">handoff packet</text>
 <text x="1146.0" y="974" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59" text-anchor="end">keep-the-reasoning · Step 3</text>
-<clipPath id="c20"><rect x="920" y="158" width="240" height="684" rx="14"/></clipPath><rect x="920" y="158" width="240" height="684" rx="14" fill="#141413" stroke="#141413" stroke-width="1"/>
-<text x="940" y="192" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#D4A27F" font-weight="700" letter-spacing="1.4">DEFERS TO,</text>
-<text x="940" y="210" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#D4A27F" font-weight="700" letter-spacing="1.4">WHEN INSTALLED</text>
-<text x="940" y="230" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1" font-style="italic">oh-my-claudecode siblings</text>
+<clipPath id="c20"><rect x="920" y="158" width="240" height="684" rx="14"/></clipPath><rect x="920" y="158" width="240" height="684" rx="14" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><rect x="920" y="158" width="4" height="684" fill="#D97757" clip-path="url(#c20)"/>
+<text x="940" y="192" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" letter-spacing="1.4">DEFERS TO,</text>
+<text x="940" y="210" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" letter-spacing="1.4">WHEN INSTALLED</text>
+<text x="940" y="230" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" font-style="italic">oh-my-claudecode siblings</text>
 <circle cx="944" cy="261.0" r="3.5" fill="#D97757"/>
-<text x="958" y="265.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">interrogate</text>
-<text x="958" y="283.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">adversarial review of a diff or</text>
-<text x="958" y="298.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">design</text>
+<text x="958" y="265.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">interrogate</text>
+<text x="958" y="283.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">adversarial review of a diff or</text>
+<text x="958" y="298.0" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">design</text>
 <circle cx="944" cy="342.7142857142857" r="3.5" fill="#D97757"/>
-<text x="958" y="346.7142857142857" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">loft</text>
-<text x="958" y="364.7142857142857" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">throwaway prototype backend</text>
+<text x="958" y="346.7142857142857" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">loft</text>
+<text x="958" y="364.7142857142857" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">throwaway prototype backend</text>
 <circle cx="944" cy="424.42857142857144" r="3.5" fill="#D97757"/>
-<text x="958" y="428.42857142857144" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">show-me-your-work</text>
-<text x="958" y="446.42857142857144" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">decision trail → Deviations log</text>
+<text x="958" y="428.42857142857144" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">show-me-your-work</text>
+<text x="958" y="446.42857142857144" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">decision trail → Deviations log</text>
 <circle cx="944" cy="506.1428571428571" r="3.5" fill="#D97757"/>
-<text x="958" y="510.1428571428571" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">blast-radius</text>
-<text x="958" y="528.1428571428571" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">proves the wide lane’s</text>
-<text x="958" y="543.1428571428571" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">dependents</text>
+<text x="958" y="510.1428571428571" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">blast-radius</text>
+<text x="958" y="528.1428571428571" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">proves the wide lane’s</text>
+<text x="958" y="543.1428571428571" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">dependents</text>
 <circle cx="944" cy="587.8571428571429" r="3.5" fill="#D97757"/>
-<text x="958" y="591.8571428571429" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">deep-interview</text>
-<text x="958" y="609.8571428571429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">OMC state, ontology, ralplan</text>
-<text x="958" y="624.8571428571429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">handoff</text>
+<text x="958" y="591.8571428571429" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">deep-interview</text>
+<text x="958" y="609.8571428571429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">OMC state, ontology, ralplan</text>
+<text x="958" y="624.8571428571429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">handoff</text>
 <circle cx="944" cy="669.5714285714286" r="3.5" fill="#D97757"/>
-<text x="958" y="673.5714285714286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">ask-navigator</text>
-<text x="958" y="691.5714285714286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">decisions as tracker tickets</text>
+<text x="958" y="673.5714285714286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">ask-navigator</text>
+<text x="958" y="691.5714285714286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">decisions as tracker tickets</text>
 <circle cx="944" cy="751.2857142857142" r="3.5" fill="#D97757"/>
-<text x="958" y="755.2857142857142" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#FAF9F5" font-weight="700">teach</text>
-<text x="958" y="773.2857142857142" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B1ADA1">learner-paced explanation</text>
-<rect x="40" y="1014" width="1120" height="36" rx="10" fill="#141413"/>
-<text x="60" y="1037" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#D4A27F" font-weight="700" letter-spacing="1.4">PRINCIPLES</text>
-<text x="168" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#FAF9F5" font-weight="700">author never self-approves</text>
+<text x="958" y="755.2857142857142" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">teach</text>
+<text x="958" y="773.2857142857142" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">learner-paced explanation</text>
+<clipPath id="cf"><rect x="40" y="1014" width="1120" height="36" rx="10"/></clipPath><rect x="40" y="1014" width="1120" height="36" rx="10" fill="#F5DDD1" stroke="#E3DFD3"/><rect x="40" y="1014" width="4" height="36" fill="#D97757" clip-path="url(#cf)"/>
+<text x="60" y="1037" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" letter-spacing="1.4">PRINCIPLES</text>
+<text x="168" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#141413" font-weight="700">author never self-approves</text>
 <circle cx="390" cy="1032" r="3" fill="#D97757"/>
-<text x="404" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#FAF9F5" font-weight="700">gate on blast radius, not confidence</text>
+<text x="404" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#141413" font-weight="700">gate on blast radius, not confidence</text>
 <circle cx="684" cy="1032" r="3" fill="#D97757"/>
-<text x="698" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#FAF9F5" font-weight="700">the irreversible lane always waits for the user</text>
+<text x="698" y="1037" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#141413" font-weight="700">the irreversible lane always waits for the user</text>
 </svg>
