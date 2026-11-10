@@ -10,27 +10,32 @@ Driven by the first comparative eval: gpt-6.1-sol in Codex with and without thes
 six pre-registered tasks, blinded grading, recorded in
 [docs/evals/2026-11-10-codex-pilot](docs/evals/2026-11-10-codex-pilot/README.md). Both arms
 caught nearly every trap (22 vs 22.75 of 25, inside the noise for one run per cell); the
-skills cost 47 % more input tokens. The two fixes below target misses the skill arm shared
-with the baseline; neither has been re-run yet.
+skills cost 47 % more input tokens (22 % more uncached). The two fixes below target misses
+the skill arm shared with the baseline; neither has been re-run yet.
 
 ### Fixed
 - **Remote access is checked first (field note F3, again).** In the eval the skill arm read
-  the 4.3.1 access rule in Technique 1 and Technique 5 and still did not make logging in a
-  first step. The rule is now one always-on Execution_Policy bullet: for a remote device,
-  server or hosted service, state the access path the territory records (host entry, login
-  user, network route) or that none is recorded, and make "confirm you can log in" step 1 of
-  any plan that touches it. The two narrower sentences in Technique 1 and Technique 5 are
-  removed.
+  `finding-unknowns/SKILL.md`, including the 4.3.1 rule in Technique 5. It cited a recorded
+  login (`ssh nas`) that predates a migration and never made "confirm the login reaches the
+  Jetson" a first step. The rule is now one always-on Execution_Policy bullet. For a remote
+  device, server or hosted service: cite the recorded access path (host entry, user, route)
+  or say none is recorded; never read key material, and make no network probe unless asked.
+  Because a record can predate a migration, step 1 of any plan that touches the target is
+  to confirm the login reaches the intended machine. The two narrower sentences in
+  Technique 1 and Technique 5 are removed; `blindspot-scout` and the Cartographer checklist
+  keep their own text.
 - **`theory-vs-result` computes the noise floor from reruns in hand.** The skill arm led a
   benchmark write-up with a point difference and never estimated noise from the five and
-  three runs it had. "Noise floor first" now adds: when the data already holds reruns,
-  compute it from them (each side's spread, an interval for the difference) before the
-  headline, and lead with the verdict, not the point difference.
+  three runs it had, although the skill already asked for that. "Noise floor first" now
+  says it outright: when the data holds reruns, compute that spread and an interval for
+  the difference before any headline, and make the headline the verdict.
 
 ### Added
-- `docs/evals/2026-11-10-codex-pilot/`: pre-registration, scripts (isolated `CODEX_HOME`
-  per arm, blinding), synthetic fixtures, every final answer and every grader reply
-  verbatim, token and time usage. `validate.py` checks each eval's README.
+- `docs/evals/2026-11-10-codex-pilot/`: pre-registration (two corrections appended
+  after review: a wrong T2 trap premise, and undisclosed web search), scripts (isolated
+  `CODEX_HOME` per arm, blinding, order swap, usage), grader prompts, synthetic fixtures,
+  every final answer and grader reply verbatim, and token and time usage. `validate.py`
+  checks each eval's README.
 - README Design Notes: a short entry on the eval.
 
 ## [4.3.1]

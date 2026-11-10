@@ -58,9 +58,8 @@ rule stays separate from the judgment about the direction.
   reads, ~0 on warm" can
 - **Noise floor first.** No consistency verdict until you know how big a difference
   noise produces (seeds, reruns, windows, bootstrap). A difference inside it gets
-  "can't tell", not "consistent". When the data already holds reruns, compute it from
-  them (each side's spread, an interval for the difference) before writing a headline,
-  and lead with the verdict, not the point difference
+  "can't tell", not "consistent". When the data holds reruns, compute that spread and an
+  interval for the difference before any headline; the headline is the verdict
 - **Fair comparison or no comparison.** Same data, same coverage, same seeds/runs, same
   metric definition, same evaluation pipeline (how outputs become actions). Change one
   variable at a time, or say the change was confounded
