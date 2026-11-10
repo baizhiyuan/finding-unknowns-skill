@@ -32,8 +32,21 @@ All notable changes to this project are documented in this file. The format is b
   sibling-tooling table lists the new skill.
 - README, README.zh, ARCHITECTURE, AGENTS, CLAUDE.md and EXAMPLES updated for the third
   skill and fifth agent.
-- Not yet updated: the diagrams in `assets/*.svg` (and `assets/zh/`) still show two
-  skills and four agents.
+- Diagrams: `hero` and `framework` (English and Chinese) updated for v4.1.0, three skills
+  and five agents.
+
+### Changed — review hardening before merge
+- An independent two-round review closed the skill's rescue and post-hoc loopholes: a
+  theory written after the result is a `post-hoc fit (not a test)`, capped at `inferred`
+  and kept out of rule verdicts; a defect found afterwards voids the run only with
+  evidence that it changes the headline number, and any rerun on spent data is a labelled,
+  approved `re-read`; verdicts read the interval (one holding both 0 and the prediction is
+  `can't tell`); `verified` excludes accounting identities; prediction cards carry a
+  `Written` line and are saved before measuring (`predictions/{slug}.md`); the rule
+  verdict is computed on the rule's frozen metric; `dead` needs a fired falsifier.
+- Cartographer's `experiment` route now specifies rows as prediction cards (clearing line
+  through the threshold gate) and maps returned cards onto ledger status; the
+  mechanism-auditor reviews every card, including consistent ones.
 
 ## [4.0.0]
 

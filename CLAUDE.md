@@ -36,12 +36,14 @@ measured-result sibling in [`skills/theory-vs-result/SKILL.md`](skills/theory-vs
 - Report each result as one card: **Theory → Measured → Consistent? → Mechanism**
   (理论预期 → 实测 → 是否一致 → 机理). Compare like with like: same data, seeds, metric.
 - Consistency is consistent / partly / inconsistent / can't tell (inside the noise).
-  Tag every mechanism `verified`, `supported`, `inferred`, or `untested` — an inference is
-  never a mechanism.
+  Tag every mechanism `verified`, `supported`, `inferred`, or `untested`, and never present
+  an `inferred` mechanism as established. A theory written after the result is a
+  `post-hoc fit`, not a test.
 - On a mismatch, walk pipeline → comparison → metric → theory → environment, name the
   broken link, and give the smallest check that would tell the explanations apart.
-- Keep two verdicts apart: the pre-agreed **rule** (PASS / FAIL / UNCERTAIN / descriptive
-  only) and the **direction** (alive / constrained / weakened / dead). A good story never
+- Keep two verdicts apart: the pre-agreed **rule**, in the rule's own labels (e.g. PASS /
+  FAIL / UNCERTAIN, or descriptive only / void), and the **direction** (alive /
+  alive-but-constrained / weakened / dead). Neither a good story nor a rerun on spent data
   turns a FAIL into a PASS.
 - Explain any new or tighter threshold in plain words and get approval before applying it.
 
