@@ -64,15 +64,16 @@
 <circle cx="92" cy="688.0" r="20" fill="#D97757"/>
 <text x="92" y="692.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">C</text>
 <text x="124" y="668" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#141413" font-weight="700">Cartographer mode</text>
-<text x="124" y="692" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">high stakes: ledger, regret, dual gate</text>
+<text x="124" y="692" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">high stakes: ledger, regret, six-condition gate</text>
 <text x="124" y="713" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#5E5D59">references/cartographer.md</text>
 <path d="M92 741 L92 753" fill="none" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
 <clipPath id="c5"><rect x="60" y="754" width="470" height="104" rx="10"/></clipPath>
-<rect x="60" y="754" width="470" height="104" rx="10" fill="#FAF9F5" stroke="#D97757" stroke-width="1.5"/>
+<rect x="60" y="754" width="470" height="104" rx="10" fill="#FAF9F5" stroke="#D97757" stroke-width="1.5" stroke-dasharray="6 4"/>
 <circle cx="92" cy="806.0" r="20" fill="#D97757"/>
 <text x="92" y="810.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">E</text>
 <text x="124" y="786" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#141413" font-weight="700">Phase E · Execution</text>
-<text x="124" y="810" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">approval-gated task graph</text>
+<rect x="298" y="772" width="184" height="20" rx="10" fill="#F5DDD1"/><text x="390" y="785.6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#C15F3C" font-weight="700" text-anchor="middle" letter-spacing="1">EXPERIMENTAL · OPTIONAL</text>
+<text x="124" y="810" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">approval-gated task graph, only on explicit request</text>
 <text x="124" y="831" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#5E5D59">references/workflows.md</text>
 <clipPath id="c6"><rect x="620" y="320" width="250" height="556" rx="12"/></clipPath>
 <rect x="620" y="320" width="250" height="556" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
@@ -233,7 +234,8 @@
 <text x="906.5" y="1414" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">prototype-smith</text>
 <clipPath id="c25"><rect x="40.0" y="1438" width="364.0" height="56" rx="10"/></clipPath>
 <rect x="40.0" y="1438" width="364.0" height="56" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
-<text x="56.0" y="1462" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">change-report.html</text>
+<text x="56.0" y="1462" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">change-report.md</text>
+<text x="192.0" y="1462" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">(.html on request)</text>
 <text x="56.0" y="1482" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">quiz-master · must-pass quiz</text>
 <clipPath id="c26"><rect x="418.0" y="1438" width="364.0" height="56" rx="10"/></clipPath>
 <rect x="418.0" y="1438" width="364.0" height="56" rx="10" fill="#F5DDD1" stroke="#D97757" stroke-width="1"/>

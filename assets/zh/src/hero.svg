@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns v4.1.1</title><desc id="d">横幅：一枚图钉在点阵地图上驱散迷雾。动手之前，先弄清还有哪些未知项。智能体交付成果时，判断仍由人来做。</desc>
+<title id="t">finding-unknowns v4.2.0</title><desc id="d">横幅：一枚图钉在点阵地图上驱散迷雾。动手之前，先弄清还有哪些未知项。智能体交付成果时，判断仍由人来做。</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <pattern id="dotsb" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#D97757" opacity="0.75"/></pattern>
@@ -31,7 +31,7 @@
 <path d="M930 262C900 222 890 205 890 186a40 40 0 0 1 80 0c0 19-10 36-40 76z" fill="#D97757"/>
 <circle cx="930" cy="186" r="15" fill="#FAF9F5"/><circle cx="930" cy="186" r="5" fill="#D97757"/>
 </g>
-<text x="56" y="70" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" fill="#C15F3C">[ CLAUDE CODE 技能 · v4.1.1 ]</text>
+<text x="56" y="70" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" fill="#C15F3C">[ CLAUDE CODE 技能 · v4.2.0 ]</text>
 <text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#141413">finding-unknowns</text>
 <text x="56" y="200" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="22" font-weight="500" fill="#141413">动手之前，先弄清还有哪些未知项。</text>
 <text x="56" y="234" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="400" fill="#5E5D59">智能体交付成果时，判断仍由人来做。</text>

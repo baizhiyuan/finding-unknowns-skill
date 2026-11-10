@@ -6,25 +6,33 @@ here is normative. Workflow scripts referenced below live in `workflows.md`.
 
 ## Phase C: Cartographer mode (high-stakes escalation)
 
-Gates on **coverage** (all four quadrants probed) AND **clarity** (per-quadrant ambiguity
-scored every round, weighted total at or below threshold), persists across the **whole
-lifecycle**, and orders work by **regret**. Two axes, two jobs: regret prices *rows*
-(which unknown to clear next); ambiguity scores *quadrants* (whether the user can see how
-clear the map actually is). The interactive loop is mandatory — scores are shown after
-every round so the user can steer instead of discovering drift at the end.
+Gates on **coverage** (six conditions, C2: every quadrant probed — or, for UK only,
+user-confirmed not applicable — no open high-regret row, every irreversible row
+user-confirmed), persists across the **whole lifecycle**, and orders work by **regret**.
+**Clarity is displayed, not gated**: per-quadrant clarity is scored every round and
+summarized as a weighted ambiguity figure so the user can steer instead of discovering
+drift at the end. Two signals, two jobs: regret prices *rows* (which unknown to clear
+next); the clarity display scores *quadrants* (whether the user can see how clear the map
+actually is). The interactive loop is mandatory — scores are shown after every round —
+but the ambiguity figure is never a gate condition.
 
-**Resolve the clarity threshold first (blocking).** Read
-`findingUnknowns.ambiguityThreshold` from `./.claude/settings.json` (project) then
-`~/.claude/settings.json` (user); default **0.25**. Depth-flag presets: `--quick` 0.35 ·
-`--standard` 0.25 · `--deep` 0.15. Precedence: **flag > project > user > default**. Announce on entry,
-first line exactly:
+**Resolve the depth first (blocking).** Depth sets breadth, not a threshold:
 
-> Clarity threshold: {X}% (source: {project settings | user settings | default | flag})
+| Depth | Seeding (C0) | Before the gate (C2) | Soft check |
+|-------|--------------|----------------------|------------|
+| `--quick` | single-lens blind-spot pass (one scout, one lens) | standard gate | round 5, then every 5 rounds |
+| `--standard` (default) | one blind-spot pass (full report); escalates to a multi-lens sweep when the task spans more than one risk domain (e.g. money + data + infra) | standard gate | round 10, then every 10 rounds |
+| `--deep` | always a multi-lens sweep (`fu-multi-lens-sweep` or parallel scouts) | UU loop-until-dry (`fu-uu-until-dry` or its fallback) | round 10, then every 10 rounds |
+
+Precedence: **flag > the user's stated request > default (`--standard`)**. The settings
+key `findingUnknowns.ambiguityThreshold` is ignored since 4.2.0 (see § Settings).
+Announce on entry, first line exactly:
+
+> Depth: {quick | standard | deep} (source: {flag | user request | default})
 >
 > Entering Cartographer mode. I will maintain unknowns-ledger.md, clear the highest-regret
-> unknown each round by its route, score all four quadrants' clarity after every round, and
-> will not proceed to implementation until the coverage gate passes AND weighted ambiguity
-> is at or below {X}%.
+> unknown each round by its route, show all four quadrants' clarity after every round, and
+> will not proceed to implementation until the six-condition gate passes.
 
 **Round 0 — topology gate (one question, before any scoring).** Enumerate the task's 1–6
 top-level components (outcomes that can succeed or fail independently — not sub-features)
@@ -42,33 +50,40 @@ and a named gap when below 0.9:
 |----------|------------------|
 | KK | stated knowns are written down, internally consistent, and confirmed against the territory |
 | KU | known gaps are enumerated, each with a route and a resolution or logged default |
-| UK | taste/recognition criteria have been elicited — prototype reactions or reference extractions converted into explicit criteria |
+| UK | taste/recognition criteria have been elicited — prototype reactions or reference extractions converted into explicit criteria (a UK the user confirmed not applicable scores 1.0 with that justification) |
 | UU | blind-spot probes ran and are going dry; findings are tracked rows |
 
 `ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)` — UU carries the most weight
-because unprobed blind spots are the failure mode this skill exists to prevent. Scoring is
-`ledger-keeper`'s SCORE-QUADRANTS operation when installed; inline otherwise. Consistency
-beats flair: justify from ledger evidence, never from how productive the round felt.
+because unprobed blind spots are the failure mode this skill exists to prevent. The figure
+is a **display**: it steers targeting and tells the user how clear the map is; it never
+passes or fails the gate. Scoring is `ledger-keeper`'s SCORE-QUADRANTS operation when
+installed; inline otherwise. Consistency beats flair: justify from ledger evidence, never
+from how productive the round felt.
 
 ### C0: Seed the ledger
 
 Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed). The file opens
-with a header block — clarity threshold + source, the Round 0 locked topology (components,
-statuses, deferral reasons), and a per-round quadrant score history table — followed by
-the rows:
+with a header block — depth + source, the Round 0 locked topology (components, statuses,
+deferral reasons), the UK status (in scope, or not applicable with the user's
+confirmation), and a per-round quadrant score history table — followed by the rows:
 
 | id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | **route** | **reversibility** | status | phase | resolution / default |
 |----|----------|---------|--------------------|----------|--------|-----------|-------------------|--------|-------|----------------------|
 
-- Run Technique 1 (blind-spot pass) → seed UU rows. Naming a blind spot makes it trackable.
-  For high-stakes tasks, prefer a **multi-lens sweep**: parallel scouts with distinct lenses
-  (e.g. domain-risk / engineering / statistics) — diversity catches what one lens cannot.
+- Run Technique 1 (blind-spot pass, full report) → seed UU rows. Naming a blind spot makes
+  it trackable. Breadth follows the depth: `--quick` runs one scout with one lens;
+  `--standard` runs one blind-spot pass, escalating to a **multi-lens sweep** when the
+  task spans more than one risk domain (e.g. money + data + infra); `--deep` always runs
+  a multi-lens sweep. A multi-lens sweep is parallel scouts with distinct lenses (e.g.
+  domain-risk / engineering / statistics) — diversity catches what one lens cannot.
   When the Workflow tool is available (and the user has opted into orchestration), run the
   sweep as the `fu-multi-lens-sweep` script in `workflows.md`: scouts fan out,
   each finding is adversarially verified as its lens completes (pipeline, no barrier), and
   the result is schema-validated ledger rows — no lens or verification step can be
   silently dropped. Without Workflow, follow the fallback ladder in that file.
-- Run Technique 2/4 where taste is involved → seed UK rows.
+- Run Technique 2/4 where taste is involved → seed UK rows. When the task has no taste
+  component (e.g. a backend migration), propose marking UK "not applicable" and record the
+  user's confirmation in the ledger header; never mark it without that confirmation.
 - Write down KK; list KU.
 - **Domain checklist hook**: after seeding, check the ledger against a domain checklist
   derived from the user's profile, and add any missing rows. Example (quant trading):
@@ -172,18 +187,10 @@ by its route. Repeat until the gate passes or the user exits:
      instruments — e.g. an experiment AND an audit) are required for full resolution.
    - Record per resolution: the evidence, its source(s), and a confidence label
      (high/medium/low). Separate fact from inference explicitly.
-3.8 **Score the quadrants** (every round, no exceptions): re-score all four quadrants per
-   the clarity model in the Phase C header (`ledger-keeper` SCORE-QUADRANTS when
-   installed). Append the scores to the ledger's score history. The next round's target
-   is the highest-regret open row, tie-broken toward the weakest quadrant.
-3.9 **Challenge modes** (each used exactly once, then back to normal clearing):
-   - Round 4+, **Contrarian**: the next interview question challenges a core assumption —
-     "what if the opposite were true / this constraint doesn't exist?"
-   - Round 6+, **Simplifier**: probe removable complexity — "what's the simplest version
-     that would still be valuable?"
-   - Round 8+ if ambiguity still > 0.30, **Ontologist**: "what IS this, really — which
-     component is the core and which are supporting views?" (may revise the Round 0
-     topology; re-lock it if so)
+3.8 **Score the quadrants** (every round, no exceptions; display only): re-score all four
+   quadrants per the clarity model in the Phase C header (`ledger-keeper` SCORE-QUADRANTS
+   when installed). Append the scores to the ledger's score history. The next round's
+   target is the highest-regret open row, tie-broken toward the weakest quadrant.
 4. **Report** after every round, in exactly this format:
 
 ```
@@ -196,52 +203,62 @@ Top regret: {id} ({regret}) — {unknown} [route: {route}]
 |----------|-------|--------|-----|
 | KK | {s} | 0.20 | {gap or "clear"} |
 | KU | {s} | 0.25 | {gap or "clear"} |
-| UK | {s} | 0.25 | {gap or "clear"} |
+| UK | {s} | 0.25 | {gap, "clear", or "n/a (user-confirmed)"} |
 | UU | {s} | 0.30 | {gap or "clear"} |
-| **Ambiguity** | **{a}%** | threshold {X}% | {weakest quadrant × component + why it's next} |
+| **Ambiguity** (display) | **{a}%** | — | {weakest quadrant × component + why it's next} |
 
-Coverage gate:
-[{x| }] KK locked          [{x| }] KU resolved/deferred
-[{x| }] UK extracted       [{x| }] UU probed
+Gate:
+[{x| }] KK written down    [{x| }] KU resolved/deferred-with-default
+[{x| }] UK extracted or n/a (user-confirmed)
+[{x| }] UU probed
 [{x| }] no open row with regret ≥ 1.0
 [{x| }] every irreversible row user-confirmed
-[{x| }] ambiguity {a}% ≤ threshold {X}%
 
-{gate passes ? "Gate PASSED — ready to build."
+{gate passes ? "Gate PASSED — writing the close-out report and spec (C2.5)."
  : "Next target: {id} — {reason}"
  : when only probing rows with pending experiments/audits remain:
    "Gate BLOCKED on external work: {list of clearing actions}. No further rounds add
     value — execute the clearing actions, then resume (the ledger is the state)."}
 ```
 
-### C2: Gate check (blocking, dual-axis)
+### C2: Gate check (blocking, six conditions)
 
-Implementation may start only when ALL hold — coverage AND clarity:
+Implementation may start only when ALL six hold:
 
-- [ ] KK locked — knowns written down
+- [ ] KK written down — knowns recorded in the ledger
 - [ ] KU resolved or deferred-with-default
-- [ ] UK extracted — at least one brainstorm/prototype/reference ran
+- [ ] UK extracted — at least one brainstorm/prototype/reference ran — OR marked "not
+      applicable" with the user's confirmation recorded (e.g. a backend migration with no
+      taste component)
 - [ ] UU probed — at least one blind-spot pass ran; findings are tracked rows
 - [ ] No open row has regret ≥ 1.0
 - [ ] Every `irreversible` row is user-confirmed (resolved with recorded confirmation, or
       deferred with a conservative default the user accepted) — never agent-resolved
-- [ ] Weighted ambiguity ≤ threshold (per-quadrant scores from the latest round)
 
-The two axes catch different failures: coverage catches "we never looked there";
-ambiguity catches "we looked, but the user still can't tell how clear it is". Passing one
-does not imply the other. Round limits: soft warning at round 10 (show scores, offer
-continue/proceed-with-risk), hard cap at round 20 (proceed noting the residual ambiguity).
-Early exit from round 3+ is allowed — display the current score table and open gaps once,
-transparently, then respect the exit. **Exits waive the coverage and ambiguity
+The clarity display is shown next to the gate but is not a condition: the gate rules on
+checkable ledger facts (what was probed, what is still open, what the user confirmed),
+never on whether a self-scored figure crossed a line.
+
+**Soft check** at round 10 and every 10 rounds after (round 5 and every 5 after under
+`--quick`) while the gate has not passed: show
+the score table, surface the top-3 stuck rows by regret, and offer the user three ways
+forward — resolve them now, defer them with a conservative default, or exit. There is no
+hard round cap. Early exit from round 3+ is also allowed — display the current score table
+and open gaps once, transparently, then respect the exit. **Exits waive the coverage
 conditions, never the irreversibility floor**: before proceeding through an early exit,
-the round-20 cap, or a "just build it", list every open irreversible row and get each
-confirmed or deferred-with-accepted-default — or force the work it guards into the
-irreversible lane so it cannot run without the user.
+the soft-check exit, or a "just build it", list every open irreversible row and get each
+confirmed or deferred-with-accepted-default. A row left open stays under the build rule
+in C2.5 ("Any build from this spec"): the work it guards is prepared but never executed
+until the user runs it or says yes to that exact command.
 
 If UU was never probed the gate FAILS — that is its entire point. When `ledger-keeper` is
 installed its verdict is final; never pass the gate out of politeness.
 
-**Completeness critic (final sub-step before declaring PASS)**: when all seven conditions
+**`--deep` only — UU loop-until-dry before the gate**: once the other conditions appear
+satisfied, run `fu-uu-until-dry` (`workflows.md`; without Workflow, its fallback ladder)
+and add every new finding as a row before the gate is evaluated.
+
+**Completeness critic (final sub-step before declaring PASS)**: when all six conditions
 appear satisfied, run one explicit "what's missing?" pass before announcing PASS — a
 domain-checklist re-scan plus three questions: which quadrant was probed most shallowly?
 which resolution is single-source or provisional? what would an expert reviewer ask that
@@ -273,12 +290,18 @@ Acknowledging gaps is a deliverable, not an apology — an unlisted gap is an un
 deviation waiting to happen.
 
 **Crystallized spec.** On gate PASS, also write `unknowns-spec-{slug}.md` next to the
-ledger — the handoff artifact for Phase E: goal (one sentence, covering every active
-topology component), constraints, non-goals, testable acceptance criteria, the final
-quadrant clarity table (scores + ambiguity % + threshold + source), an assumptions
-exposed → resolved table, the **verification contract** (below), and a ledger snapshot
-reference. The spec is marked **pending approval** — writing it grants no execution
-permission.
+ledger — the handoff artifact: goal (one sentence, covering every active topology
+component), constraints, non-goals, testable acceptance criteria, the final quadrant
+clarity table (scores + ambiguity %, display; depth), an assumptions exposed → resolved
+table, the **verification contract** (below), and a ledger snapshot reference. The spec
+is marked **pending approval** — writing it grants no execution permission.
+
+**Default end of Cartographer: write the spec, then STOP.** On gate PASS, deliver the
+close-out report and the spec with its verification contract, and stop. Offer the next
+step per § E1 (the consensus-refine plan, option 1, recommended), and the
+`keep-the-reasoning` handoff packet at merge. That merge packet is always the **full**
+packet: Cartographer is high stakes by definition. Workflow execution (§ E2, option 2,
+`fu-execute-verified`) is experimental and runs only when the user explicitly asks for it.
 
 **Verification contract — define "verified" before anything is built.** Post-facto,
 any outcome can be rationalized; so each acceptance criterion gets, in the spec:
@@ -286,6 +309,9 @@ any outcome can be rationalized; so each acceptance criterion gets, in the spec:
 | criterion | check (what runs) | artifact (test / screenshot / log / trace) | proves | does NOT prove | lane |
 |-----------|-------------------|---------------------------------------------|--------|----------------|------|
 
+- **Irreversible-lane criteria name their post-check** (what runs after the user executes
+  the command, and what result closes the row) — the build rule below requires it on
+  every execution path.
 - **A check must be able to fail.** "Tests exit 0", "every claim carries a source line",
   "the diff touches only files listed in the plan" are checks. "Looks good", "the model
   is confident", "no errors were raised" are not — absence of an error is not evidence
@@ -299,34 +325,54 @@ any outcome can be rationalized; so each acceptance criterion gets, in the spec:
   mistake as the feature passes, and an agent that can edit its oracle can always go
   green.
 - **`lane`** inherits the reversibility of the work the criterion guards
-  (`reversible` · `wide` · `irreversible`) and decides who may close it in Phase E.
+  (`reversible` · `wide` · `irreversible`) and decides who may close it (the build rule
+  in C2.5/C3 for any build; the § E2 lane rules when Phase E runs).
 - The user approves the contract together with the spec. This is the front end of the
-  human's two touchpoints; the back end is the irreversible lane in Phase E.
+  human's two touchpoints; the back end is the irreversible work and the final merge.
 
-### E: Cross-validated execution bridge (approval-gated)
+**Any build from this spec — irreversible work stays with the user.** Whatever the
+execution path (the user's own build, a build from the consensus plan after a separate
+yes, or Phase E), the implementer prepares each irreversible change and the exact
+command, and executes nothing irreversible itself. The user runs the command, or gives an
+explicit yes for that specific command; a general "go ahead" is not a per-command yes.
+The post-checks run before the row (or task) closes. Phase E's irreversible lane (§ E2)
+is this rule applied inside a task graph.
 
-Never auto-execute. After the spec, ask ONE question — "Spec ready (ambiguity {a}%).
-How to proceed?" — with these options:
+### E: After the spec — next step and execution bridge
 
-1. **Consensus-refine, then separate execution approval (recommended).** A planner-role
-   agent drafts the implementation plan from spec + ledger; an INDEPENDENT reviewer-role
-   agent (architect/critic framing: "find what breaks this plan against the spec and the
-   ledger's deferred defaults") reviews it; loop until the reviewer approves, ≤3
-   iterations. Then STOP with the consensus plan marked pending approval — execution is a
-   separate explicit yes.
-2. **Execute via Workflow orchestration** (requires the user's orchestration opt-in): run
-   `fu-execute-verified` from `workflows.md` under the execution rules below — every task
-   is a loop (implement → independent verify against the contract → correct), the tasks
-   form a graph (only real dependencies wait), and lanes decide who closes a task.
-   **First, the task graph is itself approved**: a planner-role context derives tasks
-   from the spec (id, description, covered criteria, lane = max lane of those criteria,
-   touched paths, checks and check files from the contract, post-checks for the
-   irreversible lane, dependencies with what crosses); the user approves that graph
-   before the run. The spec author does not approve its own decomposition.
-   Fallback ladder: Workflow → parallel Agent calls → inline. On the inline rung the
-   implementer and verifier would share a context, so no lane closes automatically —
-   every task goes to the user with its check results.
-3. **Refine further** — return to the C1 loop.
+The default end of Cartographer is the spec (C2.5). Never auto-execute. The options keep
+stable numbers (1, 2, 3) wherever they are referenced.
+
+#### E1 — Next step after the spec (default)
+
+After the spec, ask ONE question — "Spec ready. How to proceed?" — offering options 1
+and 3; offer `keep-the-reasoning` (full packet) at merge. Option 2 (§ E2) is not offered
+by default.
+
+- **Option 1 — Consensus-refine, then separate execution approval (recommended).** A
+  planner-role agent drafts the implementation plan from spec + ledger; an INDEPENDENT
+  reviewer-role agent (architect/critic framing: "find what breaks this plan against the
+  spec and the ledger's deferred defaults") reviews it; loop until the reviewer approves,
+  ≤3 iterations. Then STOP with the consensus plan marked pending approval — execution
+  is a separate explicit yes, and any build that follows is bound by the build rule in
+  C2.5.
+- **Option 3 — Refine further** — return to the C1 loop.
+
+#### E2 — Workflow execution (experimental, optional; not yet run in a live Workflow runtime; explicit request only)
+
+- **Option 2 — Execute via Workflow orchestration.** Runs only on the user's explicit
+  request, and requires the user's orchestration opt-in: run
+  `fu-execute-verified` from `workflows.md` under the execution rules below — every task
+  is a loop (implement → independent verify against the contract → correct), the tasks
+  form a graph (only real dependencies wait), and lanes decide who closes a task.
+  **First, the task graph is itself approved**: a planner-role context derives tasks
+  from the spec (id, description, covered criteria, lane = max lane of those criteria,
+  touched paths, checks and check files from the contract, post-checks for the
+  irreversible lane, dependencies with what crosses); the user approves that graph
+  before the run. The spec author does not approve its own decomposition.
+  Fallback ladder: Workflow → parallel Agent calls → inline. On the inline rung the
+  implementer and verifier would share a context, so no lane closes automatically —
+  every task goes to the user with its check results.
 
 **Execution rules (normative on every rung of the fallback ladder).**
 
@@ -375,12 +421,12 @@ How to proceed?" — with these options:
   `reversible` → then closes on the independent verifier's pass.
   `wide` → additionally requires the verifier to have checked the dependents of the
   changed surface, with evidence (`oh-my-claudecode:blast-radius` when installed).
-  `irreversible` → never closes in-run, whatever the scores. Contract checks for this
-  lane must be safe dry-runs (plan output, `--sql`, diff of intended effect); anything
-  that would perform the irreversible action is a *post-check*. The implementer prepares
-  the change and the exact command and executes nothing irreversible; the user (or the
-  main agent on the user's explicit yes for that command) executes it; then the
-  post-checks run, and only then does the task close.
+  `irreversible` → never closes in-run, whatever the scores (the C2.5 build rule, inside
+  the graph). Contract checks for this lane must be safe dry-runs (plan output, `--sql`,
+  diff of intended effect); anything that would perform the irreversible action is a
+  *post-check*. The implementer prepares the change and the exact command and executes
+  nothing irreversible; the user (or the main agent on the user's explicit yes for that
+  command) executes it; then the post-checks run, and only then does the task close.
   Evidence order for every verdict: check-runner results → the commands actually
   executed and their output → the verifier's own reading → the implementer's summary,
   which is a claim, not evidence.
@@ -396,13 +442,17 @@ different contexts — a second agent, or the user.
 
 ### C3: During & close-out
 
+- Whoever builds, the build rule in C2.5 holds: irreversible steps are prepared, not
+  executed; the user runs each one or gives a per-command yes; post-checks run before the
+  row closes.
 - Keep the ledger open through the build: every mid-build discovery becomes a row
   (quadrant + regret + reversibility), conservative option chosen and logged (Technique 6
-  feeds the ledger; learning-edge constraints from Phase E land here too).
+  feeds the ledger; learning-edge constraints land here too when Phase E runs).
 - Post: build the quiz FROM the ledger — one question per resolved high-regret row and per
   named UU. Merge only when no open row has regret ≥ 1.0 and every irreversible row —
   including those discovered mid-build — is user-confirmed or deferred with an accepted
-  default.
+  default. Hand over at merge with the full `keep-the-reasoning` packet (Cartographer is
+  high stakes by definition).
 
 ## Resume
 
@@ -410,14 +460,12 @@ The ledger IS the state. To resume an interrupted Cartographer session, re-read
 `unknowns-ledger.md` (and `implementation-notes.md` if the build started), announce the
 current gate status, and continue from the highest-regret open row. Do not re-seed.
 
-## Threshold configuration
+## Settings
 
-Optional, read at Cartographer entry (project overrides user; degrade silently to the
-default — no OMC runtime required):
-
-```json
-{ "findingUnknowns": { "ambiguityThreshold": 0.25 } }
-```
+None are required. `findingUnknowns.ambiguityThreshold` is ignored since 4.2.0 — the
+ambiguity figure is display-only, so there is nothing for it to set. Depth comes from the
+flag or the user's request (see the depth table at the top); a leftover key has no effect
+and needs no announcement.
 
 ## Cartographer final checklist
 
@@ -430,13 +478,24 @@ default — no OMC runtime required):
 - [ ] Every round reported the ledger summary + gate checklist in the standard format
 - [ ] Gate verdict came from ledger-keeper when installed; UU probe was not skipped
 - [ ] Deferred rows all carry conservative defaults; no rows were deleted
-- [ ] First announcement line stated the clarity threshold and its source
+- [ ] First announcement line stated the depth and its source
 - [ ] Round 0 topology was confirmed by the user before any quadrant scoring
-- [ ] Every round's report included the four-quadrant score table with weighted ambiguity
-- [ ] Gate checked both axes: coverage conditions AND ambiguity ≤ threshold
+- [ ] Every round's report included the four-quadrant score table with the weighted
+      ambiguity figure, shown as a display and never used as a gate condition
+- [ ] Gate checked all six conditions; UK was marked not applicable only with the user's
+      confirmation recorded
+- [ ] Depth honoured: `--quick` single-lens pass and soft check every 5 rounds;
+      `--standard` one blind-spot pass, a multi-lens sweep when the task spans more than
+      one risk domain; `--deep` multi-lens sweep at seeding and UU loop-until-dry before
+      the gate
 - [ ] On PASS, unknowns-spec-{slug}.md was written and marked pending approval, with a
       verification contract whose every check can fail and states what it does NOT prove
-- [ ] In execution: edges named what crosses; failures returned per unit with SCOPE;
-      derived constraints fed forward; irreversible-lane tasks waited for the user
-- [ ] Execution bridge asked before any execution; plan author ≠ plan approver throughout
+      — and the run stopped there
+- [ ] After the spec, only options 1 and 3 were offered (§ E1); § E2 option 2 ran only on
+      the user's explicit request; if it ran: edges named what crosses; failures returned
+      per unit with SCOPE; derived constraints fed forward
+- [ ] In any build from the spec, irreversible steps were prepared, not executed; the user
+      ran each one or gave a per-command yes; post-checks ran before the row closed
+- [ ] Nothing executed without a separate yes; plan author ≠ plan approver throughout
+- [ ] The merge handoff used the full `keep-the-reasoning` packet
 - [ ] Quiz was generated from the ledger; merge recommendation followed the pass rule

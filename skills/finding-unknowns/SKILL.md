@@ -1,12 +1,12 @@
 ---
 name: finding-unknowns
-description: "Surface the user's unknowns before, during, and after implementation — quadrant routing into eight cheap techniques (blind-spot pass, prototype, interview, references, plan, notes, pitch, quiz), escalating to Cartographer mode (coverage-gated, regret-ordered unknowns ledger with an approval-gated execution bridge) for high-stakes work. For ambiguous or unfamiliar tasks; not for concrete specs or trivial fixes."
+description: "Use when the user says 'I'm not sure where to start', 'what am I missing' or 'interview me'; is new to a codebase or domain; is about to build without acceptance criteria; or faces high-stakes or irreversible work. Routes each unknown to a cheap discovery technique, escalating to Cartographer mode. Not for concrete specs or trivial fixes."
 aliases: []
 metadata:
   credits:
     techniques: "Thariq Shihipar — A Field Guide to Fable: Finding Your Unknowns"
     url: "https://x.com/trq212/status/2073100352921215386"
-    ambiguity-gating: "oh-my-claudecode deep-interview (Ouroboros-inspired)"
+    ambiguity-scoring: "oh-my-claudecode deep-interview (Ouroboros-inspired)"
     verification-contract: "Addy Osmani — Critical thinking when agents do the work"
     execution-rules: "evaluator-optimizer / orchestrator-workers (Anthropic, Building effective agents); return-the-unit and edge heuristics from @hanakoxbt, Loops and Graphs"
 ---
@@ -30,6 +30,9 @@ the territory is unmapped.
 
 <Use_When>
 - The user is starting work in a new domain or an unfamiliar part of the codebase
+- The user says "I'm not sure where to start" or "what am I missing"
+- The user is about to build without acceptance criteria, or the work is high-stakes or
+  irreversible
 - The task involves taste — "I'll know it when I see it" criteria that resist specification
 - The task is long-horizon and a wrong early assumption would compound
 - A previous attempt came back wrong and the spec, not the execution, is the suspect
@@ -43,6 +46,9 @@ the territory is unmapped.
 - The user wants ontology/entity-convergence tracking, OMC state persistence, or
   OMC-native handoff into ralplan/autopilot/ralph/team — use
   `oh-my-claudecode:deep-interview` instead (see Relationship to sibling tooling)
+- The goal is clear and the user only needs divergent options — use
+  `superpowers:brainstorming`. This skill takes precedence when the risk is what the user
+  doesn't know; Technique 2 routes to brainstorming when only options are needed
 - The work is done and the risk is the *handoff* — the user accepting agent output
   without engaging — use the sibling skill `keep-the-reasoning`
 - The user explicitly says "just do it" — respect that; offer one sentence of risk if
@@ -78,8 +84,11 @@ single uniform interview under-serves all four.
 - "You have no significant unknowns here" is a valid and valuable result — say it plainly
   rather than manufacturing concerns
 - Deviations get logged, not buried. Comprehension is the merge gate, not a green diff
-- Prefer single-file self-contained HTML artifacts for anything the user must react to or
-  review (prototypes, plans, quiz reports); markdown fallback for pure-terminal flows
+- Lightweight by default: analysis outputs end in a short report (Phase 0); the full
+  technique output is available on request ("full report"). Artifacts the user reacts to
+  or acts on (prototypes, questions, plans, notes, pitches, quizzes) are never shortened
+- Text first: reports, plans, and quiz reports default to Markdown; HTML only on request.
+  Prototypes stay single-file self-contained HTML — they are visual
 - Delegate to companion agents when installed and the case is non-trivial; run inline
   otherwise. Every technique works standalone. Where an installed sibling skill already
   owns a mechanism (see Relationship to sibling tooling), prefer it over re-implementing
@@ -109,6 +118,22 @@ Lane selection:
   offer Cartographer mode explicitly; do not silently escalate. Before entering, read
   `references/cartographer.md`
 
+**Default deliverable (lightweight lane):** analysis outputs — the Phase 0 routing
+analysis, the Technique 1 blind-spot pass, and Technique 4 reference extraction — end in
+a short report: the 3 most consequential findings, each with its evidence, and 1
+recommended next action. Fewer findings when fewer matter ("no significant unknowns" is
+a valid report).
+
+- **Surprises are never capped.** Every finding that contradicts the prior is listed,
+  on top of the 3 findings.
+- **No double compression.** When Technique 1 runs, its compact report IS the short
+  report; do not compress it again.
+- **Full output** (e.g. the five-section blind-spot report) on request ("full report")
+  or at high stakes.
+- **Always delivered in full**, never cut down to a short report: prototypes, interview
+  questions, plans (Technique 5, including its Definition of verified), implementation
+  notes, pitches (Technique 7), and quizzes. A short report may frame them.
+
 ## Phase 1: Pre-implementation techniques
 
 ### Technique 1 — Blind-spot pass (UU)
@@ -120,20 +145,28 @@ small conversational cases.
    from Phase 0.
 2. Explore the territory first: module, tests, git history, conventions, prior art; for
    external domains, what practitioners consider table stakes.
-3. Report in five sections — preceded by **Surprises** when a prior was given:
-   **Landmines** (typical newcomer mistakes + repo-specific
-   potholes, cited), **Hidden context** (constraining decisions and invariants, with
-   evidence), **What good looks like** (2–3 real examples), **Questions you should be
-   asking** (3–5 expert questions with best-guess answers + confidence), **Rewritten
-   request** (the user's request, upgraded by what you found). **Surprises** lists every
-   finding that contradicts the prior, or says "prior consistent with the territory"
+3. Report **compact by default** — this is the lightweight lane's short report (Phase 0),
+   not something to compress again: **Surprises** when a prior was given, the **top 3
+   findings** ranked by blast radius (each cited; fewer when fewer matter), and the
+   **Rewritten request** (the user's request, upgraded by what you found; it serves as
+   the next action). ≤ ~25 lines, not counting Surprises, which are never capped:
+   **Surprises** lists every finding that contradicts the prior, or says "prior
+   consistent with the territory".
+4. **Full report** on request or when the case is high stakes (Cartographer seeding
+   always uses it) — five sections, preceded by **Surprises** when a prior was given:
+   **Landmines** (typical newcomer mistakes + repo-specific potholes, cited), **Hidden
+   context** (constraining decisions and invariants, with evidence), **What good looks
+   like** (2–3 real examples), **Questions you should be asking** (3–5 expert questions
+   with best-guess answers + confidence), **Rewritten request**.
 
 Stop when the report is delivered. Guardrail: prioritize architecture-changing findings;
 cite evidence for every non-obvious claim.
 
 ### Technique 2 — Brainstorm & prototype (UK)
 
-Delegate to `prototype-smith` for multi-direction artifacts.
+Delegate to `prototype-smith` for multi-direction artifacts. When the goal is already
+clear and the user only needs options generated, route to `superpowers:brainstorming`
+(when installed) instead.
 
 1. Gather raw material (data samples, constraints, references) so options are concrete.
 2. Produce N genuinely different directions (default 4) — different hierarchies, framings,
@@ -178,7 +211,8 @@ conflicts with host-codebase conventions, surface the conflict; don't silently p
 ### Technique 5 — Implementation plan (KU)
 
 The plan's job is to put expensive-to-change decisions in front of the user while changing
-them is free — not to prove thoroughness. `prototype-smith` can render HTML.
+them is free — not to prove thoroughness. Markdown by default; `prototype-smith` can
+render HTML on request.
 
 1. Three-line opener: what is being built, chosen approach, single riskiest assumption.
 2. **Decisions likely to change** first: data model, interfaces, API shapes, anything
@@ -228,11 +262,11 @@ logged — answer them preemptively.
 Delegate to `quiz-master` — an examiner that didn't write the change probes what its
 author glosses over.
 
-1. Report first: **Context**, **What changed** (grouped by intent, not file), **How it
-   interacts** (existing paths that now behave differently, including files the diff
-   doesn't show), **Decisions & assumptions** (defaults chosen, scope cut, requirements
-   reinterpreted — the places a structurally-clean diff hides judgment), **Intuition**
-   (2–3 mental-model updates).
+1. Report first (Markdown by default; HTML on request): **Context**, **What changed**
+   (grouped by intent, not file), **How it interacts** (existing paths that now behave
+   differently, including files the diff doesn't show), **Decisions & assumptions**
+   (defaults chosen, scope cut, requirements reinterpreted — the places a
+   structurally-clean diff hides judgment), **Intuition** (2–3 mental-model updates).
 2. Then 5–8 questions weighted toward deviations, edge cases, interaction effects; mix
    recall and prediction. Never trivia about names.
 3. Grade honestly; for each miss give the answer AND classify it — gap in the user's
@@ -248,28 +282,46 @@ unexplained diff hunk absent from notes/ledger is an **unlogged deviation** — 
 the map; that file is the normative protocol (ledger schema, round template, gate,
 close-out report, spec, verification contract, execution rules).
 
-What it is: a coverage-gated, clarity-scored, regret-ordered discovery loop backed by
-`unknowns-ledger.md`, persisting from pre-build through review. Its shape:
+What it is: a coverage-gated, regret-ordered discovery loop with a per-round clarity
+display, backed by `unknowns-ledger.md`, persisting from pre-build through review. Its
+shape:
 
-1. **Announce the clarity threshold** (first line; flag > project > user > default 0.25) and
-   confirm the **Round 0 topology** (1–6 independently-failing components).
+1. **Announce the depth** (first line; `--quick` single-lens pass, soft check every 5
+   rounds · `--standard` default: one blind-spot pass, escalating to a multi-lens sweep
+   when the task spans more than one risk domain · `--deep` always a multi-lens sweep +
+   UU loop-until-dry before the gate) and confirm the **Round 0 topology** (1–6
+   independently-failing components).
 2. **C0 Seed** the ledger from all four quadrants — blind-spot pass (UU), prototypes or
    references (UK), knowns (KK), named gaps (KU) — plus a domain checklist. Each row
    carries a prior, `regret = cost × P(wrong)`, a **route** (interview · territory ·
    experiment · audit), and a **reversibility** (reversible · wide · irreversible).
 3. **C1 Clearing loop** — a router, not an interview: clear the highest-regret row by its
    route; adversarially verify cost ≥ 4 resolutions; re-score all four quadrants every
-   round and show the score table so the user can steer.
-4. **C2 Dual gate** — coverage (all quadrants probed) AND clarity (weighted ambiguity ≤
-   threshold), plus the **irreversibility floor**: no irreversible row is ever defaulted
-   silently or resolved without the user. Completeness critic before any PASS.
-5. **C2.5 Close-out** — structured unknowns report + crystallized spec with a
-   **verification contract** ("verified" defined before building; every check can fail
-   and states what it does NOT prove; checks locked against the implementer).
-6. **E Execution bridge** — approval-gated. Execution runs tasks as loops inside a graph:
-   edges must name what crosses, failures return per unit with SCOPE, derived
+   round and show the score table and weighted ambiguity — a display so the user can
+   steer, never a gate condition.
+4. **C2 Gate — six conditions**: KK written down; KU resolved or deferred-with-default;
+   UK extracted, or marked not applicable with the user's confirmation; UU probed; no
+   open row with regret ≥ 1.0; every irreversible row user-confirmed — the
+   **irreversibility floor** (no irreversible row is ever defaulted silently or resolved
+   without the user). Completeness critic before any PASS. Soft check at round 10 and
+   every 10 rounds after (round 5 and every 5 after under `--quick`): surface stuck rows;
+   offer resolve / defer-with-default / exit. No hard round cap.
+5. **C2.5 Close-out — the default end.** On PASS: structured unknowns report +
+   crystallized spec with a **verification contract** ("verified" defined before
+   building; every check can fail and states what it does NOT prove; checks locked
+   against the implementer) — then STOP. **Any build from the spec**, whoever runs it:
+   irreversible steps are prepared, never executed by the implementer; the user runs
+   each one or gives a per-command yes; post-checks run before the row closes.
+6. **E1 Next step (default):** ask "Spec ready. How to proceed?" — option 1,
+   consensus-refine plan (recommended; execution is a separate yes), or option 3, keep
+   refining. Offer the `keep-the-reasoning` packet at merge, always the full packet
+   (Cartographer is high stakes by definition). **E2 Workflow execution — experimental,
+   optional; not yet run in a live Workflow runtime.** Option 2 (`fu-execute-verified`)
+   runs only on the user's explicit request. When it runs, tasks are loops inside a
+   graph: edges must name what crosses, failures return per unit with SCOPE, derived
    constraints flow forward (learning edge), and lanes close tasks by reversibility —
-   the irreversible lane always waits for the user. The author never self-approves.
+   the irreversible lane is the build rule applied per task. The author never
+   self-approves.
 7. **C3** — the ledger stays open through the build; the quiz is generated from it.
 
 </Steps>
@@ -277,10 +329,10 @@ What it is: a coverage-gated, clarity-scored, regret-ordered discovery loop back
 <Agent_Delegation>
 | Agent | Backs | Contract: give it → it returns |
 |-------|-------|-------------------------------|
-| `blindspot-scout` | Technique 1, 4 | goal + experience level → five-section recon report (no file-editing tools; Bash for inspection only, by instruction) |
+| `blindspot-scout` | Technique 1, 4 | goal + experience level → compact recon report (top 3 findings + rewritten request; Surprises uncapped); full five-section report on request or at high stakes (no file-editing tools; Bash for inspection only, by instruction) |
 | `prototype-smith` | Technique 2, 5 | problem + data sources + N → one HTML artifact of N divergent directions + reaction guide (writes only throwaway files) |
 | `ledger-keeper` | Cartographer | task/answers/discoveries → updated ledger, regret scores, next target, gate verdict (touches only the ledger) |
-| `quiz-master` | Technique 7, 8 | diff + notes + ledger → HTML report + must-pass quiz (no file-editing tools; flags unlogged deviations) |
+| `quiz-master` | Technique 7, 8 | diff + notes + ledger → Markdown report (HTML on request) + must-pass quiz (no file-editing tools; flags unlogged deviations) |
 
 - Relay agent reports; do not re-run their exploration in the main context.
 - The gate verdict belongs to `ledger-keeper`; the quiz belongs to `quiz-master`. Do not
@@ -300,7 +352,8 @@ What it is: a coverage-gated, clarity-scored, regret-ordered discovery loop back
   fan-out-heavy operations — multi-lens sweep, cost ≥ 4 verification panel, UU
   loop-until-dry — have ready-to-run Workflow scripts in `references/workflows.md`, with
   structured (schema-validated) outputs that feed the ledger mechanically; a fourth,
-  `fu-execute-verified`, runs approved execution under Phase E's rules. Workflow use
+  `fu-execute-verified` (experimental; only on the user's explicit request), runs
+  approved execution under Phase E's rules. Workflow use
   requires the user's orchestration opt-in; the file's fallback ladder covers plain-Agent
   and fully-inline environments. The logic is normative; the mechanism is not.
 
@@ -356,7 +409,7 @@ instead of asking the user to rediscover it, offers options with a recommendatio
 <Good>
 Honest gate failure:
 ```
-Coverage gate: [x] KK [x] KU [x] UK [ ] UU [x] regret [x] irreversible [x] ambiguity
+Gate: [x] KK [x] KU [x] UK [ ] UU [x] regret [x] irreversible
 Gate FAILED — no blind-spot pass has run. Clarity on the questions we thought to ask is
 not coverage of the ones we didn't. Run the scout before building.
 ```
@@ -414,15 +467,19 @@ destroys the user's trust that a scout is safe to run.
   highest-regret unresolved unknowns and the conservative defaults you will take, then
   proceed. Respect the exit; make the risk visible once, not repeatedly. The one thing an
   exit never waives: an unknown guarding an irreversible step gets its own one-line
-  confirmation (or its step waits for the user) before that step runs.
+  confirmation before that step runs. Unconfirmed, the step is prepared but not executed:
+  the user runs it or gives a yes for that exact command (in Cartographer, the build rule
+  in `references/cartographer.md` C2.5).
 - **Interview stalls** (answers stop changing any row's regret): stop interviewing; the
   remaining unknowns are cheaper to discover during implementation. Say so.
 - **Two failed quiz rounds**: recommend simplifying or splitting the change. Do not keep
   quizzing.
 - **Scout finds nothing significant**: report "no significant blindspots" and end — do not
   pad the report.
-- **Cartographer round 10 without gate progress**: surface the top-3 stuck rows and ask
-  the user to resolve, defer-with-default, or exit to lightweight techniques.
+- **Cartographer soft check** (round 10 and every 10 after; round 5 and every 5 after
+  under `--quick`) without a gate PASS:
+  surface the top-3 stuck rows and ask the user to resolve, defer-with-default, or exit to
+  lightweight techniques. There is no hard round cap.
 - **Interview question times out / user is away**: the row stays `open` (no re-score
   without an answer), mark it "re-askable", report the round with the gate suspended, and
   deliver whatever territory/experiment routes can proceed without the user. Never invent
@@ -441,7 +498,11 @@ Lightweight lane:
 - [ ] No discovery technique mutated product code
 - [ ] Interview questions were blast-radius-ordered, non-discoverable, ≤3 per round, and
       never bundled when dependent
-- [ ] Artifacts delivered in reactable form (HTML default) with a reaction guide
+- [ ] Analysis outputs ended in the short report (3 findings with evidence + 1 next
+      action; Surprises uncapped); full output on request or at high stakes; prototypes,
+      questions, plans, notes, pitches, and quizzes delivered in full
+- [ ] Prototypes delivered as reactable HTML with a reaction guide; reports and plans in
+      Markdown unless HTML was requested
 - [ ] Plans defined "verified" up front: a failable check per criterion + what it misses
 - [ ] Deviations logged at decision time, not reconstructed afterwards
 
@@ -458,15 +519,18 @@ The ledger IS the state — see `references/cartographer.md` § Resume. Do not r
 
 | Knob | Default | Meaning |
 |------|---------|---------|
+| Report size | short (analysis outputs) | 3 most consequential findings (with evidence) + 1 next action, Surprises uncapped; "full report" for the full technique output; prototypes, questions, plans, notes, pitches, quizzes always in full |
+| Blind-spot report | compact (≤ ~25 lines + Surprises) | top 3 findings + rewritten request; it is the short report, not compressed again; five-section report on request or at high stakes |
+| Report format | Markdown | HTML on request; prototypes stay HTML |
 | Prototype directions N | 4 | genuinely different directions per brainstorm |
 | Regret question bar | 1.0 | rows below this get defaults, not questions — never applies to irreversible rows |
 | Quiz size | 5–8 | questions per round |
 | Quiz rounds | 2 | before recommending simplify/split |
-| Cartographer soft cap | 10 rounds | then surface stuck rows / show scores |
-| Cartographer hard cap | 20 rounds | proceed, noting residual ambiguity |
-| Ambiguity threshold | 0.25 | settings `findingUnknowns.ambiguityThreshold`, or --quick 0.35 / --deep 0.15 |
-| Consensus iterations | 3 | planner↔reviewer loops in Phase E option 1 |
-| Execution attempt cap | 3 per task | then the task becomes a plan-suspect ledger row |
+| Cartographer depth | `--standard` | `--standard`: one blind-spot pass (full report), a multi-lens sweep when the task spans more than one risk domain · `--quick`: single-lens pass, soft check every 5 rounds · `--deep`: always a multi-lens sweep + UU loop-until-dry before the gate |
+| Cartographer soft check | round 10, then every 10 (5, then every 5, with `--quick`) | surface stuck rows; offer resolve / defer-with-default / exit; no hard cap |
+| Ambiguity figure | display only | shown every round; never a gate condition (`findingUnknowns.ambiguityThreshold` is ignored since 4.2.0) |
+| Consensus iterations | 3 | planner↔reviewer loops in § E1 option 1 |
+| Execution attempt cap | 3 per task | experimental § E2 option 2; then the task becomes a plan-suspect ledger row |
 | Questions per round | ≤3 independent | interview-route rows batched per round (dependent ones one at a time) |
 
 ## Relationship to sibling tooling
@@ -477,9 +541,9 @@ floor, and lifecycle persistence from discovery through review.
 
 | Need | Sibling (when installed) | Relationship |
 |------|--------------------------|--------------|
-| Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repo) | the handoff half — Phase 3 and Phase E's back end hand over to it |
+| Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repo) | the handoff half — Phase 3 and Cartographer's merge (and Phase E's back end, when run) hand over to it |
 | Reporting an experiment result against its prediction | `theory-vs-result` (this repo) | `experiment`-route rows are specified as its prediction cards and come back as Theory → Measured → Consistent? → Mechanism cards, mapped onto the row per `references/cartographer.md` (C1, `experiment`) |
-| Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` | Cartographer's ambiguity gating, topology gate and challenge modes are adapted from it; its `--frontier` mode is the closest analogue of batched independent questions + territory routing. Both are approval-gated. Use it when you want the OMC runtime |
+| Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` | Cartographer's ambiguity scoring (display-only here) and topology gate are adapted from it; its `--frontier` mode is the closest analogue of batched independent questions + territory routing. Both are approval-gated. Use it when you want the OMC runtime |
 | Fog test + decision tickets on a tracker | `oh-my-claudecode:ask-navigator` | ticket types map onto routes (research ≈ territory, loft ≈ experiment, grilling ≈ interview); use it when decisions must live in an issue tracker rather than a ledger file |
 | Adversarial review of a diff/design | `oh-my-claudecode:interrogate` | stronger than a same-model panel for cost ≥ 4 code claims (C1 step 3.5) |
 | Throwaway prototype to settle a design | `oh-my-claudecode:loft` | an alternative backend for Technique 2 |
@@ -487,8 +551,8 @@ floor, and lifecycle persistence from discovery through review.
 | Prove a change's blast radius | `oh-my-claudecode:blast-radius` | runs the checks; this skill only ranks by blast radius |
 | Restate the brief before starting | `oh-my-claudecode:in-your-own-words` / `sharpen` | lighter than Technique 1 when the gap is wording, not territory |
 | Learner-paced explanation | `oh-my-claudecode:teach` | Technique 8 grades and gates merge; teach only paces |
+| Divergent options when the goal is clear | `superpowers:brainstorming` | brainstorming generates options; this skill takes precedence when the risk is what the user doesn't know. Technique 2 routes there when only options are needed |
 
-Divergent option generation as a discipline → `superpowers:brainstorming`. Rigorous
-written plans → `superpowers:writing-plans` / `oh-my-claudecode:plan`. Spec already
+Rigorous written plans → `superpowers:writing-plans` / `oh-my-claudecode:plan`. Spec already
 concrete → skip discovery and execute.
 </Advanced>

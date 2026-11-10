@@ -1,5 +1,5 @@
 ---
-description: "Hand off agent work without surrendering judgment — evidence first, decisions listed, what the checks did NOT prove, what went unchecked."
+description: "Hand off agent work without surrendering judgment — evidence first, what the checks did NOT prove, what went unchecked, and decisions listed at high stakes."
 ---
 
 # keep-the-reasoning

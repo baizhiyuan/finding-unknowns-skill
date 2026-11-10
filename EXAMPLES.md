@@ -90,11 +90,12 @@ prior in the resolution column first ("prior: …") and append to it, never over
    Rows under regret 1.0 get a logged conservative default, except irreversible rows,
    which always come to me. Before resolving any row with cost-if-wrong >= 4, give the
    strongest alternative explanation of the same evidence; one source is only provisional.
-3. Each round, show the ledger summary, the four-quadrant scores and the gate checklist.
-   Do NOT let me start until the knowns are written down, known gaps are resolved or have a
-   logged default, taste criteria are explicit, UU has been probed, no open row has
-   regret >= 1.0, every irreversible row is confirmed by me, and ambiguity is at or below
-   the threshold.
+3. Each round, show the ledger summary, the four-quadrant clarity scores (as a display,
+   not a gate) and the gate checklist. Do NOT let me start until the knowns are written
+   down, known gaps are resolved or have a logged default, taste criteria are explicit
+   (or I have confirmed there is no taste component), UU has been probed, no open row has
+   regret >= 1.0, and every irreversible row is confirmed by me.
+4. When the gate passes, write the spec with its verification contract and stop there.
 
 Keep the ledger open through implementation and build the final merge quiz from it.
 ```
