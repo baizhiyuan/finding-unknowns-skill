@@ -196,7 +196,7 @@ are enforced in code and which only by prompt.
 ## Relationship to upstream paradigms
 
 - Technique content derives from Thariq Shihipar's essay (see README attribution).
-- `theory-vs-result` is distilled from a long-running empirical research practice, generalized for any
+- `theory-vs-result` is distilled from the author's own empirical research practice, generalized for any
   measured claim.
 - `keep-the-reasoning` and the verification contract draw on Addy Osmani's "Critical
   thinking when agents do the work" (https://x.com/addyosmani/status/2117512471930167377).

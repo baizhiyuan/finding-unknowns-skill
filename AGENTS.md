@@ -33,7 +33,7 @@ It is about maintaining the project — for what the skill does at runtime, read
 - Preserve the attribution block (Thariq Shihipar / @trq212) and the non-affiliation
   disclaimer in SKILL.md, README.md, and CLAUDE.md. Credit sources as in each SKILL.md
   `metadata.credits` (Osmani for `keep-the-reasoning` and the verification contract;
-  Anthropic and @hanakoxbt for the execution heuristics; an unnamed long-running
+  Anthropic and @hanakoxbt for the execution heuristics; the author's own
   empirical research practice for `theory-vs-result`); neutral credit only.
 
 ## After any change

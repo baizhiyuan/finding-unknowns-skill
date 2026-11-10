@@ -4,7 +4,7 @@ description: "Report empirical results as Theory → Measured → Consistent? �
 aliases: [theory-measured-mechanism, predict-measure-explain]
 metadata:
   credits:
-    source: "Distilled from a long-running empirical research practice, generalized for any measured claim"
+    source: "Distilled from the author's own empirical research practice (baizhiyuan), generalized for any measured claim"
     sibling: "finding-unknowns (unknowns before work) and keep-the-reasoning (the handoff) — this repository"
     related-practice: "pre-registration; equivalence testing with a smallest effect of interest; multiple-testing and effective-trial corrections"
 ---
