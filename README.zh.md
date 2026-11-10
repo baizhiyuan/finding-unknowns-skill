@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.3.0：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.3.1：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-4.3.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.3.0">
+  <img src="https://img.shields.io/badge/version-4.3.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.3.1">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 个技能">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
@@ -90,7 +90,7 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 
 ### 更新
 
-按当初的安装方式更新即可。最新版本为 **v4.3.0**。
+按当初的安装方式更新即可。最新版本为 **v4.3.1**。
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -128,7 +128,7 @@ rm -f ~/.claude/commands/finding-unknowns.md ~/.claude/commands/keep-the-reasoni
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# 预期：4.3.0（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
+# 预期：4.3.1（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
 ```
 
 </details>

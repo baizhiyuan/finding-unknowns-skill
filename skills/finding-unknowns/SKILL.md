@@ -125,7 +125,9 @@ Capture the prior in one line — what the user expects the answer or outcome to
 only if it is not inferable; "no idea yet" is a valid prior and itself routes to UU). A
 prior is any expectation recorded before the result; one already recorded in this session
 by `keep-the-reasoning` (Step 1) or `theory-vs-result` (a prediction card) is reused,
-never asked again.
+never asked again. A prior can also arrive later, as a follow-up that assumes an answer
+("can I just upgrade X so it runs Y?"): record it and check it like the first one, and
+report it as a Surprise when the evidence contradicts it.
 
 Then choose the mode and say so:
 
@@ -163,7 +165,9 @@ small conversational cases.
 1. Establish goal + experience level (inferred conservatively if unstated) + the prior
    from Phase 0.
 2. Explore the territory first: module, tests, git history, conventions, prior art; for
-   external domains, what practitioners consider table stakes.
+   external domains, what practitioners consider table stakes. When the work runs on a
+   remote device or service, access is itself an unknown: can the agent reach it from
+   here, and with which credentials?
 3. Report **compact by default** — this is the lightweight mode's short report (Phase 0),
    not something to compress again: **Surprises** when a prior was given, the **top 3
    findings** ranked by blast radius (each cited; fewer when fewer matter), and the
@@ -179,7 +183,9 @@ small conversational cases.
    with best-guess answers + confidence), **Rewritten request**.
 
 Stop when the report is delivered. Guardrail: prioritize architecture-changing findings;
-cite evidence for every non-obvious claim.
+cite evidence for every non-obvious claim. A claim that something is absent ("not
+recorded", "needs device check") is a claim too: search the territory for it first and
+cite the hit or the search that came back empty.
 
 ### Technique 2 — Brainstorm & prototype (UK)
 
@@ -516,7 +522,8 @@ destroys the user's trust that a scout is safe to run.
 <Final_Checklist>
 Lightweight mode:
 - [ ] Phase 0 routing was announced (quadrant → technique) before any technique ran
-- [ ] The prior was captured before discovery; contradicting findings surfaced as surprises
+- [ ] The prior was captured before discovery, and so was any prior stated later;
+      contradicting findings surfaced as surprises
 - [ ] No discovery technique mutated product code
 - [ ] Interview questions were blast-radius-ordered, non-discoverable, ≤3 per round, and
       never bundled when dependent

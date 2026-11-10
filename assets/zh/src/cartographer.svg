@@ -66,7 +66,7 @@
 <text x="82" y="494.32" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#FAF9F5" text-anchor="middle">C1</text>
 <text x="116" y="496.84" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="19" font-weight="700" fill="#141413">逐项处理未知项（按类型分派，而不是一律提问）</text>
 <text x="1140" y="486" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" font-weight="400" fill="#5E5D59" text-anchor="end">软检查（不设硬上限）：</text>
-<text x="1140" y="507" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C" text-anchor="end">第 10 轮（--quick 为第 5 轮）</text>
+<text x="1140" y="507" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C" text-anchor="end">第 10 轮起每 10 轮（--quick 为每 5 轮）</text>
 <clipPath id="cc4"><rect x="56" y="534" width="236" height="222" rx="10"/></clipPath>
 <rect x="56" y="534" width="236" height="222" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
 <circle cx="82" cy="562" r="11" fill="#F5DDD1"/>
