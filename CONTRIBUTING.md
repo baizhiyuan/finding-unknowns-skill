@@ -21,6 +21,19 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 - **Diagrams.** SVG assets in `assets/` must be well-formed XML and should render on GitHub.
   `assets/zh/` holds the Simplified Chinese versions used by `README.zh.md`; when you change
   a diagram, update its Chinese counterpart in the same change.
+- **Chinese diagrams are generated.** Edit the source in `assets/zh/src/NAME.svg` (Chinese text
+  uses `font-family="Noto Sans SC, …"`, one line per `<text>`, no letter-spacing), then
+  regenerate the published file, which outlines the Chinese glyphs so every viewer sees the
+  same typeface:
+
+  ```bash
+  # Noto Sans SC Regular / Medium / Bold (SIL OFL) from
+  # https://github.com/notofonts/noto-cjk/tree/main/Sans/SubsetOTF/SC
+  python3 scripts/outline_cjk.py --fonts /path/to/noto-sans-sc --out assets/zh assets/zh/src/*.svg
+  ```
+
+  Never hand-edit `assets/zh/*.svg`; it is overwritten on every build. Chinese wording follows
+  the terminology already used in `README.zh.md`.
   Validate with any standard XML parser before committing.
 - **Attribution.** Preserve the attribution to the original essay. Do not represent this
   project as affiliated with Anthropic.
