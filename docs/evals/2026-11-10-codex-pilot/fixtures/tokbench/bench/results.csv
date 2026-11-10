@@ -1,0 +1,9 @@
+variant,run,machine,date,p50_ms,p95_ms
+baseline,1,ci-runner-1,2026-11-03,41.2,58.0
+baseline,2,ci-runner-1,2026-11-03,38.7,55.1
+baseline,3,ci-runner-1,2026-11-03,43.0,61.4
+baseline,4,ci-runner-1,2026-11-03,39.5,56.2
+baseline,5,ci-runner-1,2026-11-03,42.1,60.3
+lru_cache,1,ci-runner-2,2026-11-08,38.9,57.2
+lru_cache,2,ci-runner-2,2026-11-08,40.8,59.9
+lru_cache,3,ci-runner-2,2026-11-08,37.6,54.8

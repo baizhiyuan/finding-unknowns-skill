@@ -1,0 +1,98 @@
+{
+ "T1-A": {
+  "input_tokens": 163400,
+  "output_tokens": 1795,
+  "seconds": 197,
+  "words": 209,
+  "skills_read": []
+ },
+ "T1-B": {
+  "input_tokens": 228474,
+  "output_tokens": 2269,
+  "seconds": 238,
+  "words": 232,
+  "skills_read": [
+   "finding-unknowns"
+  ]
+ },
+ "T2-A": {
+  "input_tokens": 545152,
+  "output_tokens": 4762,
+  "seconds": 458,
+  "words": 337,
+  "skills_read": []
+ },
+ "T2-B": {
+  "input_tokens": 786987,
+  "output_tokens": 7843,
+  "seconds": 656,
+  "words": 347,
+  "skills_read": [
+   "finding-unknowns",
+   "keep-the-reasoning"
+  ]
+ },
+ "T3-A": {
+  "input_tokens": 92322,
+  "output_tokens": 1827,
+  "seconds": 146,
+  "words": 246,
+  "skills_read": []
+ },
+ "T3-B": {
+  "input_tokens": 142594,
+  "output_tokens": 4480,
+  "seconds": 207,
+  "words": 407,
+  "skills_read": [
+   "keep-the-reasoning",
+   "theory-vs-result"
+  ]
+ },
+ "T4-A": {
+  "input_tokens": 113195,
+  "output_tokens": 1240,
+  "seconds": 304,
+  "words": 124,
+  "skills_read": []
+ },
+ "T4-B": {
+  "input_tokens": 162288,
+  "output_tokens": 2662,
+  "seconds": 351,
+  "words": 209,
+  "skills_read": [
+   "keep-the-reasoning"
+  ]
+ },
+ "T5-A": {
+  "input_tokens": 181181,
+  "output_tokens": 2029,
+  "seconds": 363,
+  "words": 257,
+  "skills_read": []
+ },
+ "T5-B": {
+  "input_tokens": 287531,
+  "output_tokens": 2392,
+  "seconds": 421,
+  "words": 305,
+  "skills_read": [
+   "finding-unknowns"
+  ]
+ },
+ "T6-A": {
+  "input_tokens": 71763,
+  "output_tokens": 345,
+  "seconds": 82,
+  "words": 6,
+  "skills_read": []
+ },
+ "T6-B": {
+  "input_tokens": 54528,
+  "output_tokens": 244,
+  "seconds": 73,
+  "words": 6,
+  "skills_read": []
+ }
+}

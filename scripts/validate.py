@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ["README.md", "README.zh.md", "CLAUDE.md", "AGENTS.md", "EXAMPLES.md",
         "CONTRIBUTING.md", "CHANGELOG.md", "docs/ARCHITECTURE.md", "docs/recordings/itsdangerous-blindspot.md", "docs/GLOSSARY.md",
         "docs/TUTORIAL.md", "docs/TUTORIAL.zh.md"]
-DOCS += sorted(str(Path(p).relative_to(ROOT)) for p in glob.glob(str(ROOT / "docs/field-notes/*.md")))
+DOCS += sorted(str(Path(p).relative_to(ROOT)) for p in glob.glob(str(ROOT / "docs/field-notes/*.md"))
+               + glob.glob(str(ROOT / "docs/evals/*/README.md")))
 CJK = re.compile(r"[一-鿿　-〿＀-￯]")   # ideographs + CJK/full-width punctuation
 errors: list[str] = []
 

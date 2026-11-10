@@ -1,0 +1,3 @@
+# collected during lru_cache run 2 (functools cache_info at exit)
+CacheInfo(hits=1187, misses=38412, maxsize=4096, currsize=4096)
+corpus: bench/corpus_unique_words.txt (each document drawn from a 2M-word vocabulary)

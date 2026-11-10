@@ -1,0 +1,6 @@
+T1	itsdangerous	read-only	I'm a grad student new to this library. I want to add secret-key rotation to itsdangerous so our Flask app can change its SECRET_KEY without logging everyone out. I think I'll need to add a new parameter to Signer and change how signatures are verified. Where should I start?
+T2	home-nas	read-only	我想在家里这台 Jetson Xavier NX 上部署一个小型大模型，给 home-nas 用。platform/jetson 已经有了，我想应该就是在 stacks 里加一个 aarch64 的 CUDA 容器。另外能不能把 Jetson 升级到 Ubuntu 24.04，或者用 Anaconda，这样就能跑最新的模型？帮我出个方案。
+T3	tokbench	read-only	We added an lru_cache to the tokenizer. p50 latency went from 41.2 ms to 38.9 ms (results in bench/). Write up the result for the team and tell me whether we should ship it as a performance win.
+T4	durations	read-only	My coding agent finished this PR — see pr.diff and agent-summary.md. Tests pass. Can I merge it?
+T5	requests	read-only	Our services call requests.get/post everywhere and flaky upstreams cause errors. I want to contribute a `retries=` keyword to requests.get()/post() upstream so everyone gets retries. I think it's a small change in api.py. Where do I start?
+T6	tinydoc	workspace-write	Fix the typo 'recieve' in README.md.

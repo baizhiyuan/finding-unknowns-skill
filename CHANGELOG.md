@@ -4,6 +4,35 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.2]
+
+Driven by the first comparative eval: gpt-6.1-sol in Codex with and without these skills,
+six pre-registered tasks, blinded grading, recorded in
+[docs/evals/2026-11-10-codex-pilot](docs/evals/2026-11-10-codex-pilot/README.md). Both arms
+caught nearly every trap (22 vs 22.75 of 25, inside the noise for one run per cell); the
+skills cost 47 % more input tokens. The two fixes below target misses the skill arm shared
+with the baseline; neither has been re-run yet.
+
+### Fixed
+- **Remote access is checked first (field note F3, again).** In the eval the skill arm read
+  the 4.3.1 access rule in Technique 1 and Technique 5 and still did not make logging in a
+  first step. The rule is now one always-on Execution_Policy bullet: for a remote device,
+  server or hosted service, state the access path the territory records (host entry, login
+  user, network route) or that none is recorded, and make "confirm you can log in" step 1 of
+  any plan that touches it. The two narrower sentences in Technique 1 and Technique 5 are
+  removed.
+- **`theory-vs-result` computes the noise floor from reruns in hand.** The skill arm led a
+  benchmark write-up with a point difference and never estimated noise from the five and
+  three runs it had. "Noise floor first" now adds: when the data already holds reruns,
+  compute it from them (each side's spread, an interval for the difference) before the
+  headline, and lead with the verdict, not the point difference.
+
+### Added
+- `docs/evals/2026-11-10-codex-pilot/`: pre-registration, scripts (isolated `CODEX_HOME`
+  per arm, blinding), synthetic fixtures, every final answer and every grader reply
+  verbatim, token and time usage. `validate.py` checks each eval's README.
+- README Design Notes: a short entry on the eval.
+
 ## [4.3.1]
 
 Driven by a recorded field run: three defects observed in a real run (a Jetson Xavier NX
@@ -663,6 +692,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[4.3.2]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.2
 [4.3.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.1
 [4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0
 [4.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.2.0
