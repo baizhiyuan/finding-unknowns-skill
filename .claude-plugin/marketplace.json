@@ -7,7 +7,7 @@
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "Discover your unknowns before they get expensive (blind-spot pass, prototype, interview, references, plan, notes, pitch, quiz, Cartographer mode) — and keep the reasoning when agents hand work back (keep-the-reasoning handoff packets)."
+      "description": "Discover your unknowns before they get expensive (blind-spot pass, prototype, interview, references, plan, notes, pitch, quiz, Cartographer mode) — keep the reasoning when agents hand work back (keep-the-reasoning handoff packets) — and report every measured result as Theory → Measured → Consistent? → Mechanism (theory-vs-result, with a fresh-context mechanism-auditor)."
     }
   ]
 }

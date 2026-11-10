@@ -4,9 +4,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-4.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.0.0">
-  <img src="https://img.shields.io/badge/skills-2-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="2 个技能">
-  <img src="https://img.shields.io/badge/agents-4-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="4 个代理">
+  <img src="https://img.shields.io/badge/version-4.1.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.1.0">
+  <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 个技能">
+  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
 </p>
 
@@ -42,7 +42,7 @@
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-如果想克隆仓库安装，`install.sh` 会安装两个技能、`references/`、四个子代理和全部斜杠命令。
+如果想克隆仓库安装，`install.sh` 会安装三个技能、`references/`、五个子代理和全部斜杠命令。
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -55,10 +55,11 @@ cd finding-unknowns-skill && bash install.sh
 <summary><b>手动复制（仅技能）</b></summary>
 
 ```bash
-mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning
+mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning ~/.claude/skills/theory-vs-result
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
 cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
 cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
+cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 ```
 
 </details>
@@ -83,10 +84,11 @@ cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
 
 - **高风险**（难以撤销、影响面广，或领域陌生且周期长）→ `/cartographer --deep "…"`
 - **工作已经完成，风险在于验收** → `/keep-the-reasoning "…"`
+- **结果已经出来（或即将测量），风险在于误读结果** → `/theory-vs-result "…"`
 
 ### 更新
 
-按当初的安装方式更新即可。最新版本为 **v4.0.0**。
+按当初的安装方式更新即可。最新版本为 **v4.1.0**。
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -105,14 +107,15 @@ cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
 cd finding-unknowns-skill && git pull origin main && bash install.sh
 ```
 
-**手动复制。** 用新文件覆盖原来的同名文件。`references/` 中包含 Cartographer 协议和 Workflow 模板，也必须一并更新；v4 还新增了 `keep-the-reasoning` 技能。
+**手动复制。** 用新文件覆盖原来的同名文件。`references/` 中包含 Cartographer 协议和 Workflow 模板，也必须一并更新；v4 新增了 `keep-the-reasoning` 技能，v4.1 又新增了 `theory-vs-result`。
 
 ```bash
 cd finding-unknowns-skill && git pull origin main
-mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning
+mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning ~/.claude/skills/theory-vs-result
 cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
 cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
 cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
+cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 cp agents/*.md   ~/.claude/agents/
 cp commands/*.md ~/.claude/commands/
 ```
@@ -121,8 +124,8 @@ cp commands/*.md ~/.claude/commands/
 
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
-  || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md
-# 预期：4.0.0（插件方式），或列出这两个文件（v4.0.0 起才有）
+  || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
+# 预期：4.1.0（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
 ```
 
 </details>
@@ -136,23 +139,25 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 - **Cartographer 模式按覆盖面把关。** 它面向高风险任务，包括按风险值排序的未知项台账、每轮展示的清晰度评分，以及 7 项开工条件。相关代码和实际情况没有查清之前，不会开始任何实现。
 - **不可逆操作确认规则。** 是否放行取决于影响范围，而不是把握大小。只要某个未知项关系到不可逆的步骤，无论证据看起来多么确凿，都会交给你确认。
 - **交付时由人保留判断。** 交付报告先列证据，写明每项检查*不能*证明什么、哪些内容没有人检查过，以免在验收智能体成果时不知不觉地放弃判断。
+- **先有理论，再看数据。** 每个实测结果都按“理论预期 → 实测 → 是否一致 → 机理”呈现：预测先写下，噪声下限讲清楚，机理标明证据强弱，按预先约定的规则得出的判定与对方向本身的判断分开写。
 - **独立判断。** 方案的作者不批准自己的方案。排查、评分和测验都在未参与实现的上下文中进行。
 - **零依赖。** 全部内容都是纯 Markdown。子代理和 Workflow 脚本可以让排查更深入；没有它们，每种方法也能在当前会话内完整运行。
 
-> **来源说明。** 这些方法及其名称出自 Thariq Shihipar 的文章《_A Field Guide to Fable: Finding Your Unknowns_》（[@trq212](https://x.com/trq212/status/2073100352921215386)）；底层理念归功于原作者，本仓库只是把它们打包成可安装的 Claude Code 插件。`keep-the-reasoning` 提炼自 Addy Osmani 的《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。该文指出，随着交付次数增加，人会从**委托**（把工作交出去，责任仍在自己）逐渐转向**依赖**（直接拿输出当下一步的依据），最终走到**放弃判断**（不知不觉地把输出当成了自己的结论）。
+> **来源说明。** 这些方法及其名称出自 Thariq Shihipar 的文章《_A Field Guide to Fable: Finding Your Unknowns_》（[@trq212](https://x.com/trq212/status/2073100352921215386)）；底层理念归功于原作者，本仓库只是把它们打包成可安装的 Claude Code 插件。`keep-the-reasoning` 提炼自 Addy Osmani 的《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。该文指出，随着交付次数增加，人会从**委托**（把工作交出去，责任仍在自己）逐渐转向**依赖**（直接拿输出当下一步的依据），最终走到**放弃判断**（不知不觉地把输出当成了自己的结论）。`theory-vs-result` 提炼自一套长期积累的实证研究实践，并推广到任何实测结论：在知道预期是什么、差距是否超出噪声、结果为何如此之前，一个数字还算不上发现。
 
 ---
 
 ## 功能特性
 
-### 两个技能
+### 三个技能
 
 | 技能 | 是什么 | 用于 |
 |------|--------|------|
 | **`finding-unknowns`** | 第 0 阶段问题定位 → 八种方法 → 可选的 Cartographer 模式 | 开工前与实施中：找出原本只能靠猜测处理的未知项 |
 | **`keep-the-reasoning`** | 影响评估、事先定好验收标准、按固定顺序编写的交付报告 | 交付时：验收智能体成果，同时保留自己的判断 |
+| **`theory-vs-result`** | 先写预测卡，再按“理论预期 → 实测 → 是否一致 → 机理”逐项成卡，并分别给出两种判定 | 实测结果（回测、基准测试、A/B 测试、消融实验、训练）：任何数字都要附上它所检验的预测和成因 |
 
-在第 3 阶段结束时，以及 Cartographer 模式的执行阶段结束时，`finding-unknowns` 会转交给 `keep-the-reasoning`。
+在第 3 阶段结束时，以及 Cartographer 模式的执行阶段结束时，`finding-unknowns` 会转交给 `keep-the-reasoning`。`experiment` 路线返回的实验结果通过 `theory-vs-result` 汇报，其汇总表也同时充当交付报告中“预期与结果对比”一节。
 
 ### 八种方法
 
@@ -245,6 +250,19 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 
 如果之前已经运行过 `finding-unknowns`，`keep-the-reasoning` 会直接沿用它记录的预期、验收标准，以及 quiz-master 报告中的“决策与假设”，不再重复整理。
 
+### 理论与实测
+
+| 步骤 | 是什么 | 用于 |
+|------|--------|------|
+| **结果分级** | `note`（只有一个数字，没有决定依赖它）· `report`（有人会据此行动，或结果与预期不符）· `decision`（采纳／上线、预先约定的规则、涉及资金） | 卡片的详细程度取决于这个数字关系到什么 |
+| **预测卡** | 待检验的主张、机理链、方向 + 幅度 + 效应应出现的*位置*、噪声下限、证伪条件、判定规则；在看到数据之前写好，否则标为 `post-hoc` | 让结果有可能与预期不一致 |
+| **公平测量** | 基线匹配、一次只改一个变量、种子相同、使用真正关心的指标、遵守数据预算 | 不把样本本身造成的差异算到改动头上 |
+| **结果卡** | 理论预期 → 实测 → 是否一致 → 机理；一致性分为 `consistent`（一致）· `partly`（部分一致）· `inconsistent`（不一致）· `can't tell`（无法判断）；机理证据分级为 `verified`（已验证）· `supported`（有数据支持）· `inferred`（推断）· `untested`（未检验） | 把事实、推断和未检验的解释清楚地区分开 |
+| **不符排查** | 管线 → 对比 → 指标 → 理论 → 环境；指出断裂的环节，以及能区分各种解释的最小检查 | 既不凭一次结果否定一个方向，也不靠一个故事挽救它 |
+| **两种判定** | 规则判定（`PASS` · `FAIL` · `UNCERTAIN` · `descriptive only`）与方向判定（`alive` · `alive-but-constrained` · `weakened` · `dead`） | 机理可以让一个方向继续成立，但不能把 `FAIL` 改成 `PASS` |
+
+新增或收紧任何判定门槛之前，先用通俗的话向你解释：它防什么、为什么是这个数、不通过意味着什么；只有你批准后才冻结，并且只对此后的结果生效，不追溯。对 report 和 decision 级别的结果，卡片会交给只读的 `mechanism-auditor` 子代理：它会下调证据不足以支撑的等级，并提出一个能解释同一组数字的替代机理。
+
 ### 子代理与模型路由
 
 **命令负责分发，技能负责决策，子代理负责执行，文档负责留存记录。** 每个技能的流程只在一处定义；命令和子代理用于增强功能，技能并不依赖它们。
@@ -259,6 +277,7 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 | **`prototype-smith`** | inherit | 只写一次性文件 | 方案原型、实施计划 | 一次给出 N 个真正不同的方向，不触碰真实应用 |
 | **`ledger-keeper`** | inherit | 仅限台账文件 | Cartographer 模式 | 负责风险值、清晰度评分和开工条件判定，不会给自己主持的访谈打分 |
 | **`quiz-master`** | inherit | 只读 + 报告 | 变更说明、理解测验 | 没有参与编写这次改动，能以旁观者的视角出题；会指出没有记录的偏离 |
+| **`mechanism-auditor`** | inherit | 只读 | `theory-vs-result` | 既没有写理论、也没有做测量的复核者；会下调缺乏证据支撑的判定和等级 |
 
 **模型路由。** 负责判断和创意工作的子代理使用 `model: inherit`，与当前会话使用同一模型，不会被降级。`blindspot-scout` 是唯一刻意降低成本的子代理（`sonnet`），因为侦察需要大量并行调用；只做单一视角的排查时，可以改为 `inherit`。这一安排参照了 OMC 的角色分级，以及 Deep Research 的做法（由最强的模型负责综合，较便宜的模型负责并行展开）；不同之处在于，最高一级的模型从会话继承，而不是写死。
 
@@ -275,7 +294,8 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 | `/cartographer` | 斜杠命令 → C 阶段 | 未知项台账、带评分的逐项处理、开工条件、进入执行 | `/cartographer --deep "migrate billing"` |
 | `/change-quiz` | 斜杠命令 → 方法 8 | 变更报告，以及必须通过的理解测验 | `/change-quiz main..HEAD` |
 | `/keep-the-reasoning` | 斜杠命令 → `keep-the-reasoning` 第 0 步（工作已完成则进入第 3 步） | 先做影响评估，再给出交付报告 | `/keep-the-reasoning "ship the migration?"` |
-| `finding-unknowns` / `keep-the-reasoning` | Skill 工具 | 调用同样的技能，不需要插件命令 | 通过 Skill 工具调用 |
+| `/theory-vs-result` | 斜杠命令 → `theory-vs-result` 第 0 步（尚未测量时写完预测卡即停止；结果已出时标为 `post-hoc`） | 先分级，再给出“理论预期 → 实测 → 是否一致 → 机理”卡片 | `/theory-vs-result "did the new loss beat baseline?"` |
+| `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill 工具 | 调用同样的技能，不需要插件命令 | 通过 Skill 工具调用 |
 | 自然语言 | 提示词 | 直接点名某种方法 | _“做一次盲区排查”_、_“先问我几个问题”_、_“给我四个不同的方向”_ |
 
 **说明：**
@@ -301,7 +321,7 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 
 ## 演示
 
-> _以下是示意记录，依据两个 `SKILL.md` 和 `references/cartographer.md` 中的输出模板编写（保留模板的英文原文），并非真实会话的记录。_
+> _以下是示意记录，依据三个 `SKILL.md` 和 `references/cartographer.md` 中的输出模板编写（保留模板的英文原文），并非真实会话的记录。_
 
 **第 0 阶段问题定位。** 定位结果会在任何方法运行之前公布，你可以当场否决。
 
@@ -367,6 +387,26 @@ Handoff lane: keep-the-reasoning — schema migration on a shared production tab
 
 </details>
 
+<details>
+<summary><b>一张 theory-vs-result 卡片（预测、偏差，以及断裂的环节）</b></summary>
+
+```
+[R1] Does the read-through cache cut API p95?
+Theory      : 80% of reads repeat within 60s → hit rate ~0.8 → p95 roughly halves.
+              Writes should not change.
+Measured    : p95 412 → 371 ms (−10%), 5 reruns, spread ±15 ms; hit rate 0.31; write p95 flat.
+Consistent? : partly — direction yes, magnitude no; writes flat as predicted.
+Mechanism   : broken link = "80% repeat". The cache key includes the session ID, so
+              repeats from different sessions miss [supported: the key format explains
+              a 0.31 hit rate].
+              Next check: replay one hour of logs with a session-free key; the predicted
+              hit rate is ≥0.7.
+```
+
+它要取代的是这样一句交代：_“p95 只降了 10%，缓存没用。”_
+
+</details>
+
 ---
 
 ## 横向对比
@@ -388,6 +428,7 @@ Deep Interview（以 OMC 5.8.1 为准）须经批准才放行；它的 `--fronti
 | 需求 | 同类工具（已安装时） |
 |------|----------------------|
 | 验收智能体成果，同时保留自己的判断 | `keep-the-reasoning`（本仓库） |
+| 对照预测汇报实测结果 | `theory-vs-result`（本仓库） |
 | 本体追踪、OMC 状态管理、衔接 ralplan/autopilot | `oh-my-claudecode:deep-interview` |
 | 迷雾测试，以及在任务跟踪系统中创建决策工单 | `oh-my-claudecode:ask-navigator` |
 | 对 diff 或设计做对抗性审查 | `oh-my-claudecode:interrogate` |
@@ -417,7 +458,8 @@ finding-unknowns  （定向：这个未知落在哪个象限？）
         ├─ 发散地生成备选方案            → superpowers:brainstorming
         ├─ 一份严谨的书面计划            → superpowers:writing-plans / omc-plan
         ├─ 规格说明已经很具体            → OMC autopilot / ralph / team
-        └─ 工作已完成，风险在于交付验收  → keep-the-reasoning
+        ├─ 工作已完成，风险在于交付验收  → keep-the-reasoning
+        └─ 结果已出，风险在于误读结果    → theory-vs-result
 ```
 
 </details>
@@ -456,6 +498,7 @@ finding-unknowns  （定向：这个未知落在哪个象限？）
 - **[Cartographer 协议](skills/finding-unknowns/references/cartographer.md)**，是台账、开工条件、收尾和执行阶段规则的规范定义。
 - **[Workflow 模板](skills/finding-unknowns/references/workflows.md)**，包括四个脚本、代码与提示词的分工表和降级方案。
 - **[keep-the-reasoning SKILL.md](skills/keep-the-reasoning/SKILL.md)**，包括影响评估、交付报告和放弃判断的迹象。
+- **[theory-vs-result SKILL.md](skills/theory-vs-result/SKILL.md)**，包括预测卡、结果卡、机理分级和两种判定。
 - **[示例](EXAMPLES.md)**，提供可直接复制使用的端到端提示词。
 - **[更新日志](CHANGELOG.md)**，记录版本历史。
 - **[AGENTS.md](AGENTS.md)**，为编码智能体和贡献者说明仓库结构与不变约束。
@@ -467,7 +510,7 @@ finding-unknowns  （定向：这个未知落在哪个象限？）
 
 - **Claude Code。** 命令行、桌面应用或 IDE 扩展均可。
 - **无运行时、无依赖。** 技能、子代理和命令都是纯 Markdown，无需编译。
-- **可选组件缺失时会自动降级。** 四个配套子代理和 Workflow 工具都是可选的；没有它们，每种方法也能在当前会话内运行。
+- **可选组件缺失时会自动降级。** 五个配套子代理和 Workflow 工具都是可选的；没有它们，每种方法也能在当前会话内运行。
 - **`bash`。** 仅运行 `install.sh` 时需要。
 
 ## 项目结构
@@ -483,16 +526,19 @@ finding-unknowns-skill/
 │   ├── blindspot.md           /blindspot：盲区排查
 │   ├── cartographer.md        /cartographer：Cartographer 模式
 │   ├── change-quiz.md         /change-quiz：变更报告与理解测验
-│   └── keep-the-reasoning.md  /keep-the-reasoning：交付复核
+│   ├── keep-the-reasoning.md  /keep-the-reasoning：交付复核
+│   └── theory-vs-result.md    /theory-vs-result：实测结果
 ├── skills/
 │   ├── finding-unknowns/
 │   │   ├── SKILL.md         问题定位、八种方法、Cartographer 摘要
 │   │   └── references/
 │   │       ├── cartographer.md  Cartographer 完整协议（规范性），按需读取
 │   │       └── workflows.md     Workflow 模板 + 降级方案
-│   └── keep-the-reasoning/
-│       └── SKILL.md         影响评估、交付报告
-├── agents/                  blindspot-scout（sonnet）· prototype-smith · ledger-keeper · quiz-master（inherit）
+│   ├── keep-the-reasoning/
+│   │   └── SKILL.md         影响评估、交付报告
+│   └── theory-vs-result/
+│       └── SKILL.md         预测卡，“理论预期 → 实测 → 是否一致 → 机理”卡片
+├── agents/                  blindspot-scout（sonnet）· prototype-smith · ledger-keeper · quiz-master · mechanism-auditor（inherit）
 ├── docs/ARCHITECTURE.md     设计参考：分层、契约、原则
 ├── assets/                  README 示意图（SVG）；assets/zh/ 为中文版
 ├── AGENTS.md                面向编码智能体与贡献者的仓库指南
@@ -511,6 +557,7 @@ finding-unknowns-skill/
 
 - 方法理念与名称：Thariq Shihipar，《_A Field Guide to Fable: Finding Your Unknowns_》（[@trq212](https://x.com/trq212/status/2073100352921215386)）。
 - `keep-the-reasoning` 与验收标准：Addy Osmani，《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。
+- `theory-vs-result`：提炼自一套长期积累的实证研究实践，并推广到任何实测结论。
 - 执行阶段规则：Anthropic 的《_Building effective agents_》（evaluator-optimizer、orchestrator-workers）与 @hanakoxbt 的《_Loops and Graphs_》（[原文](https://x.com/hanakoxbt/status/2091515787366306154)）。
 - Cartographer 模式的模糊度把关、第 0 轮任务拆分与质询模式改编自 [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) 中的 deep-interview 技能；对比部分还参考了 [Superpowers](https://github.com/obra/superpowers)。
 

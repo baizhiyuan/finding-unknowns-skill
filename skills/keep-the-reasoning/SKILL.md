@@ -124,7 +124,8 @@ Handoff lane: keep-the-reasoning — {reason}
                        — defaults chosen, scope cut, requirements reinterpreted,
                          sources summarized rather than read — each with where to look.
 4. Prior vs result     — the user's hypothesis against what came back; every mismatch
-                         is where to look hardest.
+                         is where to look hardest. For measured claims, use the
+                         `theory-vs-result` summary table here instead of rewriting it.
 5. Strongest counterargument
                        — from a FRESH context (a subagent; a different model when
                          available): "what would have to be true for this to be wrong?"
@@ -240,4 +241,6 @@ evidence, and move on.
   section 5) for code changes when installed.
 - `oh-my-claudecode:show-me-your-work` supplies section 3 for long autonomous runs.
 - `oh-my-claudecode:teach` paces learning; `/change-quiz` gates merge on comprehension.
+- `theory-vs-result` (this repository) supplies section 4 for measured claims (backtests,
+  benchmarks, A/B tests): Theory → Measured → Consistent? → Mechanism.
 </Relationship_To_Sibling_Tooling>
