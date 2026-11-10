@@ -20,12 +20,13 @@ HTML file with 4 wildly different layout directions using fake data so I can rea
 we wire up anything real.
 ```
 
-## Interview me — architecture-first, one question at a time
+## Interview me — architecture-first, independent questions batched
 
 ```
-Interview me one question at a time about this new signal. Prioritize questions where my
-answer would change the architecture (data model, where it plugs into the pipeline). Stop
-when you could write the acceptance criteria yourself.
+Interview me about this new signal using AskUserQuestion: up to 3 independent questions per
+round, but ask dependent questions one at a time. Prioritize questions where my answer would
+change the architecture (data model, where it plugs into the pipeline). Stop when you could
+write the acceptance criteria yourself.
 ```
 
 ## Reference hunt — point at the real code
@@ -65,15 +66,27 @@ the bottom I have to pass before I merge.
 Enter Cartographer mode for this refactor of the equity/PnL accounting.
 
 Maintain unknowns-ledger.md with columns: id, quadrant (KK/KU/UK/UU), unknown,
-cost-if-wrong (1-5), P(wrong), regret (=cost×P), status, phase, resolution.
+cost-if-wrong (1-5), P(wrong), regret (=cost×P), reversibility (reversible/wide/irreversible),
+prior, status, phase, resolution.
 
 1. Seed it: run a blind-spot pass to populate Unknown Unknowns, then list Known Unknowns
    and any tacit "done means..." criteria.
-2. Interview me ONE question at a time, always targeting the highest-regret open row.
-   Re-score P(wrong) after each answer. Skip anything with regret < 1.0 — log a conservative
-   default instead.
+2. Interview me via AskUserQuestion, up to 3 independent questions per round (dependent
+   ones one at a time), always targeting the highest-regret open rows. Re-score P(wrong)
+   after each answer. Skip anything with regret < 1.0 — log a conservative default instead,
+   except for rows marked irreversible, which always come to me.
 3. Show the ledger + four-quadrant coverage checklist each round. Do NOT let me start until
    all four quadrants are probed (especially UU) and no open row has regret >= 1.0.
 
 Keep the ledger open through implementation and build the final merge quiz from it.
+```
+
+## Keep the reasoning — at the handoff
+
+```
+/keep-the-reasoning the migration plan you just wrote
+
+Before I accept it: triage the stakes, define what "verified" means for this, then give me
+the handoff packet. Evidence first, what each check did NOT prove, the decisions and
+assumptions you made, and what you did not check.
 ```

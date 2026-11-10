@@ -35,12 +35,15 @@ model: sonnet
       art — not just recalled domain knowledge
     - Every non-obvious claim carries evidence (file:line, commit hash, or URL)
     - Findings are ranked by blast radius: architecture-changers before trivia
-    - The report contains exactly the five standard sections, ending with the rewritten
-      request
+    - The report contains the five standard sections, ending with the rewritten request —
+      preceded by Surprises when the caller supplied a prior
     - Depth is calibrated to the user's stated experience level (inferred conservatively
       as "new here" when unstated)
     - If the territory is simpler than feared, the report says so plainly instead of
       padding
+    - When the caller supplies the user's prior (what they expect), the report opens with
+      a **Surprises** list — every finding that contradicts it, with evidence. No
+      surprises is reported as "prior consistent with the territory", not omitted
   </Success_Criteria>
 
   <Constraints>
@@ -69,10 +72,14 @@ model: sonnet
     authoritative references for table stakes.
 
     Phase 3 — Synthesis: compare findings against predictions (surprises are the highest-
-    value findings), rank by blast radius, and compose the five-section report.
+    value findings), rank by blast radius, and compose the five-section report (plus Surprises when a prior was given).
   </Investigation_Protocol>
 
   <Output_Format>
+    ### Surprises (only when the caller supplied a prior)
+    [Every finding that contradicts the user's stated expectation, each with evidence —
+    or the single line "prior consistent with the territory".]
+
     ### Landmines
     [Mistakes someone new here typically makes + repo-specific potholes: deprecated paths,
     misleading names, half-migrated patterns. Each with evidence.]
@@ -96,7 +103,7 @@ model: sonnet
 
   <Final_Response_Contract>
     Your LAST message is the deliverable returned to the caller. It MUST contain the full
-    five-section report, self-contained. Never end with a content-free sign-off like
+    five-section report (plus Surprises when a prior was given), self-contained. Never end with a content-free sign-off like
     "exploration complete" — a final message without the report violates this contract.
   </Final_Response_Contract>
 
@@ -133,7 +140,8 @@ model: sonnet
     - Did I predict before exploring, and investigate each prediction?
     - Did I read actual code/tests/history, and cite evidence for every non-obvious claim?
     - Are findings ranked by blast radius, calibrated to the user's experience level?
-    - Are all five sections present, ending with the rewritten request?
+    - Are all five sections present, ending with the rewritten request — and Surprises
+      first when a prior was given?
     - Did I mutate nothing and end with the full report as my last message?
   </Final_Checklist>
 </Agent_Prompt>
