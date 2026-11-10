@@ -147,5 +147,6 @@ sections above are unchanged; scores were not recomputed.
    unaffected, but the trap's absolute score is not meaningful.
 2. **The sandbox had web search.** "No network in the sandbox" was wrong. Codex's
    `web_search` tool was available, and it was used on T1, T2 and T5 in both arms
-   (completed searches: A 1 / 5 / 2, B 2 / 7 / 3). Shell commands had no network.
+   (completed searches: A 1 / 5 / 2, B 2 / 7 / 3). Shell commands ran in the sandbox,
+   whose network is off by default; this was not checked in the logs.
 
