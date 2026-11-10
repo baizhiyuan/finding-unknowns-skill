@@ -4,6 +4,32 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.1]
+
+First release driven by field evidence: three defects observed in a real run (a Jetson
+Xavier NX deployment on the author's own infrastructure repo), recorded in
+[docs/field-notes/2026-11-10-jetson-nx.md](docs/field-notes/2026-11-10-jetson-nx.md).
+
+### Fixed
+- **Absence claims must be searched (F1).** The scout reported a version as "recorded
+  nowhere (needs device check)" while a file it had already cited stated it. Technique 1's
+  guardrail and `blindspot-scout`'s constraints now treat "not recorded" / "needs device
+  check" as a claim: search the territory first, then cite the hit or the empty search.
+- **Priors stated later are priors (F2).** A follow-up that assumes an answer ("can I just
+  upgrade X so it runs Y?") is now recorded and checked like the first prior, and reported
+  as a Surprise when contradicted (Phase 0, lightweight final checklist).
+- **Access is an unknown for remote work (F3).** For work on a remote device or service,
+  Technique 1, `blindspot-scout`'s territory sweep and Cartographer's domain checklist now
+  ask whether the agent can reach it from here and with which credentials, and report
+  what could not be confirmed.
+- **Cartographer diagram soft check.** `assets/cartographer.svg` and its Chinese version
+  showed only round 10 (round 5 under `--quick`); they now say "then every 10" ("every 5"),
+  matching the protocol.
+
+### Added
+- `docs/field-notes/` with the first field note (the run is paused; its resume point,
+  frozen threshold and pre-measurement prediction are recorded there).
+
 ## [4.3.0]
 
 ### Added
@@ -630,6 +656,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[4.3.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.1
 [4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0
 [4.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.2.0
 [4.1.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.1

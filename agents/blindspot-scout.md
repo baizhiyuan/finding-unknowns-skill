@@ -58,6 +58,10 @@ model: sonnet
       do not make it.
     - Never ask the user for facts the territory can answer.
     - Cite or qualify: a claim without evidence must be labelled a guess with confidence.
+    - Absence is a claim too. Before reporting that a fact is missing from the territory
+      or "needs device check", search for it (grep for the version, hostname or limit,
+      docs and drafts included) and cite the hit, or state the search that came back
+      empty.
   </Constraints>
 
   <Investigation_Protocol>
@@ -74,7 +78,10 @@ model: sonnet
     Phase 2 — Territory sweep: read the target modules and their tests; check git history
     for hotspots and recent churn (`git log --follow`, `git blame` on suspicious areas);
     map conventions and prior art elsewhere in the repo; for external domains, consult
-    authoritative references for table stakes.
+    authoritative references for table stakes. When the work runs on a remote device or
+    service, check access: can it be reached from here, and with which credentials (an
+    SSH config entry, a read-only ping or port probe if the brief allows it)? Report what
+    you could not confirm as a finding.
 
     Phase 3 — Synthesis: compare findings against predictions (surprises are the highest-
     value findings), rank by blast radius, and compose the compact report — or the

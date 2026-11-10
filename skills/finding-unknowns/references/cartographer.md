@@ -93,7 +93,9 @@ quadrant score history table — followed by the rows:
   derived from the user's profile, and add any missing rows. Example (quant trading):
   funding/borrow costs · liquidation distance · capacity/liquidity · per-leg attribution ·
   fee/slippage realism · regime dependence. A checklist row you can immediately mark
-  resolved costs one line; a missing one costs a blown-up backtest.
+  resolved costs one line; a missing one costs a blown-up backtest. When the work runs
+  on a remote device or service, the checklist always includes access: reachable from
+  the working machine, and with which credentials.
 - **Prior first**: before a row is scored from evidence, record the prior — the user's
   stated expectation or the agent's best guess — in the resolution column as `prior: …`
   (reuse a prior already captured in Phase 0 or by a sibling skill; never ask again).
