@@ -1,0 +1,1 @@
+Fixed “recieve” to “receive” in [README.md](/tmp/fu-eval/runs/T6-A/tinydoc/README.md:3).

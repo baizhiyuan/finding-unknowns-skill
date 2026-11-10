@@ -77,6 +77,9 @@ single uniform interview under-serves all four.
 - Never ask the user a question the territory can answer — explore the codebase first.
   Never report a fact as absent or "needs device check" without searching for it: cite
   the hit (say so if it is only a draft) or the search that came back empty
+- Remote targets (a device, server or hosted service): access is an unknown. State the
+  access path the territory records (host entry, login user, network route) or that none
+  is recorded, and make "confirm you can log in" step 1 of any plan that touches it
 - Interview via AskUserQuestion (clickable options). Up to 3 *independent* questions per
   round, ordered by blast-radius/regret; never bundle *dependent* questions — where one
   answer would change the next question's framing, ask those one at a time
@@ -166,8 +169,7 @@ small conversational cases.
 1. Establish goal + experience level (inferred conservatively if unstated) + the prior
    from Phase 0.
 2. Explore the territory first: module, tests, git history, conventions, prior art; for
-   external domains, what practitioners consider table stakes. For a remote device or
-   service, access (reachable from here? which credentials?) is itself an unknown.
+   external domains, what practitioners consider table stakes.
 3. Report **compact by default** — this is the lightweight mode's short report (Phase 0),
    not something to compress again: **Surprises** when a prior was given, the **top 3
    findings** ranked by blast radius (each cited; fewer when fewer matter), and the
@@ -241,7 +243,7 @@ render HTML on request.
 2. **Decisions likely to change** first: data model, interfaces, API shapes, anything
    user-facing — each with the choice, one alternative, and the cost of changing later.
 3. **Known unknowns and their defaults**: the default to be taken and the signal that
-   would trigger a pivot. For remote work, access is one; its check is the first step.
+   would trigger a pivot.
 3.5 **Definition of verified**: for each acceptance criterion, the check that will prove
    it (a test, screenshot, log or trace — something that can fail), and one line on what
    that check does NOT prove. Written now, because after the build any outcome can be

@@ -25,7 +25,7 @@ finding-unknowns v4.2.0 on the public repository
 `/blindspot` dispatches to; the `/blindspot` command itself and Phase 0 routing were not
 exercised. The output below is verbatim; the citations were spot-checked against the clone.
 The full raw record is in [docs/recordings/itsdangerous-blindspot.md](docs/recordings/itsdangerous-blindspot.md).
-The compact report format is unchanged through 4.3.1.
+The compact report format is unchanged in later versions.
 
 **Brief as sent to `blindspot-scout`** (the user's request and prior are quoted inside it;
 the experience-level line and the format instructions were written by the operator)

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.3.1：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.3.2：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-4.3.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.3.1">
+  <img src="https://img.shields.io/badge/version-4.3.2-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.3.2">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 个技能">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
@@ -90,7 +90,7 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 
 ### 更新
 
-按当初的安装方式更新即可。最新版本为 **v4.3.1**。
+按当初的安装方式更新即可。最新版本为 **v4.3.2**。
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -128,7 +128,7 @@ rm -f ~/.claude/commands/finding-unknowns.md ~/.claude/commands/keep-the-reasoni
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# 预期：4.3.1（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
+# 预期：4.3.2（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
 ```
 
 </details>
@@ -499,6 +499,7 @@ finding-unknowns  （定向：这个未知落在哪个象限？）
   - **第 3 轮。** 修复了范围检查导致的误停：运行前就已有改动的路径会记入基线并予以排除。
   - 以上改动由 [`tests/workflows/run.mjs`](tests/workflows/run.mjs) 验证：共 69 个场景，在模拟的智能体运行时上直接读取 `workflows.md` 中的模板运行，每次向 `main` 推送和每个拉取请求都会在 CI 中执行。
 - **一个词只有一种含义（v4.3.0）。** 过去“lane”一词在 Cartographer 模式中指可逆性，在 `theory-vs-result` 中指严谨级别，在 `keep-the-reasoning` 中又指交付报告大小。现在它只表示可逆性类别；另外两种含义分别改称*严谨级别*和*交付报告大小*，finding-unknowns 的轻量与 Cartographer 之分称为*模式*，共用术语统一收在[术语表](docs/GLOSSARY.md)中。
+- **第一次对比评测（v4.3.2）。** 在 Codex 中用 gpt-6.1-sol 分别在装与不装这些技能的情况下完成 6 个预先登记的任务，并进行盲评。两组几乎抓到了所有预设问题（满分 25，分别为 22 和 22.75，差距在噪声范围内），装技能一组多消耗 47% 的输入 token。装技能一组与基线共同漏掉的两处（远程设备没有先确认能否登录；手头已有重复运行数据却没有估算噪声）成为 4.3.2 的两项修复。详细说明、原始输出和评分记录见 [docs/evals/2026-11-10-codex-pilot](docs/evals/2026-11-10-codex-pilot/README.md)。
 - **刻意没有采纳的做法。** 一是“只批准最后一步”。审查者如果从未参与界定问题、只看最终产物，批准就只是走形式。二是认为“把握大小是模型唯一能影响的输入”。实际上智能体还能修改自己的检查，因此验收标准必须锁定。
 
 ### 路线图

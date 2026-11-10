@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.3.1 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v4.3.2 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-4.3.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.3.1">
+  <img src="https://img.shields.io/badge/version-4.3.2-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.3.2">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 skills">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
@@ -88,7 +88,7 @@ Phase 0 places the gap on the quadrant map, captures your prior, and routes to t
 
 ### Updating
 
-Update the same way you installed. Latest release: **v4.3.1**.
+Update the same way you installed. Latest release: **v4.3.2**.
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -126,7 +126,7 @@ rm -f ~/.claude/commands/finding-unknowns.md ~/.claude/commands/keep-the-reasoni
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# expect: 4.3.1 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
+# expect: 4.3.2 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
 ```
 
 </details>
@@ -497,6 +497,7 @@ What field tests and reviews changed:
   - **Round 3** — fixed the scope check's false halts: paths already dirty before the run are baselined and excluded.
   - Exercised by [`tests/workflows/run.mjs`](tests/workflows/run.mjs), 69 scenarios against a stubbed agent runtime that read the templates straight from `workflows.md`, run in CI on every push to `main` and every pull request.
 - **One word, one meaning (v4.3.0).** "Lane" meant reversibility in Cartographer, a rigor level in `theory-vs-result`, and a packet size in `keep-the-reasoning`. It now means reversibility only; the other two are *rigor level* and *packet size*, finding-unknowns' lightweight/Cartographer split is a *mode*, and the [Glossary](docs/GLOSSARY.md) holds the shared terms.
+- **A first comparative eval (v4.3.2).** gpt-6.1-sol in Codex, with and without these skills, on six pre-registered tasks with blinded grading: both arms caught nearly every trap (22 vs 22.75 of 25, inside the noise), and the skills cost 47 % more input tokens. Two misses the skill arm shared with the baseline (no access check for a remote device; no noise estimate from reruns in hand) became the two 4.3.2 fixes. Details, raw outputs and grader replies: [docs/evals/2026-11-10-codex-pilot](docs/evals/2026-11-10-codex-pilot/README.md).
 - **Deliberately not adopted.** "Approve only the last step" — a human reviewing only a final artifact they never framed is rubber-stamping. "Confidence is the only input the model can influence" — agents can also edit their own checks, hence the locked contract.
 
 ### Roadmap
