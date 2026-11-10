@@ -70,8 +70,9 @@ const rows = results.filter(Boolean).flat().filter(Boolean).filter(f => f.verdic
 // dedup by normalized unknown text; duplicates across lenses = confirmation, keep max cost
 const byKey = {}
 for (const r of rows) {
-  const k = r.unknown.toLowerCase().replace(/\W+/g, ' ').trim()
-  if (!byKey[k] || r.costIfWrong > byKey[k].costIfWrong) byKey[k] = { ...r, confirmedBy: [] }
+  const k = r.unknown.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{M}\p{N}]+/gu, ' ').trim()
+  if (!byKey[k] || r.costIfWrong > byKey[k].costIfWrong)
+    byKey[k] = { ...r, confirmedBy: byKey[k]?.confirmedBy ?? [] }   // keep earlier lenses
   byKey[k].confirmedBy.push(r.lens)
 }
 return { rows: Object.values(byKey) }
@@ -82,8 +83,11 @@ by ≥2 lenses get a note in the evidence column.
 
 ## Template 2 — Adversarial verification panel (backs C1 step 3.5, cost ≥ 4 rows)
 
-Three independent refuters, each with a distinct failure lens; a resolution survives only
-if ≥2 fail to refute. Diversity of lenses catches failure modes redundancy cannot.
+Three independent refuters, each with a distinct failure lens. A resolution survives only
+if every refuter returns and none produces a plausible refutation; one surviving
+counterexample keeps the row `resolved-provisional` (C1 step 3.5: evidence does not lose a
+majority vote). A refuter that returns nothing also blocks survival. Diversity of lenses
+catches failure modes redundancy cannot.
 
 ```javascript
 export const meta = {
@@ -92,7 +96,10 @@ export const meta = {
   phases: [{ title: 'Refute' }],
 }
 // args: { claim, evidence, lenses?: string[] }
-const LENSES = args.lenses ?? ['alternative-explanation', 'evidence-independence', 'reproduction']
+const DEFAULT_LENSES = ['alternative-explanation', 'evidence-independence', 'reproduction']
+const LENSES = args.lenses ?? DEFAULT_LENSES
+if (!Array.isArray(LENSES) || new Set(LENSES).size < 3)
+  return { status: 'invalid-args', problems: ['the panel needs at least three distinct lenses'] }
 const VERDICT = { type: 'object', required: ['refuted', 'reason'],
   properties: { refuted: { type: 'boolean' }, reason: { type: 'string' },
     discriminatingCheck: { type: 'string' } } }
@@ -104,15 +111,18 @@ const votes = await parallel(LENSES.map(lens => () =>
     `discriminating check that would separate the explanations. Default refuted=true if uncertain.`,
     { label: `refute:${lens}`, phase: 'Refute', schema: VERDICT })))
 const v = votes.filter(Boolean)
-const survives = v.filter(x => !x.refuted).length >= 2
+// Fail closed: every lens must report, and none may refute.
+const survives = v.length === LENSES.length && v.every(x => !x.refuted)
 return { survives,
-  status: survives ? 'resolved' : 'resolved-provisional',
+  status: survives ? 'panel-survived' : 'resolved-provisional',   // not 'resolved': see below
   discriminatingChecks: v.filter(x => x.refuted).map(x => x.discriminatingCheck).filter(Boolean),
   votes: v }
 ```
 
 If `survives === false`, the row stays `resolved-provisional` and the returned
-`discriminatingChecks` go into the ledger verbatim.
+`discriminatingChecks` go into the ledger verbatim. `panel-survived` is not a resolution
+by itself: the caller still applies the cross-reference rule from C1 step 3.5 (a second,
+independent source) before marking the row `resolved`.
 
 ## Template 3 — UU loop-until-dry (deep probe for the shallowest quadrant)
 
@@ -164,8 +174,11 @@ What is enforced in code vs by prompt — stated honestly:
 | Unnamed edges are never dropped silently: dropped only from `reversible` upstreams and only after `confirmDroppedEdges`; kept (fail closed) otherwise | code |
 | Only real dependencies wait (per-task scheduling, no wave barrier) | code |
 | Tasks whose touched paths overlap never run concurrently (paths normalized; globs rejected) | code |
-| Edits outside every task's declared paths stop the run (`scope-violation`); paths already dirty before the run (ledger, spec, notes, WIP) are excluded | code compares the runner's report against the pre-run baseline |
+| Edits outside every task's declared paths stop the run (`scope-violation`); paths already dirty before the run (ledger, spec, notes, WIP) are excluded from the path check but content-hashed, so a further edit to them is still caught | code compares the runner's report and hashes against the pre-run baseline |
 | (Consequence) Check artifacts such as coverage reports must be gitignored, or they count as out-of-scope writes | by design — fails closed |
+| Every task's check files are hashed on every check run and again in a final sweep after all tasks; any change halts the run | code compares the runner's hashes against the baseline |
+| Do not edit files that were already dirty before the run (the ledger, notes, WIP) while it runs: any change to them halts every task | by design — fails closed |
+| Before resuming after a `scope-violation`, revert or commit the stray files; otherwise they count as pre-dirty on the next run | by instruction |
 | A concurrent task's edits are attributed to the right task, and a sibling's mid-edit state never disturbs this task's checks | prompted — keep checks narrow to the task's paths |
 | Lanes decide closing; `irreversible` never closes in-run | code |
 | Check results are matched to contract checks by exact string; missing ones fail | code |
@@ -271,7 +284,7 @@ const executed = new Set(args.executed ?? [])
 const pending = new Map((args.pending ?? []).map(p => [p.id, p.prepared ?? 'prepared in a previous run']))
 const derived = [], recheck = [], conflicts = []
 let halted = false
-const norm = x => x.toLowerCase().replace(/\W+/g, ' ').trim()
+const norm = x => x.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{M}\p{N}]+/gu, ' ').trim()
 
 // Path locks: a task waits for every earlier-registered task whose touches overlap.
 const registry = []
@@ -289,7 +302,8 @@ const RUN = { type: 'object', required: ['results', 'hashes', 'changedPaths'], p
   results: { type: 'array', items: { type: 'object', required: ['check', 'exitCode'],
     properties: { check: { type: 'string' }, exitCode: { type: 'integer' }, output: { type: 'string' } } } },
   hashes: { type: 'object', additionalProperties: { type: 'string' } },
-  changedPaths: { type: 'array', items: { type: 'string' } } } }
+  changedPaths: { type: 'array', items: { type: 'string' } },
+  deletedPaths: { type: 'array', items: { type: 'string' } } } }
 const VERDICT = { type: 'object', required: ['pass', 'reason', 'evidence'], properties: {
   pass: { type: 'boolean' }, reason: { type: 'string' }, evidence: { type: 'string' },
   scope: { type: 'string' }, dependents: { type: 'string' },
@@ -301,10 +315,12 @@ const runChecks = (t, list, label, files = t.checkFiles) => agent(
   `You are a check runner. Edit nothing. Run each check exactly as written and report its ` +
   `exit code and the last 20 lines of output: ${list.length ? list.join(' ;; ') : '(none)'}. ` +
   IRREV + `If a check would do any of that, do not run it: report exitCode -1 and output ` +
-  `"refused: irreversible". Then report the sha256 of each of these files (sha256sum; ` +
+  `"refused: irreversible". Then report the sha256 of each of these paths (sha256sum; for a directory, the sha256 of ` +
+  `its sorted manifest: \`find DIR -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum\`; ` +
   `"missing" if absent): ${files.join(', ') || '(none)'}. Finally report changedPaths: the ` +
-  `union of \`git diff --name-only HEAD\` and \`git ls-files --others --exclude-standard\` ` +
-  `(bare paths, one per entry). Report each check under its exact ` +
+  `union of \`git -c core.quotePath=false diff --name-only HEAD\` and ` +
+  `\`git -c core.quotePath=false ls-files --others --exclude-standard\` (bare paths, one per ` +
+  `entry), and deletedPaths: \`git -c core.quotePath=false diff --diff-filter=D --name-only HEAD\`. Report each check under its exact ` +
   `string as given. Raw results only — no interpretation.`, { label, phase: 'Check', schema: RUN })
 // Code: match results to checks by exact string (counting is not enough).
 const grade = (list, run) => {
@@ -319,6 +335,7 @@ const grade = (list, run) => {
   return { missing, refused, failing, green: !missing.length && !failing.length }
 }
 let preexisting = new Set()          // dirty before the run (ledger, spec, notes, WIP)
+let watched = [], dirtyBase = {}     // pre-dirty paths outside every task: hashed, must not change
 const outOfScope = run => run.changedPaths.map(normPath).filter(p => !preexisting.has(p) &&
   !allTouches.some(x => under(p, x)) && !allCheckFiles.some(x => under(p, x)))
 
@@ -385,12 +402,13 @@ const runTask = async t => {
       continue
     }
     produced++
-    const run = await runChecks(t, t.checks, `check:${t.id}#${attempt}`)
+    const run = await runChecks(t, t.checks, `check:${t.id}#${attempt}`, sweepFiles)
     if (!run || !Array.isArray(run.changedPaths))
       return { id: t.id, status: 'infra-error', where: 'check runner (no result or no changedPaths)', attempts: attempt }
-    const tampered = t.checkFiles.filter(f => baseline[f] !== run.hashes?.[f])
-    if (tampered.length) return { id: t.id, status: 'tampered', files: tampered, attempts: attempt }
-    const stray = outOfScope(run)
+    const tampered = allCheckFilesU.filter(f => baseline[f] !== run.hashes?.[f])   // any task's checks
+    if (tampered.length) { halted = true; return { id: t.id, status: 'tampered', files: tampered, attempts: attempt } }
+    const stray = [...outOfScope(run),
+      ...watched.filter(f => dirtyBase[f] !== run.hashes?.[f])]   // pre-dirty file changed again
     if (stray.length) {                   // edits outside every declared path: unattributable
       halted = true
       return { id: t.id, status: 'scope-violation', paths: stray, attempts: attempt }
@@ -427,10 +445,24 @@ const runTask = async t => {
 const firstTask = tasks[0]
 const base = await runChecks(firstTask, [], 'baseline:all', [...new Set(allCheckFiles)])
 if (!base || !Array.isArray(base.changedPaths)) return { status: 'infra-error', where: 'baseline' }
-const unhashed = allCheckFiles.filter(f => typeof base.hashes?.[f] !== 'string')
+const unhashed = allCheckFiles.filter(f => typeof base.hashes?.[f] !== 'string' ||
+  base.hashes[f] === 'missing')   // a check file that cannot be hashed cannot be guarded
 if (unhashed.length) return { status: 'infra-error', where: 'baseline', missingHashes: unhashed }
 const baselineHashes = base.hashes
 preexisting = new Set((base.changedPaths ?? []).map(normPath))
+watched = [...preexisting].filter(p =>
+  !allTouches.some(x => under(p, x)) && !allCheckFiles.some(x => under(p, x)))
+if (watched.length) {
+  const dirty = await runChecks(firstTask, [], 'baseline:dirty', watched)
+  const deleted = new Set((base.deletedPaths ?? []).map(normPath))
+  const unhashedDirty = watched.filter(f => typeof dirty?.hashes?.[f] !== 'string' ||
+    (dirty.hashes[f] === 'missing' && !deleted.has(f)))   // e.g. a quoted non-ASCII path
+  if (!dirty || unhashedDirty.length)
+    return { status: 'infra-error', where: 'baseline (pre-dirty files)', missingHashes: unhashedDirty }
+  dirtyBase = dirty.hashes
+}
+const allCheckFilesU = [...new Set(allCheckFiles)]
+const sweepFiles = [...allCheckFilesU, ...watched]
 
 const memo = {}
 const schedule = id => memo[id] ??= (async () => {
@@ -450,8 +482,20 @@ const schedule = id => memo[id] ??= (async () => {
 
 const results = (await parallel(tasks.map(t => () => schedule(t.id))))
   .map((r, i) => r ?? { id: tasks[i].id, status: 'errored', reason: 'no result' })
+
+// Code node 3 — final sweep: nothing may have moved after the last per-task check
+// (a verifier editing files, a null implementer attempt, another task's late write).
+const sweep = await runChecks(firstTask, [], 'sweep:final', sweepFiles)
+const finalSweep = !sweep || !Array.isArray(sweep.changedPaths)
+  ? { ok: false, reason: 'infra-error: sweep runner returned nothing' }
+  : (() => {
+      const tamperedEnd = allCheckFilesU.filter(f => baselineHashes[f] !== sweep.hashes?.[f])
+      const strayEnd = [...outOfScope(sweep), ...watched.filter(f => dirtyBase[f] !== sweep.hashes?.[f])]
+      return { ok: !tamperedEnd.length && !strayEnd.length, tampered: tamperedEnd, stray: strayEnd }
+    })()
+if (!finalSweep.ok) halted = true
 const pick = st => results.filter(r => r.status === st)
-return { status: halted ? 'halted' : 'done', results,
+return { status: halted ? 'halted' : 'done', results, finalSweep,
   droppedEdges, keptUnnamedEdges, derivedConstraints: derived, recheck, conflicts,
   awaitingHuman: pick('awaiting-human'), planSuspect: pick('plan-suspect'),
   blocked: pick('blocked'), problems: results.filter(r =>
@@ -471,6 +515,9 @@ After the run:
 - `derivedConstraints` — appended to the spec's Derived constraints; `recheck` lists
   tasks that closed before a constraint appeared (review them against it);
   `conflicts` halted the run — each is a ledger row for the user to rule on.
+- `finalSweep` — the last check over every check file, every pre-dirty file and the
+  changed paths. If `ok` is false the run is halted; inspect `tampered` / `stray` before
+  trusting any `closed` task.
 - `droppedEdges` / `keptUnnamedEdges` — reported, so the user sees which sequencing was
   removed and which was kept because its upstream was not reversible.
 

@@ -4,6 +4,50 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1]
+
+### Fixed — defects found by an outside review (GPT-6-astra, Fable 5.1), verified and tested
+- `fu-verify-panel` (Template 2) let a majority vote override a counterexample: one
+  refuter's plausible alternative was outvoted by two that found none, contradicting C1
+  step 3.5. A resolution now survives only if every refuter reports and none refutes;
+  a missing vote also blocks survival.
+- Template 1's finding dedup and Template 4's derived-constraint dedup used `\W+`, which
+  erases Chinese text, so every Chinese finding collapsed into one key. Both now normalise
+  with Unicode letter/number classes.
+- Template 4's scope check exempted files that were already dirty before the run, so a
+  further edit to such a file went unnoticed. Those files are now content-hashed at the
+  baseline and any change to them is a `scope-violation`. Paths are read with
+  `core.quotePath=false`, so non-ASCII file names are hashed rather than silently
+  "missing"; a "missing" hash is accepted only for a real deletion. A check file that
+  cannot be hashed at the baseline is an infra error; directories are hashed by manifest.
+- Template 4 also hashes every task's check files on every check run (one task can no
+  longer edit another's checks unnoticed) and runs a final sweep after all tasks, which
+  catches edits made after the last per-task check (e.g. by a verifier). Any mismatch
+  halts the run.
+- Template 2 rejects fewer than three distinct lenses (an empty panel used to "survive"),
+  and returns `panel-survived` instead of `resolved`: the caller still applies the
+  two-source rule. Template 1 keeps earlier lenses' confirmations when a higher-cost
+  duplicate arrives; both dedups apply NFKC and keep combining marks.
+- Overstated isolation claims corrected: `blindspot-scout` has no file-editing tools but
+  does have Bash, and `prototype-smith` can write files; their limits are instructions, not
+  a sandbox, and README / ARCHITECTURE now say so. `quiz-master` no longer equates a pass
+  with "merge-ready"; merging stays the user's decision.
+- Documentation drift: the Cartographer example in EXAMPLES.md now has the `route` column,
+  route-typed clearing and the full gate; CONTRIBUTING no longer says the skill is one file;
+  version link references added for 4.x.
+
+### Added — tests and CI
+- `tests/workflows/run.mjs`: 69 behavioural scenarios for all four Workflow templates,
+  extracted from `workflows.md` at test time (the documented code is the tested code). The
+  new scenarios fail on 4.1.0 and pass on 4.1.1. Replaces the harness the README
+  previously cited but the repository did not contain.
+- `scripts/validate.py`: frontmatter, JSON, SVG safety, relative links, fences/details,
+  en/zh README structure, em dashes in README.zh, version and skill/agent-count drift
+  across plugin.json, badges, hero diagrams and CHANGELOG, outlined Chinese diagrams,
+  `bash -n install.sh`, "latest release" lines and CHANGELOG link references; links are
+  checked across all Markdown, anchors stripped.
+- `.github/workflows/validate.yml` runs both on every push to `main` and every pull request.
+
 ## [4.1.0]
 
 ### Added — `theory-vs-result`, a third sibling skill for measured results
@@ -356,6 +400,9 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[4.1.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.1
+[4.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.0
+[4.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.0.0
 [3.7.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.7.0
 [3.6.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.6.0
 [3.5.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v3.5.0

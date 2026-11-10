@@ -164,7 +164,8 @@ by its route. Repeat until the gate passes or the user exits:
      same IC; the discriminating check is a pipeline audit.) With Workflow available, use
      the `fu-verify-panel` script (`workflows.md`): three refuters with distinct
      lenses (alternative-explanation / evidence-independence / reproduction); the
-     resolution survives only if ≥2 fail to refute, and refuters' discriminating checks
+     resolution survives only if every refuter reports and none refutes it (one plausible
+     refutation keeps the row `resolved-provisional`), and refuters' discriminating checks
      land in the ledger verbatim.
    - **Cross-reference rule**: a cost ≥ 4 resolution backed by a single evidence source is
      `resolved-provisional`, never `resolved`. Two independent sources (different

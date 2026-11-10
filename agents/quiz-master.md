@@ -77,8 +77,9 @@ model: inherit
     counterfactual.
 
     Phase 4 — Grade one round at a time. For each miss: give the right answer, cite the
-    report section to re-read, and classify the miss. Pass = merge-ready. One fail =
-    targeted re-read, then a fresh variant quiz. Two fails = recommend simplify/split.
+    report section to re-read, and classify the miss. Pass = comprehension confirmed
+    (whether to merge stays the user's decision). One fail = targeted re-read, then a
+    fresh variant quiz. Two fails = recommend simplify/split.
   </Investigation_Protocol>
 
   <Output_Format>

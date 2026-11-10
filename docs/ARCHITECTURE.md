@@ -86,11 +86,11 @@ the same context that implements.**
 
 | Agent | Model | Tools | Why isolated |
 |-------|-------|-------|--------------|
-| `blindspot-scout` | sonnet | read-only | Wide recon in its own context window; structurally cannot drift into implementing |
-| `prototype-smith` | inherit | writes throwaway files only | Diverges into N directions in one pass; sandboxed away from the real application |
+| `blindspot-scout` | sonnet | no Write/Edit; Bash for inspection (by instruction) | Wide recon in its own context window; without file-editing tools it cannot quietly start implementing |
+| `prototype-smith` | inherit | Write + Bash; throwaway files only (by instruction) | Diverges into N directions in one pass; instructed to stay away from the real application (not a sandbox) |
 | `ledger-keeper` | inherit | ledger file only | Scoring and gate verdicts need consistency and independence — a bookkeeper that did not conduct the interview will not inflate its verdict |
-| `quiz-master` | inherit | read-only + report | An examiner that did not author the diff probes what the author glosses over |
-| `mechanism-auditor` | inherit | read-only | The context that predicted an effect and measured it believes its own mechanism; a fresh referee re-derives the numbers and downgrades unearned verdicts and tiers |
+| `quiz-master` | inherit | no Write/Edit; Bash for inspection and its report (by instruction) | An examiner that did not author the diff probes what the author glosses over |
+| `mechanism-auditor` | inherit | no Write/Edit; Bash for inspection and recomputation into /tmp (by instruction) | The context that predicted an effect and measured it believes its own mechanism; a fresh referee re-derives the numbers and downgrades unearned verdicts and tiers |
 
 Model routing (v3.7.0) follows the cost/judgment split used by mature frameworks — OMC
 (opus for judgment, sonnet for execution, haiku for breadth) and Deep Research (strongest
