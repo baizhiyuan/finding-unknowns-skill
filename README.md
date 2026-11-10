@@ -443,7 +443,6 @@ Not done yet:
 
 - **Run `fu-execute-verified` in a live Workflow runtime** — so far exercised only against a stubbed agent runtime.
 - **Move the remaining prompted guarantees into code** where the runtime allows.
-- **Chinese-language diagram variants** — [README.zh.md](README.zh.md) reuses the English SVGs.
 - **Ontology / entity-convergence tracking** — consciously deferred in v3.6.0 because the Round 0 topology gate covers convergence more cheaply; to revisit if component drift shows up in tests.
 
 ---

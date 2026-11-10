@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="688" viewBox="0 0 1200 688" role="img" aria-labelledby="t d">
+<title id="t">finding-unknowns 使用时机</title><desc id="d">在工作的四个阶段分别发现未知项：开工前、实施中、合并前、交付时；底部是贯穿全过程的未知项台账。</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
+<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
+</defs>
+<rect x="0.5" y="0.5" width="1199" height="687" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="687" rx="18" fill="url(#dots)" opacity="0.5"/>
+<text x="40" y="54" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C">// 01 · 使用时机</text>
+<text x="40" y="98" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="32" font-weight="700" fill="#141413">在工作的四个阶段分别发现未知项</text>
+<text x="40" y="130" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">每种方法都安排在问题最早暴露、处理代价最低的阶段。</text>
+<rect x="40" y="158" width="262" height="32" rx="16" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/><circle cx="62" cy="170" r="4.5" fill="#D97757"/><path d="M54 182a8 7 0 0 1 16 0z" fill="#D97757"/><text x="80" y="180" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#141413">人工确认：规格与验收标准</text>
+<rect x="612" y="158" width="548" height="32" rx="16" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/><circle cx="634" cy="170" r="4.5" fill="#D97757"/><path d="M626 182a8 7 0 0 1 16 0z" fill="#D97757"/><text x="652" y="180" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#141413">人工确认：不可逆操作与合并</text>
+<path d="M171 190V210" stroke="#141413" stroke-width="1.5" stroke-dasharray="3 3"/><path d="M1029 190V210" stroke="#141413" stroke-width="1.5" stroke-dasharray="3 3"/>
+<rect x="40" y="210" width="262" height="352" rx="12" fill="#F0EEE6" stroke="#E3DFD3" filter="url(#sh)"/>
+<path d="M40 222a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H40z" fill="#D97757"/>
+<text x="58" y="258" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700" fill="#141413">开工前</text>
+<text x="58" y="282" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">明确需求与方案</text>
+<path d="M304 386.0h20" stroke="#D97757" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="326" y="210" width="262" height="352" rx="12" fill="#F0EEE6" stroke="#E3DFD3" filter="url(#sh)"/>
+<path d="M326 222a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H326z" fill="#D97757"/>
+<text x="344" y="258" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700" fill="#141413">实施中</text>
+<text x="344" y="282" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">编码与执行</text>
+<path d="M590 386.0h20" stroke="#D97757" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="612" y="210" width="262" height="352" rx="12" fill="#F0EEE6" stroke="#E3DFD3" filter="url(#sh)"/>
+<path d="M612 222a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H612z" fill="#D97757"/>
+<text x="630" y="258" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700" fill="#141413">合并前</text>
+<text x="630" y="282" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">检查改动</text>
+<path d="M876 386.0h20" stroke="#D97757" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="898" y="210" width="262" height="352" rx="12" fill="#F0EEE6" stroke="#E3DFD3" filter="url(#sh)"/>
+<path d="M898 222a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H898z" fill="#D97757"/>
+<text x="916" y="258" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700" fill="#141413">交付时</text>
+<text x="916" y="282" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">成果交给用户</text>
+<rect x="58" y="314" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="75" y="330" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T1</text><text x="102" y="331" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">盲区排查</text>
+<rect x="58" y="360" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="75" y="376" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T2</text><text x="102" y="377" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">方案原型</text>
+<rect x="58" y="406" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="75" y="422" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T3</text><text x="102" y="423" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">需求访谈</text>
+<rect x="58" y="452" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="75" y="468" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T4</text><text x="102" y="469" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">参考实现</text>
+<rect x="58" y="498" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="75" y="514" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T5</text><text x="102" y="515" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">实施计划与验收标准</text>
+<rect x="344" y="314" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="361" y="330" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T6</text><text x="388" y="331" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">实施记录</text>
+<text x="344" y="386" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#C15F3C">执行阶段</text>
+<text x="344" y="408" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">按任务图逐项执行并验证</text>
+<path d="M372 466L440 446" stroke="#B1ADA1" stroke-width="1.8" marker-end="url(#ahc)" />
+<path d="M372 466L440 486" stroke="#B1ADA1" stroke-width="1.8" marker-end="url(#ahc)" />
+<path d="M440 446L508 466" stroke="#B1ADA1" stroke-width="1.8" marker-end="url(#ahc)" />
+<path d="M440 486L508 466" stroke="#B1ADA1" stroke-width="1.8" marker-end="url(#ahc)" />
+<path d="M508 466L556 466" stroke="#B1ADA1" stroke-width="1.8" marker-end="url(#ahc)" />
+<circle cx="372" cy="466" r="11" fill="#FAF9F5" stroke="#D97757" stroke-width="2.2"/>
+<circle cx="440" cy="446" r="11" fill="#FAF9F5" stroke="#D97757" stroke-width="2.2"/>
+<circle cx="440" cy="486" r="11" fill="#FAF9F5" stroke="#D97757" stroke-width="2.2"/>
+<circle cx="508" cy="466" r="11" fill="#FAF9F5" stroke="#D97757" stroke-width="2.2"/>
+<circle cx="556" cy="466" r="11" fill="#FAF9F5" stroke="#B5442E" stroke-width="2.2"/>
+<text x="344" y="540" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#B5442E">不可逆操作须等待用户确认</text>
+<rect x="630" y="314" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="647" y="330" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T7</text><text x="674" y="331" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">变更说明</text>
+<rect x="630" y="360" width="34" height="22" rx="6" fill="#F5DDD1"/><text x="647" y="376" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#C15F3C" text-anchor="middle">T8</text><text x="674" y="377" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" fill="#141413">理解测验</text>
+<rect x="628" y="424" width="234" height="100" rx="10" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5"/>
+<text x="644" y="462" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" font-weight="700" fill="#C15F3C">理解改动后才能合并</text>
+<text x="644" y="490" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">测试全部通过并不够</text>
+<rect x="914" y="310" width="234" height="76" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/><path d="M914 314v68" stroke="#D97757" stroke-width="4"/>
+<text x="932" y="340" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#141413">keep-the-reasoning</text>
+<text x="932" y="366" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">交付报告，而非一句总结</text>
+<circle cx="922" cy="416" r="3.5" fill="#D97757"/>
+<text x="936" y="420" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#141413">先列证据</text>
+<circle cx="922" cy="452" r="3.5" fill="#D97757"/>
+<text x="936" y="456" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#141413">说明检查证明了什么、没证明什么</text>
+<circle cx="922" cy="488" r="3.5" fill="#D97757"/>
+<text x="936" y="492" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#141413">列出未检查的内容</text>
+<circle cx="922" cy="524" r="3.5" fill="#D97757"/>
+<text x="936" y="528" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#141413">最后写结论</text>
+<rect x="40" y="588" width="1120" height="64" rx="12" fill="#F5DDD1" stroke="#E3DFD3"/><rect x="40" y="598" width="4" height="44" rx="2" fill="#D97757"/>
+<rect x="64" y="605" width="190" height="30" rx="15" fill="#D97757"/><text x="159" y="625" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#141413" text-anchor="middle">unknowns-ledger.md</text>
+<text x="278" y="626" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" fill="#141413">Cartographer 模式下，未知项台账贯穿全过程；任务中断后可据此恢复</text>
+<path d="M776 620H1136" stroke="#D97757" stroke-width="2" stroke-dasharray="2 6" opacity="0.8" marker-end="url(#ah)"/>
+</svg>
