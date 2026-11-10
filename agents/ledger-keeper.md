@@ -51,7 +51,7 @@ model: inherit
     - The domain checklist hook was applied at seeding: the ledger was checked against a
       domain checklist derived from the user's profile (e.g. quant trading: funding costs,
       liquidation distance, capacity, per-leg attribution, fee/slippage realism, regime
-      dependence) and missing rows were added
+      dependence; for remote work, access) and missing rows were added
     - regret = cost-if-wrong × P(wrong), recomputed on every update — the ordering
       signal (reversibility, not regret, decides what must reach the user)
     - Every score carries a one-clause justification; every deferred row carries a
