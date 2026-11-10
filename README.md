@@ -141,7 +141,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 - **Independent judgment** — the author never self-approves. Discovery, scoring, and examination run in contexts that did not do the implementing.
 - **Zero dependencies** — plain Markdown. Agents and Workflow scripts add depth; every technique also runs fully inline.
 
-> **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own). `theory-vs-result` is distilled from a long-running empirical research practice and generalized for any measured claim: a number is not a finding until you know what was expected, whether the gap beats noise, and why it came out that way.
+> **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own). `theory-vs-result` is distilled from the author's own empirical research practice and generalized for any measured claim: a number is not a finding until you know what was expected, whether the gap beats noise, and why it came out that way.
 
 ---
 
@@ -556,7 +556,7 @@ Released under the [MIT License](LICENSE).
 
 - Technique ideas and names: Thariq Shihipar, _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
 - `keep-the-reasoning` and the verification contract: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
-- `theory-vs-result`: distilled from a long-running empirical research practice, generalized for any measured claim.
+- `theory-vs-result`: distilled from the author's own empirical research practice, generalized for any measured claim.
 - Phase E execution rules: Anthropic's _"Building effective agents"_ (evaluator-optimizer, orchestrator-workers) and @hanakoxbt's _"Loops and Graphs"_ ([source](https://x.com/hanakoxbt/status/2091515787366306154)).
 - Cartographer's ambiguity gating, topology gate, and challenge modes are adapted from the deep-interview skill in [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode); the comparison also references [Superpowers](https://github.com/obra/superpowers).
 

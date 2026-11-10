@@ -61,5 +61,5 @@ measured-result sibling in [`skills/theory-vs-result/SKILL.md`](skills/theory-vs
 ([@trq212](https://x.com/trq212/status/2073100352921215386)). Handoff guidance draws on
 Addy Osmani's "Critical thinking when agents do the work"
 ([source](https://x.com/addyosmani/status/2117512471930167377)). Result-reporting guidance is
-distilled from a long-running empirical research practice. Community project; not
+distilled from the author's own empirical research practice. Community project; not
 affiliated with or endorsed by Anthropic.*

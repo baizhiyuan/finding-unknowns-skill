@@ -143,7 +143,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 - **独立判断。** 方案的作者不批准自己的方案。排查、评分和测验都在未参与实现的上下文中进行。
 - **零依赖。** 全部内容都是纯 Markdown。子代理和 Workflow 脚本可以让排查更深入；没有它们，每种方法也能在当前会话内完整运行。
 
-> **来源说明。** 这些方法及其名称出自 Thariq Shihipar 的文章《_A Field Guide to Fable: Finding Your Unknowns_》（[@trq212](https://x.com/trq212/status/2073100352921215386)）；底层理念归功于原作者，本仓库只是把它们打包成可安装的 Claude Code 插件。`keep-the-reasoning` 提炼自 Addy Osmani 的《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。该文指出，随着交付次数增加，人会从**委托**（把工作交出去，责任仍在自己）逐渐转向**依赖**（直接拿输出当下一步的依据），最终走到**放弃判断**（不知不觉地把输出当成了自己的结论）。`theory-vs-result` 提炼自一套长期积累的实证研究实践，并推广到任何实测结论：在知道预期是什么、差距是否超出噪声、结果为何如此之前，一个数字还算不上发现。
+> **来源说明。** 这些方法及其名称出自 Thariq Shihipar 的文章《_A Field Guide to Fable: Finding Your Unknowns_》（[@trq212](https://x.com/trq212/status/2073100352921215386)）；底层理念归功于原作者，本仓库只是把它们打包成可安装的 Claude Code 插件。`keep-the-reasoning` 提炼自 Addy Osmani 的《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。该文指出，随着交付次数增加，人会从**委托**（把工作交出去，责任仍在自己）逐渐转向**依赖**（直接拿输出当下一步的依据），最终走到**放弃判断**（不知不觉地把输出当成了自己的结论）。`theory-vs-result` 提炼自作者本人的实证研究实践，并推广到任何实测结论：在知道预期是什么、差距是否超出噪声、结果为何如此之前，一个数字还算不上发现。
 
 ---
 
@@ -558,7 +558,7 @@ finding-unknowns-skill/
 
 - 方法理念与名称：Thariq Shihipar，《_A Field Guide to Fable: Finding Your Unknowns_》（[@trq212](https://x.com/trq212/status/2073100352921215386)）。
 - `keep-the-reasoning` 与验收标准：Addy Osmani，《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。
-- `theory-vs-result`：提炼自一套长期积累的实证研究实践，并推广到任何实测结论。
+- `theory-vs-result`：提炼自作者本人的实证研究实践，并推广到任何实测结论。
 - 执行阶段规则：Anthropic 的《_Building effective agents_》（evaluator-optimizer、orchestrator-workers）与 @hanakoxbt 的《_Loops and Graphs_》（[原文](https://x.com/hanakoxbt/status/2091515787366306154)）。
 - Cartographer 模式的模糊度把关、第 0 轮任务拆分与质询模式改编自 [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) 中的 deep-interview 技能；对比部分还参考了 [Superpowers](https://github.com/obra/superpowers)。
 

@@ -8,7 +8,7 @@ All notable changes to this project are documented in this file. The format is b
 
 ### Added — `theory-vs-result`, a third sibling skill for measured results
 - New skill `skills/theory-vs-result/SKILL.md` + `/theory-vs-result` command, distilled
-  from a long-running empirical research practice and generalized for any
+  from the author's own empirical research practice and generalized for any
   measured claim (backtest, benchmark, A/B test, ablation, training run, load test, debugging
   hypothesis). Every result is reported as a fixed four-part card — **Theory → Measured →
   Consistent? → Mechanism** (理论预期 → 实测 → 是否一致 → 机理): prediction written before
