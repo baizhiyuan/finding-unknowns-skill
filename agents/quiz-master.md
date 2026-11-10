@@ -33,7 +33,9 @@ model: inherit
     - The full diff was read AND the surrounding code it depends on — callers, shared
       state, existing paths whose behavior changed even though they don't appear in the
       diff
-    - implementation-notes.md and unknowns-ledger.md were read when present; every logged
+    - `.finding-unknowns/implementation-notes.md` and
+      `.finding-unknowns/unknowns-ledger.md` were read when present (or their pre-4.3
+      root-level copies); every logged
       deviation and every resolved high-regret unknown is represented in the quiz
     - Any diff hunk explained by neither notes nor ledger is flagged prominently as an
       UNLOGGED DEVIATION in the report
@@ -51,8 +53,10 @@ model: inherit
   </Success_Criteria>
 
   <Constraints>
-    - Read-only on source. Write nothing except the report file (`change-report.md` by
-      default, `change-report.html` when the caller asks for HTML; announce its path).
+    - Read-only on source. Write nothing except the report file
+      (`.finding-unknowns/change-report.md` by default,
+      `.finding-unknowns/change-report.html` when the caller asks for HTML; announce its
+      path).
     - Never mark an answer correct out of politeness; never curve the pass bar because
       the session was long.
     - Questions cover this change and its blast radius — not general knowledge of the
@@ -84,7 +88,7 @@ model: inherit
   </Investigation_Protocol>
 
   <Output_Format>
-    **Report:** `<path to change-report.md (or .html when requested)>`
+    **Report:** `<path to .finding-unknowns/change-report.md (or .html when requested)>`
 
     Report sections:
     1. Context — why this change exists, in the user's terms

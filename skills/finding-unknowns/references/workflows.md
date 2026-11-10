@@ -83,6 +83,9 @@ by ≥2 lenses get a note in the evidence column.
 
 ## Template 2 — Adversarial verification panel (backs C1 step 3.5, cost ≥ 4 rows)
 
+The fresh-context refutation primitive (shared across these skills: a context
+that did not produce the claim tries to refute it from the same evidence and returns the
+strongest alternative explanation plus the cheapest discriminating check), run as a panel.
 Three independent refuters, each with a distinct failure lens. A resolution survives only
 if every refuter returns and none produces a plausible refutation; one surviving
 counterexample keeps the row `resolved-provisional` (C1 step 3.5: evidence does not lose a
@@ -180,10 +183,10 @@ What is enforced in code vs by prompt — stated honestly:
 | Unnamed edges are never dropped silently: dropped only from `reversible` upstreams and only after `confirmDroppedEdges`; kept (fail closed) otherwise | code |
 | Only real dependencies wait (per-task scheduling, no wave barrier) | code |
 | Tasks whose touched paths overlap never run concurrently (paths normalized; globs rejected) | code |
-| Edits outside every task's declared paths stop the run (`scope-violation`); paths already dirty before the run (ledger, spec, notes, WIP) are excluded from the path check but content-hashed, so a further edit to them is still caught | code compares the runner's report and hashes against the pre-run baseline |
+| Edits outside every task's declared paths stop the run (`scope-violation`); paths already dirty before the run (WIP, and `.finding-unknowns/` files when they are not gitignored) are excluded from the path check but content-hashed, so a further edit to them is still caught | code compares the runner's report and hashes against the pre-run baseline |
 | (Consequence) Check artifacts such as coverage reports must be gitignored, or they count as out-of-scope writes | by design — fails closed |
 | Every task's check files are hashed on every check run and again in a final sweep after all tasks; any change halts the run | code compares the runner's hashes against the baseline |
-| Do not edit files that were already dirty before the run (the ledger, notes, WIP) while it runs: any change to them halts every task | by design — fails closed |
+| Do not edit files that were already dirty before the run (WIP, and `.finding-unknowns/` files when they are not gitignored) while it runs: any change to them halts every task | by design — fails closed |
 | Before resuming after a `scope-violation`, revert or commit the stray files; otherwise they count as pre-dirty on the next run | by instruction |
 | A concurrent task's edits are attributed to the right task, and a sibling's mid-edit state never disturbs this task's checks | prompted — keep checks narrow to the task's paths |
 | Lanes decide closing; `irreversible` never closes in-run | code |
@@ -192,6 +195,22 @@ What is enforced in code vs by prompt — stated honestly:
 | Tampered check files stop the task immediately | code (given the runner's hashes) |
 | Implementer does not execute irreversible actions; runner refuses irreversible checks | prompted |
 | Verifier independence (different context from implementer) | structural |
+
+`.finding-unknowns/` (ledger, spec, notes) is guarded according to its git state:
+
+- **Gitignored** (the default): `git ls-files --others --exclude-standard` never reports
+  it, so it is invisible to the runner. The path check neither flags nor guards it; an
+  edit to the ledger, spec or notes during the run goes unnoticed.
+- **Committed**: its files are checked like any other path. A file already dirty before
+  the run is hashed and must not change; a clean file edited during the run is a
+  `scope-violation`.
+- **Untracked and not ignored**: the files that exist before the run are reported as
+  untracked, so they count as pre-dirty and are hashed; a new file created under it
+  during the run is a `scope-violation`.
+
+To keep the spec guarded when the directory is gitignored, list
+`.finding-unknowns/unknowns-spec-{slug}.md` in a task's `checkFiles` (check files are
+hashed regardless of git state).
 
 ```javascript
 export const meta = {

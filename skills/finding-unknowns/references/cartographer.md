@@ -30,9 +30,10 @@ Announce on entry, first line exactly:
 
 > Depth: {quick | standard | deep} (source: {flag | user request | default})
 >
-> Entering Cartographer mode. I will maintain unknowns-ledger.md, clear the highest-regret
-> unknown each round by its route, show all four quadrants' clarity after every round, and
-> will not proceed to implementation until the six-condition gate passes.
+> Entering Cartographer mode. I will maintain .finding-unknowns/unknowns-ledger.md, clear
+> the highest-regret unknown each round by its route, show all four quadrants' clarity
+> after every round, and will not proceed to implementation until the six-condition gate
+> passes.
 
 **Round 0 — topology gate (one question, before any scoring).** Enumerate the task's 1–6
 top-level components (outcomes that can succeed or fail independently — not sub-features)
@@ -62,10 +63,13 @@ from how productive the round felt.
 
 ### C0: Seed the ledger
 
-Create `unknowns-ledger.md` (owned by `ledger-keeper` when installed). The file opens
-with a header block — depth + source, the Round 0 locked topology (components, statuses,
-deferral reasons), the UK status (in scope, or not applicable with the user's
-confirmation), and a per-round quadrant score history table — followed by the rows:
+Create `.finding-unknowns/unknowns-ledger.md` at the project root (owned by
+`ledger-keeper` when installed; the directory and its `.gitignore` rule are in SKILL.md
+Execution_Policy, Artifacts). The file opens with a header block — first line
+`schema: 2` (the ledger format version; the fields below are schema 2), then depth +
+source, the Round 0 locked topology (components, statuses, deferral reasons), the UK
+status (in scope, or not applicable with the user's confirmation), and a per-round
+quadrant score history table — followed by the rows:
 
 | id | quadrant | unknown | cost-if-wrong (1–5) | P(wrong) | regret | **route** | **reversibility** | status | phase | resolution / default |
 |----|----------|---------|--------------------|----------|--------|-----------|-------------------|--------|-------|----------------------|
@@ -91,7 +95,8 @@ confirmation), and a per-round quadrant score history table — followed by the 
   fee/slippage realism · regime dependence. A checklist row you can immediately mark
   resolved costs one line; a missing one costs a blown-up backtest.
 - **Prior first**: before a row is scored from evidence, record the prior — the user's
-  stated hypothesis or the agent's best guess — in the resolution column as `prior: …`.
+  stated expectation or the agent's best guess — in the resolution column as `prior: …`
+  (reuse a prior already captured in Phase 0 or by a sibling skill; never ask again).
   The column is append-only: a resolution extends it (`prior: X → resolved: Y
   [user-confirmed {date}]`), never overwrites it, so the prior stays comparable.
   Initial P(wrong) reflects how much evidence backs the prior; no evidence → P(wrong)
@@ -105,7 +110,8 @@ confirmation), and a per-round quadrant score history table — followed by the 
   `irreversible` = hard or impossible to undo (migrations that rewrite or drop data,
   deletions, production data, money, external publication, commitments to people).
   **Classify upward when unsure.** Downgrading a row from `irreversible` requires user
-  confirmation, recorded like any other. A task's lane is the maximum lane of the
+  confirmation, recorded like any other. This value is the row's **lane** (the only
+  meaning of "lane" across these skills); a task's lane is the maximum lane of the
   criteria it covers.
 - **Irreversibility floor**: regret contains P(wrong), and P(wrong) is a confidence
   estimate — the one input most prone to optimism. So for `irreversible` rows,
@@ -171,17 +177,20 @@ by its route. Repeat until the gate passes or the user exits:
 3. **Re-score** the row's P(wrong) from the answer/evidence; recompute regret. Answers may
    spawn NEW rows (quadrant + regret + route) — that chain is the ledger working correctly.
 3.5 **Verify before resolving (evidence discipline, for rows with cost ≥ 4)**:
-   - **Adversarial check**: before marking the row resolved, construct the strongest
-     alternative explanation consistent with the SAME evidence. If a plausible refutation
-     exists, the row stays `resolved-provisional` and the ledger records the one
-     discriminating check that would separate the explanations. (Example: a strong
-     backtest IC resolves "is the signal real?" only provisionally — leakage produces the
-     same IC; the discriminating check is a pipeline audit.) With Workflow available, use
-     the `fu-verify-panel` script (`workflows.md`): three refuters with distinct
-     lenses (alternative-explanation / evidence-independence / reproduction); the
-     resolution survives only if every refuter reports and none refutes it (one plausible
-     refutation keeps the row `resolved-provisional`), and refuters' discriminating checks
-     land in the ledger verbatim.
+   - **Adversarial check** — a fresh-context refutation (the shared primitive: a context
+     that did not produce the resolution tries to refute it from the same evidence; run in
+     the same context, it is labelled `same-context — weaker` in the row's resolution /
+     evidence cell). Before marking the row
+     resolved, construct the strongest alternative explanation consistent with the SAME
+     evidence. If a plausible refutation exists, the row stays `resolved-provisional` and
+     the ledger records the one discriminating check that would separate the
+     explanations. (Example: a strong backtest IC resolves "is the signal real?" only
+     provisionally — leakage produces the same IC; the discriminating check is a pipeline
+     audit.) With Workflow available, use the `fu-verify-panel` script (`workflows.md`):
+     three refuters with distinct lenses (alternative-explanation / evidence-independence
+     / reproduction); the resolution survives only if every refuter reports and none
+     refutes it (one plausible refutation keeps the row `resolved-provisional`), and
+     refuters' discriminating checks land in the ledger verbatim.
    - **Cross-reference rule**: a cost ≥ 4 resolution backed by a single evidence source is
      `resolved-provisional`, never `resolved`. Two independent sources (different
      instruments — e.g. an experiment AND an audit) are required for full resolution.
@@ -289,12 +298,13 @@ not a prose summary:
 Acknowledging gaps is a deliverable, not an apology — an unlisted gap is an unlogged
 deviation waiting to happen.
 
-**Crystallized spec.** On gate PASS, also write `unknowns-spec-{slug}.md` next to the
-ledger — the handoff artifact: goal (one sentence, covering every active topology
-component), constraints, non-goals, testable acceptance criteria, the final quadrant
-clarity table (scores + ambiguity %, display; depth), an assumptions exposed → resolved
-table, the **verification contract** (below), and a ledger snapshot reference. The spec
-is marked **pending approval** — writing it grants no execution permission.
+**Crystallized spec.** On gate PASS, also write
+`.finding-unknowns/unknowns-spec-{slug}.md` next to the ledger — the handoff artifact:
+goal (one sentence, covering every active topology component), constraints, non-goals,
+testable acceptance criteria, the final quadrant clarity table (scores + ambiguity %,
+display; depth), an assumptions exposed → resolved table, the **verification contract**
+(below), and a ledger snapshot reference. The spec is marked **pending approval** —
+writing it grants no execution permission.
 
 **Default end of Cartographer: write the spec, then STOP.** On gate PASS, deliver the
 close-out report and the spec with its verification contract, and stop. Offer the next
@@ -369,7 +379,10 @@ by default.
   from the spec (id, description, covered criteria, lane = max lane of those criteria,
   touched paths, checks and check files from the contract, post-checks for the
   irreversible lane, dependencies with what crosses); the user approves that graph
-  before the run. The spec author does not approve its own decomposition.
+  before the run. The spec author does not approve its own decomposition. A gitignored
+  `.finding-unknowns/` is invisible to the run's path check, so list
+  `.finding-unknowns/unknowns-spec-{slug}.md` in a task's `checkFiles` to keep the spec
+  guarded (`workflows.md`, guarantee table).
   Fallback ladder: Workflow → parallel Agent calls → inline. On the inline rung the
   implementer and verifier would share a context, so no lane closes automatically —
   every task goes to the user with its check results.
@@ -457,8 +470,25 @@ different contexts — a second agent, or the user.
 ## Resume
 
 The ledger IS the state. To resume an interrupted Cartographer session, re-read
-`unknowns-ledger.md` (and `implementation-notes.md` if the build started), announce the
-current gate status, and continue from the highest-regret open row. Do not re-seed.
+`.finding-unknowns/unknowns-ledger.md` (and `.finding-unknowns/implementation-notes.md` if
+the build started), announce the current gate status, and continue from the highest-regret
+open row. Do not re-seed.
+
+- **Legacy location.** If `.finding-unknowns/unknowns-ledger.md` is absent but a
+  root-level `unknowns-ledger.md` exists (pre-4.3), read it — and a root-level
+  `implementation-notes.md` or `unknowns-spec-*.md` likewise — and offer in one line to
+  move them into `.finding-unknowns/`. Never move them silently; until the user agrees,
+  keep working on the root-level files.
+- **Schema upgrade.** A ledger whose first line is not `schema: 2` is schema 1 (pre-4.3).
+  Before the first round, `ledger-keeper` (its RESUME operation; inline otherwise) adds
+  the missing header fields — depth + source, Round 0 topology, UK status, score
+  history — reconstructed from the rows where they allow it and written as
+  `{value} (reconstructed, legacy)`, otherwise marked `unknown (legacy)`; writes
+  `schema: 2` as the first line; and reports what it added. A reconstructed or
+  `unknown (legacy)` field never satisfies a gate condition until the user confirms it;
+  on confirmation the marker is removed. So a reconstructed depth or topology counts only
+  once confirmed, UK `unknown (legacy)` is not "not applicable", and a missing topology
+  is re-confirmed with the user (Round 0).
 
 ## Settings
 
@@ -469,7 +499,8 @@ and needs no announcement.
 
 ## Cartographer final checklist
 
-- [ ] Ledger exists with quadrant, cost, P(wrong), regret, route, reversibility, status,
+- [ ] Ledger exists at `.finding-unknowns/unknowns-ledger.md` with `schema: 2` as its
+      first line, and quadrant, cost, P(wrong), regret, route, reversibility, status,
       phase per row; priors recorded before evidence-based scoring
 - [ ] No `irreversible` row was defaulted silently or resolved without user confirmation
 - [ ] The domain checklist hook ran at seeding; missing domain rows were added
@@ -488,9 +519,9 @@ and needs no announcement.
       `--standard` one blind-spot pass, a multi-lens sweep when the task spans more than
       one risk domain; `--deep` multi-lens sweep at seeding and UU loop-until-dry before
       the gate
-- [ ] On PASS, unknowns-spec-{slug}.md was written and marked pending approval, with a
-      verification contract whose every check can fail and states what it does NOT prove
-      — and the run stopped there
+- [ ] On PASS, `.finding-unknowns/unknowns-spec-{slug}.md` was written and marked pending
+      approval, with a verification contract whose every check can fail and states what
+      it does NOT prove — and the run stopped there
 - [ ] After the spec, only options 1 and 3 were offered (§ E1); § E2 option 2 ran only on
       the user's explicit request; if it ran: edges named what crosses; failures returned
       per unit with SCOPE; derived constraints fed forward

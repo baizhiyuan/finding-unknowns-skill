@@ -4,7 +4,7 @@
 Checks that have broken before in this repo: frontmatter that fails to parse, unsafe or
 malformed SVGs, broken relative links, unbalanced code fences or <details>, version and
 count drift between plugin.json, README badges and the hero diagram, em dashes in the
-Chinese README, en/zh README structure drift, Chinese diagrams with live (un-outlined)
+Chinese README and tutorial, en/zh README structure drift, Chinese diagrams with live (un-outlined)
 CJK text, and a broken install script.
 
 Usage: python3 scripts/validate.py   (exit 1 on any failure)
@@ -23,7 +23,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ["README.md", "README.zh.md", "CLAUDE.md", "AGENTS.md", "EXAMPLES.md",
-        "CONTRIBUTING.md", "CHANGELOG.md", "docs/ARCHITECTURE.md"]
+        "CONTRIBUTING.md", "CHANGELOG.md", "docs/ARCHITECTURE.md", "docs/recordings/itsdangerous-blindspot.md", "docs/GLOSSARY.md",
+        "docs/TUTORIAL.md", "docs/TUTORIAL.zh.md"]
 CJK = re.compile(r"[一-鿿　-〿＀-￯]")   # ideographs + CJK/full-width punctuation
 errors: list[str] = []
 
@@ -106,8 +107,9 @@ def check_readme_pair() -> None:
     levels = lambda t: re.findall(r"^(#{2,3}) ", strip_code(t), re.M)  # noqa: E731
     if levels(en) != levels(zh):
         fail("README.md and README.zh.md heading structure differs")
-    if "——" in strip_code(zh):
-        fail("README.zh.md: em dash (——) outside code blocks")
+    for rel in ("README.zh.md", "docs/TUTORIAL.zh.md"):
+        if "——" in strip_code(read(rel)):
+            fail(f"{rel}: em dash (——) outside code blocks")
 
 
 def check_versions_and_counts() -> None:

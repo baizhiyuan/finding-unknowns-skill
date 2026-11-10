@@ -41,8 +41,9 @@ model: inherit
   </Success_Criteria>
 
   <Constraints>
-    - Write ONLY new throwaway files (default `prototypes/<slug>.html`). Never modify the
-      real application, its configuration, or its tests.
+    - Write ONLY new throwaway files (default `.finding-unknowns/prototypes/<slug>.html`
+      at the project root). Never modify the real application, its configuration, or
+      its tests.
     - Fake every backend: hardcoded data, stubbed handlers. Wiring is waste at this stage.
     - Offer no personal ranking unless asked; your job is to widen the option space, not
       to narrow it.

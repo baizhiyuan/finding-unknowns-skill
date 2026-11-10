@@ -2,34 +2,42 @@
 
 This document describes the design of the finding-unknowns framework: its components, the
 contracts between them, and the principles that decide where a responsibility lives. The
-README is the landing page; this is the reference.
+README is the landing page; this is the reference. Terms (lane, rigor level, packet size,
+mode, prior, fresh-context refutation, schema) are defined once in the
+[Glossary](GLOSSARY.md); the [5-minute tutorial](TUTORIAL.md) is the hands-on entry.
 
 ## Components
 
 ```
-commands/            Entry points (slash commands) — thin dispatchers, no logic
+commands/            Entry points (/blindspot, /cartographer, /change-quiz) — thin dispatchers, no logic
 skills/
   finding-unknowns/  Before/during work — routing, techniques, Cartographer mode, guardrails
     references/      cartographer.md (normative Cartographer protocol), workflows.md
   keep-the-reasoning/  The handoff — stakes triage, handoff packet
   theory-vs-result/  Measured results — prediction card, Theory → Measured → Consistent? → Mechanism cards
 agents/              Specialists — isolated execution profiles the main context lacks
-docs/                Reference documentation (this file)
+docs/                Reference documentation: this file, GLOSSARY.md, TUTORIAL.md (+ .zh)
 ```
 
 ### Layer 1 — Commands (entry)
 
-Commands are deliberately logic-free. Each one reads the skill and jumps to a named entry
-point, passing `$ARGUMENTS` as the task:
+The three skills need no command: Claude Code exposes each skill as a slash command, so
+`/finding-unknowns`, `/keep-the-reasoning` and `/theory-vs-result` invoke the skill
+directly, starting at its own first step (Phase 0; Step 0 stakes triage; Step 0 triage:
+Debug path or rigor level). Until 4.2 the plugin also shipped command files with those
+same names; a command and a skill sharing a name collide (the command shadows the skill
+and, by invoking the skill of its own name, risks recursion), so 4.3.0 removed them.
+
+The remaining commands are deliberately logic-free. Each one invokes the
+`finding-unknowns` skill through the Skill tool (so plugin and manual installs resolve the
+same way, with no hard-coded file path) and jumps to a named entry point, passing
+`$ARGUMENTS` as the task:
 
 | Command | Entry point |
 |---------|-------------|
-| `/finding-unknowns` | Phase 0 (quadrant routing) |
 | `/blindspot` | Technique 1 (blind-spot pass) |
 | `/cartographer` | Phase C (Cartographer mode) |
 | `/change-quiz` | Technique 8 (quiz) |
-| `/keep-the-reasoning` | Step 0 of the `keep-the-reasoning` skill (stakes triage; Step 3 if the work is done) |
-| `/theory-vs-result` | Step 0 of the `theory-vs-result` skill (triage; stops after Step 1 if nothing is measured yet; if the result is already in hand, writes a `post-hoc` Step 1 card first, then continues at Step 2) |
 
 Keeping commands thin means each protocol has exactly one source of truth: its `SKILL.md`.
 A command never restates procedure; it names the section to execute.
@@ -38,12 +46,13 @@ A command never restates procedure; it names the section to execute.
 
 There are three sibling skills. `finding-unknowns` covers the unknowns *before and during*
 work. `keep-the-reasoning` covers the human's judgment *at acceptance*: stakes triage
-(offload vs keep the reasoning), a hypothesis before asking, "verified" defined up front,
+into a packet size (offload · compact · full), a prior before asking, "verified" defined up front,
 and a fixed-order handoff packet sized to the stakes: a compact four-section packet at
 medium stakes (evidence; what the checks did NOT prove; a never-empty "not checked";
 summary), the full nine-section packet at high stakes or on request (evidence first; what
-each check proved and did NOT prove; decisions and assumptions; prior vs result; a
-fresh-context counterargument; a never-empty "not checked"; summary last). Packet
+each check proved and did NOT prove; decisions and assumptions; prior vs result; the
+strongest counterargument and "did I miss anything?" from a fresh-context refutation; a
+never-empty "not checked"; summary last). Packet
 sections are referred to by name, not number; the compact packet adds a Prior vs result
 line when a prior was recorded or the claim is measured. `finding-unknowns` Phase 3 and
 Cartographer's merge (and the back end of the experimental Phase E, when it runs) hand
@@ -55,9 +64,25 @@ before the data (else `post-hoc`), a noise floor, fairness checks, a consistency
 and mechanism evidence tiers (verified · supported · inferred · untested). The *rule
 verdict* (PASS · FAIL · UNCERTAIN · descriptive only) is kept apart from the *direction
 verdict* (alive · alive-but-constrained · weakened · dead), and a new or tightened
-threshold is explained in plain language and approved before it is frozen. It meets
-`finding-unknowns` at the `experiment` route and `keep-the-reasoning` at the packet's
-Prior vs result section.
+threshold is explained in plain language and approved before it is frozen. Step 0 picks
+a rigor level (note · report · decision), or the lighter **Debug path** for a
+reproducible, deterministic failure: repro + observed output, prior, at least two
+competing explanations, one discriminating check each, fix, and the repro re-run plus an
+unchanged neighbour; no noise floor, no frozen rule, and an escalation to a rigor level
+when the failure is flaky or a ship/no-ship rides on it. It meets `finding-unknowns` at
+the `experiment` route and `keep-the-reasoning` at the packet's Prior vs result section.
+
+The three skills share two things by name rather than each defining its own. A **prior**
+(any expectation recorded before the result) captured by one skill in a session is reused
+by the others, never asked twice; a `theory-vs-result` prediction card is its
+measured-claim form. The **fresh-context refutation** primitive is defined once, in
+`keep-the-reasoning`: a context that did not produce a claim tries to refute it from the
+same evidence and returns the strongest alternative explanation plus the cheapest
+discriminating check; without a separate context the fallback is labelled
+`same-context — weaker`. It fills the full packet's Strongest counterargument and Did I
+miss anything?, and, with its own mechanics on top, backs `theory-vs-result`'s
+Fresh_Context_Check (`mechanism-auditor`), Cartographer's C1 step 3.5 adversarial check,
+and the `fu-verify-panel` workflow.
 
 `SKILL.md` is written as an executable protocol, not a description. Its structure:
 
@@ -73,7 +98,8 @@ Prior vs result section.
 - **Templates**: exact per-round report and question formats, so output is reproducible
   rather than improvised.
 - **Examples**: Good/Bad pairs with rationale — the strongest behavioural steering.
-- **Escalation_And_Stop_Conditions** and a two-lane **Final_Checklist**.
+- **Escalation_And_Stop_Conditions** and a **Final_Checklist** per mode (lightweight,
+  Cartographer).
 - **References**: `references/cartographer.md` — the full normative Cartographer protocol
   (C0–C3, the § E1 next-step offer and the experimental § E2 Workflow execution, resume,
   settings, checklist), read on demand before entering
@@ -119,18 +145,43 @@ their exploration.
 
 ## Data artifacts
 
+Every file the skills write lives under `.finding-unknowns/` at the project root, created
+on first write. It is working state: the default `.gitignore` line is `.finding-unknowns/`.
+A team that reviews ledgers and specs in PRs ignores the contents instead and re-includes
+the two files (git cannot re-include a file inside an ignored directory):
+
+```
+.finding-unknowns/*
+!.finding-unknowns/unknowns-ledger.md
+!.finding-unknowns/unknowns-spec-*.md
+```
+
 | Artifact | Producer | Consumer | Lifetime |
 |----------|----------|----------|----------|
-| `unknowns-ledger.md` | ledger-keeper (or skill inline) | clearing loop, gate, quiz | whole task; IS the resume state (header: depth + source, locked topology, UK status (in scope, or not applicable with the user's confirmation), per-round quadrant score history). Rows carry a prior and a `reversibility` value (reversible · wide · irreversible) |
-| `predictions/{slug}.md` (or the ledger row) | theory-vs-result Step 1 | the measurement, mechanism-auditor | one claim; saved before measuring with a `Written` line, so timing can be audited |
-| result cards + summary table | theory-vs-result Steps 3–4 | user, mechanism-auditor, Cartographer ledger, keep-the-reasoning Prior vs result | one report |
-| `unknowns-spec-{slug}.md` | Cartographer gate PASS | user approval; consensus-refine plan (§ E1); the experimental § E2 Workflow execution (on request) | one task; the default end of Cartographer; pending-approval handoff artifact, including the verification contract (per criterion: failable check, artifact, what it proves, what it does NOT prove, lane) |
-| `implementation-notes.md` | build phase | quiz-master, next attempt | one build |
-| `prototypes/*.html` | prototype-smith | user reaction | throwaway |
-| `change-report.md` (`.html` on request) | quiz-master | merge decision | one review |
+| `.finding-unknowns/unknowns-ledger.md` | ledger-keeper (or skill inline) | clearing loop, gate, quiz | whole task; IS the resume state. First line `schema: 2`, then the header (depth + source, locked topology, UK status (in scope, or not applicable with the user's confirmation), per-round quadrant score history). Rows carry a prior and a `reversibility` value, the row's lane (reversible · wide · irreversible) |
+| `.finding-unknowns/predictions/{slug}.md` (or the ledger row) | theory-vs-result Step 1 | the measurement, mechanism-auditor | one claim; saved before measuring with a `Written` line, so timing can be audited (a timestamp when the folder is gitignored) |
+| result cards + summary table, or the Debug path record | theory-vs-result Steps 0–4 | user, mechanism-auditor, Cartographer ledger, keep-the-reasoning Prior vs result | one report |
+| `.finding-unknowns/unknowns-spec-{slug}.md` | Cartographer gate PASS | user approval; consensus-refine plan (§ E1); the experimental § E2 Workflow execution (on request) | one task; the default end of Cartographer; pending-approval handoff artifact, including the verification contract (per criterion: failable check, artifact, what it proves, what it does NOT prove, lane) |
+| `.finding-unknowns/implementation-notes.md` | build phase | quiz-master, next attempt | one build |
+| `.finding-unknowns/prototypes/*.html` | prototype-smith | user reaction | throwaway |
+| `.finding-unknowns/change-report.md` (`.html` on request) | quiz-master | merge decision | one review |
+| `.finding-unknowns/handoff-{slug}.md` | keep-the-reasoning Step 3, when the packet is written to disk | user, reviewers | one handoff |
 
 Resume semantics: Cartographer sessions resume by re-reading the ledger — no separate
-state store, no re-seeding.
+state store, no re-seeding. Two upgrade paths, both owned by `ledger-keeper`'s RESUME
+operation (inline otherwise):
+
+- **Legacy location.** If `.finding-unknowns/unknowns-ledger.md` is absent but a pre-4.3
+  root-level `unknowns-ledger.md` exists, it is read (with any root-level notes and specs)
+  and a one-line move offer goes to the user. Nothing is moved silently; until the user
+  agrees, work continues on the root-level files. Likewise, `theory-vs-result` reads a
+  pre-4.3 prediction card at root `predictions/{slug}.md` in place (its `Written` line
+  stands) and offers the move into `.finding-unknowns/predictions/`.
+- **Schema upgrade.** A ledger whose first line is not `schema: 2` is schema 1. The missing
+  header fields are reconstructed from the rows where possible and written as
+  `{value} (reconstructed, legacy)`, otherwise marked `unknown (legacy)`, and each
+  addition is reported. A reconstructed or `unknown (legacy)` field never satisfies a gate
+  condition until the user confirms it; the marker is then removed.
 
 ## Design principles
 
@@ -178,9 +229,10 @@ state store, no re-seeding.
    spec: in any build, whatever the execution path, the implementer prepares each
    irreversible change and its exact command but executes none; the user runs it or gives
    a per-command yes, and post-checks run before the row closes.
-9. **Hypothesis before discovery.** Each row records a prior before evidence-based scoring;
+9. **Prior before discovery.** Each row records a prior before evidence-based scoring;
    findings that contradict it surface as surprises (blindspot-scout reports a Surprises
-   section when given a prior) rather than being absorbed quietly.
+   section when given a prior) rather than being absorbed quietly. A prior recorded by any
+   of the three skills is reused by the others, never asked twice.
 10. **Checks the implementer cannot edit.** The verification contract is locked against the
     implementer, since agents can also edit their own checks.
 11. **Prediction before measurement; two verdicts never merged.** A theory written after the
@@ -206,8 +258,8 @@ runs only on the user's explicit request. Normative text is in
 - An attempt cap (default 3) turns a task into a plan-suspect ledger row.
 - A learning edge feeds derived constraints to every task not yet started; constraints
   may only tighten the spec — a conflicting one halts the run.
-- Every lane requires green contract checks from a separate check-runner context with
-  check files unchanged against a pre-run baseline; `wide` also requires a dependents
+- Every lane (reversibility, the only meaning of "lane" in this repository) requires
+  green contract checks from a separate check-runner context with check files unchanged against a pre-run baseline; `wide` also requires a dependents
   check; `irreversible` never closes in-run — its checks are dry-runs, the user executes,
   post-checks close it (the C2.5 build rule, applied per task).
 - The human sits at both ends (spec, contract and task graph at the front; irreversible

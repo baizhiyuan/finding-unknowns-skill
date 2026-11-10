@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.2.0 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v4.3.0 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-4.2.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.2.0">
+  <img src="https://img.shields.io/badge/version-4.3.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.3.0">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 skills">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
@@ -70,6 +70,8 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 /change-quiz main..HEAD                                      # change report + must-pass comprehension quiz before merge
 ```
 
+**New to the plugin?** The [5-minute tutorial](docs/TUTORIAL.md) walks through three copy-paste exercises: a blind-spot pass on a real open-source repo, a handoff packet, and a theory-vs-result card. Every term the skills share (prior, lane, rigor level, packet size, mode, fresh-context refutation) is defined once in the [Glossary](docs/GLOSSARY.md).
+
 ### Not Sure Where to Start?
 
 If the task is vague, or you're new to the domain or codebase:
@@ -82,11 +84,11 @@ Phase 0 places the gap on the quadrant map, captures your prior, and routes to t
 
 - **High stakes** (hard to reverse, wide blast radius, unfamiliar territory + long horizon) → `/cartographer --deep "…"`
 - **Work is done, the risk is accepting it** → `/keep-the-reasoning "…"`
-- **A result is in (or about to be measured), the risk is misreading it** → `/theory-vs-result "…"`
+- **A result is in (or about to be measured), the risk is misreading it** → `/theory-vs-result "…"` (a failing test or crash that reproduces every time takes its lighter Debug path)
 
 ### Updating
 
-Update the same way you installed. Latest release: **v4.2.0**.
+Update the same way you installed. Latest release: **v4.3.0**.
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -116,6 +118,7 @@ cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
 cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 cp agents/*.md   ~/.claude/agents/
 cp commands/*.md ~/.claude/commands/
+rm -f ~/.claude/commands/finding-unknowns.md ~/.claude/commands/keep-the-reasoning.md ~/.claude/commands/theory-vs-result.md  # removed in 4.3.0; the skills answer these slashes
 ```
 
 **Verify:**
@@ -123,7 +126,7 @@ cp commands/*.md ~/.claude/commands/
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# expect: 4.2.0 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
+# expect: 4.3.0 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
 ```
 
 </details>
@@ -138,7 +141,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 - **Irreversibility floor** — gate on blast radius, not confidence. An unknown guarding an irreversible step always reaches you, however confident the evidence looks.
 - **Keep the reasoning at the handoff** — an evidence-first packet that says what each check did NOT prove and what went unchecked, so accepting agent work never slides into cognitive surrender.
 - **Theory before data** — every measured result arrives as Theory → Measured → Consistent? → Mechanism: the prediction written first, the noise floor stated, the mechanism tagged with how well it is evidenced, and the rule verdict kept apart from the verdict on the idea.
-- **Independent judgment** — the author never self-approves. Discovery, scoring, and examination run in contexts that did not do the implementing.
+- **Independent judgment** — the author never self-approves. Discovery, scoring, and examination run in contexts that did not do the implementing, and all three skills share one check: a **fresh-context refutation**, where a context that did not produce a claim names the strongest alternative explanation and the cheapest check that would tell them apart.
 - **Zero dependencies** — plain Markdown. Agents and Workflow scripts add depth; every technique also runs fully inline.
 
 > **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own). `theory-vs-result` is distilled from the author's own empirical research practice and generalized for any measured claim: a number is not a finding until you know what was expected, whether the gap beats noise, and why it came out that way.
@@ -153,7 +156,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 |-------|------------|---------|
 | **`finding-unknowns`** | Phase 0 quadrant routing → eight techniques → optional Cartographer mode | Before and during work: surfacing the unknowns that would otherwise become guesses |
 | **`keep-the-reasoning`** | Stakes triage, "verified" defined up front, a fixed-order handoff packet | The handoff: accepting agent work without surrendering judgment |
-| **`theory-vs-result`** | Prediction card first, then Theory → Measured → Consistent? → Mechanism cards, with two separate verdicts | Measured results: backtests, benchmarks, A/B tests, ablations, training runs — never a number without its prediction and its reason |
+| **`theory-vs-result`** | Prediction card first, then Theory → Measured → Consistent? → Mechanism cards, with two separate verdicts | Measured results: backtests, benchmarks, A/B tests, ablations, training runs — never a number without its prediction and its reason. Reproducible failures take a lighter Debug path |
 
 `finding-unknowns` hands over to `keep-the-reasoning` at the end of Phase 3 and at Cartographer's merge (and at the end of the experimental execution bridge, when it runs). Returning `experiment`-route results are reported through `theory-vs-result`, whose summary table also serves as the handoff packet's "prior vs result" section.
 
@@ -182,7 +185,7 @@ Phase 0 is blocking: classify the gap, capture your prior in one line, announce 
 
 Known knowns just get written down before they drift. Full procedures: [`SKILL.md`](skills/finding-unknowns/SKILL.md).
 
-**Lightweight by default.** Analysis outputs (the routing analysis, the blind-spot pass, reference extraction) end in a short report: the 3 most consequential findings, each with its evidence, and 1 recommended next action. Surprises against your prior are never capped. The blind-spot pass's compact report (top 3 findings + rewritten request) *is* that short report, not compressed again; ask for the "full report" (given by default at high stakes) to get the complete technique output. Prototypes, interview questions, plans (with their definition of "verified"), implementation notes, pitches, and quizzes are always delivered in full. Text comes first: reports, plans, and quiz reports are Markdown, with HTML on request; prototypes stay HTML because they are visual.
+**Lightweight mode by default.** Analysis outputs (the routing analysis, the blind-spot pass, reference extraction) end in a short report: the 3 most consequential findings, each with its evidence, and 1 recommended next action. Surprises against your prior are never capped. The blind-spot pass's compact report (top 3 findings + rewritten request) *is* that short report, not compressed again; ask for the "full report" (given by default at high stakes) to get the complete technique output. Prototypes, interview questions, plans (with their definition of "verified"), implementation notes, pitches, and quizzes are always delivered in full. Text comes first: reports, plans, and quiz reports are Markdown, with HTML on request; prototypes stay HTML because they are visual.
 
 ### Cartographer mode
 
@@ -194,11 +197,11 @@ The rigorous escalation for high-stakes work. Full protocol: [`references/cartog
 
 | Part | What it is | Use for |
 |------|------------|---------|
-| **Unknowns ledger** | Rows with quadrant, prior, `regret = cost-if-wrong × P(wrong)`, route (interview · territory · experiment · audit), reversibility (reversible · wide · irreversible) | Ordering the work; it *is* the resume state |
-| **Clearing loop** | A router, not an interview: clear the highest-regret open row by its route; adversarially verify cost ≥ 4 resolutions | Never asking the user what the territory can answer |
+| **Unknowns ledger** | `.finding-unknowns/unknowns-ledger.md`, first line `schema: 2`. Rows with quadrant, prior, `regret = cost-if-wrong × P(wrong)`, route (interview · territory · experiment · audit), reversibility (reversible · wide · irreversible) | Ordering the work; it *is* the resume state |
+| **Clearing loop** | A router, not an interview: clear the highest-regret open row by its route; adversarially verify cost ≥ 4 resolutions (a fresh-context refutation) | Never asking the user what the territory can answer |
 | **Clarity display** | `ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`, re-scored every round; shown to steer, never a gate condition | Letting you see and steer how clear the map is |
 | **Six-condition gate** | KK written down; KU resolved or deferred-with-default; UK extracted, or marked not applicable with your confirmation; UU probed; no open row with regret ≥ 1.0; every irreversible row user-confirmed (the irreversibility floor). Completeness critic before any PASS; soft check at round 10 and every 10 rounds after (round 5 and every 5 after under `--quick`), no hard round cap | Refusing to build on an unmapped territory |
-| **Spec + verification contract** | The default end: close-out report and a pending-approval spec, then stop. Any build from the spec leaves irreversible steps to you: prepared, never executed, until you run each one or say yes to that command | Building from a crystallized, pending-approval spec |
+| **Spec + verification contract** | `.finding-unknowns/unknowns-spec-{slug}.md`, the default end: close-out report and a pending-approval spec, then stop. Any build from the spec leaves irreversible steps to you: prepared, never executed, until you run each one or say yes to that command | Building from a crystallized, pending-approval spec |
 | **Next-step offer (E1)** | The default after the spec: a planner + reviewer consensus plan (recommended; execution is a separate yes), or keep refining. The full `keep-the-reasoning` packet at merge | Choosing how to proceed without anything running on its own |
 | **Workflow execution (E2)** | Experimental, optional; not yet run in a live Workflow runtime. Only on your explicit request | Running an approved task graph under Phase E rules |
 
@@ -245,38 +248,39 @@ When the host exposes Claude Code's **Workflow tool** and you opt in, the fan-ou
 
 | Step | What it is | Use for |
 |------|------------|---------|
-| **Stakes triage** | `offload` (cheap, reversible, lands only on you) vs `keep-the-reasoning`: compact at medium stakes (lands on others, but reversible and contained), full at high stakes (hard to reverse) | Scaling the packet to consequence, not effort |
-| **Before the work** | Capture your hypothesis; define "verified" — a check must be able to fail | Making any outcome un-rationalizable after the fact |
-| **Handoff packet** | Compact (four sections): evidence → what the checks did NOT prove → never-empty "not checked" → summary. Full (nine sections): evidence first → what checks proved / did NOT prove → decisions & assumptions → prior vs result → fresh-context counterargument → never-empty "not checked" → summary last | Accepting work with your judgment intact |
+| **Stakes triage → packet size** | `offload` (cheap, reversible, lands only on you; one line) · `compact` (medium stakes: lands on others, but reversible and contained) · `full` (high stakes: hard to reverse) | Scaling the packet to consequence, not effort |
+| **Before the work** | Capture your prior (reused if another skill already recorded it this session); define "verified" — a check must be able to fail | Making any outcome un-rationalizable after the fact |
+| **Handoff packet** | Compact (four sections): evidence → what the checks did NOT prove → never-empty "not checked" → summary. Full (nine sections): evidence first → what checks proved / did NOT prove → decisions & assumptions → prior vs result → strongest counterargument and "did I miss anything?" from a fresh-context refutation (labelled `same-context — weaker` when no separate context exists) → never-empty "not checked" → summary last | Accepting work with your judgment intact |
 | **After the handoff** | A rejection becomes a rule (test, hook, lint rule); surrender signals named once, without moralizing | Making taste compound |
 
-When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, verification contract, and the quiz-master's Decisions & assumptions instead of repeating them.
+When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, verification contract, and the quiz-master's Decisions & assumptions instead of repeating them. A packet written to disk goes to `.finding-unknowns/handoff-{slug}.md`.
 
 ### Theory vs result
 
 | Step | What it is | Use for |
 |------|------------|---------|
-| **Result triage** | `note` (one number, nothing rides on it) · `report` (someone will act on it, or it misses) · `decision` (adopt/ship, a pre-agreed rule, money) | Scaling the card to what rides on the number |
-| **Prediction card** | Claim, mechanism chain, direction + magnitude + *where* it should show, noise floor, falsifier, decision rule, and when it was written; saved before the data. A card written after the result is a `post-hoc fit`, not a test | Giving a result something to disagree with |
+| **Triage → rigor level** | `note` (one number, nothing rides on it) · `report` (someone will act on it, or it misses) · `decision` (adopt/ship, a pre-agreed rule, money) | Scaling the card to what rides on the number |
+| **Debug path** | For a reproducible, deterministic failure (a failing test, a crash, the same wrong output every run): repro + observed output → prior → at least two competing explanations → one discriminating check each, cheapest first → fix → the same repro re-run plus one neighbouring case that should not change. No noise floor, no frozen rule; escalates to a rigor level when the failure is flaky or a ship/no-ship rides on the fix | Explaining a bug without dressing it up as an experiment |
+| **Prediction card** | Claim, mechanism chain, direction + magnitude + *where* it should show, noise floor, falsifier, decision rule, and when it was written; saved before the data (`.finding-unknowns/predictions/{slug}.md`). A card written after the result is a `post-hoc fit`, not a test | Giving a result something to disagree with |
 | **Fair measurement** | Matched baseline, one variable changed, same seeds, the metric you are actually paid for, data budget respected | Not crediting a change with what the sample did |
 | **Result card** | Theory → Measured → Consistent? → Mechanism (理论预期 → 实测 → 是否一致 → 机理); consistency is `consistent` · `partly` · `inconsistent` · `can't tell`, read from the interval (one that holds both 0 and the prediction is `can't tell`); mechanism tier is `verified` · `supported` · `inferred` · `untested` | Keeping facts, inferences, and untested stories visibly apart |
 | **Mismatch walk** | Pipeline → comparison → metric → theory → environment; name the broken link and the smallest check that separates the explanations | Neither dismissing a direction on one run nor rescuing it with a story |
 | **Two verdicts** | Rule verdict (in the rule's own labels, e.g. `PASS` · `FAIL` · `UNCERTAIN`, or `descriptive only` / `void`) vs direction verdict (`alive` · `alive-but-constrained` · `weakened` · `dead`) | A mechanism can keep a direction alive; neither a mechanism nor a rerun on spent data turns a `FAIL` into a `PASS`. A defect found afterwards voids the run instead |
 
-A new or tightened threshold is first explained in plain language — what it protects against, why this number, what failing it means — and frozen only after you approve; it applies from then on, never retroactively. For report and decision lanes, the cards go to the read-only `mechanism-auditor` agent, which downgrades tiers the evidence does not earn and proposes an alternative mechanism that fits the same numbers.
+A new or tightened threshold is first explained in plain language — what it protects against, why this number, what failing it means — and frozen only after you approve; it applies from then on, never retroactively. At the report and decision rigor levels, the cards go to the read-only `mechanism-auditor` agent, the fresh-context refutation applied to result cards: it downgrades tiers the evidence does not earn and proposes an alternative mechanism that fits the same numbers.
 
 ### Agents & model routing
 
 **Commands dispatch, skills decide, agents execute, documents persist.** Procedure lives in one place per skill; commands and agents are enhancements, not dependencies.
 
 <p align="center">
-  <img src="assets/framework.svg" alt="Framework layers: six slash commands dispatch into three skills, which delegate to five specialist agents that write persistent artifacts" width="96%">
+  <img src="assets/framework.svg" alt="Framework layers: six slash entry points (three skills invoked directly, three commands) lead into three skills, which delegate to five specialist agents that write persistent artifacts" width="96%">
 </p>
 
 | Agent | Model | Tools | Backs | Why isolated |
 |-------|-------|-------|-------|--------------|
 | **`blindspot-scout`** | sonnet | no Write/Edit; Bash for inspection | Blind-spot pass, References | Wide recon in its own context window; it has no file-editing tools, and Bash is limited to inspection by instruction |
-| **`prototype-smith`** | inherit | Write + Bash; throwaway files only | Prototype, Plan | N genuinely divergent directions in one pass; instructed to write only under its prototype folder and never touch the real app |
+| **`prototype-smith`** | inherit | Write + Bash; throwaway files only | Prototype, Plan | N genuinely divergent directions in one pass; instructed to write only under `.finding-unknowns/prototypes/` and never touch the real app |
 | **`ledger-keeper`** | inherit | ledger file only | Cartographer | Regret, clarity scores, and the gate verdict — without grading its own interview |
 | **`quiz-master`** | inherit | no Write/Edit; Bash for inspection and its report | Pitch, Quiz | Fresh-eyes examiner that did not author the change; flags unlogged deviations |
 | **`mechanism-auditor`** | inherit | no Write/Edit; Bash for inspection | `theory-vs-result` | Referee that did not write the theory or run the measurement; downgrades unearned verdicts and tiers |
@@ -289,24 +293,34 @@ Tool lists remove file-editing tools where noted, which the runtime enforces. Th
 
 ## Commands
 
-These run **inside a Claude Code session**. Each command is a thin dispatcher into a named skill section.
+These run **inside a Claude Code session**. The three skills are invoked directly as `/finding-unknowns`, `/keep-the-reasoning` and `/theory-vs-result`, because Claude Code exposes skills as slash commands. The three plugin commands (`/blindspot`, `/cartographer`, `/change-quiz`) are thin dispatchers: each invokes the `finding-unknowns` skill through the Skill tool and jumps to a named section.
 
 | Form | Kind | Effect | Example |
 |------|------|--------|---------|
-| `/finding-unknowns` | Slash command → Phase 0 | Locate the unknown, announce the route, run the matching technique | `/finding-unknowns "add a usage dashboard"` |
+| `/finding-unknowns` | Skill → Phase 0 | Locate the unknown, announce the route, run the matching technique | `/finding-unknowns "add a usage dashboard"` |
 | `/blindspot` | Slash command → Technique 1 | Read-only blind-spot pass | `/blindspot "src/auth"` |
 | `/cartographer` | Slash command → Phase C | Ledger, regret-ordered clearing loop, six-condition gate, spec + verification contract (default stop) | `/cartographer --deep "migrate billing"` |
 | `/change-quiz` | Slash command → Technique 8 | Change report (Markdown; HTML on request) + must-pass comprehension quiz | `/change-quiz main..HEAD` |
-| `/keep-the-reasoning` | Slash command → `keep-the-reasoning` Step 0 (Step 3 if the work is done) | Stakes triage, then the handoff packet | `/keep-the-reasoning "ship the migration?"` |
-| `/theory-vs-result` | Slash command → `theory-vs-result` Step 0 (stops after the prediction card if nothing is measured yet; a result already in hand is marked `post-hoc`) | Triage, then the Theory → Measured → Consistent? → Mechanism cards | `/theory-vs-result "did the new loss beat baseline?"` |
-| `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill tool | The same skills, no plugin commands needed | invoke via the Skill tool |
+| `/keep-the-reasoning` | Skill → Step 0 (Step 3 if the work is done) | Stakes triage (packet size), then the handoff packet | `/keep-the-reasoning "ship the migration?"` |
+| `/theory-vs-result` | Skill → Step 0 (stops after the prediction card if nothing is measured yet; a result already in hand is marked `post-hoc`) | Triage (Debug path or rigor level), then the Theory → Measured → Consistent? → Mechanism cards, or the six Debug path items | `/theory-vs-result "did the new loss beat baseline?"` |
+| `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill tool | The same skills, invoked by the model instead of by you | invoke via the Skill tool |
 | plain language | Prompt | Request one technique directly | _"do a blind-spot pass"_, _"interview me"_, _"brainstorm four directions"_ |
 
 **Notes:**
 
-- The slash commands need the plugin or a manual copy of `commands/`; the skills alone load through the Skill tool.
+- `/blindspot`, `/cartographer` and `/change-quiz` need the plugin or a manual copy of `commands/`; the three skill slashes need only the skills installed. Up to 4.2 the plugin also shipped `/finding-unknowns`, `/keep-the-reasoning` and `/theory-vs-result` as command files with the same names as the skills; 4.3.0 removed them (the same invocations now reach the skills), and `install.sh` deletes old copies it recognizes.
 - Depth flags set Cartographer's exploration depth: `--quick` single-lens blind-spot pass, soft check every 5 rounds · `--standard` (default) one blind-spot pass, escalating to a multi-lens sweep when the task spans more than one risk domain (e.g. money + data + infra) · `--deep` always a multi-lens sweep at seeding plus a UU loop-until-dry before the gate. Precedence: flag > your request > default.
 - Copy-paste, end-to-end prompts: [`EXAMPLES.md`](EXAMPLES.md).
+
+**Artifacts.** Everything the skills write lives under `.finding-unknowns/` at the project root: `unknowns-ledger.md`, `unknowns-spec-{slug}.md`, `implementation-notes.md`, `prototypes/`, `change-report.md`, `predictions/`, and `handoff-{slug}.md`. It is working state, so by default add `.finding-unknowns/` to your `.gitignore`. If your team reviews ledgers and specs in pull requests, use these lines instead (git cannot re-include a file inside an ignored directory, so the one-line form would hide them too):
+
+```
+.finding-unknowns/*
+!.finding-unknowns/unknowns-ledger.md
+!.finding-unknowns/unknowns-spec-*.md
+```
+
+Upgrading from 4.2 or earlier: a root-level `unknowns-ledger.md` is still read, and the skill offers in one line to move it (nothing moves silently); a ledger without a `schema: 2` first line is upgraded on resume, with every added header field reported.
 
 <details>
 <summary><b>Configuration (optional — zero config by default)</b></summary>
@@ -321,7 +335,7 @@ Other defaults — report size (short for analysis outputs: 3 findings + 1 next 
 
 ## Demo
 
-> _Illustrative transcripts, written to the output templates in the three `SKILL.md` files and `references/cartographer.md` — not recordings of real sessions._
+> _Illustrative transcripts, written to the output templates in the three `SKILL.md` files and `references/cartographer.md` — not recordings of real sessions. One real, recorded run now exists: a blind-spot pass on the public `pallets/itsdangerous` repo, with the brief as sent to `blindspot-scout` and the verbatim output, in [EXAMPLES.md](EXAMPLES.md#a-real-blind-spot-pass-recorded)._
 
 **Phase 0 routing** — announced before any technique runs, so you can veto it.
 
@@ -367,7 +381,7 @@ middleware layer.
 <summary><b>A keep-the-reasoning handoff packet — evidence first, summary last</b></summary>
 
 ```
-Handoff lane: keep-the-reasoning (full) — schema migration on a shared production table.
+Packet size: full — schema migration on a shared production table.
 1. Evidence: `pytest tests/migrations -q` → 14 passed; `alembic upgrade head --sql` →
    plan at artifacts/upgrade.sql (ALTER + backfill, 2 statements)
 2. Proved: upgrade SQL applies cleanly to an empty schema. NOT proved: runtime on the
@@ -419,7 +433,7 @@ The anti-pattern it replaces: _"p95 only dropped 10%, the cache doesn't work."_
 | Altitude | Meta / orienting | One phase: requirements | Execution & delivery | Discipline primitives |
 | Lifecycle | Pre · During · Post | Pre only | During · Post | Mostly single-phase |
 | Rigor | Flexible | Ambiguity gating | Verification-gated | Checklist-driven |
-| State | Stateless (Cartographer: ledger file) | Persisted, resumable | Persisted, multi-agent | Varies |
+| State | Stateless (Cartographer: ledger file in `.finding-unknowns/`) | Persisted, resumable | Persisted, multi-agent | Varies |
 | Best when | You don't yet know your unknowns | You need a validated spec | The spec is clear | You need one disciplined move |
 
 Deep Interview (as of OMC 5.8.1) is approval-gated; its `--frontier` mode is the closest analogue of batched independent questions plus territory routing. Cartographer keeps two pieces of its transparency machinery: the Round 0 topology gate and per-quadrant clarity scores, shown every round as a display. Since v4.2.0 it does not adopt a clarity threshold or challenge modes; its gate rules only on ledger facts a reviewer can check, and it keeps the axes a clarity-scoring interview alone does not cover.
@@ -482,6 +496,7 @@ What field tests and reviews changed:
   - **Round 2** — closed the remaining fail-open edges: paths normalized and globs rejected before locking, mandatory check files for `wide`/`irreversible` tasks, writes outside every declared path stop the run.
   - **Round 3** — fixed the scope check's false halts: paths already dirty before the run are baselined and excluded.
   - Exercised by [`tests/workflows/run.mjs`](tests/workflows/run.mjs), 69 scenarios against a stubbed agent runtime that read the templates straight from `workflows.md`, run in CI on every push to `main` and every pull request.
+- **One word, one meaning (v4.3.0).** "Lane" meant reversibility in Cartographer, a rigor level in `theory-vs-result`, and a packet size in `keep-the-reasoning`. It now means reversibility only; the other two are *rigor level* and *packet size*, finding-unknowns' lightweight/Cartographer split is a *mode*, and the [Glossary](docs/GLOSSARY.md) holds the shared terms.
 - **Deliberately not adopted.** "Approve only the last step" — a human reviewing only a final artifact they never framed is rubber-stamping. "Confidence is the only input the model can influence" — agents can also edit their own checks, hence the locked contract.
 
 ### Roadmap
@@ -496,6 +511,8 @@ Not done yet:
 
 ## Documentation
 
+- **[5-minute tutorial](docs/TUTORIAL.md)** — install, then three copy-paste exercises
+- **[Glossary](docs/GLOSSARY.md)** — one vocabulary across the three skills: lane, rigor level, packet size, mode, prior, fresh-context refutation, artifacts
 - **[Architecture](docs/ARCHITECTURE.md)** — layers, artifact contracts, design principles
 - **[finding-unknowns SKILL.md](skills/finding-unknowns/SKILL.md)** — routing, the eight techniques, Cartographer summary, defaults
 - **[Cartographer protocol](skills/finding-unknowns/references/cartographer.md)** — the normative ledger, gate, close-out, and Phase E rules
@@ -524,13 +541,10 @@ Not done yet:
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          Plugin and marketplace manifests (/plugin install)
-├── commands/                Slash-command entry points (thin dispatchers)
-│   ├── finding-unknowns.md    /finding-unknowns — Phase 0 routing
+├── commands/                Slash-command entry points (thin dispatchers; the skills answer to their own names)
 │   ├── blindspot.md           /blindspot — blind-spot pass
 │   ├── cartographer.md        /cartographer — Cartographer mode
-│   ├── change-quiz.md         /change-quiz — report + merge quiz
-│   ├── keep-the-reasoning.md  /keep-the-reasoning — the handoff
-│   └── theory-vs-result.md    /theory-vs-result — measured results
+│   └── change-quiz.md         /change-quiz — report + merge quiz
 ├── skills/
 │   ├── finding-unknowns/
 │   │   ├── SKILL.md         Routing, eight techniques, Cartographer summary
@@ -542,7 +556,10 @@ finding-unknowns-skill/
 │   └── theory-vs-result/
 │       └── SKILL.md         Prediction card, Theory → Measured → Consistent? → Mechanism cards
 ├── agents/                  blindspot-scout (sonnet) · prototype-smith · ledger-keeper · quiz-master · mechanism-auditor (inherit)
-├── docs/ARCHITECTURE.md     Design reference: layers, contracts, principles
+├── docs/
+│   ├── ARCHITECTURE.md      Design reference: layers, contracts, principles
+│   ├── GLOSSARY.md          Shared vocabulary across the three skills
+│   └── TUTORIAL.md          5-minute tutorial (TUTORIAL.zh.md: Chinese)
 ├── assets/                  README diagrams (SVG); assets/zh/ = Chinese versions
 ├── AGENTS.md                Repository guide for coding agents and contributors
 ├── EXAMPLES.md              Copy-paste, end-to-end prompts

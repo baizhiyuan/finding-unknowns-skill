@@ -25,6 +25,8 @@ measured-result sibling in [`skills/theory-vs-result/SKILL.md`](skills/theory-vs
 ## During and after
 
 - Mid-build, keep **implementation notes**: log any deviation and the conservative choice.
+- Write notes, ledgers and prediction cards under `.finding-unknowns/` at the project root
+  (gitignored by default).
 - Before merge, **quiz** yourself on what actually changed. Comprehension is the gate.
 - When handing work over for acceptance, lead with evidence, say what each check did **not**
   prove, list the decisions you made, and name what went unchecked (`keep-the-reasoning`).
@@ -46,6 +48,10 @@ measured-result sibling in [`skills/theory-vs-result/SKILL.md`](skills/theory-vs
   alive-but-constrained / weakened / dead). Neither a good story nor a rerun on spent data
   turns a FAIL into a PASS.
 - Explain any new or tighter threshold in plain words and get approval before applying it.
+- A failure that reproduces the same way every time (a failing test, a crash) needs no
+  noise floor: record the repro and its output, your expectation, at least two competing
+  explanations with one cheap check each, the fix, and the repro re-run plus one
+  neighbouring case that should not change.
 
 ## Guardrails
 
