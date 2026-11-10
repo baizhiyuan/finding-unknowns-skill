@@ -23,7 +23,8 @@ gain) was wrong: the baseline was far stronger than expected.
   natural activation and effect together.
 - **Runs:** one per task per arm, each on a fresh copy of the fixture, non-interactive
   (the first response is scored). Read-only sandbox, except workspace-write for the
-  typo task. Shell commands had no network, but Codex's `web_search` tool was available
+  typo task. Shell commands ran in Codex's sandbox, whose network is off by default (not
+  checked in the logs), but Codex's `web_search` tool was available
   and both arms used it on T1, T2 and T5 (completed searches A 1 / 5 / 2, B 2 / 7 / 3).
   PREREG said "no network"; see its Amendments.
 - **Grading:** blinded. Outputs were labelled X/Y at random, with the key held in
@@ -87,12 +88,13 @@ memory) and none for B; round 2 counted none for either.
   predicted 10–50 % band, but the cached share differs (+22 % uncached). The T6 control
   shows how large single-run noise is: on an identical one-line edit B used 24 % fewer
   input tokens than A, outside the predicted ±20 %.
-- **Preferences that survived the swap: T1 and T3, both B.** On T1 the reasons were a
-  warning about a Flask 3.1.0 key-selection advisory (use 3.1.1 or later), an
-  integration test as the first step, and correct citations (A had one wrong line
-  number). On T3 they were two traps: B tied the 3 % hit rate to doubt that the cache
-  caused the gain, and it flagged the missing pre-agreed decision rule (full credit to B
-  and half to A from both graders; that rule is `theory-vs-result`'s core).
+- **Preferences that survived the swap: T1 and T3, both B.** On T1 both graders cited a
+  warning about a Flask 3.1.0 key-selection advisory (use 3.1.1 or later) and an
+  integration test as the first step. Round 1 also cited correct citations (A had one
+  wrong line number). On T3 the reason that held in both rounds was the missing
+  pre-agreed decision rule (full credit to B and half to A from both graders; that rule is
+  `theory-vs-result`'s core). Round 1 also credited B alone with tying the 3 % hit rate
+  to doubt that the cache caused the gain; round 2 gave both arms full credit there.
 - **What A did better.** On T2, A found the repo's allow-all Tailscale ACL (both
   graders credited it), and round 1 preferred A for that and for stating that JetPack
   6/7 do not support Xavier. On T3, round 1 noted that A came closer to the noise trap
@@ -128,7 +130,7 @@ These fixes come from this pilot and have **not** been re-run:
   headline, and make the headline the verdict.
 - **Field note F1 (absence claims).** Neither arm called the versions unknown. Both cited
   `docs/admin/现状与路线图.md:103`. B also mentioned the older research recording JetPack
-  5.1.5 and flagged it as historical. A also cited a build script for CUDA 11.4. This is
+  5.1.5 and flagged it as historical. Both also cited a build script for CUDA 11.4. This is
   consistent with the 4.3.1 fix, but it does not test the fix, because A did not make the
   mistake either.
 
@@ -161,7 +163,9 @@ These fixes come from this pilot and have **not** been re-run:
 - `scripts/`:
   - `make_homes.py <repo>` builds the two isolated `CODEX_HOME` directories. It copies
     only the model and provider keys from `~/.codex/config.toml`, links `auth.json`,
-    and prints key names, never values.
+    and prints key names, never values. The pilot's homes also carried
+    `disable_response_storage = true`; Codex ignored it (logged as an unrecognized
+    setting in every run), so the script leaves it out.
   - `run.sh` and `all.sh` run the 12 runs (from `tasks.tsv`).
   - `blind.py` builds the X/Y grading packets. It reads `/tmp/fu-eval/PREREG.md`, so copy
     PREREG.md there first.
