@@ -5,13 +5,12 @@ argument-hint: "[--quick|--standard|--deep] <task>"
 
 # cartographer
 
-Direct entry into Cartographer mode, skipping lightweight-lane routing.
+Direct entry into Cartographer mode, skipping Phase 0's routing to lightweight mode.
 
 ## Dispatch
 
-1. Read `skills/finding-unknowns/SKILL.md` in this plugin (or
-   `~/.claude/skills/finding-unknowns/SKILL.md` for manual installs), then read
-   `references/cartographer.md` next to it in full — that file is the normative protocol.
+1. Invoke the `finding-unknowns` skill with the Skill tool, then read its
+   `references/cartographer.md` in full — that file is the normative protocol.
 2. Follow **Cartographer mode** exactly — resolve and announce the depth (first line),
    run the Round 0 topology gate, seed the ledger (C0), run the regret-ordered clearing
    loop (C1) with the standard round-report template (four-quadrant clarity display

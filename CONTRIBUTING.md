@@ -9,8 +9,10 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 2. Make your changes. Each skill lives in `skills/<name>/SKILL.md` (finding-unknowns,
    keep-the-reasoning, theory-vs-result); Cartographer's full protocol is in
    `skills/finding-unknowns/references/`. See [`AGENTS.md`](AGENTS.md) for what to keep in sync.
-3. If you change the skill, keep the passive drop-in [`CLAUDE.md`](CLAUDE.md) and
-   [`EXAMPLES.md`](EXAMPLES.md) consistent with it.
+3. If you change the skill, keep the passive drop-in [`CLAUDE.md`](CLAUDE.md),
+   [`EXAMPLES.md`](EXAMPLES.md), the [glossary](docs/GLOSSARY.md), and the tutorials
+   ([`docs/TUTORIAL.md`](docs/TUTORIAL.md), [`docs/TUTORIAL.zh.md`](docs/TUTORIAL.zh.md))
+   consistent with it.
 4. Update [`CHANGELOG.md`](CHANGELOG.md) under an "Unreleased" heading.
 5. Open a pull request with a clear description of the change and its motivation.
 
@@ -18,6 +20,9 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 
 - **Scope.** Keep the skill focused on discovering unknowns. Execution and delivery concerns
   belong to other tools referenced in the README.
+- **Commands.** `commands/` holds only `/blindspot`, `/cartographer` and `/change-quiz`. Do
+  not add a command with the same name as a skill: Claude Code already exposes each skill
+  as a slash command, and a same-named command shadows it.
 - **Prose quality.** Techniques should be actionable and concise. Prefer concrete, copy-paste
   prompts over abstract description.
 - **Diagrams.** SVG assets in `assets/` must be well-formed XML and should render on GitHub.

@@ -36,7 +36,20 @@ for cmd in "$SRC"/commands/*.md; do
   echo "Installed command -> $CMD_DEST/$(basename "$cmd")"
 done
 
+# Remove our old pass-through commands (pre-4.3.0): they shared a name with a skill and
+# shadowed it. Only files that look like our pass-through are removed.
+for old in finding-unknowns keep-the-reasoning theory-vs-result; do
+  stale="$CMD_DEST/$old.md"
+  if [ -f "$stale" ] && grep -q 'description:' "$stale" \
+      && grep -qE 'Skill tool|SKILL\.md' "$stale"; then
+    rm "$stale"
+    echo "Removed stale command -> $stale (the /$old skill now answers to /$old)"
+  fi
+done
+
 echo
-echo "Done. Skills: finding-unknowns, keep-the-reasoning, theory-vs-result (invoke via the Skill tool)."
+echo "Done. Skills: finding-unknowns, keep-the-reasoning, theory-vs-result (invoke as /finding-unknowns,"
+echo "/keep-the-reasoning, /theory-vs-result, or via the Skill tool)."
+echo "Commands: /blindspot, /cartographer, /change-quiz."
 echo "Agents (blindspot-scout, prototype-smith, ledger-keeper, quiz-master, mechanism-auditor)"
 echo "are available to the Agent tool and are delegated to automatically by the skill."

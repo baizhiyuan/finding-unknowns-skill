@@ -34,7 +34,7 @@
 <circle cx="480" cy="188" r="18" fill="#D97757"/>
 <text x="480" y="192.32" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#FAF9F5" text-anchor="middle">C0</text>
 <text x="512" y="194.12" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" font-weight="700" fill="#141413">建立未知项台账</text>
-<text x="1140" y="199" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#C15F3C" text-anchor="end">unknowns-ledger.md</text>
+<text x="1140" y="199" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#C15F3C" text-anchor="end">.finding-unknowns/unknowns-ledger.md</text>
 <rect x="460" y="231" width="34" height="22" rx="6" fill="#141413"/>
 <text x="477" y="246.3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#FAF9F5" text-anchor="middle">UU</text>
 <text x="506" y="246.7" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13.5" font-weight="400" fill="#141413">盲区排查（可多视角并行）</text>

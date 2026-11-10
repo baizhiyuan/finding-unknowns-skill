@@ -20,7 +20,7 @@ with or endorsed by Anthropic.*
 <Purpose>
 Agents now produce fast, mostly-correct work, and mostly-correct work does not demand a
 second look. Across many handoffs the human slides down a spectrum — **offloading**
-(delegate the work, keep ownership) → **deferral** (the output stops being a hypothesis
+(delegate the work, keep ownership) → **deferral** (the output stops being a claim to check
 and becomes the next input) → **cognitive surrender** (the output quietly becomes your
 own; you feel no need to check it). Nothing in an agentic workflow pushes back on that
 slide by default. This skill is the push-back, applied at the one moment it is cheap:
@@ -60,29 +60,53 @@ others will have to deal with the consequences.*
 - On high-consequence decisions the agent recommends, labelled as a recommendation; the
   user decides. Never present a judgment call as settled fact
 - Fresh context for self-critique: the context that produced the work does not grade it
+  (the fresh-context refutation primitive, below)
+- Artifacts: a packet written to disk goes to `.finding-unknowns/handoff-{slug}.md` at the
+  project root — working state, gitignored by default (`finding-unknowns`
+  Execution_Policy has the `.gitignore` lines, including how to re-include files the
+  team reviews in PRs)
 </Execution_Policy>
+
+<Fresh_Context_Refutation>
+## Fresh-context refutation (shared primitive)
+
+One instrument, defined here and reused by name across these skills. A
+context that did not produce the claim (a subagent; a different model when available)
+tries to refute it from the same evidence, and returns two things: the **strongest
+alternative explanation** that fits that evidence, and the **cheapest discriminating
+check** that would tell the two apart. It reads the evidence the claim used and changes
+nothing. Without a separate context, run it yourself and label the result
+`same-context — weaker`; never skip it.
+
+Here it fills the full packet's Strongest counterargument and Did I miss anything?
+sections. The same primitive, with its own mechanics on top, is `theory-vs-result`'s
+Fresh_Context_Check (`mechanism-auditor`), Cartographer's C1 step 3.5 adversarial check,
+and the `fu-verify-panel` workflow (three refuters with distinct lenses).
+</Fresh_Context_Refutation>
 
 <Steps>
 
 ## Step 0: Stakes triage (blocking)
 
-| Lane | Signals | Handoff |
-|------|---------|---------|
+| Packet size | Signals | Handoff |
+|-------------|---------|---------|
 | **Offload** | cheap to be wrong, reversible, consequences land only on the user | normal handoff + one line: "Low stakes — delegated fully." |
-| **Keep the reasoning — compact** (medium stakes) | consequences land on others, but the change is reversible and contained (a PR to shared code behind tests, an internal analysis) | Steps 1–4 below, compact packet |
-| **Keep the reasoning — full** (high stakes) | hard to reverse; production, money, safety, people; "what should we build", "is it safe to ship" | Steps 1–4 below, full nine-section packet |
+| **Compact** — keep the reasoning (medium stakes) | consequences land on others, but the change is reversible and contained (a PR to shared code behind tests, an internal analysis) | Steps 1–4 below, compact packet |
+| **Full** — keep the reasoning (high stakes) | hard to reverse; production, money, safety, people; "what should we build", "is it safe to ship" | Steps 1–4 below, full nine-section packet |
 
-Announce: `Handoff lane: {offload | keep-the-reasoning (compact | full)} — {one-line reason}`.
+Announce: `Packet size: {offload | compact | full} — {one-line reason}`.
 The user can ask for the full packet at any stakes; when unsure between compact and full,
 choose full.
 
 ## Step 1: Before the work (front end)
 
-1. **Hypothesis first.** Ask the user, in one skippable question, what they expect the
+1. **Prior first.** Ask the user, in one skippable question, what they expect the
    answer or outcome to be — or infer it from the request and state it back. "No idea"
    is a valid answer and means the user lacks a map: route to `finding-unknowns`
    (Technique 1, blind-spot pass) before proceeding. Record the prior; Step 3 compares
-   against it.
+   against it. A prior already recorded in this session by `finding-unknowns` (Phase 0
+   or a ledger row's `prior:`) or `theory-vs-result` (a prediction card) is reused,
+   never asked again.
 2. **Define "verified" up front.** Before doing the work, write the verification
    contract — per claim the handoff will make: the check, the artifact it produces
    (test, screenshot, log, trace), what it proves, and what it does NOT prove. After the
@@ -119,7 +143,7 @@ Both sizes hold the order rule: **evidence first, summary last**.
 **Compact packet (medium stakes).** Deliver in exactly this order:
 
 ```
-Handoff lane: keep-the-reasoning (compact) — {reason}
+Packet size: compact — {reason}
 
 1. Evidence            — the commands actually executed and their actual output
                          (trimmed, not paraphrased); artifacts by path. When a
@@ -142,7 +166,7 @@ anything in the high-stakes row of Step 0.
 section to the stakes; omit none.
 
 ```
-Handoff lane: keep-the-reasoning (full) — {reason}
+Packet size: full — {reason}
 
 1. Evidence            — the commands actually executed and their actual output
                          (trimmed, not paraphrased); artifacts by path. Before any summary.
@@ -153,13 +177,13 @@ Handoff lane: keep-the-reasoning (full) — {reason}
 3. Decisions & assumptions
                        — defaults chosen, scope cut, requirements reinterpreted,
                          sources summarized rather than read — each with where to look.
-4. Prior vs result     — the user's hypothesis against what came back; every mismatch
+4. Prior vs result     — the user's prior against what came back; every mismatch
                          is where to look hardest. For measured claims, use the
                          `theory-vs-result` summary table here instead of rewriting it.
 5. Strongest counterargument
-                       — from a FRESH context (a subagent; a different model when
-                         available): "what would have to be true for this to be wrong?"
-                         and whether that was checked.
+                       — fresh-context refutation (the shared primitive above):
+                         "what would have to be true for this to be wrong?", the
+                         cheapest check that would tell, and whether it was run.
 6. Did I miss anything? — the fresh context's answer to that question, verbatim-short.
 7. Not checked         — at least one thing nobody verified. Never empty.
 8. Answerability       — "Would you bet on this in front of whoever maintains it?"
@@ -168,9 +192,9 @@ Handoff lane: keep-the-reasoning (full) — {reason}
 9. Summary             — last, and short.
 ```
 
-Strongest counterargument and Did I miss anything? need a context that did not produce
-the work. Without subagents, write
-them yourself but label them "same-context critique — weaker"; never skip them.
+Strongest counterargument and Did I miss anything? come from one fresh-context
+refutation (the shared primitive): a context that did not produce the work. Without
+subagents, write them yourself but label them `same-context — weaker`; never skip them.
 
 For high-consequence decisions (what to build, ship or not, who it affects, what to
 sacrifice) the Summary becomes **Options and recommendation**: 2–3 options with trade-offs
@@ -216,7 +240,7 @@ Opt-in only — offer it when the user asks about skill atrophy, never unprompte
 <Examples>
 <Good>
 ```
-Handoff lane: keep-the-reasoning (full) — schema migration on a shared production table.
+Packet size: full — schema migration on a shared production table.
 1. Evidence: `pytest tests/migrations -q` → 14 passed; `alembic upgrade head --sql` →
    plan at artifacts/upgrade.sql (ALTER + backfill, 2 statements)
 2. Proved: upgrade SQL applies cleanly to an empty schema. NOT proved: runtime on the
@@ -237,7 +261,7 @@ picture (backfill semantics) surfaced, and the prior mismatch points straight at
 
 <Good>
 ```
-Handoff lane: keep-the-reasoning (compact) — refactor of a shared date helper, behind tests.
+Packet size: compact — refactor of a shared date helper, behind tests.
 1. Evidence: `npm test -- dates` → 38 passed; diff touches src/utils/dates.ts only
 2. Did NOT prove: behaviour in the 3 callers outside src/ (no tests there). Tests
    written in this session.
@@ -264,13 +288,14 @@ evidence, and move on.
 </Examples>
 
 <Final_Checklist>
-- [ ] Stakes lane announced before anything else, with the packet size (compact | full)
+- [ ] Packet size announced before anything else (offload | compact | full)
 - [ ] Prior captured (or "no idea" routed to a blind-spot pass)
 - [ ] Verification contract existed before the work, or its absence was stated
 - [ ] Packet order held: evidence first, summary last (both sizes)
 - [ ] Every check states what it did NOT prove; same-context checks flagged
 - [ ] Full packet: decisions & assumptions listed with where to look
-- [ ] Full packet: counterargument and "did I miss anything" came from a fresh context
+- [ ] Full packet: counterargument and "did I miss anything" came from a fresh-context
+      refutation (or were labelled `same-context — weaker`)
 - [ ] "Not checked" is non-empty
 - [ ] High-consequence decisions left with the user, recommendation labelled as such
 </Final_Checklist>

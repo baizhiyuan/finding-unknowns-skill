@@ -4,6 +4,145 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0]
+
+### Added
+- **`theory-vs-result` Debug path** for reproducible, deterministic failures (a failing
+  test, a crash, the same wrong output for the same input). Step 0 asks first whether the
+  "result" is such a failure; if so it announces `Debug path — {reason}` and records six
+  items: repro + observed output, prior, at least two competing explanations, one
+  discriminating check per explanation (cheapest first), fix, and the same repro re-run
+  plus one neighbouring case that should not change. No noise floor, no frozen rule;
+  escalate to a rigor level when the failure is flaky (Report) or the fix is a ship/no-ship
+  (Decision). The skill description now triggers on "a failing test or crash whose cause
+  isn't obvious", and Do_Not_Use_When excludes a failure whose cause the error message
+  already names (a typo, a missing import, a stack trace pointing at one line);
+  `superpowers:systematic-debugging` is listed as a sibling that can drive the
+  investigation.
+- **Fresh-context refutation, one shared primitive**, defined once in `keep-the-reasoning`
+  (`<Fresh_Context_Refutation>`): a context that did not produce the claim tries to refute
+  it from the same evidence and returns the strongest alternative explanation plus the
+  cheapest discriminating check. It fills the full packet's Strongest counterargument and
+  Did I miss anything?, and is named as the basis of `theory-vs-result`'s
+  Fresh_Context_Check, `mechanism-auditor`, Cartographer's C1 step 3.5 adversarial check,
+  and the `fu-verify-panel` workflow. One fallback label everywhere: `same-context — weaker`.
+- **Artifact directory `.finding-unknowns/`** at the project root for everything the skills
+  write: `unknowns-ledger.md`, `unknowns-spec-{slug}.md`, `implementation-notes.md`,
+  `prototypes/`, `change-report.md` (`.html` on request), `predictions/{slug}.md`, and
+  handoff packets written to disk (`handoff-{slug}.md`). Created on first write. The
+  default `.gitignore` line is `.finding-unknowns/`; a team that reviews ledgers and specs
+  in PRs uses `.finding-unknowns/*`, `!.finding-unknowns/unknowns-ledger.md`,
+  `!.finding-unknowns/unknowns-spec-*.md` instead (git cannot re-include a file inside an
+  ignored directory). `workflows.md` states how `fu-execute-verified`'s path check treats
+  the directory in each git state: gitignored, it is invisible to the runner and not
+  guarded; committed, it is guarded like any path; untracked and not ignored, pre-existing
+  files are hashed and a new file is a `scope-violation`. Listing
+  `.finding-unknowns/unknowns-spec-{slug}.md` in a task's `checkFiles` keeps the spec
+  guarded in every state (Cartographer § E2 says so where the run is set up). A gitignored
+  prediction card uses a timestamp, not a commit, as its `Written` line.
+- **Ledger `schema: 2`** as the ledger's first line, and a `ledger-keeper` **RESUME**
+  operation: it locates the ledger (new location first, then a pre-4.3 root-level file,
+  for which it returns a move offer), upgrades a schema 1 ledger by adding the missing
+  header fields (depth + source, Round 0 topology, UK status, score history), written as
+  `{value} (reconstructed, legacy)` when reconstructed from the rows or marked
+  `unknown (legacy)`, and reports each addition. A reconstructed or `unknown (legacy)`
+  field never satisfies a gate condition until the user confirms it; the marker is then
+  removed.
+- **`docs/GLOSSARY.md`**: one page where the three skills' terms meet (quadrants, regret,
+  route, lane, rigor level, packet size, mode, prior, verification contract, mechanism
+  tier, fresh-context refutation, ledger, spec, artifact directory, schema).
+- **`docs/TUTORIAL.md` and `docs/TUTORIAL.zh.md`**: a 5-minute tutorial (install, then a
+  blind-spot pass on `pallets/itsdangerous`, a compact handoff packet, a prediction card
+  and a Debug path record), linked from both READMEs' quick start. The handoff exercise
+  adds a serializer-level rotation test (`URLSafeTimedSerializer`; the signer level is
+  already covered by `test_secret_keys`), sets up a venv first, and states that the change
+  goes into a PR to the shared repo, which is why the compact packet applies (a test kept
+  in a private clone would be `offload`); packet sections are referred to by name, and
+  the Prior vs result line appears because Exercise 1 recorded a prior.
+- **A real, recorded blind-spot pass** in EXAMPLES.md ("A real blind-spot pass
+  (recorded)"): run on 2026-11-10 with v4.2.0 on `pallets/itsdangerous` @ `672971d`,
+  compact report, brief sent directly to `blindspot-scout` (the `/blindspot` command itself was
+  not exercised), output verbatim, citations spot-checked; the raw record is in
+  `docs/recordings/itsdangerous-blindspot.md`. The README demo
+  section points to it and still labels the other transcripts as illustrative. EXAMPLES.md
+  also gains a Debug path prompt.
+- `scripts/validate.py` checks `docs/GLOSSARY.md`, both tutorials and the recording
+  (fences, links) and
+  extends the em-dash check to `docs/TUTORIAL.zh.md`.
+
+### Changed
+- **One vocabulary.** "Lane" now means reversibility only (`reversible` · `wide` ·
+  `irreversible`). `theory-vs-result` triage is a **rigor level** (`Rigor level: {note |
+  report | decision}`); `keep-the-reasoning` triage is a **packet size** (`Packet size:
+  {offload | compact | full}`); finding-unknowns' lightweight vs Cartographer split is a
+  **mode**. **Prior** is the umbrella term for any expectation recorded before a result
+  (Phase 0, ledger `prior:` entries, the handoff's Step 1, a prediction card, which is the
+  measured-claim form of a prior); a prior recorded by one skill in a session is reused by
+  the others, never asked twice. `keep-the-reasoning` "hypothesis first" becomes "prior
+  first". `theory-vs-result` notes that its mechanism tier `verified` is not the
+  verification-contract sense of "verified".
+- **Commands dispatch through the Skill tool** (`/blindspot`, `/cartographer`,
+  `/change-quiz`) instead of reading a `SKILL.md` by plugin or `~/.claude/skills/` path.
+  The three skills are invoked directly as `/finding-unknowns`, `/keep-the-reasoning` and
+  `/theory-vs-result` (see Removed).
+- `theory-vs-result` reads a pre-4.3 prediction card at root `predictions/{slug}.md` in
+  place (its `Written` line stands) and offers the move into
+  `.finding-unknowns/predictions/`; it never moves the card silently.
+- Cartographer C1 step 3.5 records the `same-context — weaker` label in the row's
+  resolution / evidence cell. Installed skills and `mechanism-auditor` refer to the shared
+  primitive and the meaning of "lane" as holding "across these skills", not "in this
+  repository".
+- Agents follow the new paths and terms: `prototype-smith` writes to
+  `.finding-unknowns/prototypes/`; `quiz-master` writes `.finding-unknowns/change-report.md`
+  and reads notes and ledger there (or their pre-4.3 root-level copies); `ledger-keeper`
+  owns `.finding-unknowns/unknowns-ledger.md`, never moves a ledger itself, and lists
+  RESUME in its Output_Format; `mechanism-auditor` is described as the fresh-context
+  refutation primitive applied to result cards, for the Report or Decision rigor level.
+- Plugin description mentions the Debug path; version 4.3.0.
+- README, README.zh, ARCHITECTURE, EXAMPLES, AGENTS, CONTRIBUTING and CLAUDE.md updated:
+  version 4.3.0, the renamed terms, `.finding-unknowns/` paths, an Artifacts note with the
+  `.gitignore` lines, the Debug path, the three commands and the directly invoked skills,
+  the shared refutation primitive, and links to the glossary and tutorial. The demo handoff
+  packet now opens with `Packet size: full`. The passive drop-in CLAUDE.md says to write
+  notes, ledgers and prediction cards under `.finding-unknowns/` (gitignored by default).
+  Chinese docs render "lane" as 可逆性类别, so it no longer collides with 未知类别.
+- Diagrams (en and zh): version and artifact paths (`hero`, `cartographer`, `framework`),
+  plus the renamed terms where a diagram showed them (the English `framework` Phase 0 box
+  now reads "announce the mode").
+
+### Removed
+- **`commands/finding-unknowns.md`, `commands/keep-the-reasoning.md`,
+  `commands/theory-vs-result.md`.** Each was a pass-through that told the model to invoke
+  the skill of the same name; a command and a skill sharing a name collide (the command
+  shadows the skill and risks recursion). Claude Code already exposes skills as slash
+  commands. `install.sh` now deletes a previously installed copy of these three files from
+  the commands directory, only when the file contains `description:` and either
+  `Skill tool` or `SKILL.md` (our old pass-through), and echoes each removal.
+
+### Migration
+- **Artifacts move to `.finding-unknowns/`.** Nothing is moved for you: on resume, if
+  `.finding-unknowns/unknowns-ledger.md` is absent but a root-level `unknowns-ledger.md`
+  exists, the skill reads it (and root-level `implementation-notes.md` /
+  `unknowns-spec-*.md`) and offers in one line to move them; until you agree, it keeps
+  working on the root-level files. A root-level `predictions/{slug}.md` card is read in
+  place and offered the same move. Add `.finding-unknowns/` to `.gitignore`, or the
+  three-line form above if the team reviews ledgers and specs in PRs.
+- **`/finding-unknowns`, `/keep-the-reasoning`, `/theory-vs-result` still work.** They now
+  resolve to the skills themselves. Plugin users need do nothing; after a manual install,
+  rerun `install.sh` (it removes the old command files it recognizes) or delete those three
+  files from `~/.claude/commands/` yourself.
+- **Ledgers without a `schema: 2` first line** are schema 1 and are upgraded on the first
+  resume, with every added header field reported. A reconstructed field is marked
+  `(reconstructed, legacy)` and, like `unknown (legacy)`, counts toward the gate only once
+  you confirm it (UK status, depth, or Round 0 topology).
+- **Renamed terms** (old → new): `Result lane: {note | report | decision}` → `Rigor level:
+  {note | report | decision}`; `Handoff lane: {offload | keep-the-reasoning (compact |
+  full)}` → `Packet size: {offload | compact | full}`; "Note / Report / Decision lane" →
+  "Note / Report / Decision level"; "lightweight lane" / "Cartographer lane" → "lightweight
+  mode" / "Cartographer mode"; "hypothesis" (the user's expectation) → "prior";
+  `same-context critique — weaker` and `same-context audit — weaker` → `same-context —
+  weaker`. "Lane" alone keeps its reversibility meaning.
+
 ## [4.2.0]
 
 ### Changed — Cartographer gates on ledger facts; clarity is a display
@@ -491,6 +630,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0
 [4.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.2.0
 [4.1.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.1
 [4.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.0

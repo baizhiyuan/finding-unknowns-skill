@@ -66,7 +66,7 @@ single uniform interview under-serves all four.
 
 <Execution_Policy>
 - ALWAYS locate the unknown on the quadrant map (Phase 0) before choosing a technique
-- Hypothesis before discovery: record what the user (or you) expects *before* a scout,
+- Prior before discovery: record what the user (or you) expects *before* a scout,
   interview, or prototype runs. Findings that contradict the prior are the most valuable
   output — surface them as surprises, never quietly absorb them
 - Establish the user's starting point — where they are in their thinking, their experience
@@ -92,6 +92,22 @@ single uniform interview under-serves all four.
 - Delegate to companion agents when installed and the case is non-trivial; run inline
   otherwise. Every technique works standalone. Where an installed sibling skill already
   owns a mechanism (see Relationship to sibling tooling), prefer it over re-implementing
+- **Artifacts** live under `.finding-unknowns/` at the project root — for this skill and
+  its siblings: `unknowns-ledger.md`, `unknowns-spec-{slug}.md`, `implementation-notes.md`,
+  `prototypes/`, `change-report.md`, `predictions/`, and handoff packets written to disk.
+  Create the directory on first write. It is working state; the default `.gitignore`
+  line is `.finding-unknowns/`. If the team wants ledgers and specs reviewed in PRs, use
+  these lines instead (git cannot re-include a file inside an ignored directory, so the
+  directory form never lets them through):
+  ```
+  .finding-unknowns/*
+  !.finding-unknowns/unknowns-ledger.md
+  !.finding-unknowns/unknowns-spec-*.md
+  ```
+  Legacy (pre-4.3) root-level files: on resume, if
+  `.finding-unknowns/unknowns-ledger.md` is absent but a root-level `unknowns-ledger.md`
+  exists, read it and offer in one line to move it into `.finding-unknowns/`; never move
+  it silently
 </Execution_Policy>
 
 <Steps>
@@ -106,19 +122,22 @@ Before any technique, classify where the gap lives and announce the routing:
 | **User doesn't know it** | **KU — Known Unknowns**: nameable gaps. → Technique 3, 5 | **UU — Unknown Unknowns**: blind spots. → Technique 1, 8 |
 
 Capture the prior in one line — what the user expects the answer or outcome to be (ask
-only if it is not inferable; "no idea yet" is a valid prior and itself routes to UU).
+only if it is not inferable; "no idea yet" is a valid prior and itself routes to UU). A
+prior is any expectation recorded before the result; one already recorded in this session
+by `keep-the-reasoning` (Step 1) or `theory-vs-result` (a prediction card) is reused,
+never asked again.
 
-Then choose the lane and say so:
+Then choose the mode and say so:
 
 > **Routing:** {quadrant(s) identified} → {technique(s) or Cartographer mode} — {one-line reason}
 
-Lane selection:
+Mode selection:
 - Low/medium stakes, one dominant quadrant → run the matching technique(s) from Phase 1–3
 - High stakes (hard to reverse, wide blast radius, unfamiliar territory + long horizon) →
   offer Cartographer mode explicitly; do not silently escalate. Before entering, read
   `references/cartographer.md`
 
-**Default deliverable (lightweight lane):** analysis outputs — the Phase 0 routing
+**Default deliverable (lightweight mode):** analysis outputs — the Phase 0 routing
 analysis, the Technique 1 blind-spot pass, and Technique 4 reference extraction — end in
 a short report: the 3 most consequential findings, each with its evidence, and 1
 recommended next action. Fewer findings when fewer matter ("no significant unknowns" is
@@ -145,7 +164,7 @@ small conversational cases.
    from Phase 0.
 2. Explore the territory first: module, tests, git history, conventions, prior art; for
    external domains, what practitioners consider table stakes.
-3. Report **compact by default** — this is the lightweight lane's short report (Phase 0),
+3. Report **compact by default** — this is the lightweight mode's short report (Phase 0),
    not something to compress again: **Surprises** when a prior was given, the **top 3
    findings** ranked by blast radius (each cited; fewer when fewer matter), and the
    **Rewritten request** (the user's request, upgraded by what you found; it serves as
@@ -171,8 +190,8 @@ clear and the user only needs options generated, route to `superpowers:brainstor
 1. Gather raw material (data samples, constraints, references) so options are concrete.
 2. Produce N genuinely different directions (default 4) — different hierarchies, framings,
    interaction models. Variations on one idea are a failure mode.
-3. One self-contained HTML artifact; each direction labelled with a one-sentence thesis
-   plus what it optimizes for and sacrifices.
+3. One self-contained HTML artifact (`.finding-unknowns/prototypes/{slug}.html`); each
+   direction labelled with a one-sentence thesis plus what it optimizes for and sacrifices.
 4. Close with a reaction guide: 3–5 questions helping the user articulate what they like.
 
 Stop when the user has reacted; convert reactions into explicit criteria before real code.
@@ -233,8 +252,8 @@ leave room for improvisation; present mid-planning pivots as their own decision.
 
 ### Technique 6 — Implementation notes
 
-1. At build start create `implementation-notes.md` with headings: **Deviations**,
-   **Discovered edge cases**, **Questions for review**.
+1. At build start create `.finding-unknowns/implementation-notes.md` with headings:
+   **Deviations**, **Discovered edge cases**, **Questions for review**.
 2. When reality forces an unplanned choice: pick the conservative option (conservative =
    most reversible, not simplest), log what the plan said / what was done / why / cost to
    revisit — and keep going. Don't block the user on reversible decisions.
@@ -262,9 +281,10 @@ logged — answer them preemptively.
 Delegate to `quiz-master` — an examiner that didn't write the change probes what its
 author glosses over.
 
-1. Report first (Markdown by default; HTML on request): **Context**, **What changed**
-   (grouped by intent, not file), **How it interacts** (existing paths that now behave
-   differently, including files the diff doesn't show), **Decisions & assumptions**
+1. Report first (Markdown, `.finding-unknowns/change-report.md`, by default; HTML on
+   request): **Context**, **What changed** (grouped by intent, not file), **How it
+   interacts** (existing paths that now behave differently, including files the diff
+   doesn't show), **Decisions & assumptions**
    (defaults chosen, scope cut, requirements reinterpreted — the places a
    structurally-clean diff hides judgment), **Intuition** (2–3 mental-model updates).
 2. Then 5–8 questions weighted toward deviations, edge cases, interaction effects; mix
@@ -283,8 +303,8 @@ the map; that file is the normative protocol (ledger schema, round template, gat
 close-out report, spec, verification contract, execution rules).
 
 What it is: a coverage-gated, regret-ordered discovery loop with a per-round clarity
-display, backed by `unknowns-ledger.md`, persisting from pre-build through review. Its
-shape:
+display, backed by `.finding-unknowns/unknowns-ledger.md` (first line `schema: 2`),
+persisting from pre-build through review. Its shape:
 
 1. **Announce the depth** (first line; `--quick` single-lens pass, soft check every 5
    rounds · `--standard` default: one blind-spot pass, escalating to a multi-lens sweep
@@ -296,9 +316,11 @@ shape:
    carries a prior, `regret = cost × P(wrong)`, a **route** (interview · territory ·
    experiment · audit), and a **reversibility** (reversible · wide · irreversible).
 3. **C1 Clearing loop** — a router, not an interview: clear the highest-regret row by its
-   route; adversarially verify cost ≥ 4 resolutions; re-score all four quadrants every
-   round and show the score table and weighted ambiguity — a display so the user can
-   steer, never a gate condition.
+   route; adversarially verify cost ≥ 4 resolutions (fresh-context refutation: a context
+   that did not produce the resolution names the strongest alternative explanation and
+   the cheapest discriminating check); re-score all four quadrants every round and show
+   the score table and weighted ambiguity — a display so the user can steer, never a
+   gate condition.
 4. **C2 Gate — six conditions**: KK written down; KU resolved or deferred-with-default;
    UK extracted, or marked not applicable with the user's confirmation; UU probed; no
    open row with regret ≥ 1.0; every irreversible row user-confirmed — the
@@ -319,7 +341,7 @@ shape:
    optional; not yet run in a live Workflow runtime.** Option 2 (`fu-execute-verified`)
    runs only on the user's explicit request. When it runs, tasks are loops inside a
    graph: edges must name what crosses, failures return per unit with SCOPE, derived
-   constraints flow forward (learning edge), and lanes close tasks by reversibility —
+   constraints flow forward (learning edge), and reversibility lanes close tasks —
    the irreversible lane is the build rule applied per task. The author never
    self-approves.
 7. **C3** — the ledger stays open through the build; the quiz is generated from it.
@@ -488,11 +510,11 @@ destroys the user's trust that a scout is safe to run.
   rounds add no information. State the clearing actions and suspend; resume from the
   ledger when results arrive.
 - **Any technique asked to mutate product code**: refuse within the technique; discovery
-  is read-only except for its own artifacts (prototypes/, notes, ledger, reports).
+  is read-only except for its own artifacts (everything under `.finding-unknowns/`).
 </Escalation_And_Stop_Conditions>
 
 <Final_Checklist>
-Lightweight lane:
+Lightweight mode:
 - [ ] Phase 0 routing was announced (quadrant → technique) before any technique ran
 - [ ] The prior was captured before discovery; contradicting findings surfaced as surprises
 - [ ] No discovery technique mutated product code
@@ -505,15 +527,18 @@ Lightweight lane:
       Markdown unless HTML was requested
 - [ ] Plans defined "verified" up front: a failable check per criterion + what it misses
 - [ ] Deviations logged at decision time, not reconstructed afterwards
+- [ ] Artifacts written under `.finding-unknowns/`; a legacy root-level ledger was read and
+      a move offered, never moved silently
 
-Cartographer lane: additionally run the checklist at the end of
+Cartographer mode: additionally run the checklist at the end of
 `references/cartographer.md`.
 </Final_Checklist>
 
 <Advanced>
 ## Resume
 
-The ledger IS the state — see `references/cartographer.md` § Resume. Do not re-seed.
+The ledger IS the state — see `references/cartographer.md` § Resume (legacy root-level
+ledgers and schema 1 upgrades included). Do not re-seed.
 
 ## Defaults (override by telling the skill)
 

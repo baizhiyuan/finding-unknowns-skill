@@ -111,7 +111,7 @@
 <rect x="924" y="414" width="222" height="86" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
 <text x="938" y="438" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#3F6C99" font-weight="500">第 0 步</text>
 <text x="938" y="460" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16" fill="#141413" font-weight="700">结果分级</text>
-<text x="938" y="482" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">note · report · decision</text>
+<text x="938" y="482" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">严谨级别：note/report/decision</text>
 <clipPath id="c12"><rect x="924" y="512" width="222" height="86" rx="10"/></clipPath>
 <rect x="924" y="512" width="222" height="86" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
 <text x="938" y="536" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#3F6C99" font-weight="500">第 1 步</text>
@@ -209,7 +209,7 @@
 <circle cx="604" cy="1266" r="3.5" fill="#D97757"/>
 <text x="616" y="1270" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#141413" font-weight="700">teach</text>
 <text x="616" y="1289" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">按学习者节奏讲解</text>
-<text x="40" y="1356" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#C15F3C" font-weight="500">[ 04 ] 产出文件</text>
+<text x="40" y="1356" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#C15F3C" font-weight="500">[ 04 ] 产出文件 · .finding-unknowns/</text>
 <clipPath id="c21"><rect x="40.0" y="1370" width="269.5" height="56" rx="10"/></clipPath>
 <rect x="40.0" y="1370" width="269.5" height="56" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
 <text x="56.0" y="1394" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">unknowns-ledger.md</text>

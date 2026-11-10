@@ -1,6 +1,6 @@
 ---
 name: theory-vs-result
-description: "Use when a benchmark, backtest, A/B test, ablation, training or load-test result is planned or comes back, or the user asks 'is this consistent', 'why did this come out like this', 'does it pass', '理论 → 实测 → 机理'. Reports it as Theory → Measured → Consistent? → Mechanism, prediction first. Not for results with no prediction at stake."
+description: "Use when a benchmark, backtest, A/B test, training or load-test result is planned or comes back, a failing test or crash whose cause isn't obvious, or the user asks 'is this consistent', 'why did this happen', 'does it pass', '理论 → 实测 → 机理'. Reports Theory → Measured → Consistent? → Mechanism, prediction first. Not for results nothing rides on."
 aliases: [theory-measured-mechanism, predict-measure-explain]
 metadata:
   credits:
@@ -28,7 +28,9 @@ rule stays separate from the judgment about the direction.
 
 <Use_When>
 - Reporting any result that was measured to test a belief: backtests, benchmarks, A/B
-  tests, ablations, training runs, load tests, profiling, a bug-fix hypothesis
+  tests, ablations, training runs, load tests, profiling, a bug fix's measured effect
+- A reproducible failure whose cause isn't obvious — a failing test, a crash, the same wrong
+  output for the same input every time → the Debug path (Step 0)
 - Before running such a measurement: write the prediction and decision rule first
 - The user asks "why", "is this consistent", "does it pass", "should we drop this"
 - A result contradicts the expectation, or sits close to a threshold
@@ -38,17 +40,20 @@ rule stays separate from the judgment about the direction.
 
 <Do_Not_Use_When>
 - Nothing was predicted and nothing is decided (a lookup, a status read, a log grep).
-  If a prediction exists but little rides on it, use the Note lane instead
+  If a prediction exists but little rides on it, use the Note level instead
 - The work is building, not measuring. Use `finding-unknowns` before it and
   `keep-the-reasoning` at the handoff
 - A one-off sanity number with no decision attached. One sentence is enough: "measured X,
   expected roughly X, no action"
+- A failure whose cause the error message already names (a typo, a missing import, a
+  stack trace pointing at one line): just fix it
 </Do_Not_Use_When>
 
 <Execution_Policy>
 - **Theory before data.** Write the prediction before looking at the result, and record
-  when it was written. A theory written afterwards is labelled `post-hoc`: it can only
-  produce a *post-hoc fit*, never a test (Step 3)
+  when it was written. The Theory is the measured-claim form of a *prior* (the
+  expectation recorded before the result; see Step 1). A theory written afterwards is
+  labelled `post-hoc`: it can only produce a *post-hoc fit*, never a test (Step 3)
 - **Predict magnitude and location, not just sign.** "Faster" cannot fail. "~2× on cold
   reads, ~0 on warm" can
 - **Noise floor first.** No consistency verdict until you know how big a difference
@@ -71,6 +76,10 @@ rule stays separate from the judgment about the direction.
   neither can a rerun or a claim that the rule's metric was "only a proxy"
 - **Rules are explained before they are frozen.** Any new or tightened threshold is
   explained in plain language and approved by the user before it applies (Step 1.4)
+- **Deterministic failures take the Debug path.** A failure that reproduces the same way
+  every time has no noise floor and needs no frozen rule; record it on the Debug path
+  (Step 0) and escalate to a rigor level only when it is flaky or a ship/no-ship rides
+  on it
 - **Report in the user's language.** Chinese labels: 理论预期 → 实测 → 是否一致 → 机理;
   一致 · 部分一致 · 不一致 · 无法判断 · 事后拟合; 已验证 · 有数据支持 · 推断 · 未检验;
   仍成立 · 有条件成立 · 已削弱 · 已否定; 作废
@@ -80,15 +89,50 @@ rule stays separate from the judgment about the direction.
 
 ## Step 0: Triage (blocking)
 
-| Lane | Signals | Output |
-|------|---------|--------|
+First ask: is the "result" a **reproducible, deterministic failure** — same input → same
+wrong output, a crash, a failing test? Then take the **Debug path** below, not a rigor
+level. Otherwise choose the rigor level:
+
+| Rigor level | Signals | Output |
+|-------------|---------|--------|
 | **Note** | one number, a prediction exists, low stakes, no decision rides on it | one-line card: `[R#] expected {X}, measured {Y} → {verdict}; no action` |
 | **Report** | a result someone will act on; a mismatch; near a threshold | full cards + summary table (Step 4) |
 | **Decision** | adopt/reject, ship/no-ship, a pre-registered test, money or production | Report, plus the frozen rule quoted verbatim and the rule verdict separated from the direction verdict. No frozen rule → propose one via Step 1.4 and stop; the decision is the user's. A rule approved after this result was seen does not apply to it: this result stays `descriptive only` |
 
-Announce: `Result lane: {note | report | decision} — {one-line reason}`.
+Announce: `Rigor level: {note | report | decision} — {one-line reason}`, or
+`Debug path — {one-line reason}`.
+
+### Debug path (reproducible, deterministic failures)
+
+When the failure comes back the same way every run, the repro *is* the experiment: there
+is no noise floor to estimate and no data budget to spend. Record six things, in order:
+
+```
+Debug path — {one-line reason}
+1. Repro        : `{exact command}` → {observed output, trimmed, not paraphrased}
+2. Prior        : what you expected it to output
+3. Explanations : the competing explanations, at least two, before touching the code
+4. Checks       : one discriminating check per explanation, cheapest first, each with
+                  its outcome (a print, a minimal input, a bisect, one variable changed)
+5. Fix          : what changed, by path
+6. Re-run       : the same repro → the expected output; plus one neighbouring case that
+                  should not change → unchanged
+```
+
+No frozen rule, no pre-registration, no fresh-run requirement beyond re-running the repro.
+An explanation whose check was never run stays a guess; say so. **Escalate to a rigor
+level** when the failure is flaky or statistical (it does not reproduce every run, so a
+noise floor exists: Report) or when the fix decision is a ship/no-ship (Decision).
+`superpowers:systematic-debugging`, when installed, can drive the investigation (items
+3–5); this path records the result.
 
 ## Step 1: Before measuring, write the theory (prediction card)
+
+The prediction card is the measured-claim form of a **prior** — the expectation recorded
+before the result, as `finding-unknowns` and `keep-the-reasoning` call it: Theory = prior +
+mechanism chain. A prior already recorded in this session by either sibling (a Phase 0
+prior, a ledger row's `prior:`, a handoff's Step 1 prior) is reused as the card's starting
+point, never asked again; sharpen it into direction, magnitude and location.
 
 Write this down before you run anything, or before you open a result that already exists:
 
@@ -108,11 +152,16 @@ Terms            : definitions of any term that could shift meaning ("accuracy",
 Written          : {timestamp | commit | "before opening <path>"}
 ```
 
-In the Report and Decision lanes, save the card before measuring (default
-`predictions/{slug}.md`, or the Cartographer ledger row it belongs to). An unsaved card
-whose timing cannot be shown counts as `post-hoc`.
+At the Report and Decision levels, save the card before measuring (default
+`.finding-unknowns/predictions/{slug}.md` at the project root, or the Cartographer ledger
+row it belongs to). An unsaved card whose timing cannot be shown counts as `post-hoc`.
+A pre-4.3 card at root `predictions/{slug}.md` is read in place (its `Written` line
+stands); offer the move into `.finding-unknowns/predictions/`, never move silently.
+`.finding-unknowns/` is working state and usually gitignored; a gitignored card cannot
+use a commit as its `Written` line, so give a timestamp, or commit the card when its
+timing must survive review (`git add -f` the card, since the directory is ignored).
 
-1. **Scale the card to the stakes.** In the Note lane the Prediction line alone is enough.
+1. **Scale the card to the stakes.** At the Note level the Prediction line alone is enough.
 2. **Locate the effect.** Most real mechanisms act on a subset: the tails of a ranking, cold
    caches, small accounts, peak hours. Say where the effect should appear and
    where it should *not*. The "should not" half is often the sharper test.
@@ -190,7 +239,9 @@ Mechanism   : {why} [verified | supported | inferred | untested]
   called `dead` only on a fired falsifier, or on independent failures that each name the
   same broken link.
 
-**Mechanism evidence tiers**
+**Mechanism evidence tiers** (the tier `verified` grades a *mechanism*; it is not a claim
+"verified" under a `keep-the-reasoning` or Cartographer verification contract, which means
+its contract checks ran and could have failed)
 - `verified`: a targeted test was run that would have come out differently if the
   mechanism were false (an ablation, a counterfactual replay, a decomposition whose parts
   were measured independently and could have failed to sum to the total; an accounting
@@ -225,12 +276,12 @@ spent?
 
 ## Step 4: Report
 
-Report and Decision lanes deliver in this order (Note lane: the one-line card only):
+Report and Decision levels deliver in this order (Note level: the one-line card only):
 
 ```
-Result lane: {lane} — {reason}
+Rigor level: {level} — {reason}
 
-0. Frozen rule        — Decision lane only: quoted verbatim, with its approval date
+0. Frozen rule        — Decision level only: quoted verbatim, with its approval date
 1. Bottom line       — 1–3 lines. The rule verdict (if any) and the direction verdict,
                        stated separately.
 2. Summary table     — | Question | Theory | Measured | Consistent? | Mechanism [tier] |
@@ -289,7 +340,7 @@ Recurring failures in empirical work. Each costs a decision when it goes unnotic
 <Examples>
 <Good>
 ```
-Result lane: decision — ship/no-ship for a shorter checkout form, pre-registered rule.
+Rigor level: decision — ship/no-ship for a shorter checkout form, pre-registered rule.
 Frozen rule (verbatim, approved before launch): "Ship if the conversion-lift 95% CI lower
 bound > 0 and the refund-rate increase is < 0.3 pt."
 
@@ -357,24 +408,34 @@ pre-registered test …".
 </Examples>
 
 <Fresh_Context_Check>
+This is the **fresh-context refutation** primitive (shared across these skills; defined
+in `keep-the-reasoning`): a context that did not produce the claim tries to refute it from
+the same evidence and returns the strongest alternative explanation plus the cheapest
+discriminating check. Here it runs per card, with verdict and tier downgrades on top.
+
 The context that wrote the theory and ran the measurement is the one most likely to
-believe its own mechanism. For Report and Decision lanes, hand the auditor the inputs, not
-your conclusion: the cards, the saved prediction card with its `Written` line, the frozen
-rule quoted verbatim, and the paths of the artifacts behind every number (without paths,
-every card comes back `untraceable`). Use the `mechanism-auditor` agent when it is
-available, or any fresh subagent. Ask it to downgrade any verdict or tier the evidence does
-not support, to name an alternative mechanism that fits the same numbers for every card
-(including `consistent` ones), and to propose the cheapest discriminating check.
+believe its own mechanism. For the Report and Decision levels, hand the auditor the
+inputs, not your conclusion: the cards, the saved prediction card with its `Written`
+line, the frozen rule quoted verbatim, and the paths of the artifacts behind every number
+(without paths, every card comes back `untraceable`). Use the `mechanism-auditor` agent
+when it is available, or any fresh subagent. Ask it to downgrade any verdict or tier the
+evidence does not support, to name an alternative mechanism that fits the same numbers
+for every card (including `consistent` ones), and to propose the cheapest discriminating
+check.
 
 Apply the audit: downgrades take effect as given; where you disagree, keep the audit's
 reading and put yours in Caveats; the alternative mechanisms and checks go into Next, and
 into the `keep-the-reasoning` packet when a handoff follows (Strongest counterargument
-and Did I miss anything? in the full packet; under Not checked in the compact one). Without subagents, do
-the audit yourself and label it `same-context audit — weaker`.
+and Did I miss anything? in the full packet; under Not checked in the compact one).
+Without subagents, do the audit yourself and label it `same-context — weaker`.
 </Fresh_Context_Check>
 
 <Final_Checklist>
-- [ ] Lane announced; Decision lane quotes the frozen rule verbatim
+- [ ] Rigor level or Debug path announced; the Decision level quotes the frozen rule
+      verbatim
+- [ ] Debug path: repro + observed output, prior, competing explanations, a check for each
+      (cheapest first), fix, the same repro re-run plus one unchanged neighbour; escalated
+      to a rigor level if flaky or ship/no-ship. The items below apply to rigor levels
 - [ ] Theory written before the result with its `Written` line, or marked `post-hoc`
       (then: `post-hoc fit`, tier ≤ `inferred`, no rule verdict, prediction card for a fresh run)
 - [ ] Every verdict reads the interval: one that holds both 0 and the prediction is `can't tell`
@@ -401,4 +462,6 @@ the audit yourself and label it `same-context audit — weaker`.
 - `oh-my-claudecode:verify` proves a behaviour works. This skill explains a measured
   effect and its size. `oh-my-claudecode:trace` is a stronger competing-hypothesis
   tool for the Step 3 disagreement walk when installed.
+- `superpowers:systematic-debugging` can drive a deterministic-failure investigation
+  when installed; the Debug path (Step 0) records its result.
 </Relationship_To_Sibling_Tooling>
