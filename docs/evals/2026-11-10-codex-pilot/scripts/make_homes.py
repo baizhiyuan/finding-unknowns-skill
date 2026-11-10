@@ -10,8 +10,9 @@ import os, re, shutil, sys, pathlib
 repo = pathlib.Path(sys.argv[1]).resolve()
 out = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else "/tmp/fu-eval/homes")
 src = (pathlib.Path.home() / ".codex/config.toml").read_text(encoding="utf-8").splitlines()
-TOP = {"model_provider", "model", "model_reasoning_effort", "disable_response_storage",
-       "openai_base_url", "service_tier", "model_context_window"}
+TOP = {"model_provider", "model", "model_reasoning_effort", "openai_base_url",
+       "service_tier", "model_context_window"}
+os.umask(0o077)  # config may hold provider headers or tokens: create it private
 top, provider, section = [], [], None
 for ln in src:
     m = re.match(r"^\[(.+)\]\s*$", ln)
@@ -29,7 +30,6 @@ for arm in ("A", "B"):
     home = out / f"base-{arm}"
     home.mkdir(parents=True, exist_ok=True)
     (home / "config.toml").write_text("\n".join(cfg) + "\n", encoding="utf-8")
-    os.chmod(home / "config.toml", 0o600)
     link = home / "auth.json"
     if not link.exists():
         link.symlink_to(pathlib.Path.home() / ".codex/auth.json")

@@ -77,9 +77,10 @@ single uniform interview under-serves all four.
 - Never ask the user a question the territory can answer — explore the codebase first.
   Never report a fact as absent or "needs device check" without searching for it: cite
   the hit (say so if it is only a draft) or the search that came back empty
-- Remote targets (a device, server or hosted service): access is an unknown. State the
-  access path the territory records (host entry, login user, network route) or that none
-  is recorded, and make "confirm you can log in" step 1 of any plan that touches it
+- Remote targets (device, server, hosted service): cite the recorded access path (host
+  entry, user, route; never key material, no network probe unless asked) or say none is
+  recorded. A record can predate a migration: step 1 of any plan touching the target is
+  to confirm the login reaches the intended machine
 - Interview via AskUserQuestion (clickable options). Up to 3 *independent* questions per
   round, ordered by blast-radius/regret; never bundle *dependent* questions — where one
   answer would change the next question's framing, ask those one at a time

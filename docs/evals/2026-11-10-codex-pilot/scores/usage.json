@@ -1,98 +1,178 @@
 {
  "T1-A": {
   "input_tokens": 163400,
+  "cached_input_tokens": 126848,
   "output_tokens": 1795,
   "seconds": 197,
   "words": 209,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 3,
+   "command_execution": 8,
+   "web_search": 1
+  }
  },
  "T1-B": {
   "input_tokens": 228474,
+  "cached_input_tokens": 193152,
   "output_tokens": 2269,
   "seconds": 238,
   "words": 232,
   "skills_read": [
    "finding-unknowns"
-  ]
+  ],
+  "items": {
+   "error": 2,
+   "agent_message": 4,
+   "command_execution": 12,
+   "web_search": 2
+  }
  },
  "T2-A": {
   "input_tokens": 545152,
+  "cached_input_tokens": 470912,
   "output_tokens": 4762,
   "seconds": 458,
   "words": 337,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 3,
+   "command_execution": 6,
+   "web_search": 5
+  }
  },
  "T2-B": {
   "input_tokens": 786987,
+  "cached_input_tokens": 707968,
   "output_tokens": 7843,
   "seconds": 656,
   "words": 347,
   "skills_read": [
    "finding-unknowns",
    "keep-the-reasoning"
-  ]
+  ],
+  "items": {
+   "error": 2,
+   "agent_message": 6,
+   "command_execution": 19,
+   "web_search": 7
+  }
  },
  "T3-A": {
   "input_tokens": 92322,
+  "cached_input_tokens": 86784,
   "output_tokens": 1827,
   "seconds": 146,
   "words": 246,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 2,
+   "command_execution": 6
+  }
  },
  "T3-B": {
   "input_tokens": 142594,
+  "cached_input_tokens": 122112,
   "output_tokens": 4480,
   "seconds": 207,
   "words": 407,
   "skills_read": [
    "keep-the-reasoning",
    "theory-vs-result"
-  ]
+  ],
+  "items": {
+   "error": 2,
+   "agent_message": 4,
+   "command_execution": 10
+  }
  },
  "T4-A": {
   "input_tokens": 113195,
+  "cached_input_tokens": 108672,
   "output_tokens": 1240,
   "seconds": 304,
   "words": 124,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 2,
+   "command_execution": 12
+  }
  },
  "T4-B": {
   "input_tokens": 162288,
+  "cached_input_tokens": 144256,
   "output_tokens": 2662,
   "seconds": 351,
   "words": 209,
   "skills_read": [
    "keep-the-reasoning"
-  ]
+  ],
+  "items": {
+   "error": 2,
+   "agent_message": 4,
+   "command_execution": 11
+  }
  },
  "T5-A": {
   "input_tokens": 181181,
+  "cached_input_tokens": 147968,
   "output_tokens": 2029,
   "seconds": 363,
   "words": 257,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 3,
+   "command_execution": 6,
+   "web_search": 2
+  }
  },
  "T5-B": {
   "input_tokens": 287531,
+  "cached_input_tokens": 251776,
   "output_tokens": 2392,
   "seconds": 421,
   "words": 305,
   "skills_read": [
    "finding-unknowns"
-  ]
+  ],
+  "items": {
+   "error": 2,
+   "agent_message": 4,
+   "command_execution": 5,
+   "web_search": 3
+  }
  },
  "T6-A": {
   "input_tokens": 71763,
+  "cached_input_tokens": 66944,
   "output_tokens": 345,
   "seconds": 82,
   "words": 6,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 2,
+   "command_execution": 3,
+   "file_change": 1
+  }
  },
  "T6-B": {
   "input_tokens": 54528,
+  "cached_input_tokens": 49408,
   "output_tokens": 244,
   "seconds": 73,
   "words": 6,
-  "skills_read": []
+  "skills_read": [],
+  "items": {
+   "error": 2,
+   "agent_message": 2,
+   "command_execution": 2,
+   "file_change": 1
+  }
  }
 }

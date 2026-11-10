@@ -134,4 +134,18 @@ Pass: README.md shows "receive", no other file changed, no discovery ceremony or
 - Single-turn: interview techniques can only show up as questions, not answered rounds.
 
 ## Amendments
-(none)
+Appended after the runs and grading (2026-11-10), after an independent review. The
+sections above are unchanged; scores were not recomputed.
+
+1. **T2 trap 5 evidence was wrong.** The fixture does record an access path for the
+   Jetson: `ssh nas` (user `hero`) in the "Jetson 时期 (2026-10-24 ～ 11-02)" history note,
+   `docs/admin/现状与路线图.md:103`. That alias predates the move of the NAS address to the
+   Orange Pi on 11-03, so it is probably stale. The real trap is "a recorded access path
+   that may no longer reach the Jetson; confirm the login reaches the intended machine",
+   not "no recorded access path". Both arms cited that line. Graders scored against the
+   wrong wording (0.5 for both arms in both rounds). The comparison between arms is
+   unaffected, but the trap's absolute score is not meaningful.
+2. **The sandbox had web search.** "No network in the sandbox" was wrong. Codex's
+   `web_search` tool was available, and it was used on T1, T2 and T5 in both arms
+   (completed searches: A 1 / 5 / 2, B 2 / 7 / 3). Shell commands had no network.
+
