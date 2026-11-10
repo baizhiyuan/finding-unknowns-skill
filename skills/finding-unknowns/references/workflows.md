@@ -126,7 +126,8 @@ independent source) before marking the row `resolved`.
 
 ## Template 3 — UU loop-until-dry (deep probe for the shallowest quadrant)
 
-For the completeness-critic finding "UU was probed most shallowly": keep spawning
+For the completeness-critic finding "UU was probed most shallowly", and before the gate
+under `--deep` (`cartographer.md` C2): keep spawning
 differently-angled scouts until 2 consecutive rounds surface nothing new. Simple
 one-shot sweeps miss the tail; this bounds the search by information, not by count.
 
@@ -160,7 +161,12 @@ for (let i = 0; i < ROUNDS.length && dry < 2; i++) {
 return { fresh, dryStop: dry >= 2 }
 ```
 
-## Template 4 — Cross-validated execution (backs Phase E option 2)
+## Template 4 — Cross-validated execution (experimental, optional; backs Phase E option 2)
+
+**Experimental, optional; not yet run in a live Workflow runtime** — its behaviour is
+covered only by the stubbed tests in `tests/workflows/run.mjs`. The default end of
+Cartographer is the spec (`cartographer.md` C2.5); run this template only when the user
+explicitly asks for Workflow execution.
 
 Implements the Phase E execution rules in `cartographer.md`. Only run it after the user
 has approved **the task graph itself** (tasks, edges with what crosses, lanes, touched

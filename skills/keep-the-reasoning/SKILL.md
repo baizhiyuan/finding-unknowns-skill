@@ -1,6 +1,6 @@
 ---
 name: keep-the-reasoning
-description: "Keep the human's judgment in agent work whose consequences fall on others. Use when STARTING such work (capture the user's prior, define 'verified' before building) and when HANDING IT BACK (evidence-first packet: what checks proved and did not, decisions made, what went unchecked). Triggers: 'keep me honest', 'what did you assume', 'what didn't you check', 'review this with me', ship/no-ship, migration or money decisions. Not for cheap, reversible tasks."
+description: "Use when starting or handing back agent work whose consequences fall on others; on ship/no-ship, migration or money decisions; or when the user says 'keep me honest', 'review this with me', 'what did you assume', 'what didn't you check'. Defines 'verified' first; hands back a stakes-triaged, evidence-first packet. Not for cheap, reversible tasks."
 aliases: []
 metadata:
   credits:
@@ -37,14 +37,15 @@ others will have to deal with the consequences.*
 - A long or autonomous run is ending and the user will review its output cold
 - The user says "keep me honest", "am I rubber-stamping this", "review this with me",
   "what did you assume", or "what didn't you check"
-- Closing out `finding-unknowns` Phase 3 or its Phase E execution bridge
+- Closing out `finding-unknowns` Phase 3, or a Cartographer build at merge (including
+  its experimental Phase E, when run)
 </Use_When>
 
 <Do_Not_Use_When>
 - Being wrong is cheap and reversible (picking a hotel, renaming a local variable, a
   throwaway script) — hand off fully; one line saying so is enough
 - The risk is unknowns in the spec rather than acceptance of the output — use
-  `finding-unknowns` (its Phase 3 and Phase E hand back here)
+  `finding-unknowns` (its Phase 3 and Cartographer's merge hand back here)
 - The user explicitly says "just ship it" — make the top risk visible once (≤3 lines),
   then respect the exit
 </Do_Not_Use_When>
@@ -68,9 +69,12 @@ others will have to deal with the consequences.*
 | Lane | Signals | Handoff |
 |------|---------|---------|
 | **Offload** | cheap to be wrong, reversible, consequences land only on the user | normal handoff + one line: "Low stakes — delegated fully." |
-| **Keep the reasoning** | consequences land on others; hard to reverse; production, money, safety, people; "what should we build", "is it safe to ship" | Steps 1–4 below |
+| **Keep the reasoning — compact** (medium stakes) | consequences land on others, but the change is reversible and contained (a PR to shared code behind tests, an internal analysis) | Steps 1–4 below, compact packet |
+| **Keep the reasoning — full** (high stakes) | hard to reverse; production, money, safety, people; "what should we build", "is it safe to ship" | Steps 1–4 below, full nine-section packet |
 
-Announce: `Handoff lane: {offload | keep-the-reasoning} — {one-line reason}`.
+Announce: `Handoff lane: {offload | keep-the-reasoning (compact | full)} — {one-line reason}`.
+The user can ask for the full packet at any stakes; when unsure between compact and full,
+choose full.
 
 ## Step 1: Before the work (front end)
 
@@ -94,8 +98,9 @@ packet ("verification defined after the fact — weaker evidence").
 
 **When `finding-unknowns` already ran**, do not repeat it: its recorded priors satisfy
 Step 1 item 1, its plan's Definition of verified or its spec's verification contract
-satisfies item 2, and packet section 3 links the quiz-master report's Decisions & assumptions instead
-of re-listing them.
+satisfies item 2, and the packet's Decisions & assumptions section links the quiz-master
+report's Decisions & assumptions instead of re-listing them. Cartographer's merge always
+gets the full packet: Cartographer is high stakes by definition.
 
 ## Step 2: During the work
 
@@ -109,10 +114,35 @@ of re-listing them.
 
 ## Step 3: The handoff packet (the core deliverable)
 
-Deliver in exactly this order. Scale each section to the stakes; omit none.
+Both sizes hold the order rule: **evidence first, summary last**.
+
+**Compact packet (medium stakes).** Deliver in exactly this order:
 
 ```
-Handoff lane: keep-the-reasoning — {reason}
+Handoff lane: keep-the-reasoning (compact) — {reason}
+
+1. Evidence            — the commands actually executed and their actual output
+                         (trimmed, not paraphrased); artifacts by path. When a
+                         quiz ran, link the quiz report here.
+2. What the checks did NOT prove
+                       — one line per check; flag same-context checks.
+3. Not checked         — at least one thing nobody verified. Never empty.
+4. Summary             — last, and short.
+```
+
+When a prior was recorded or the claim is measured, add a **Prior vs result** line before
+the Summary: the prior against what came back (for measured claims, the
+`theory-vs-result` summary table). Sections are referred to by name, not number, because
+the two packet sizes number them differently.
+
+Switch to the full packet when the user asks for it, or when the work turns out to touch
+anything in the high-stakes row of Step 0.
+
+**Full packet (high stakes, or on request).** Deliver in exactly this order. Scale each
+section to the stakes; omit none.
+
+```
+Handoff lane: keep-the-reasoning (full) — {reason}
 
 1. Evidence            — the commands actually executed and their actual output
                          (trimmed, not paraphrased); artifacts by path. Before any summary.
@@ -138,11 +168,12 @@ Handoff lane: keep-the-reasoning — {reason}
 9. Summary             — last, and short.
 ```
 
-Sections 5–6 need a context that did not produce the work. Without subagents, write
+Strongest counterargument and Did I miss anything? need a context that did not produce
+the work. Without subagents, write
 them yourself but label them "same-context critique — weaker"; never skip them.
 
 For high-consequence decisions (what to build, ship or not, who it affects, what to
-sacrifice) section 9 becomes **Options and recommendation**: 2–3 options with trade-offs
+sacrifice) the Summary becomes **Options and recommendation**: 2–3 options with trade-offs
 and a labelled recommendation. The decision line is left for the user.
 
 ## Step 4: After the handoff
@@ -185,7 +216,7 @@ Opt-in only — offer it when the user asks about skill atrophy, never unprompte
 <Examples>
 <Good>
 ```
-Handoff lane: keep-the-reasoning — schema migration on a shared production table.
+Handoff lane: keep-the-reasoning (full) — schema migration on a shared production table.
 1. Evidence: `pytest tests/migrations -q` → 14 passed; `alembic upgrade head --sql` →
    plan at artifacts/upgrade.sql (ALTER + backfill, 2 statements)
 2. Proved: upgrade SQL applies cleanly to an empty schema. NOT proved: runtime on the
@@ -204,6 +235,19 @@ Why good: evidence first, the checks' limits stated, the decision that changes t
 picture (backfill semantics) surfaced, and the prior mismatch points straight at it.
 </Good>
 
+<Good>
+```
+Handoff lane: keep-the-reasoning (compact) — refactor of a shared date helper, behind tests.
+1. Evidence: `npm test -- dates` → 38 passed; diff touches src/utils/dates.ts only
+2. Did NOT prove: behaviour in the 3 callers outside src/ (no tests there). Tests
+   written in this session.
+3. Not checked: timezone handling in reports/export.ts.
+4. Summary: helper refactored; callers outside src/ unverified.
+```
+Why good: medium stakes get four sections, not nine — and still evidence first, the
+checks' limits, a non-empty "Not checked", summary last.
+</Good>
+
 <Bad>
 ```
 Done! The migration is ready and all tests pass ✅. Let me know if you want any changes.
@@ -220,27 +264,29 @@ evidence, and move on.
 </Examples>
 
 <Final_Checklist>
-- [ ] Stakes lane announced before anything else
+- [ ] Stakes lane announced before anything else, with the packet size (compact | full)
 - [ ] Prior captured (or "no idea" routed to a blind-spot pass)
 - [ ] Verification contract existed before the work, or its absence was stated
-- [ ] Packet order held: evidence first, summary last
+- [ ] Packet order held: evidence first, summary last (both sizes)
 - [ ] Every check states what it did NOT prove; same-context checks flagged
-- [ ] Decisions & assumptions listed with where to look
-- [ ] Counterargument and "did I miss anything" came from a fresh context
+- [ ] Full packet: decisions & assumptions listed with where to look
+- [ ] Full packet: counterargument and "did I miss anything" came from a fresh context
 - [ ] "Not checked" is non-empty
 - [ ] High-consequence decisions left with the user, recommendation labelled as such
 </Final_Checklist>
 
 <Relationship_To_Sibling_Tooling>
 - `finding-unknowns` (this repository) covers the front of the work — the unknowns in
-  the spec. This skill covers the back — the human's judgment at acceptance. Its
-  Phase E routes the irreversible lane and final merge here.
+  the spec. This skill covers the back — the human's judgment at acceptance.
+  Cartographer offers the full packet at merge; its experimental Phase E, when run, routes
+  the irreversible lane and final merge here.
 - `oh-my-claudecode:verify` makes the agent prove a behaviour; this skill makes the proof
   legible and its limits explicit to the human. Use both.
-- `oh-my-claudecode:interrogate` is a stronger fresh-context counterargument (packet
-  section 5) for code changes when installed.
-- `oh-my-claudecode:show-me-your-work` supplies section 3 for long autonomous runs.
+- `oh-my-claudecode:interrogate` is a stronger fresh-context counterargument (the
+  packet's Strongest counterargument) for code changes when installed.
+- `oh-my-claudecode:show-me-your-work` supplies Decisions & assumptions for long
+  autonomous runs.
 - `oh-my-claudecode:teach` paces learning; `/change-quiz` gates merge on comprehension.
-- `theory-vs-result` (this repository) supplies section 4 for measured claims (backtests,
-  benchmarks, A/B tests): Theory → Measured → Consistent? → Mechanism.
+- `theory-vs-result` (this repository) supplies Prior vs result for measured claims
+  (backtests, benchmarks, A/B tests): Theory → Measured → Consistent? → Mechanism.
 </Relationship_To_Sibling_Tooling>

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.1.1：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.2.0：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-4.1.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.1.1">
+  <img src="https://img.shields.io/badge/version-4.2.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.2.0">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 个技能">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
@@ -88,7 +88,7 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 
 ### 更新
 
-按当初的安装方式更新即可。最新版本为 **v4.1.1**。
+按当初的安装方式更新即可。最新版本为 **v4.2.0**。
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -125,7 +125,7 @@ cp commands/*.md ~/.claude/commands/
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# 预期：4.1.1（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
+# 预期：4.2.0（插件方式），或列出这三个文件（theory-vs-result 从 v4.1.0 起才有）
 ```
 
 </details>
@@ -136,7 +136,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 - **模型会在信息缺口处猜测。** 上文所说的地图，指你交给 Claude 的内容（提示词、上下文、技能）；疆域指代码库和现实世界。两者之间的每一处差距，都会迫使模型猜测你的意图。在长周期工作中，限制结果的已经不是模型能力，而是任务本身是否清晰。
 - **按象限选择方法，而不是凭习惯。** 盲区需要侦察，看到才能判断的偏好需要原型，能说出来的待定问题需要有针对性的提问，对改动的理解需要测验来检验。用同一套访谈应对这四种情况，哪一种都处理不好。
-- **Cartographer 模式按覆盖面把关。** 它面向高风险任务，包括按风险值排序的未知项台账、每轮展示的清晰度评分，以及 7 项开工条件。相关代码和实际情况没有查清之前，不会开始任何实现。
+- **Cartographer 模式按覆盖面把关。** 它面向高风险任务，包括按风险值排序的未知项台账、每轮展示的清晰度评分（仅供参考），以及 6 项可对照台账核查的开工条件。相关代码和实际情况没有查清之前，不会开始任何实现。默认在写出规格和验收标准后结束。
 - **不可逆操作确认规则。** 是否放行取决于影响范围，而不是把握大小。只要某个未知项关系到不可逆的步骤，无论证据看起来多么确凿，都会交给你确认。
 - **交付时由人保留判断。** 交付报告先列证据，写明每项检查*不能*证明什么、哪些内容没有人检查过，以免在验收智能体成果时不知不觉地放弃判断。
 - **先有理论，再看数据。** 每个实测结果都按“理论预期 → 实测 → 是否一致 → 机理”呈现：预测先写下，噪声下限讲清楚，机理标明证据强弱，按预先约定的规则得出的判定与对方向本身的判断分开写。
@@ -157,7 +157,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 | **`keep-the-reasoning`** | 影响评估、事先定好验收标准、按固定顺序编写的交付报告 | 交付时：验收智能体成果，同时保留自己的判断 |
 | **`theory-vs-result`** | 先写预测卡，再按“理论预期 → 实测 → 是否一致 → 机理”逐项成卡，并分别给出两种判定 | 实测结果（回测、基准测试、A/B 测试、消融实验、训练）：任何数字都要附上它所检验的预测和成因 |
 
-在第 3 阶段结束时，以及 Cartographer 模式的执行阶段结束时，`finding-unknowns` 会转交给 `keep-the-reasoning`。实验验证类（`experiment`）条目返回的结果通过 `theory-vs-result` 汇报，其汇总表也同时充当交付报告中“预期与结果对比”一节。
+在第 3 阶段结束时，以及 Cartographer 模式的成果合并时（实验性的执行阶段运行时，则在其结束时），`finding-unknowns` 会转交给 `keep-the-reasoning`。实验验证类（`experiment`）条目返回的结果通过 `theory-vs-result` 汇报，其汇总表也同时充当交付报告中“预期与结果对比”一节。
 
 ### 八种方法
 
@@ -184,30 +184,34 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 已知的已知（KK）只需及时写下来，以免在执行中走样。完整流程见 [`SKILL.md`](skills/finding-unknowns/SKILL.md)。
 
+**默认采用轻量输出。** 分析类输出（问题定位、盲区排查、参考实现提炼）以一份简短报告结束：影响最大的 3 项发现（各附证据）和 1 个建议的下一步。与你的预期不符之处全部列出，不受数量限制。盲区排查的精简报告（3 项主要发现和改写后的需求）*本身*就是这份简短报告，不再二次压缩；高风险任务默认给出完整报告，其他情况下需要完整输出时，说“完整报告”即可。原型、访谈问题、实施计划（含验收标准）、实施记录、变更说明和理解测验始终完整交付。默认以文本为主：报告、计划和测验报告都使用 Markdown，需要时再生成 HTML；原型仍是 HTML，因为它需要直观呈现。
+
 ### Cartographer 模式
 
 Cartographer 模式是面向高风险工作的更严格流程。完整协议见 [`references/cartographer.md`](skills/finding-unknowns/references/cartographer.md)（按需读取）。
 
 <p align="center">
-  <img src="assets/zh/cartographer.svg" alt="Cartographer 模式：设定阈值并确认任务范围，建立未知项台账，按风险值逐项处理，满足 7 项开工条件后才实施，不可逆操作必须由用户确认" width="96%">
+  <img src="assets/zh/cartographer.svg" alt="Cartographer 模式：公布探索深度并确认任务范围，建立未知项台账，按风险值逐项处理，每轮展示清晰度评分，满足 6 项开工条件后写出规格并默认结束，不可逆操作必须由用户确认，执行阶段为实验性功能" width="96%">
 </p>
 
 | 组成 | 是什么 | 用于 |
 |------|--------|------|
 | **未知项台账** | 每个条目记录象限、预期、`风险值 = 出错代价 × 出错概率`、处理方式（询问用户 · 查证代码或数据 · 实验验证 · 审阅材料）、可逆性（可逆 · 影响面广 · 不可逆） | 确定工作顺序；台账*本身*就记录了中断后恢复工作所需的状态 |
 | **逐项处理** | 按处理方式分派，而不是一律提问。每次处理风险值最高的未决条目；出错代价 ≥ 4 的结论须先经过对抗性核查 | 能从代码或数据中查到的，不去问用户 |
-| **清晰度评分** | `模糊度 = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`，每轮重新评分，默认阈值 0.25 | 让你随时看到还有多少不清楚的地方，并据此调整方向 |
-| **开工条件** | 覆盖面达标（每个象限都已排查）并且清晰度达标，另加不可逆操作确认规则；判定通过前须再做一次遗漏检查 | 情况没有查清时，不允许开工 |
-| **进入执行** | 须经批准：由独立的规划者与审查者达成一致，或交给 Workflow 执行 | 依据待批准的定稿规格实施 |
+| **清晰度评分** | `模糊度 = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`，每轮重新评分；仅供展示和调整方向，不作为开工条件 | 让你随时看到还有多少不清楚的地方，并据此调整方向 |
+| **6 项开工条件** | KK 已写下；KU 已解决或已设默认值暂缓；UK 已提炼，或经你确认标记为不适用；UU 已排查；没有风险值 ≥ 1.0 的未决条目；每个不可逆条目都已由用户确认（即不可逆操作确认规则）。判定通过前须再做一次遗漏检查；第 10 轮做一次软检查，此后每 10 轮一次（`--quick` 下为第 5 轮起每 5 轮一次），不设轮次硬上限 | 情况没有查清时，不允许开工 |
+| **规格与验收标准** | 默认的结束点：给出收尾报告和待批准的规格，然后停止。依据规格实施时，不可逆操作一律交给你：只做准备，不执行，直到你亲自运行，或对该条命令单独确认 | 依据待批准的定稿规格实施 |
+| **下一步选项（E1）** | 规格完成后的默认步骤：由规划者与审查者达成一致的实施计划（推荐；执行需另行确认），或继续细化。合并时提供完整的 `keep-the-reasoning` 交付报告 | 选择如何继续，不会有任何操作自动运行 |
+| **Workflow 执行（E2）** | 实验性的可选功能，尚未在真实的 Workflow 运行环境中运行过；只有你明确要求时才运行 | 按执行阶段规则运行已批准的任务图 |
 
-**流程：** 公布阈值 → 第 0 轮任务拆分（1–6 个组件）→ **C0** 从四个象限出发并对照领域检查清单建立台账 → **C1** 逐项处理 → **C2** 判定开工条件 → **C2.5** 收尾报告与定稿规格 → **E** 进入执行 → **C3** 台账在整个实施过程中持续更新，并作为理解测验的出题依据。
+**流程：** 公布探索深度 → 第 0 轮任务拆分（1–6 个组件）→ **C0** 从四个象限出发并对照领域检查清单建立台账 → **C1** 逐项处理 → **C2** 判定 6 项开工条件 → **C2.5** 收尾报告与定稿规格（默认在此结束）→ **E** 下一步选项（一致通过的实施计划；Workflow 执行为实验性功能，仅在明确要求时运行）→ **C3** 台账在整个实施过程中持续更新，并作为理解测验的出题依据。
 
 **v4.0.0 新增**
 
-- **不可逆操作确认规则。** 风险值包含出错概率，而出错概率本质上是对把握大小的估计。对于 `irreversible` 条目，把握再大也不能代替用户确认。即使风险值低于提问门槛，这类条目也不会自动采用默认值，只有记录了用户的确认才算解决。这是第 7 项开工条件，提前结束也不能跳过。
+- **不可逆操作确认规则。** 风险值包含出错概率，而出错概率本质上是对把握大小的估计。对于 `irreversible` 条目，把握再大也不能代替用户确认。即使风险值低于提问门槛，这类条目也不会自动采用默认值，只有记录了用户的确认才算解决。自 4.0.0 起即为开工条件（自 4.2.0 起为第 6 项），提前结束也不能跳过。
 - **预期与不符之处。** 每个条目在依据证据评分之前，先记下当时的预期；与预期矛盾的发现单独列为“与预期不符之处”。
 - **验收标准。** 每条标准包括一项有可能不通过的检查、检查的产物、它能证明什么、*不能*证明什么，以及所属类别。实现者不得修改验收标准。
-- **执行阶段规则。** 每个任务内部是一个循环，任务之间按任务图组织；每条依赖都写明传递的内容；失败结果按 `UNIT · VERDICT · REASON · EVIDENCE · SCOPE` 逐个单元返回；重试次数达到上限后，该任务记为“计划可能有误”的台账条目；经验回传把新增约束传给后续任务；任务按可逆性类别确认完成，依据是独立检查执行器给出的结果。用户在两端把关，开工前确认规格、验收标准和任务图，交付前确认不可逆类别的任务和合并。
+- **执行阶段规则（自 v4.2.0 起为实验性功能，仅按需运行）。** 每个任务内部是一个循环，任务之间按任务图组织；每条依赖都写明传递的内容；失败结果按 `UNIT · VERDICT · REASON · EVIDENCE · SCOPE` 逐个单元返回；重试次数达到上限后，该任务记为“计划可能有误”的台账条目；经验回传把新增约束传给后续任务；任务按可逆性类别确认完成，依据是独立检查执行器给出的结果。用户在两端把关，开工前确认规格、验收标准和任务图，交付前确认不可逆类别的任务和合并。
 
 ### 执行与编排
 
@@ -222,7 +226,7 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 | **`fu-multi-lens-sweep`** | 从多个视角并行侦察；每个视角一完成，其发现就立即接受对抗性核查，无需等待其他视角；输出经 schema 校验的台账条目 | 高风险任务中建立 UU 条目 |
 | **`fu-verify-panel`** | 三个反驳者分别从替代解释、证据独立性、可复现性三个角度尝试推翻结论 | 出错代价 ≥ 4 的结论 |
 | **`fu-uu-until-dry`** | 反复排查盲区，连续两轮没有新发现才停止 | 深入排查了解最少的象限；何时停止取决于是否还有新信息，而不是固定轮数 |
-| **`fu-execute-verified`** | 按执行阶段规则执行已批准的任务；每个实现者都配有一位独立审查者，其任务是尽力推翻实现 | 执行已批准的任务图 |
+| **`fu-execute-verified`** | 实验性的可选功能，尚未在真实的 Workflow 运行环境中运行过。按执行阶段规则执行已批准的任务；每个实现者都配有一位独立审查者，其任务是尽力推翻实现 | 执行已批准的任务图，仅在你明确要求时运行 |
 
 **降级方案：** Workflow → 并行调用 Agent → 全部在当前会话内执行。规则本身必须遵守，实现机制可以替换。如果完全没有子代理，实现者和审查者会共用同一个上下文，因此任何类别的任务都不会自动确认完成，每个任务都以 `awaiting-human` 状态交给你。
 
@@ -243,9 +247,9 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 
 | 步骤 | 是什么 | 用于 |
 |------|--------|------|
-| **影响评估** | 判断属于 `offload`（出错代价低、可撤销、后果只影响你本人），还是 `keep-the-reasoning`（后果影响他人、难以撤销） | 交付报告的详细程度取决于后果大小，而不是工作量 |
+| **影响评估** | 判断属于 `offload`（出错代价低、可撤销、后果只影响你本人），还是 `keep-the-reasoning`：中等风险（后果影响他人，但可撤销且范围有限）用精简版，高风险（难以撤销）用完整版 | 交付报告的详细程度取决于后果大小，而不是工作量 |
 | **开工前** | 记下你的假设，并定好验收标准，其中的检查必须有可能不通过 | 结果出来之后，无法再随意找理由解释 |
-| **交付报告** | 证据 → 检查证明了什么、*没*证明什么 → 决策与假设 → 预期与结果对比 → 独立上下文给出的最有力的反对意见 → 不可为空的“未检查的内容” → 最后写结论 | 在保留自己判断的前提下验收成果 |
+| **交付报告** | 精简版（4 节）：证据 → 检查*没*证明什么 → 不可为空的“未检查的内容” → 结论。完整版（9 节）：证据 → 检查证明了什么、*没*证明什么 → 决策与假设 → 预期与结果对比 → 独立上下文给出的最有力的反对意见 → 不可为空的“未检查的内容” → 最后写结论 | 在保留自己判断的前提下验收成果 |
 | **交付之后** | 每次驳回都转化为一条规则（测试、hook、lint 规则）；发现放弃判断的迹象时只指出一次，不说教 | 让判断标准不断积累 |
 
 如果之前已经运行过 `finding-unknowns`，`keep-the-reasoning` 会直接沿用它记录的预期、验收标准，以及 quiz-master 报告中的“决策与假设”，不再重复整理。
@@ -293,8 +297,8 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 |------|------|------|------|
 | `/finding-unknowns` | 斜杠命令 → 第 0 阶段 | 判断未知项所属象限，说明选用的方法，然后运行该方法 | `/finding-unknowns "add a usage dashboard"` |
 | `/blindspot` | 斜杠命令 → 方法 1 | 只读的盲区排查 | `/blindspot "src/auth"` |
-| `/cartographer` | 斜杠命令 → C 阶段 | 未知项台账、带评分的逐项处理、开工条件、进入执行 | `/cartographer --deep "migrate billing"` |
-| `/change-quiz` | 斜杠命令 → 方法 8 | 变更报告，以及必须通过的理解测验 | `/change-quiz main..HEAD` |
+| `/cartographer` | 斜杠命令 → C 阶段 | 未知项台账、按风险值逐项处理、6 项开工条件、规格与验收标准（默认在此结束） | `/cartographer --deep "migrate billing"` |
+| `/change-quiz` | 斜杠命令 → 方法 8 | 变更报告（Markdown，需要时可生成 HTML），以及必须通过的理解测验 | `/change-quiz main..HEAD` |
 | `/keep-the-reasoning` | 斜杠命令 → `keep-the-reasoning` 第 0 步（工作已完成则进入第 3 步） | 先做影响评估，再给出交付报告 | `/keep-the-reasoning "ship the migration?"` |
 | `/theory-vs-result` | 斜杠命令 → `theory-vs-result` 第 0 步（尚未测量时写完预测卡即停止；结果已出时标为 `post-hoc`） | 先分级，再给出“理论预期 → 实测 → 是否一致 → 机理”卡片 | `/theory-vs-result "did the new loss beat baseline?"` |
 | `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill 工具 | 调用同样的技能，不需要插件命令 | 通过 Skill 工具调用 |
@@ -303,19 +307,15 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 **说明：**
 
 - 斜杠命令需要安装插件，或手动复制 `commands/`；只安装技能时，可以通过 Skill 工具加载。
-- 深度参数决定 Cartographer 模式的阈值：`--quick` 0.35 · `--standard` 0.25（默认）· `--deep` 0.15。
+- 深度参数决定 Cartographer 模式的探索深度：`--quick` 只做单一视角的盲区排查，每 5 轮做一次软检查 · `--standard`（默认）做一次盲区排查，任务涉及多个风险领域（例如资金、数据和基础设施）时升级为多视角排查 · `--deep` 建立台账时一律做多视角排查，并在判定开工条件前反复排查盲区，直到连续两轮没有新发现。优先级：命令参数 > 你的要求 > 默认值。
 - 可直接复制使用的端到端提示词见 [`EXAMPLES.md`](EXAMPLES.md)。
 
 <details>
 <summary><b>配置（可选，默认无需配置）</b></summary>
 
-可以在 `.claude/settings.json` 中按项目或按用户修改清晰度阈值（优先级：命令参数 > 项目设置 > 用户设置 > 默认值）。进入 Cartographer 模式时，会先公布最终生效的阈值及其来源。
+无需任何配置。Cartographer 模式的探索深度来自命令参数或你的要求（优先级：命令参数 > 你的要求 > 默认值 `--standard`），进入时第一行会公布深度及其来源：`Depth: {quick | standard | deep} (source: {flag | user request | default})`。自 4.2.0 起，设置项 `findingUnknowns.ambiguityThreshold` 不再生效：模糊度只用于展示，保留该设置也不会有任何影响。
 
-```json
-{ "findingUnknowns": { "ambiguityThreshold": 0.25 } }
-```
-
-其他默认值包括原型方向数（4）、风险值提问门槛（1.0，不适用于不可逆条目）、测验题量与轮数、Cartographer 轮次上限（软上限 10，硬上限 20）和执行重试上限（3），都列在 [`SKILL.md`](skills/finding-unknowns/SKILL.md) 的 **Defaults** 表中，可以用自然语言直接修改。
+其他默认值包括报告篇幅（分析类输出采用简短报告：3 项发现 + 1 个下一步，与预期不符之处不受数量限制）、报告格式（Markdown，需要时可生成 HTML）、原型方向数（4）、风险值提问门槛（1.0，不适用于不可逆条目）、测验题量与轮数、Cartographer 软检查（第 10 轮起每 10 轮一次，`--quick` 下每 5 轮一次；不设硬上限）和执行重试上限（3，属于实验性的执行阶段），都列在 [`SKILL.md`](skills/finding-unknowns/SKILL.md) 的 **Defaults** 表中，可以用自然语言直接修改。
 
 </details>
 
@@ -336,7 +336,7 @@ subsystem (UU) and the dashboard layout is know-it-when-you-see-it (UK).
 ```
 
 <details>
-<summary><b>一轮 Cartographer 报告（每轮都会展示评分和 7 项开工条件）</b></summary>
+<summary><b>一轮 Cartographer 报告（每轮都会展示清晰度评分和 6 项开工条件）</b></summary>
 
 ```
 Round 3 complete.
@@ -344,20 +344,20 @@ Round 3 complete.
 Ledger: 4 open | 1 probing | 6 resolved | 2 deferred
 Top regret: U2 (2.0) — which auth path to extend [route: interview]
 
-| Quadrant      | Score   | Weight        | Gap                                        |
-|---------------|---------|---------------|--------------------------------------------|
-| KK            | 0.90    | 0.20          | clear                                      |
-| KU            | 0.50    | 0.25          | auth path (U2) undecided                   |
-| UK            | 0.70    | 0.25          | session-UX criteria not yet confirmed      |
-| UU            | 0.70    | 0.30          | two scout lenses run; not yet dry          |
-| **Ambiguity** | **31%** | threshold 25% | KU × auth middleware — U2 sets the design  |
+| Quadrant                | Score   | Weight | Gap                                        |
+|-------------------------|---------|--------|--------------------------------------------|
+| KK                      | 0.90    | 0.20   | clear                                      |
+| KU                      | 0.50    | 0.25   | auth path (U2) undecided                   |
+| UK                      | 0.70    | 0.25   | session-UX criteria not yet confirmed      |
+| UU                      | 0.70    | 0.30   | two scout lenses run; not yet dry          |
+| **Ambiguity** (display) | **31%** | —      | KU × auth middleware — U2 sets the design  |
 
-Coverage gate:
-[x] KK locked          [ ] KU resolved/deferred
-[x] UK extracted       [x] UU probed
+Gate:
+[x] KK written down    [ ] KU resolved/deferred-with-default
+[x] UK extracted or n/a (user-confirmed)
+[x] UU probed
 [ ] no open row with regret ≥ 1.0
 [x] every irreversible row user-confirmed
-[ ] ambiguity 31% ≤ threshold 25%
 
 Next target: U2 — highest-regret open row; a wrong guess forces a rewrite of the
 middleware layer.
@@ -369,7 +369,7 @@ middleware layer.
 <summary><b>一份 keep-the-reasoning 交付报告（先列证据，最后写结论）</b></summary>
 
 ```
-Handoff lane: keep-the-reasoning — schema migration on a shared production table.
+Handoff lane: keep-the-reasoning (full) — schema migration on a shared production table.
 1. Evidence: `pytest tests/migrations -q` → 14 passed; `alembic upgrade head --sql` →
    plan at artifacts/upgrade.sql (ALTER + backfill, 2 statements)
 2. Proved: upgrade SQL applies cleanly to an empty schema. NOT proved: runtime on the
@@ -424,13 +424,14 @@ Mechanism   : broken link = "a repeat is a cache hit". Reads do repeat, but the 
 | 状态 | 无状态（Cartographer 模式使用台账文件） | 持久保存，可中断后恢复 | 持久保存，多智能体 | 视情况而定 |
 | 最适合 | 你还不知道自己有哪些未知项 | 需要一份经过验证的规格 | 规格已经明确 | 只需要按规范完成某一项操作 |
 
-Deep Interview（以 OMC 5.8.1 为准）须经批准才放行；它的 `--frontier` 模式最接近本插件“批量提出互不依赖的问题，并把能查到的交给代码或数据查证”的做法。Cartographer 模式*采用了*它让过程透明的机制（带阈值的清晰度评分、第 0 轮任务拆分、质询模式），同时保留了仅靠清晰度评分访谈无法覆盖的几个维度。
+Deep Interview（以 OMC 5.8.1 为准）须经批准才放行；它的 `--frontier` 模式最接近本插件“批量提出互不依赖的问题，并把能查到的交给代码或数据查证”的做法。Cartographer 模式保留了它让过程透明的两项机制：第 0 轮任务拆分，以及每轮展示的各象限清晰度评分。自 v4.2.0 起，Cartographer 模式不再采用清晰度阈值和质询模式，开工条件只依据可以对照台账核查的事实，同时保留了仅靠清晰度评分访谈无法覆盖的几个维度。
 
 **已有工具优先调用，不重复实现。** 安装了对应的同类工具时，`finding-unknowns` 会把该工具擅长的部分交给它，自己只负责与未知项直接相关的部分，包括按象限定位问题、带风险值的台账条目、按处理方式逐项处理、不可逆操作确认规则，以及在整个生命周期中保留台账。
 
 | 需求 | 同类工具（已安装时） |
 |------|----------------------|
 | 验收智能体成果，同时保留自己的判断 | `keep-the-reasoning`（本仓库） |
+| 目标已经明确，只需要发散地生成备选方案 | `superpowers:brainstorming`（风险在于你还不知道的东西时，以 `finding-unknowns` 为准） |
 | 对照预测汇报实测结果 | `theory-vs-result`（本仓库） |
 | 本体追踪、OMC 状态管理、衔接 ralplan/autopilot | `oh-my-claudecode:deep-interview` |
 | 迷雾测试，以及在任务跟踪系统中创建决策工单 | `oh-my-claudecode:ask-navigator` |
@@ -446,19 +447,19 @@ Deep Interview（以 OMC 5.8.1 为准）须经批准才放行；它的 `--fronti
 
 | 维度 | Deep Interview | Cartographer 模式 |
 |------|----------------|-------------------|
-| 放行标准 | 模糊度 ≤ 阈值（按目标、约束、标准三个维度） | 双重标准：覆盖面达标（四个象限都已排查，且必须做过盲区排查），并且按象限加权的模糊度 ≤ 阈值，另加不可逆操作确认规则 |
+| 放行标准 | 模糊度 ≤ 阈值（按目标、约束、标准三个维度） | 6 项可对照台账核查的条件（四个象限都已排查，且必须做过盲区排查；经你确认后 UK 可标记为不适用；没有风险值 ≥ 1.0 的未决条目），另加不可逆操作确认规则；各象限清晰度评分仅供展示 |
 | 盲区（UU） | 未纳入模型 | 作为核心维度，权重最高（0.30） |
 | 生命周期 | 止于规格 | 同一份台账：事前建立，事中追加，事后关闭 |
-| 排序依据 | 固定的维度权重 | 用风险值给条目排序，用模糊度给象限评分 |
+| 排序依据 | 固定的维度权重 | 用风险值给条目排序，用清晰度评分展示各象限的状态 |
 | 处理手段 | 苏格拉底式问答 | 每个未知项按其处理方式分派（询问用户 / 查证代码或数据 / 实验验证 / 审阅材料） |
-| 执行 | 经批准后交给 OMC 流水线 | 须经批准才进入执行：由规划者与审查者达成一致，或由 Workflow 执行，并对每个任务做反驳式审查 |
+| 执行 | 经批准后交给 OMC 流水线 | 默认在规格处结束，并提供由规划者与审查者达成一致的实施计划。由 Workflow 执行并对每个任务做反驳式审查属于实验性功能，仅按需运行 |
 
 ```
 finding-unknowns  （定向：这个未知落在哪个象限？）
         ├─ 轻量的重新审视就够了          → 八种方法
         ├─ 高风险，需要覆盖面检查        → Cartographer 模式
         ├─ 需要模糊度判定 + 可续跑的状态    → OMC Deep Interview
-        ├─ 发散地生成备选方案            → superpowers:brainstorming
+        ├─ 目标明确，只需要备选方案      → superpowers:brainstorming
         ├─ 一份严谨的书面计划            → superpowers:writing-plans / omc-plan
         ├─ 规格说明已经很具体            → OMC autopilot / ralph / team
         ├─ 工作已完成，风险在于交付验收  → keep-the-reasoning
@@ -476,6 +477,7 @@ finding-unknowns  （定向：这个未知落在哪个象限？）
 - **实地测试后新增“处理方式”列（v3.3.0）。** 在一项结合量化与深度学习的研究任务中，风险值最高的三个未知项都不适合靠询问用户解决。于是循环改为按处理方式分派：能从代码或数据中查到的条目不再询问用户；等待实验结果时循环暂停，而不是继续生成空的轮次。
 - **结果好看不等于问题已经解决（v3.4.0）。** 一个很高的 RankIC 看似回答了“这个信号是否真实”，但数据泄漏也会产生同样高的 IC。因此，出错代价 ≥ 4 的条目现在必须通过对抗性核查，并有两个独立来源。
 - **实地测试后公开清晰度评分（v3.6.0）。** 排查效果很好，但工作逐渐进入一种用户无法把握方向的模糊状态。解决办法是每轮公开各象限的评分，评分在一次调用中完成且只依据台账中的证据，并把“评分漂移”明确列为一种失败模式。
+- **开工条件依据台账事实，而不是自评分数（v4.2.0）。** 以加权模糊度作为开工条件，等于让一个自己打出的分数决定何时可以开工。现在这个数值只作为每轮展示保留，开工条件改为 6 项可以对照台账核查的条件。
 - **把握大小与影响范围（v4.0.0）。** 风险值要乘以出错概率，而出错概率恰恰是最容易估计得过于乐观的输入。因此，一个自认为很有把握的智能体可能在不知不觉中给不可逆步骤采用默认值。不可逆操作确认规则就是为此设立的。
 - **`fu-execute-verified` 的三轮审查（v4.0.0）。**
   - **第 1 轮。** 独立的对抗性审查发现了 1 个 CRITICAL 和 6 个 HIGH 级问题，并在模拟运行时中复现，其中包括参数校验会放过未知或缺失的类别（lane）。现在校验一旦有误即停止。
@@ -562,6 +564,6 @@ finding-unknowns-skill/
 - `keep-the-reasoning` 与验收标准：Addy Osmani，《_Critical thinking when agents do the work_》（[原文](https://x.com/addyosmani/status/2117512471930167377)）。
 - `theory-vs-result`：提炼自作者本人的实证研究实践，并推广到任何实测结论。
 - 执行阶段规则：Anthropic 的《_Building effective agents_》（evaluator-optimizer、orchestrator-workers）与 @hanakoxbt 的《_Loops and Graphs_》（[原文](https://x.com/hanakoxbt/status/2091515787366306154)）。
-- Cartographer 模式的模糊度把关、第 0 轮任务拆分与质询模式改编自 [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) 中的 deep-interview 技能；对比部分还参考了 [Superpowers](https://github.com/obra/superpowers)。
+- Cartographer 模式的各象限清晰度评分与第 0 轮任务拆分改编自 [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) 中的 deep-interview 技能；对比部分还参考了 [Superpowers](https://github.com/obra/superpowers)。
 
 **免责声明。** 本项目是独立的社区项目，与 Anthropic 无任何隶属关系，也未获其授权或背书。

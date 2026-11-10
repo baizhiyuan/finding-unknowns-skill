@@ -1,6 +1,6 @@
 ---
 name: theory-vs-result
-description: "Report empirical results as Theory → Measured → Consistent? → Mechanism, so a number never arrives without the prediction it tests and the reason it came out that way. Use when STARTING a measurement (write the prediction, noise floor and decision rule first) and when REPORTING one (backtest, benchmark, A/B test, ablation, training run, load test, debugging hypothesis). Triggers: 'theory vs result', '理论 → 实测 → 机理', 'why did this come out like this', 'is this consistent', 'does this pass', experiment/backtest/benchmark reports. Not for results with no prediction at stake (a lookup, a status check)."
+description: "Use when a benchmark, backtest, A/B test, ablation, training or load-test result is planned or comes back, or the user asks 'is this consistent', 'why did this come out like this', 'does it pass', '理论 → 实测 → 机理'. Reports it as Theory → Measured → Consistent? → Mechanism, prediction first. Not for results with no prediction at stake."
 aliases: [theory-measured-mechanism, predict-measure-explain]
 metadata:
   credits:
@@ -33,7 +33,7 @@ rule stays separate from the judgment about the direction.
 - The user asks "why", "is this consistent", "does it pass", "should we drop this"
 - A result contradicts the expectation, or sits close to a threshold
 - A `finding-unknowns` ledger row with route `experiment` comes back with data
-- `keep-the-reasoning` packet section 4 (Prior vs result) concerns a measured claim
+- The Prior vs result section of a `keep-the-reasoning` packet concerns a measured claim
 </Use_When>
 
 <Do_Not_Use_When>
@@ -368,7 +368,8 @@ not support, to name an alternative mechanism that fits the same numbers for eve
 
 Apply the audit: downgrades take effect as given; where you disagree, keep the audit's
 reading and put yours in Caveats; the alternative mechanisms and checks go into Next, and
-into `keep-the-reasoning` sections 5 and 6 when a handoff follows. Without subagents, do
+into the `keep-the-reasoning` packet when a handoff follows (Strongest counterargument
+and Did I miss anything? in the full packet; under Not checked in the compact one). Without subagents, do
 the audit yourself and label it `same-context audit — weaker`.
 </Fresh_Context_Check>
 
@@ -393,9 +394,9 @@ the audit yourself and label it `same-context audit — weaker`.
 - `finding-unknowns`: Phase 0 captures the prior and Cartographer's `experiment` route
   defines what to run. When the measurement returns, report it here and write the
   ledger row's resolution from the card.
-- `keep-the-reasoning`: when the handoff concerns measured claims, packet section 4
-  (Prior vs result) *is* this skill's summary table, and section 7 (Not checked) is
-  shared. Don't write it twice.
+- `keep-the-reasoning`: when the handoff concerns measured claims, the packet's Prior vs
+  result section (a line in the compact packet) *is* this skill's summary table, and its
+  Not checked section is shared. Don't write it twice.
 - `mechanism-auditor` (this repository): the fresh-context tier audit described above.
 - `oh-my-claudecode:verify` proves a behaviour works. This skill explains a measured
   effect and its size. `oh-my-claudecode:trace` is a stronger competing-hypothesis

@@ -14,8 +14,8 @@
 <text x="78" y="186.68" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#FAF9F5" text-anchor="middle">E</text>
 <text x="108" y="189" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700" fill="#141413">执行阶段 · fu-execute-verified</text>
 <text x="428.308" y="188" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="400" fill="#5E5D59">已批准的任务图 · 每项独立验证 · 按类别放行</text>
-<rect x="961.451" y="168" width="178.549" height="28" rx="14" fill="#F5DDD1"/>
-<text x="1050.73" y="186.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" font-weight="500" fill="#C15F3C" text-anchor="middle">模板 4 · 需开启 Workflow</text>
+<rect x="916" y="168" width="224" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="1028" y="186.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" font-weight="500" fill="#C15F3C" text-anchor="middle">模板 4 · 实验性 · 仅在用户要求时</text>
 <clipPath id="cc1"><rect x="60" y="212" width="1080" height="48" rx="10"/></clipPath>
 <rect x="60" y="212" width="1080" height="48" rx="10" fill="#F5DDD1" stroke="#E3DFD3" stroke-width="1"/>
 <rect x="60" y="212" width="4" height="48" fill="#D97757" clip-path="url(#cc1)"/>
@@ -255,5 +255,5 @@
 <text x="1008" y="1483" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" font-weight="500" fill="#B5442E">（不会自动确认完成）</text>
 <text x="40" y="52" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C">// 05 · 执行与编排</text>
 <text x="40" y="94" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="32" font-weight="700" fill="#141413">按任务图执行，每个任务通过独立验证才算完成</text>
-<text x="40" y="124" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="400" fill="#5E5D59">用户在开工前确认计划，在交付前确认不可逆操作和合并；其间由子代理实施并互相核查。</text>
+<text x="40" y="124" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="400" fill="#5E5D59">实验性可选阶段，仅在用户明确要求时运行。用户在开工前确认计划，在交付前确认不可逆操作和合并；其间由子代理实施并互相核查。</text>
 </svg>

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.1.1 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v4.2.0 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-4.1.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.1.1">
+  <img src="https://img.shields.io/badge/version-4.2.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.2.0">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 skills">
   <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
@@ -86,7 +86,7 @@ Phase 0 places the gap on the quadrant map, captures your prior, and routes to t
 
 ### Updating
 
-Update the same way you installed. Latest release: **v4.1.1**.
+Update the same way you installed. Latest release: **v4.2.0**.
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -123,7 +123,7 @@ cp commands/*.md ~/.claude/commands/
 ```bash
 grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# expect: 4.1.1 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
+# expect: 4.2.0 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
 ```
 
 </details>
@@ -134,7 +134,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 - **The map is not the territory** — the map is what you give Claude (prompt, context, skills); the territory is the codebase and the real world. Every gap between them forces the model to guess your intent. Capability is no longer the bottleneck on long-horizon work; clarity is.
 - **Route by quadrant, not by habit** — blind spots need reconnaissance, tacit taste needs prototypes, nameable gaps need targeted questions, comprehension needs examination. One uniform interview under-serves all four.
-- **Coverage-gated Cartographer mode** — for high stakes: a regret-ordered unknowns ledger, clarity scores shown every round, and a seven-condition gate that won't let implementation start while the territory is unmapped.
+- **Coverage-gated Cartographer mode** — for high stakes: a regret-ordered unknowns ledger, clarity scores shown every round as a display, and a six-condition gate on checkable ledger facts that won't let implementation start while the territory is unmapped. By default it ends at a spec with a verification contract.
 - **Irreversibility floor** — gate on blast radius, not confidence. An unknown guarding an irreversible step always reaches you, however confident the evidence looks.
 - **Keep the reasoning at the handoff** — an evidence-first packet that says what each check did NOT prove and what went unchecked, so accepting agent work never slides into cognitive surrender.
 - **Theory before data** — every measured result arrives as Theory → Measured → Consistent? → Mechanism: the prediction written first, the noise floor stated, the mechanism tagged with how well it is evidenced, and the rule verdict kept apart from the verdict on the idea.
@@ -155,7 +155,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 | **`keep-the-reasoning`** | Stakes triage, "verified" defined up front, a fixed-order handoff packet | The handoff: accepting agent work without surrendering judgment |
 | **`theory-vs-result`** | Prediction card first, then Theory → Measured → Consistent? → Mechanism cards, with two separate verdicts | Measured results: backtests, benchmarks, A/B tests, ablations, training runs — never a number without its prediction and its reason |
 
-`finding-unknowns` hands over to `keep-the-reasoning` at the end of Phase 3 and of the Cartographer execution bridge. Returning `experiment`-route results are reported through `theory-vs-result`, whose summary table also serves as the handoff packet's "prior vs result" section.
+`finding-unknowns` hands over to `keep-the-reasoning` at the end of Phase 3 and at Cartographer's merge (and at the end of the experimental execution bridge, when it runs). Returning `experiment`-route results are reported through `theory-vs-result`, whose summary table also serves as the handoff packet's "prior vs result" section.
 
 ### The eight techniques
 
@@ -182,30 +182,34 @@ Phase 0 is blocking: classify the gap, capture your prior in one line, announce 
 
 Known knowns just get written down before they drift. Full procedures: [`SKILL.md`](skills/finding-unknowns/SKILL.md).
 
+**Lightweight by default.** Analysis outputs (the routing analysis, the blind-spot pass, reference extraction) end in a short report: the 3 most consequential findings, each with its evidence, and 1 recommended next action. Surprises against your prior are never capped. The blind-spot pass's compact report (top 3 findings + rewritten request) *is* that short report, not compressed again; ask for the "full report" (given by default at high stakes) to get the complete technique output. Prototypes, interview questions, plans (with their definition of "verified"), implementation notes, pitches, and quizzes are always delivered in full. Text comes first: reports, plans, and quiz reports are Markdown, with HTML on request; prototypes stay HTML because they are visual.
+
 ### Cartographer mode
 
 The rigorous escalation for high-stakes work. Full protocol: [`references/cartographer.md`](skills/finding-unknowns/references/cartographer.md), read on demand.
 
 <p align="center">
-  <img src="assets/cartographer.svg" alt="Cartographer mode: Round 0 topology, seeded unknowns ledger, regret-ordered clearing loop by route, per-round quadrant scores, dual gate with irreversibility floor, approval-gated execution bridge" width="96%">
+  <img src="assets/cartographer.svg" alt="Cartographer mode: Round 0 topology, seeded unknowns ledger, regret-ordered clearing loop by route, per-round quadrant clarity display, six-condition gate with irreversibility floor, spec as the default end, experimental execution bridge" width="96%">
 </p>
 
 | Part | What it is | Use for |
 |------|------------|---------|
 | **Unknowns ledger** | Rows with quadrant, prior, `regret = cost-if-wrong × P(wrong)`, route (interview · territory · experiment · audit), reversibility (reversible · wide · irreversible) | Ordering the work; it *is* the resume state |
 | **Clearing loop** | A router, not an interview: clear the highest-regret open row by its route; adversarially verify cost ≥ 4 resolutions | Never asking the user what the territory can answer |
-| **Clarity scores** | `ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`, re-scored every round, threshold 0.25 by default | Letting you see and steer how clear the map is |
-| **Dual gate** | Coverage (every quadrant probed) AND clarity, plus the irreversibility floor; completeness critic before any PASS | Refusing to build on an unmapped territory |
-| **Execution bridge** | Approval-gated: independent planner + reviewer consensus, or Workflow execution | Building from a crystallized, pending-approval spec |
+| **Clarity display** | `ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`, re-scored every round; shown to steer, never a gate condition | Letting you see and steer how clear the map is |
+| **Six-condition gate** | KK written down; KU resolved or deferred-with-default; UK extracted, or marked not applicable with your confirmation; UU probed; no open row with regret ≥ 1.0; every irreversible row user-confirmed (the irreversibility floor). Completeness critic before any PASS; soft check at round 10 and every 10 rounds after (round 5 and every 5 after under `--quick`), no hard round cap | Refusing to build on an unmapped territory |
+| **Spec + verification contract** | The default end: close-out report and a pending-approval spec, then stop. Any build from the spec leaves irreversible steps to you: prepared, never executed, until you run each one or say yes to that command | Building from a crystallized, pending-approval spec |
+| **Next-step offer (E1)** | The default after the spec: a planner + reviewer consensus plan (recommended; execution is a separate yes), or keep refining. The full `keep-the-reasoning` packet at merge | Choosing how to proceed without anything running on its own |
+| **Workflow execution (E2)** | Experimental, optional; not yet run in a live Workflow runtime. Only on your explicit request | Running an approved task graph under Phase E rules |
 
-**Flow:** threshold announced → Round 0 topology (1–6 components) → **C0** seed from all four quadrants + a domain checklist → **C1** clear by route → **C2** dual gate → **C2.5** close-out report + crystallized spec → **E** execution bridge → **C3** the ledger stays open through the build and feeds the quiz.
+**Flow:** depth announced → Round 0 topology (1–6 components) → **C0** seed from all four quadrants + a domain checklist → **C1** clear by route → **C2** six-condition gate → **C2.5** close-out report + spec (default stop) → **E** next-step offer (consensus plan; Workflow execution experimental, on explicit request) → **C3** the ledger stays open through the build and feeds the quiz.
 
 **New in v4.0.0**
 
-- **Irreversibility floor** — regret contains P(wrong), a confidence estimate. For `irreversible` rows confidence never substitutes for the user: never silently defaulted under the regret bar, resolved only with recorded user confirmation. The seventh gate condition; no exit waives it.
+- **Irreversibility floor** — regret contains P(wrong), a confidence estimate. For `irreversible` rows confidence never substitutes for the user: never silently defaulted under the regret bar, resolved only with recorded user confirmation. A gate condition since 4.0.0 (the sixth since 4.2.0); no exit waives it.
 - **Priors and surprises** — each row records the expectation held before evidence-based scoring; contradictions surface as surprises.
 - **Verification contract** — per criterion: a failable check, its artifact, what it proves, what it does NOT prove, and its lane. Locked against the implementer.
-- **Phase E execution rules** — the loop lives inside a task, the graph between tasks; edges name what crosses; failures return `UNIT · VERDICT · REASON · EVIDENCE · SCOPE`; an attempt cap turns a task into a plan-suspect row; a learning edge feeds derived constraints forward; tasks close by reversibility lane on results from a separate check-runner. The human sits at both ends — spec, contract, and task graph at the front; irreversible lane and merge at the back.
+- **Phase E execution rules** (experimental since v4.2.0; run only on request) — the loop lives inside a task, the graph between tasks; edges name what crosses; failures return `UNIT · VERDICT · REASON · EVIDENCE · SCOPE`; an attempt cap turns a task into a plan-suspect row; a learning edge feeds derived constraints forward; tasks close by reversibility lane on results from a separate check-runner. The human sits at both ends — spec, contract, and task graph at the front; irreversible lane and merge at the back.
 
 ### Execution & orchestration
 
@@ -220,7 +224,7 @@ When the host exposes Claude Code's **Workflow tool** and you opt in, the fan-ou
 | **`fu-multi-lens-sweep`** | Parallel lens scouts; each finding adversarially verified as its lens completes (no barrier); schema-validated ledger rows | Seeding UU rows at high stakes |
 | **`fu-verify-panel`** | Three refuters: alternative explanation / evidence independence / reproduction | Cost ≥ 4 resolutions |
 | **`fu-uu-until-dry`** | UU probe loop that stops after two consecutive dry rounds | Probing the shallowest quadrant — bounded by information, not a count |
-| **`fu-execute-verified`** | Approved execution under Phase E rules; every implementer paired with an independent refute-framed verifier | Running the approved task graph |
+| **`fu-execute-verified`** | Experimental, optional; not yet run in a live Workflow runtime. Approved execution under Phase E rules; every implementer paired with an independent refute-framed verifier | Running the approved task graph, only on your explicit request |
 
 **Fallback ladder:** Workflow → parallel Agent calls → fully inline. The logic is normative; the mechanism is not. With no subagents at all, implementer and verifier would share a context, so no lane closes automatically — every task comes to you as `awaiting-human`.
 
@@ -241,9 +245,9 @@ When the host exposes Claude Code's **Workflow tool** and you opt in, the fan-ou
 
 | Step | What it is | Use for |
 |------|------------|---------|
-| **Stakes triage** | `offload` (cheap, reversible, lands only on you) vs `keep-the-reasoning` (lands on others, hard to reverse) | Scaling the packet to consequence, not effort |
+| **Stakes triage** | `offload` (cheap, reversible, lands only on you) vs `keep-the-reasoning`: compact at medium stakes (lands on others, but reversible and contained), full at high stakes (hard to reverse) | Scaling the packet to consequence, not effort |
 | **Before the work** | Capture your hypothesis; define "verified" — a check must be able to fail | Making any outcome un-rationalizable after the fact |
-| **Handoff packet** | Evidence first → what checks proved / did NOT prove → decisions & assumptions → prior vs result → fresh-context counterargument → never-empty "not checked" → summary last | Accepting work with your judgment intact |
+| **Handoff packet** | Compact (four sections): evidence → what the checks did NOT prove → never-empty "not checked" → summary. Full (nine sections): evidence first → what checks proved / did NOT prove → decisions & assumptions → prior vs result → fresh-context counterargument → never-empty "not checked" → summary last | Accepting work with your judgment intact |
 | **After the handoff** | A rejection becomes a rule (test, hook, lint rule); surrender signals named once, without moralizing | Making taste compound |
 
 When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, verification contract, and the quiz-master's Decisions & assumptions instead of repeating them.
@@ -291,8 +295,8 @@ These run **inside a Claude Code session**. Each command is a thin dispatcher in
 |------|------|--------|---------|
 | `/finding-unknowns` | Slash command → Phase 0 | Locate the unknown, announce the route, run the matching technique | `/finding-unknowns "add a usage dashboard"` |
 | `/blindspot` | Slash command → Technique 1 | Read-only blind-spot pass | `/blindspot "src/auth"` |
-| `/cartographer` | Slash command → Phase C | Ledger, scored clearing loop, dual gate, execution bridge | `/cartographer --deep "migrate billing"` |
-| `/change-quiz` | Slash command → Technique 8 | Change report + must-pass comprehension quiz | `/change-quiz main..HEAD` |
+| `/cartographer` | Slash command → Phase C | Ledger, regret-ordered clearing loop, six-condition gate, spec + verification contract (default stop) | `/cartographer --deep "migrate billing"` |
+| `/change-quiz` | Slash command → Technique 8 | Change report (Markdown; HTML on request) + must-pass comprehension quiz | `/change-quiz main..HEAD` |
 | `/keep-the-reasoning` | Slash command → `keep-the-reasoning` Step 0 (Step 3 if the work is done) | Stakes triage, then the handoff packet | `/keep-the-reasoning "ship the migration?"` |
 | `/theory-vs-result` | Slash command → `theory-vs-result` Step 0 (stops after the prediction card if nothing is measured yet; a result already in hand is marked `post-hoc`) | Triage, then the Theory → Measured → Consistent? → Mechanism cards | `/theory-vs-result "did the new loss beat baseline?"` |
 | `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill tool | The same skills, no plugin commands needed | invoke via the Skill tool |
@@ -301,19 +305,15 @@ These run **inside a Claude Code session**. Each command is a thin dispatcher in
 **Notes:**
 
 - The slash commands need the plugin or a manual copy of `commands/`; the skills alone load through the Skill tool.
-- Depth flags set the Cartographer threshold: `--quick` 0.35 · `--standard` 0.25 (default) · `--deep` 0.15.
+- Depth flags set Cartographer's exploration depth: `--quick` single-lens blind-spot pass, soft check every 5 rounds · `--standard` (default) one blind-spot pass, escalating to a multi-lens sweep when the task spans more than one risk domain (e.g. money + data + infra) · `--deep` always a multi-lens sweep at seeding plus a UU loop-until-dry before the gate. Precedence: flag > your request > default.
 - Copy-paste, end-to-end prompts: [`EXAMPLES.md`](EXAMPLES.md).
 
 <details>
 <summary><b>Configuration (optional — zero config by default)</b></summary>
 
-Override the clarity threshold per project or per user in `.claude/settings.json` (flag > project > user > default); Cartographer announces the resolved threshold and its source on entry.
+Nothing to configure. Cartographer depth comes from the flag or your request (flag > your request > default `--standard`), and the first line on entry announces it with its source: `Depth: {quick | standard | deep} (source: {flag | user request | default})`. The `findingUnknowns.ambiguityThreshold` settings key is ignored since 4.2.0: the ambiguity figure is display-only, so a leftover key has no effect.
 
-```json
-{ "findingUnknowns": { "ambiguityThreshold": 0.25 } }
-```
-
-Other defaults — prototype directions (4), regret question bar (1.0, never applied to irreversible rows), quiz size and rounds, Cartographer round caps (soft 10 / hard 20), execution attempt cap (3) — live in the **Defaults** table in [`SKILL.md`](skills/finding-unknowns/SKILL.md) and can be overridden in plain language.
+Other defaults — report size (short for analysis outputs: 3 findings + 1 next action, surprises uncapped), report format (Markdown; HTML on request), prototype directions (4), regret question bar (1.0, never applied to irreversible rows), quiz size and rounds, Cartographer soft check (round 10 and every 10 after, or every 5 under `--quick`; no hard cap), execution attempt cap (3, experimental Phase E) — live in the **Defaults** table in [`SKILL.md`](skills/finding-unknowns/SKILL.md) and can be overridden in plain language.
 
 </details>
 
@@ -334,7 +334,7 @@ subsystem (UU) and the dashboard layout is know-it-when-you-see-it (UK).
 ```
 
 <details>
-<summary><b>A Cartographer round report — scores + the seven-condition gate, every round</b></summary>
+<summary><b>A Cartographer round report — clarity display + the six-condition gate, every round</b></summary>
 
 ```
 Round 3 complete.
@@ -342,20 +342,20 @@ Round 3 complete.
 Ledger: 4 open | 1 probing | 6 resolved | 2 deferred
 Top regret: U2 (2.0) — which auth path to extend [route: interview]
 
-| Quadrant      | Score   | Weight        | Gap                                        |
-|---------------|---------|---------------|--------------------------------------------|
-| KK            | 0.90    | 0.20          | clear                                      |
-| KU            | 0.50    | 0.25          | auth path (U2) undecided                   |
-| UK            | 0.70    | 0.25          | session-UX criteria not yet confirmed      |
-| UU            | 0.70    | 0.30          | two scout lenses run; not yet dry          |
-| **Ambiguity** | **31%** | threshold 25% | KU × auth middleware — U2 sets the design  |
+| Quadrant                | Score   | Weight | Gap                                        |
+|-------------------------|---------|--------|--------------------------------------------|
+| KK                      | 0.90    | 0.20   | clear                                      |
+| KU                      | 0.50    | 0.25   | auth path (U2) undecided                   |
+| UK                      | 0.70    | 0.25   | session-UX criteria not yet confirmed      |
+| UU                      | 0.70    | 0.30   | two scout lenses run; not yet dry          |
+| **Ambiguity** (display) | **31%** | —      | KU × auth middleware — U2 sets the design  |
 
-Coverage gate:
-[x] KK locked          [ ] KU resolved/deferred
-[x] UK extracted       [x] UU probed
+Gate:
+[x] KK written down    [ ] KU resolved/deferred-with-default
+[x] UK extracted or n/a (user-confirmed)
+[x] UU probed
 [ ] no open row with regret ≥ 1.0
 [x] every irreversible row user-confirmed
-[ ] ambiguity 31% ≤ threshold 25%
 
 Next target: U2 — highest-regret open row; a wrong guess forces a rewrite of the
 middleware layer.
@@ -367,7 +367,7 @@ middleware layer.
 <summary><b>A keep-the-reasoning handoff packet — evidence first, summary last</b></summary>
 
 ```
-Handoff lane: keep-the-reasoning — schema migration on a shared production table.
+Handoff lane: keep-the-reasoning (full) — schema migration on a shared production table.
 1. Evidence: `pytest tests/migrations -q` → 14 passed; `alembic upgrade head --sql` →
    plan at artifacts/upgrade.sql (ALTER + backfill, 2 statements)
 2. Proved: upgrade SQL applies cleanly to an empty schema. NOT proved: runtime on the
@@ -422,13 +422,14 @@ The anti-pattern it replaces: _"p95 only dropped 10%, the cache doesn't work."_
 | State | Stateless (Cartographer: ledger file) | Persisted, resumable | Persisted, multi-agent | Varies |
 | Best when | You don't yet know your unknowns | You need a validated spec | The spec is clear | You need one disciplined move |
 
-Deep Interview (as of OMC 5.8.1) is approval-gated; its `--frontier` mode is the closest analogue of batched independent questions plus territory routing. Cartographer *adopts* its transparency machinery — clarity scores with a threshold, Round 0 topology, challenge modes — and keeps the axes a clarity-scoring interview alone does not cover.
+Deep Interview (as of OMC 5.8.1) is approval-gated; its `--frontier` mode is the closest analogue of batched independent questions plus territory routing. Cartographer keeps two pieces of its transparency machinery: the Round 0 topology gate and per-quadrant clarity scores, shown every round as a display. Since v4.2.0 it does not adopt a clarity threshold or challenge modes; its gate rules only on ledger facts a reviewer can check, and it keeps the axes a clarity-scoring interview alone does not cover.
 
 **Defer, don't duplicate.** When a sibling is installed, `finding-unknowns` uses it for the mechanism it owns and keeps the unknowns lens — quadrant routing, regret-priced rows, route-typed clearing, the reversibility floor, lifecycle persistence.
 
 | Need | Sibling (when installed) |
 |------|--------------------------|
 | Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repository) |
+| Divergent options when the goal is already clear | `superpowers:brainstorming` (`finding-unknowns` takes precedence when the risk is what you don't know) |
 | Reporting a measured result against its prediction | `theory-vs-result` (this repository) |
 | Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` |
 | Fog test and decision tickets on a tracker | `oh-my-claudecode:ask-navigator` |
@@ -444,19 +445,19 @@ Deep Interview (as of OMC 5.8.1) is approval-gated; its `--frontier` mode is the
 
 | Axis | Deep Interview | Cartographer mode |
 |------|----------------|-------------------|
-| Gate criterion | Ambiguity ≤ threshold (goal/constraint/criteria) | Dual: coverage (all four quadrants probed, blind-spot pass required) AND per-quadrant weighted ambiguity ≤ threshold, plus the irreversibility floor |
+| Gate criterion | Ambiguity ≤ threshold (goal/constraint/criteria) | Six ledger-checkable conditions (all four quadrants probed, blind-spot pass required; UK may be marked not applicable with your confirmation; no open row with regret ≥ 1.0) plus the irreversibility floor; per-quadrant clarity is display-only |
 | Blind spots (UU) | Not modelled | First-class; heaviest weight (0.30) |
 | Lifecycle | Ends at the specification | One ledger, seeded pre, appended during, closed post |
-| Prioritisation | Fixed dimension weights | Regret orders rows; ambiguity scores quadrants |
+| Prioritisation | Fixed dimension weights | Regret orders rows; the clarity display scores quadrants |
 | Clearing instrument | Socratic Q&A | Route-typed per unknown: interview / territory / experiment / audit |
-| Execution | Approval-gated handoff into OMC pipelines | Approval-gated bridge: planner + reviewer consensus, or Workflow execution with per-task refute-framed verification |
+| Execution | Approval-gated handoff into OMC pipelines | Ends at the spec by default; planner + reviewer consensus plan offered. Workflow execution with per-task refute-framed verification is experimental, only on request |
 
 ```
 finding-unknowns  (orient: which quadrant is this unknown in?)
         ├─ a light reframe is sufficient            → the eight techniques
         ├─ high-stakes, want a coverage gate         → Cartographer mode
         ├─ want ambiguity gating + resumable state   → OMC Deep Interview
-        ├─ divergent option generation               → superpowers:brainstorming
+        ├─ goal clear, only options needed           → superpowers:brainstorming
         ├─ a rigorous written plan                   → superpowers:writing-plans / omc-plan
         ├─ the specification is already concrete     → OMC autopilot / ralph / team
         ├─ the work is done, the risk is the handoff → keep-the-reasoning
@@ -474,6 +475,7 @@ What field tests and reviews changed:
 - **Field test → the route column (v3.3.0).** In a quant × deep-learning research task, the three highest-regret unknowns all had non-interview routes. The loop became a router: territory rows are never asked of the user; pending experiments suspend the loop instead of spawning empty rounds.
 - **A strong result is not a resolved one (v3.4.0).** A strong RankIC looked like it settled "is the signal real?" — but leakage produces the same IC. Cost ≥ 4 rows now need an adversarial check and two independent sources.
 - **Field test → visible clarity scoring (v3.6.0).** Discovery was strong, but work drifted into a fuzzy zone the user could not steer. Fix: per-quadrant scores every round, scored in one call from ledger evidence only, with "score drift" named as a failure mode.
+- **Gate on ledger facts, not a self-scored figure (v4.2.0).** A gate condition on weighted ambiguity let a self-assigned number decide when building could start. The figure stays as a per-round display; the gate keeps six conditions a reviewer can check against the ledger.
 - **Confidence vs blast radius (v4.0.0).** Regret multiplies by P(wrong) — the input most prone to optimism — so a confident agent could silently default an irreversible step. Hence the irreversibility floor.
 - **Three review rounds of `fu-execute-verified` (v4.0.0).**
   - **Round 1** — an independent adversarial review found 1 CRITICAL and 6 HIGH, reproduced against a stubbed runtime, including argument validation that let an unknown or missing lane through. Validation now fails closed.
@@ -560,6 +562,6 @@ Released under the [MIT License](LICENSE).
 - `keep-the-reasoning` and the verification contract: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
 - `theory-vs-result`: distilled from the author's own empirical research practice, generalized for any measured claim.
 - Phase E execution rules: Anthropic's _"Building effective agents"_ (evaluator-optimizer, orchestrator-workers) and @hanakoxbt's _"Loops and Graphs"_ ([source](https://x.com/hanakoxbt/status/2091515787366306154)).
-- Cartographer's ambiguity gating, topology gate, and challenge modes are adapted from the deep-interview skill in [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode); the comparison also references [Superpowers](https://github.com/obra/superpowers).
+- Cartographer's per-quadrant clarity scoring and the topology gate are adapted from the deep-interview skill in [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode); the comparison also references [Superpowers](https://github.com/obra/superpowers).
 
 **Disclaimer.** This is an independent community project. It is not affiliated with, authorised by, or endorsed by Anthropic.

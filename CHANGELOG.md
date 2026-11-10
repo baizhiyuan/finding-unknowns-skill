@@ -4,6 +4,97 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0]
+
+### Changed — Cartographer gates on ledger facts; clarity is a display
+- The Cartographer gate goes from seven conditions to six: KK written down; KU resolved or
+  deferred-with-default; UK extracted, or marked "not applicable" with the user's
+  confirmation recorded in the ledger header (e.g. a backend migration with no taste
+  component); UU probed; no open row with regret ≥ 1.0; every irreversible row
+  user-confirmed. The irreversibility floor is unchanged and is now the sixth condition.
+- The per-quadrant clarity scores and the weighted ambiguity figure are still computed and
+  shown every round, but only as a display: the round report labels the row
+  `**Ambiguity** (display)` with `—` in place of a threshold, and the figure never passes
+  or fails the gate. `ledger-keeper` names "display gating" as a failure mode.
+- **Migration: `--quick` / `--standard` / `--deep` now set exploration depth, not a
+  threshold.** `--quick` runs a single-lens blind-spot pass and moves the soft check to
+  every 5 rounds; `--standard` (the default) runs one blind-spot pass (full report),
+  escalating to a multi-lens sweep when the task spans more than one risk domain (e.g.
+  money + data + infra); `--deep` always runs a multi-lens sweep at seeding and a UU
+  loop-until-dry (`fu-uu-until-dry`) before the gate. Precedence: flag > the user's
+  request > default. The first line on entry is now
+  `Depth: {quick | standard | deep} (source: {flag | user request | default})`.
+- Round limits: a soft check at round 10 and every 10 rounds after (round 5 and every 5
+  after under `--quick`) surfaces the top-3 stuck rows and offers resolve /
+  defer-with-default / exit. There is no hard round cap.
+- The default end of Cartographer is the close-out report plus the spec with its
+  verification contract, then STOP. § E is split in two. **E1 — Next step after the spec
+  (default, not experimental)** asks "Spec ready. How to proceed?" with option 1,
+  consensus-refine (recommended), and option 3, keep refining. **E2 — Workflow execution**
+  (option 2, `fu-execute-verified`, Template 4) is **experimental, optional; not yet run in
+  a live Workflow runtime**, and runs only on the user's explicit request. Option numbers
+  stay 1/2/3, so existing references hold.
+- **Any build from the spec — irreversible work stays with the user** (new normative rule,
+  `references/cartographer.md` C2.5, enforced through C3). Whatever the execution path (the
+  user's own build, the consensus plan after a separate yes, or Phase E), the implementer
+  prepares each irreversible change and the exact command and executes nothing
+  irreversible; the user runs it or gives a per-command yes; post-checks run before the row
+  closes. Previously the irreversible-lane rule bound only Phase E, while discovery exits
+  pointed at it; exits now point at this rule, the contract's `lane` column names it, and
+  Phase E's irreversible lane is this rule applied per task. Cartographer's merge always
+  uses the full `keep-the-reasoning` packet (Cartographer is high stakes by definition).
+- Lightweight defaults: analysis outputs (Phase 0 routing analysis, the Technique 1
+  blind-spot pass, Technique 4 reference extraction) end in a short report (3 findings
+  with evidence + 1 next action; the full technique output on request or at high stakes).
+  Surprises are never capped. Prototypes, interview questions, plans (Technique 5,
+  including the Definition of verified), implementation notes, pitches (Technique 7), and
+  quizzes are always delivered in full. `blindspot-scout` returns a compact report by
+  default (top 3 findings + rewritten request, ≤ ~25 lines plus Surprises); when Technique 1
+  runs, that compact report *is* the short report, not compressed again. The full
+  five-section report on request or at high stakes, and always for Cartographer seeding.
+  `keep-the-reasoning` adds a compact four-section packet for medium stakes, with a Prior
+  vs result line when a prior was recorded or the claim is measured, and a link to the
+  quiz report under Evidence when a quiz ran; the full nine-section packet stays for high
+  stakes, and the lane announcement names the size. Packet sections are now referenced by
+  name rather than number across `keep-the-reasoning`, `theory-vs-result` and
+  ARCHITECTURE, since the two packet sizes number them differently.
+- Text first: reports, plans, and quiz reports default to Markdown, with HTML on request;
+  `quiz-master` writes `change-report.md` by default (`change-report.html` on request).
+  Prototypes stay single-file HTML.
+- Skill descriptions are trigger-first (`finding-unknowns`, `keep-the-reasoning`,
+  `theory-vs-result`); `keep-the-reasoning` keeps its front-end trigger (starting work
+  whose consequences fall on others) and "keep me honest". The plugin description marks
+  Workflow execution as experimental. `finding-unknowns` states its precedence over
+  `superpowers:brainstorming`: brainstorming when the goal is clear and only options are
+  needed; this skill when the risk is what the user does not know (Technique 2 routes
+  there).
+- The `finding-unknowns` credit key `ambiguity-gating` is renamed `ambiguity-scoring`;
+  Cartographer keeps deep-interview's per-quadrant clarity scoring (display-only) and
+  topology gate.
+- README, README.zh, ARCHITECTURE and EXAMPLES updated to match: six-condition gate,
+  display-only clarity, depth flags, the § E1 / § E2 split, the irreversible build rule,
+  lightweight defaults, and the round-report example. The Chinese README calls the soft
+  check 软检查, matching the diagrams.
+- Diagrams updated (en and zh: cartographer, framework, handoff, hero, lifecycle,
+  quadrants, workflows): depth replaces the clarity threshold, the gate shows six conditions with
+  clarity as a display, the challenge modes are gone, the soft check is shown with no hard
+  cap, and the spec is the default end with Workflow execution marked experimental. The
+  handoff diagram shows the three triage outcomes (offload, compact packet, full packet).
+
+### Fixed
+- `ledger-keeper`: the Output_Format operation list now includes `SCORE-QUADRANTS`
+  (`<SEED | RE-SCORE | TARGET | SCORE-QUADRANTS | GATE | CLOSE-OUT>`), matching its
+  Operations section.
+
+### Removed
+- The clarity threshold as a gate condition, its 0.35 / 0.25 / 0.15 depth-flag presets,
+  and the entry line `Clarity threshold: {X}% (source: …)`.
+- The `findingUnknowns.ambiguityThreshold` settings key: it is ignored since 4.2.0 (a
+  leftover key has no effect), and the "Threshold configuration" section of
+  `references/cartographer.md` is replaced by "Settings".
+- The challenge modes (Contrarian, Simplifier, Ontologist).
+- The round-20 hard cap.
+
 ## [4.1.1]
 
 ### Fixed — defects found by an outside review (GPT-6-astra, Fable 5.1), verified and tested
@@ -400,6 +491,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[4.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.2.0
 [4.1.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.1
 [4.1.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.1.0
 [4.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.0.0
