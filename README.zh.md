@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.0.0：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v4.1.0：动手之前，先弄清还有哪些未知项；智能体交付成果时，判断仍由人来做" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
   <img src="https://img.shields.io/badge/version-4.1.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 4.1.0">
   <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 个技能">
-  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个代理">
+  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
 </p>
 
@@ -67,7 +67,7 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 **第 2 步：首次使用**
 
 ```
-/finding-unknowns "add a usage dashboard to the admin app"   # 给未知定位、宣布路线、运行对应方法
+/finding-unknowns "add a usage dashboard to the admin app"   # 判断未知类别，说明选用哪种方法，然后执行
 /blindspot "src/auth"                                        # 只读侦察：雷区、隐藏背景、专家会问的问题
 /change-quiz main..HEAD                                      # 变更报告 + 合并前必须通过的理解测验
 ```
@@ -157,7 +157,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 | **`keep-the-reasoning`** | 影响评估、事先定好验收标准、按固定顺序编写的交付报告 | 交付时：验收智能体成果，同时保留自己的判断 |
 | **`theory-vs-result`** | 先写预测卡，再按“理论预期 → 实测 → 是否一致 → 机理”逐项成卡，并分别给出两种判定 | 实测结果（回测、基准测试、A/B 测试、消融实验、训练）：任何数字都要附上它所检验的预测和成因 |
 
-在第 3 阶段结束时，以及 Cartographer 模式的执行阶段结束时，`finding-unknowns` 会转交给 `keep-the-reasoning`。`experiment` 路线返回的实验结果通过 `theory-vs-result` 汇报，其汇总表也同时充当交付报告中“预期与结果对比”一节。
+在第 3 阶段结束时，以及 Cartographer 模式的执行阶段结束时，`finding-unknowns` 会转交给 `keep-the-reasoning`。实验验证类（`experiment`）条目返回的结果通过 `theory-vs-result` 汇报，其汇总表也同时充当交付报告中“预期与结果对比”一节。
 
 ### 八种方法
 
@@ -255,20 +255,20 @@ Cartographer 模式是面向高风险工作的更严格流程。完整协议见 
 | 步骤 | 是什么 | 用于 |
 |------|--------|------|
 | **结果分级** | `note`（只有一个数字，没有决定依赖它）· `report`（有人会据此行动，或结果与预期不符）· `decision`（采纳／上线、预先约定的规则、涉及资金） | 卡片的详细程度取决于这个数字关系到什么 |
-| **预测卡** | 待检验的主张、机理链、方向 + 幅度 + 效应应出现的*位置*、噪声下限、证伪条件、判定规则；在看到数据之前写好，否则标为 `post-hoc` | 让结果有可能与预期不一致 |
+| **预测卡** | 待检验的主张、机理链、方向 + 幅度 + 效应应出现的*位置*、噪声下限、证伪条件、判定规则，以及写成的时间；在看到数据之前写好并保存。看到结果之后才写的卡片只算事后拟合（`post-hoc fit`），不算检验 | 让结果有可能与预期不一致 |
 | **公平测量** | 基线匹配、一次只改一个变量、种子相同、使用真正关心的指标、遵守数据预算 | 不把样本本身造成的差异算到改动头上 |
-| **结果卡** | 理论预期 → 实测 → 是否一致 → 机理；一致性分为 `consistent`（一致）· `partly`（部分一致）· `inconsistent`（不一致）· `can't tell`（无法判断）；机理证据分级为 `verified`（已验证）· `supported`（有数据支持）· `inferred`（推断）· `untested`（未检验） | 把事实、推断和未检验的解释清楚地区分开 |
+| **结果卡** | 理论预期 → 实测 → 是否一致 → 机理；一致性分为 `consistent`（一致）· `partly`（部分一致）· `inconsistent`（不一致）· `can't tell`（无法判断），以区间为准（区间同时包含 0 和预测值时判为无法判断）；机理证据分级为 `verified`（已验证）· `supported`（有数据支持）· `inferred`（推断）· `untested`（未检验） | 把事实、推断和未检验的解释清楚地区分开 |
 | **不符排查** | 管线 → 对比 → 指标 → 理论 → 环境；指出断裂的环节，以及能区分各种解释的最小检查 | 既不凭一次结果否定一个方向，也不靠一个故事挽救它 |
-| **两种判定** | 规则判定（`PASS` · `FAIL` · `UNCERTAIN` · `descriptive only`）与方向判定（`alive` · `alive-but-constrained` · `weakened` · `dead`） | 机理可以让一个方向继续成立，但不能把 `FAIL` 改成 `PASS` |
+| **两种判定** | 规则判定（使用规则自身的标签，例如 `PASS` · `FAIL` · `UNCERTAIN`，或 `descriptive only` · `void`）与方向判定（`alive` · `alive-but-constrained` · `weakened` · `dead`） | 机理可以让一个方向继续成立；无论是机理解释，还是在已用过的数据上重跑，都不能把 `FAIL` 改成 `PASS`。事后发现缺陷时，该次运行作废 |
 
-新增或收紧任何判定门槛之前，先用通俗的话向你解释：它防什么、为什么是这个数、不通过意味着什么；只有你批准后才冻结，并且只对此后的结果生效，不追溯。对 report 和 decision 级别的结果，卡片会交给只读的 `mechanism-auditor` 子代理：它会下调证据不足以支撑的等级，并提出一个能解释同一组数字的替代机理。
+新增或收紧任何判定阈值之前，先用通俗的话向你解释：它防什么、为什么是这个数、不通过意味着什么；只有你批准后才冻结，并且只对此后的结果生效，不追溯。对 report 和 decision 级别的结果，卡片会交给只读的 `mechanism-auditor` 子代理：它会下调证据不足以支撑的等级，并提出一个能解释同一组数字的替代机理。
 
 ### 子代理与模型路由
 
 **命令负责分发，技能负责决策，子代理负责执行，文档负责留存记录。** 每个技能的流程只在一处定义；命令和子代理用于增强功能，技能并不依赖它们。
 
 <p align="center">
-  <img src="assets/zh/framework.svg" alt="架构：一个插件包含两个技能和四个子代理；斜杠命令调用技能，技能按需委派子代理，过程都留有文件记录" width="96%">
+  <img src="assets/zh/framework.svg" alt="架构：一个插件包含三个技能和五个子代理；斜杠命令调用技能，技能按需委派子代理，过程都留有文件记录" width="96%">
 </p>
 
 | 子代理 | 模型 | 工具 | 用于 | 为何独立运行 |
@@ -394,11 +394,12 @@ Handoff lane: keep-the-reasoning — schema migration on a shared production tab
 [R1] Does the read-through cache cut API p95?
 Theory      : 80% of reads repeat within 60s → hit rate ~0.8 → p95 roughly halves.
               Writes should not change.
-Measured    : p95 412 → 371 ms (−10%), 5 reruns, spread ±15 ms; hit rate 0.31; write p95 flat.
+Measured    : read p95 −41 ms (412 → 371, −10%), 5 reruns, spread ±15 ms; hit rate 0.31;
+              write p95 +2 ms ±8 (a regression ≥20 ms would matter).
 Consistent? : partly — direction yes, magnitude no; writes flat as predicted.
-Mechanism   : broken link = "80% repeat". The cache key includes the session ID, so
-              repeats from different sessions miss [supported: the key format explains
-              a 0.31 hit rate].
+Mechanism   : broken link = "a repeat is a cache hit". Reads do repeat, but the cache
+              key includes the session ID, so repeats from different sessions miss
+              [supported: the key format explains a 0.31 hit rate].
               Next check: replay one hour of logs with a session-free key; the predicted
               hit rate is ≥0.7.
 ```

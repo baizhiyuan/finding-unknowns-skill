@@ -6,6 +6,7 @@ metadata:
   credits:
     source: "Distilled from a long-running empirical research practice, generalized for any measured claim"
     sibling: "finding-unknowns (unknowns before work) and keep-the-reasoning (the handoff) — this repository"
+    related-practice: "pre-registration; equivalence testing with a smallest effect of interest; multiple-testing and effective-trial corrections"
 ---
 
 # Theory vs Result
@@ -36,7 +37,8 @@ rule stays separate from the judgment about the direction.
 </Use_When>
 
 <Do_Not_Use_When>
-- Nothing was predicted and nothing is decided (a lookup, a status read, a log grep)
+- Nothing was predicted and nothing is decided (a lookup, a status read, a log grep).
+  If a prediction exists but little rides on it, use the Note lane instead
 - The work is building, not measuring. Use `finding-unknowns` before it and
   `keep-the-reasoning` at the handoff
 - A one-off sanity number with no decision attached. One sentence is enough: "measured X,
@@ -44,29 +46,34 @@ rule stays separate from the judgment about the direction.
 </Do_Not_Use_When>
 
 <Execution_Policy>
-- **Theory before data.** Write the prediction before looking at the result. A theory
-  written afterwards is labelled `post-hoc` and counts as weaker evidence
+- **Theory before data.** Write the prediction before looking at the result, and record
+  when it was written. A theory written afterwards is labelled `post-hoc`: it can only
+  produce a *post-hoc fit*, never a test (Step 3)
 - **Predict magnitude and location, not just sign.** "Faster" cannot fail. "~2× on cold
   reads, ~0 on warm" can
 - **Noise floor first.** No consistency verdict until you know how big a difference
   noise produces (seeds, reruns, windows, bootstrap). A difference inside it gets
   "can't tell", not "consistent"
 - **Fair comparison or no comparison.** Same data, same coverage, same seeds/runs, same
-  metric definition, same evaluation pipeline (how outputs become actions). Change one variable at a time, or say the
-  change was confounded
+  metric definition, same evaluation pipeline (how outputs become actions). Change one
+  variable at a time, or say the change was confounded
 - **The metric must be the objective.** Report the metric that is actually shipped,
   paid for or decided on. A convenient proxy is supporting evidence only
 - **Mechanism has an evidence tier.** Every explanation carries one of
-  `verified · supported · inferred · untested`. Never present an inference as a mechanism
+  `verified · supported · inferred · untested`. Never present an `inferred` mechanism
+  untagged or as established
 - **A mismatch names the broken assumption.** Say which link in the theory's chain failed,
   give the smallest check that would tell the candidate explanations apart, and say what
   adjustment would let the idea hold
 - **Two verdicts, never merged.** The *rule verdict* (what the pre-agreed rule says) is
   final for this run. The *direction verdict* (is the idea alive) is a judgment. A
-  mechanism can keep a direction alive, but it cannot overturn a rule verdict
+  mechanism can keep a direction alive, but it cannot overturn a rule verdict, and
+  neither can a rerun or a claim that the rule's metric was "only a proxy"
 - **Rules are explained before they are frozen.** Any new or tightened threshold is
   explained in plain language and approved by the user before it applies (Step 1.4)
-- **Report in the user's language.** Chinese labels: 理论预期 → 实测 → 是否一致 → 机理
+- **Report in the user's language.** Chinese labels: 理论预期 → 实测 → 是否一致 → 机理;
+  一致 · 部分一致 · 不一致 · 无法判断 · 事后拟合; 已验证 · 有数据支持 · 推断 · 未检验;
+  仍成立 · 有条件成立 · 已削弱 · 已否定; 作废
 </Execution_Policy>
 
 <Steps>
@@ -75,9 +82,9 @@ rule stays separate from the judgment about the direction.
 
 | Lane | Signals | Output |
 |------|---------|--------|
-| **Note** | one number, low stakes, no decision rides on it | one-line card |
+| **Note** | one number, a prediction exists, low stakes, no decision rides on it | one-line card: `[R#] expected {X}, measured {Y} → {verdict}; no action` |
 | **Report** | a result someone will act on; a mismatch; near a threshold | full cards + summary table (Step 4) |
-| **Decision** | adopt/reject, ship/no-ship, a pre-registered test, money or production | Report, plus the frozen rule quoted verbatim and the rule verdict separated from the direction verdict. No frozen rule → propose one via Step 1.4 and stop; the decision is the user's |
+| **Decision** | adopt/reject, ship/no-ship, a pre-registered test, money or production | Report, plus the frozen rule quoted verbatim and the rule verdict separated from the direction verdict. No frozen rule → propose one via Step 1.4 and stop; the decision is the user's. A rule approved after this result was seen does not apply to it: this result stays `descriptive only` |
 
 Announce: `Result lane: {note | report | decision} — {one-line reason}`.
 
@@ -95,25 +102,34 @@ Noise floor      : how big a difference noise makes, and how you know
 Falsifier        : the result that would show the claim is wrong
 Decision rule    : the pre-agreed rule if one exists, quoted verbatim; else "descriptive only"
 Data budget      : which data this run uses up (holdout / fresh traffic / forward period), if any
-Trials so far    : how many configs/hypotheses were already tried for this claim
+Trials so far    : raw configurations tried for this claim, and the effective number of
+                   independent hypotheses among them (both, cumulative across reports)
 Terms            : definitions of any term that could shift meaning ("accuracy", "return", "rare")
+Written          : {timestamp | commit | "before opening <path>"}
 ```
+
+In the Report and Decision lanes, save the card before measuring (default
+`predictions/{slug}.md`, or the Cartographer ledger row it belongs to). An unsaved card
+whose timing cannot be shown counts as `post-hoc`.
 
 1. **Scale the card to the stakes.** In the Note lane the Prediction line alone is enough.
 2. **Locate the effect.** Most real mechanisms act on a subset: the tails of a ranking, cold
    caches, small accounts, peak hours. Say where the effect should appear and
    where it should *not*. The "should not" half is often the sharper test.
 3. **Name the chain.** "Feature X carries information → the model learns it → the
-   decisions that act on it change → the outcome metric improves" has four links. When the result
-   misses, Step 3 has to say which link broke.
+   decisions that act on it change → the outcome metric improves" has four links. When the
+   result misses, Step 3 has to say which link broke.
 4. **Threshold gate.** If you are proposing a new or tighter pass/fail line, stop. Explain
    to the user in plain words: **what it protects against, why this number, what failing it
    means, and what it might wrongly reject.** Freeze it only after the user approves, and
    record the approval. Until then it stays a diagnostic. A diagnostic never quietly turns
    into a gate, and a rule applies only from its approval onward, never retroactively.
-5. **If the result is already in hand**, write the card anyway and mark it
-   `post-hoc theory — weaker`. Do not "predict" what you have already seen. A result that
-   exists but has not been opened can still get a genuine prediction.
+5. **If the result is already in hand**, write the card anyway and mark it `post-hoc`.
+   Do not "predict" what you have already seen. A post-hoc card is limited (Step 3): its
+   verdict is `post-hoc fit`, its mechanism tier is at most `inferred`, it never feeds a
+   rule verdict, and the report must include a prediction card for a fresh run. A result
+   that exists but has not been opened can still get a genuine prediction, if the card's
+   `Written` line shows it.
 6. **No theory at all** (pure exploration that still feeds a decision): label it
    `exploratory`; Consistent? = n/a; rule verdict = descriptive only. The deliverable
    includes a prediction card for the next, pre-registered run.
@@ -127,12 +143,12 @@ Before trusting a difference, check:
 | Matched baseline: same data window, coverage, seeds/runs, population, evaluation pipeline (how outputs become actions) | Crediting the change with what the sample did |
 | One variable changed, or the confounds named | Crediting the architecture with what the loss or preprocessing did |
 | Simplest baseline present | Complexity winning only because nothing simple was tried |
-| Same ≥N seeds/reruns on both sides; independent batches reported separately | A lucky seed; a pooled result hiding a failed replication |
+| The same number of seeds/reruns on both sides (state N); independent batches reported separately | A lucky seed; a pooled result hiding a failed replication |
 | All windows/segments reported, not the best ones | Cherry-picking periods, seeds or regimes |
 | Metric = objective; proxies labelled as proxies | A metric that improves while what you are paid for gets worse |
 | Pipeline sanity: leakage, alignment, units, NaNs, numeric failures | A bug read as an economic or product result |
-| Data budget respected: holdout read only when approved, then once | A "confirmation" tuned on the very data it claims to confirm |
-| Trials counted by independent hypothesis, and reported | Best-of-N presented as a single test |
+| Data budget respected: holdout read only when approved, then once; budget carried forward across reports on the same claim | A "confirmation" tuned on the very data it claims to confirm |
+| Trials reported as raw configurations and as effective independent hypotheses, cumulative across reports | Best-of-N presented as a single test |
 
 Report checks that failed or were skipped as caveats. Never drop them silently.
 
@@ -150,6 +166,10 @@ Mechanism   : {why} [verified | supported | inferred | untested]
 ```
 
 **Verdict rules**
+- **The interval governs.** Direction counts as matched only when the interval (CI, or the
+  spread across reruns) excludes 0; magnitude only when it excludes sizes that would
+  contradict the prediction. An interval that contains both 0 and the predicted size is
+  `can't tell`. The noise floor informs how wide that interval is; it does not replace it.
 - **consistent**: direction and magnitude both match, beyond the noise floor.
 - **partly**: direction matches but magnitude or location does not, or some segments match
   and others don't. Say which.
@@ -162,10 +182,19 @@ Mechanism   : {why} [verified | supported | inferred | untested]
   excludes any effect large enough to matter. State that size; otherwise it is can't tell.
 - **untraceable** (used by the auditor): the number cannot be found in the artifacts →
   treat as can't tell until it is traced.
+- **post-hoc fit**: the card's theory was written after the result was seen. It is not a
+  test. Report it as `post-hoc fit (not a test)`, cap the mechanism tier at `inferred`
+  unless a later, separately predicted test was run, keep it out of any rule verdict, and
+  add a prediction card for a fresh run.
+- **Falsifier.** If the Step 1 falsifier fired, say so on the card. A direction can be
+  called `dead` only on a fired falsifier, or on independent failures that each name the
+  same broken link.
 
 **Mechanism evidence tiers**
 - `verified`: a targeted test was run that would have come out differently if the
-  mechanism were false (an ablation, a counterfactual replay, a decomposition that adds up).
+  mechanism were false (an ablation, a counterfactual replay, a decomposition whose parts
+  were measured independently and could have failed to sum to the total; an accounting
+  identity always sums and is not a test).
 - `supported`: the data fits the mechanism, but no discriminating test was run.
 - `inferred`: a plausible story with no check behind it.
 - `untested`: named only so it can be tested later.
@@ -173,8 +202,15 @@ Mechanism   : {why} [verified | supported | inferred | untested]
 **When theory and result disagree, walk this order.** It goes from the cheapest
 explanation to the most expensive:
 1. **Our pipeline.** Bug, leakage, misalignment, unit/scale error, numeric failure
-   (saturation, overflow, NaN masking). A numeric failure gets fixed first. It is not
-   evidence against the idea.
+   (saturation, overflow, NaN masking). A defect found after the result does not convert
+   the result: the run is marked `void: pipeline defect` and its rule verdict is `void`.
+   A void must name the defect with evidence and show that it changes the headline
+   number; otherwise the original verdict stands. The original verdict stays visible
+   (`FAIL → void: {defect, evidence}`), and the auditor checks the claim.
+   A rerun after the fix is a new run. On fresh data it can be confirmatory; on data
+   already read (holdout, forward period) it is labelled `re-read, not confirmatory` and
+   needs the user's approval before it runs. Check runs that passed for the same defect
+   class too: bugs found only after failures are a one-sided search.
 2. **Our comparison.** Baseline mismatch, confound, power too low, wrong segment.
 3. **Our metric.** The proxy moved and the objective did not, or the other way round.
 4. **Our theory.** A specific link in the chain is wrong. Name it.
@@ -194,6 +230,7 @@ Report and Decision lanes deliver in this order (Note lane: the one-line card on
 ```
 Result lane: {lane} — {reason}
 
+0. Frozen rule        — Decision lane only: quoted verbatim, with its approval date
 1. Bottom line       — 1–3 lines. The rule verdict (if any) and the direction verdict,
                        stated separately.
 2. Summary table     — | Question | Theory | Measured | Consistent? | Mechanism [tier] |
@@ -208,22 +245,27 @@ Result lane: {lane} — {reason}
 
 **Rule verdict vs direction verdict**
 - Rule verdict: in the frozen rule's own labels (e.g. `PASS · FAIL · UNCERTAIN`), or
-  `descriptive only`. If the result lands exactly on a boundary the rule does not cover, say so
-  and ask. Do not resolve it in your own favour.
+  `descriptive only`, or `void` (pipeline defect, Step 3). It is computed on the rule's
+  own metric as defined when the rule was frozen. An argument that this metric was a proxy
+  feeds the direction verdict and the next rule proposal, never this verdict. If the
+  result lands exactly on a boundary the rule does not cover, say so and ask. Do not
+  resolve it in your own favour.
 - Direction verdict: `alive · alive-but-constrained · weakened · dead`, with the reason.
-  A single failed run rarely makes a direction `dead`. One configuration failed;
-  say which assumption the failure constrains. A good mechanism, in turn, does not turn a
-  rule `FAIL` into a `PASS`. It only justifies a new, pre-registered test.
+  `dead` needs a fired falsifier or independent failures naming the same broken link;
+  otherwise `weakened` at most. A single failed run rarely makes a direction `dead`. One
+  configuration failed; say which assumption the failure constrains. A good mechanism, in
+  turn, does not turn a rule `FAIL` into a `PASS`. It only justifies a new, pre-registered
+  test.
 - A descriptive result is never upgraded into an adoption decision in the same report.
-- A screen can only eliminate. Passing a screen means "not eliminated", never PASS or
-  confirmation.
+- A screen (a cheap pre-filter run before the real test) can only eliminate. Passing a
+  screen means "not eliminated", never PASS or confirmation.
 - A pooled result never covers for a failed independent batch. Report the batch
   that failed by itself first.
 
 </Steps>
 
 <Anti_Patterns>
-Each of these came up in real research and cost a decision:
+Recurring failures in empirical work. Each costs a decision when it goes unnoticed:
 
 | Pattern | What it looks like | Instead |
 |---------|-------------------|---------|
@@ -238,7 +280,9 @@ Each of these came up in real research and cost a decision:
 | Silent gate | A diagnostic gets used as a rejection line | Step 1.4: explain, get approval, apply going forward only |
 | Retroactive rule | A new threshold re-judges old results | Rules apply from their approval onward |
 | Blame the world | "Regime change" with no evidence | Check pipeline → comparison → metric → theory first |
-| Numeric failure as idea failure | A NaN-masked loss or an overflowed counter reported as "approach X doesn't work" | Fix the numerics, then rerun |
+| Numeric failure as idea failure | A NaN-masked loss or an overflowed counter reported as "approach X doesn't work" | Mark the run `void`, fix the numerics, rerun on fresh data (or a re-read with approval) |
+| Void-and-rerun rescue | A failed run is voided for a bug, rerun on the same holdout, and the new PASS reported as confirmation | A re-read is `not confirmatory`; audit passing runs for the same bug |
+| Post-hoc as prediction | A theory written after seeing the result, reported as `consistent [supported]` | `post-hoc fit (not a test)`, tier ≤ `inferred`, plus a prediction card for a fresh run |
 | Undefined terms | "Rare event", "accuracy", "return" used in shifting senses | Define each term before measuring |
 </Anti_Patterns>
 
@@ -246,32 +290,33 @@ Each of these came up in real research and cost a decision:
 <Good>
 ```
 Result lane: decision — ship/no-ship for a shorter checkout form, pre-registered rule.
-Frozen rule (verbatim): "Ship if the conversion-lift 95% CI lower bound > 0 and the
-refund-rate increase is < 0.3 pt."
+Frozen rule (verbatim, approved before launch): "Ship if the conversion-lift 95% CI lower
+bound > 0 and the refund-rate increase is < 0.3 pt."
 
 Bottom line: rule verdict FAIL (lower bound −0.1 pt). Direction: alive-but-constrained.
-The lift is where the theory said it would be (mobile) and absent where it said it would
-be absent (desktop), which dilutes the overall number.
+The overall effect cannot be told apart from zero, but the lift is where the theory said
+it would be (mobile) and absent where it said it would be absent (desktop).
 Noise floor: last month's A/A test, ±0.4 pt on conversion.
 
 | Question | Theory | Measured | Consistent? | Mechanism [tier] |
 |---|---|---|---|---|
-| Overall conversion lift? | Fewer fields → fewer abandons → about +1.0 pt | +0.5 pt [−0.1, +1.1], n = 48k per arm | partly: direction yes, size half | Diluted by desktop (next row) [supported] |
-| Where does it show up? | Mobile about +1.5 pt (typing is costly); desktop ≈ 0 (a gain ≥ 1 pt would matter) | Mobile +1.3 [+0.4, +2.2]; desktop −0.1 [−0.9, +0.7] | consistent, including the predicted null | Typing cost on small screens [verified: per-field abandon events fell on mobile only, which a design-wide effect would not produce] |
-| Refunds unchanged? | No mechanism links form length to refunds | +0.1 pt [−0.2, +0.4] | can't tell: upper bound crosses 0.3 | none proposed [untested] |
+| Overall conversion lift? | Fewer fields → fewer abandons → about +1.0 pt | +0.5 pt [−0.1, +1.1], n = 48k per arm | can't tell: the CI spans both 0 and the predicted +1.0 | Diluted by desktop (next row) [supported] |
+| Where does it show up? | Mobile about +1.5 pt (typing is costly); desktop ≈ 0 (a gain ≥ 1 pt would matter) | Mobile +1.3 [+0.4, +2.2]; desktop −0.1 [−0.9, +0.7] | consistent, including the predicted null | Typing cost on small screens [verified: abandon events fell only at the three typing-heavy fields and only on mobile; a design-wide or scroll-length effect would also have moved the non-typing fields, and it did not] |
+| Refunds unchanged? | No mechanism links form length to refunds | +0.1 pt [−0.2, +0.4] | can't tell: upper bound crosses 0.3 | no mechanism named (no tier) |
 
 Facts: mobile lift; desktop null; overall CI crosses 0.
 Inferences: none beyond the tiers above.
 To test: refund effect at a larger n.
+Caveats: none of the Step 2 checks failed; the prediction card was saved before launch.
 Not checked: novelty effect after week 2.
 Next: pre-register a mobile-only test under the same rule. It uses fresh traffic and
 needs your approval. This run's FAIL stands.
-```
-Why good: each prediction has a size and a location, including where the effect should
-not appear. The predicted null is judged against a stated size that matters. The mechanism
-earns `verified` from a split that could have come out the other way. The rule verdict
-stays FAIL while the direction stays alive, and the next step is a new pre-registered test,
-not a reinterpretation of this one.
+``` Why good: each prediction has a size and a location, including where the effect should
+not appear. The overall row is `can't tell`, not "partly", because its interval holds both
+0 and the prediction. The predicted null is judged against a stated size that matters. The
+mechanism earns `verified` from a split that could have come out the other way. The rule
+verdict stays FAIL while the direction stays alive, and the next step is a new
+pre-registered test, not a reinterpretation of this one.
 </Good>
 
 <Good>
@@ -282,9 +327,9 @@ Theory      : 80% of reads repeat within 60s → hit rate ~0.8 → p95 roughly h
 Measured    : read p95 −41 ms (412 → 371, −10%), 5 reruns, spread ±15 ms; hit rate 0.31;
               write p95 +2 ms ±8 (a regression ≥20 ms would matter).
 Consistent? : partly — direction yes, magnitude no; writes flat as predicted.
-Mechanism   : broken link = "80% repeat". The cache key includes the session ID, so
-              repeats from different sessions miss [supported: the key format explains
-              a 0.31 hit rate].
+Mechanism   : broken link = "a repeat is a cache hit". Reads do repeat, but the cache
+              key includes the session ID, so repeats from different sessions miss
+              [supported: the key format explains a 0.31 hit rate].
               Next check: replay one hour of logs with a session-free key; the predicted
               hit rate is ≥0.7.
 ```
@@ -295,9 +340,9 @@ change did no damage. The next check is cheap and can fail.
 <Bad>
 ```
 New ranking model: NDCG 0.412 vs baseline 0.418. Doesn't pass, dropping this direction.
-```
-Why bad: no theory, no noise floor (is 0.006 within run-to-run spread?), no check that the
-runs and query sets matched, no broken link named. A direction got discarded on one confounded number.
+``` Why bad: no theory, no noise floor (is 0.006 within run-to-run spread?), no check that
+the runs and query sets matched, no broken link named. A direction got discarded on one
+confounded number.
 </Bad>
 
 <Bad>
@@ -313,19 +358,28 @@ pre-registered test …".
 
 <Fresh_Context_Check>
 The context that wrote the theory and ran the measurement is the one most likely to
-believe its own mechanism. For Report and Decision lanes, hand the cards (not your
-conclusion) to the `mechanism-auditor` agent when it is available, or to any fresh
-subagent. Ask it to downgrade any tier the evidence does not support, to name an
-alternative mechanism that fits the same numbers, and to propose the cheapest
-discriminating check. Without subagents, do it yourself and label it
-`same-context audit — weaker`.
+believe its own mechanism. For Report and Decision lanes, hand the auditor the inputs, not
+your conclusion: the cards, the saved prediction card with its `Written` line, the frozen
+rule quoted verbatim, and the paths of the artifacts behind every number (without paths,
+every card comes back `untraceable`). Use the `mechanism-auditor` agent when it is
+available, or any fresh subagent. Ask it to downgrade any verdict or tier the evidence does
+not support, to name an alternative mechanism that fits the same numbers for every card
+(including `consistent` ones), and to propose the cheapest discriminating check.
+
+Apply the audit: downgrades take effect as given; where you disagree, keep the audit's
+reading and put yours in Caveats; the alternative mechanisms and checks go into Next, and
+into `keep-the-reasoning` sections 5 and 6 when a handoff follows. Without subagents, do
+the audit yourself and label it `same-context audit — weaker`.
 </Fresh_Context_Check>
 
 <Final_Checklist>
 - [ ] Lane announced; Decision lane quotes the frozen rule verbatim
-- [ ] Theory written before the result, or marked `post-hoc`
+- [ ] Theory written before the result with its `Written` line, or marked `post-hoc`
+      (then: `post-hoc fit`, tier ≤ `inferred`, no rule verdict, prediction card for a fresh run)
+- [ ] Every verdict reads the interval: one that holds both 0 and the prediction is `can't tell`
+- [ ] Defects found after the result void the run; any re-read of spent data is labelled and approved
 - [ ] Prediction states direction, magnitude and location; noise floor stated
-- [ ] Comparison matched (data, coverage, seeds, metric, mapping), or confounds named
+- [ ] Comparison matched (data, coverage, seeds, metric, evaluation pipeline), or confounds named
 - [ ] Objective metric reported first; proxies labelled
 - [ ] Every result has all four parts; every mechanism has a tier
 - [ ] Every mismatch names the broken link and the smallest next check

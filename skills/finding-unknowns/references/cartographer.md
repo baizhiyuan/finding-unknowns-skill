@@ -135,10 +135,22 @@ by its route. Repeat until the gate passes or the user exits:
      ```
 
    - `territory` → run the check now (Grep/Read/scout); report the evidence found.
-   - `experiment` → do NOT block the loop: record the experiment spec (what to run, what
-     result clears the row) as the row's clearing action; the row stays `probing`.
-     When results return, report them as `theory-vs-result` cards and write the row's
-     resolution from the card (its consistency verdict and mechanism tier).
+   - `experiment` → do NOT block the loop: record the experiment spec as the row's
+     clearing action, written as a `theory-vs-result` prediction card (saved with its
+     `Written` line); the row stays `probing`. "What result clears the row" is a pass
+     line, so it goes through that skill's threshold gate (explained in plain language and
+     approved by the user) or the row can only clear descriptively.
+     When results return, report them as `theory-vs-result` cards and append the card's
+     verdict and tier to the row's resolution column (append-only). Mapping: `consistent`
+     with tier `verified` may resolve the row, subject to step 3.5 (a single source at
+     cost ≥ 4 stays `resolved-provisional`) and the irreversibility floor; `consistent` or
+     `partly` with a lower tier → `resolved-provisional`, with the card's next check as the
+     discriminating check; `inconsistent` → `resolved-provisional` with "prior contradicted:
+     broken link = …" (the experiment answered the question; the answer is that the prior
+     was wrong), the broken link becomes a new row, and sibling rows that rested on the same
+     belief are re-examined; `can't tell`, `post-hoc fit` or `void` → the row stays `probing`. For
+     cost ≥ 4 rows the `mechanism-auditor` audit can serve as step 3.5's adversarial check;
+     it does not count as an independent second source.
    - `audit` → likewise: name the artifact, what to look for, and the expected effort;
      the row stays `probing` until the audit result arrives.
 3. **Re-score** the row's P(wrong) from the answer/evidence; recompute regret. Answers may

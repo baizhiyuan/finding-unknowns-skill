@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.0.0 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v4.1.0 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
 </p>
 
 <p align="center">
@@ -253,11 +253,11 @@ When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, ver
 | Step | What it is | Use for |
 |------|------------|---------|
 | **Result triage** | `note` (one number, nothing rides on it) · `report` (someone will act on it, or it misses) · `decision` (adopt/ship, a pre-agreed rule, money) | Scaling the card to what rides on the number |
-| **Prediction card** | Claim, mechanism chain, direction + magnitude + *where* it should show, noise floor, falsifier, decision rule — written before the data, else labelled `post-hoc` | Giving a result something to disagree with |
+| **Prediction card** | Claim, mechanism chain, direction + magnitude + *where* it should show, noise floor, falsifier, decision rule, and when it was written; saved before the data. A card written after the result is a `post-hoc fit`, not a test | Giving a result something to disagree with |
 | **Fair measurement** | Matched baseline, one variable changed, same seeds, the metric you are actually paid for, data budget respected | Not crediting a change with what the sample did |
-| **Result card** | Theory → Measured → Consistent? → Mechanism (理论预期 → 实测 → 是否一致 → 机理); consistency is `consistent` · `partly` · `inconsistent` · `can't tell`; mechanism tier is `verified` · `supported` · `inferred` · `untested` | Keeping facts, inferences, and untested stories visibly apart |
+| **Result card** | Theory → Measured → Consistent? → Mechanism (理论预期 → 实测 → 是否一致 → 机理); consistency is `consistent` · `partly` · `inconsistent` · `can't tell`, read from the interval (one that holds both 0 and the prediction is `can't tell`); mechanism tier is `verified` · `supported` · `inferred` · `untested` | Keeping facts, inferences, and untested stories visibly apart |
 | **Mismatch walk** | Pipeline → comparison → metric → theory → environment; name the broken link and the smallest check that separates the explanations | Neither dismissing a direction on one run nor rescuing it with a story |
-| **Two verdicts** | Rule verdict (`PASS` · `FAIL` · `UNCERTAIN` · `descriptive only`) vs direction verdict (`alive` · `alive-but-constrained` · `weakened` · `dead`) | A mechanism can keep a direction alive; it never turns a `FAIL` into a `PASS` |
+| **Two verdicts** | Rule verdict (in the rule's own labels, e.g. `PASS` · `FAIL` · `UNCERTAIN`, or `descriptive only` / `void`) vs direction verdict (`alive` · `alive-but-constrained` · `weakened` · `dead`) | A mechanism can keep a direction alive; neither a mechanism nor a rerun on spent data turns a `FAIL` into a `PASS`. A defect found afterwards voids the run instead |
 
 A new or tightened threshold is first explained in plain language — what it protects against, why this number, what failing it means — and frozen only after you approve; it applies from then on, never retroactively. For report and decision lanes, the cards go to the read-only `mechanism-auditor` agent, which downgrades tiers the evidence does not earn and proposes an alternative mechanism that fits the same numbers.
 
@@ -266,7 +266,7 @@ A new or tightened threshold is first explained in plain language — what it pr
 **Commands dispatch, skills decide, agents execute, documents persist.** Procedure lives in one place per skill; commands and agents are enhancements, not dependencies.
 
 <p align="center">
-  <img src="assets/framework.svg" alt="Framework layers: five slash commands dispatch into two skills, which delegate to four specialist agents that write persistent artifacts" width="96%">
+  <img src="assets/framework.svg" alt="Framework layers: six slash commands dispatch into three skills, which delegate to five specialist agents that write persistent artifacts" width="96%">
 </p>
 
 | Agent | Model | Tools | Backs | Why isolated |
@@ -392,11 +392,12 @@ The anti-pattern it replaces: _"Done! The migration is ready and all tests pass 
 [R1] Does the read-through cache cut API p95?
 Theory      : 80% of reads repeat within 60s → hit rate ~0.8 → p95 roughly halves.
               Writes should not change.
-Measured    : p95 412 → 371 ms (−10%), 5 reruns, spread ±15 ms; hit rate 0.31; write p95 flat.
+Measured    : read p95 −41 ms (412 → 371, −10%), 5 reruns, spread ±15 ms; hit rate 0.31;
+              write p95 +2 ms ±8 (a regression ≥20 ms would matter).
 Consistent? : partly — direction yes, magnitude no; writes flat as predicted.
-Mechanism   : broken link = "80% repeat". The cache key includes the session ID, so
-              repeats from different sessions miss [supported: the key format explains
-              a 0.31 hit rate].
+Mechanism   : broken link = "a repeat is a cache hit". Reads do repeat, but the cache
+              key includes the session ID, so repeats from different sessions miss
+              [supported: the key format explains a 0.31 hit rate].
               Next check: replay one hour of logs with a session-free key; the predicted
               hit rate is ≥0.7.
 ```

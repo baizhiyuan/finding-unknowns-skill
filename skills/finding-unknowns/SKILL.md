@@ -478,7 +478,7 @@ floor, and lifecycle persistence from discovery through review.
 | Need | Sibling (when installed) | Relationship |
 |------|--------------------------|--------------|
 | Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repo) | the handoff half — Phase 3 and Phase E's back end hand over to it |
-| Reporting an experiment result against its prediction | `theory-vs-result` (this repo) | returning `experiment`-route results are reported as Theory → Measured → Consistent? → Mechanism cards; the row's resolution is written from the card |
+| Reporting an experiment result against its prediction | `theory-vs-result` (this repo) | `experiment`-route rows are specified as its prediction cards and come back as Theory → Measured → Consistent? → Mechanism cards, mapped onto the row per `references/cartographer.md` (C1, `experiment`) |
 | Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` | Cartographer's ambiguity gating, topology gate and challenge modes are adapted from it; its `--frontier` mode is the closest analogue of batched independent questions + territory routing. Both are approval-gated. Use it when you want the OMC runtime |
 | Fog test + decision tickets on a tracker | `oh-my-claudecode:ask-navigator` | ticket types map onto routes (research ≈ territory, loft ≈ experiment, grilling ≈ interview); use it when decisions must live in an issue tracker rather than a ledger file |
 | Adversarial review of a diff/design | `oh-my-claudecode:interrogate` | stronger than a same-model panel for cost ≥ 4 code claims (C1 step 3.5) |

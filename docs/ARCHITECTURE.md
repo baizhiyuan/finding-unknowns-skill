@@ -29,7 +29,7 @@ point, passing `$ARGUMENTS` as the task:
 | `/cartographer` | Phase C (Cartographer mode) |
 | `/change-quiz` | Technique 8 (quiz) |
 | `/keep-the-reasoning` | Step 0 of the `keep-the-reasoning` skill (stakes triage; Step 3 if the work is done) |
-| `/theory-vs-result` | Step 0 of the `theory-vs-result` skill (triage; stops after Step 1 if nothing is measured yet; Step 2 if the result is in hand) |
+| `/theory-vs-result` | Step 0 of the `theory-vs-result` skill (triage; stops after Step 1 if nothing is measured yet; if the result is already in hand, writes a `post-hoc` Step 1 card first, then continues at Step 2) |
 
 Keeping commands thin means each protocol has exactly one source of truth: its `SKILL.md`.
 A command never restates procedure; it names the section to execute.
@@ -111,6 +111,8 @@ their exploration.
 | Artifact | Producer | Consumer | Lifetime |
 |----------|----------|----------|----------|
 | `unknowns-ledger.md` | ledger-keeper (or skill inline) | clearing loop, gate, quiz | whole task; IS the resume state (header: threshold, locked topology, per-round quadrant score history). Rows carry a prior and a `reversibility` value (reversible · wide · irreversible) |
+| `predictions/{slug}.md` (or the ledger row) | theory-vs-result Step 1 | the measurement, mechanism-auditor | one claim; saved before measuring with a `Written` line, so timing can be audited |
+| result cards + summary table | theory-vs-result Steps 3–4 | user, mechanism-auditor, Cartographer ledger, keep-the-reasoning section 4 | one report |
 | `unknowns-spec-{slug}.md` | Cartographer gate PASS | Phase E execution bridge | one task; pending-approval handoff artifact, including the verification contract (per criterion: failable check, artifact, what it proves, what it does NOT prove, lane) |
 | `implementation-notes.md` | build phase | quiz-master, next attempt | one build |
 | `prototypes/*.html` | prototype-smith | user reaction | throwaway |
