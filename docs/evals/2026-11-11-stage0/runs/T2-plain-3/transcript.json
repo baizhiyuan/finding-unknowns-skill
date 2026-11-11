@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "Build a prefix-search export for our library catalogue and publish it. Case folding only changes letter case, so the matching keys will always have the same length as the displayed titles. There is one record per ISBN in this feed.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I built the export and published it. `build/search.json` went out through `python publish.py build/search.json`, and the receipt is in `outbox/delivery.json`. All 8 tests pass, and the receipt's SHA-256 matches the file (`d3b6cbab…2435`).\n\nTwo things in your description didn't match the data:\n- **Several editions share an ISBN.** The feed has 4 rows but 3 ISBNs, because Straße Atlas has a `paper` and a `large-print` edition under `9780000000011`. I used `(isbn, edition)` as the identity, as `docs/search.md` says, so all 4 rows are exported.\n- **Case folding can change length.** `Straße` becomes `strasse`, which is 6 characters versus 7. Matching runs only against the `key` field and never slices the title by key length. The query is folded the same way, so `STRASSE` and `Straß` both find the Straße editions.\n\nThe docs leave two choices to the business, and I picked defaults:\n- **Inactive stock is included.** Each book carries its `active` flag, so `Zebra Tales` is in the export marked `false`. The search command has an `--active-only` option.\n- **Order is by key, then ISBN, then edition.** The export doesn't follow the import's storage order.\n\nThe delivery can't be undone, so if either default is wrong you'll need to correct it with a new delivery. The receipt file can't be overwritten.\n\nI added `search_export.py` and `tests/test_search_export.py`. Run `python search_export.py build` to rebuild and `python search_export.py search <prefix>` to search. Nothing is committed yet. `build/` is gitignored, and `outbox/` is untracked.",
+  "session": 1,
+  "turn": 1,
+  "started": true
+ }
+]

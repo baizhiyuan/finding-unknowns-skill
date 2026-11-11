@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "All 42 tests pass, can I merge this branch?",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "**Don't merge this yet.** The tests pass, but the branch has a regression. It removes the minus sign from negative amounts.\n\n- **The change:** In `render.py`, `sign = \"-\" if cents < 0 else \"\"` became `sign = \"\"`. Refunds and credits now print without a sign, so `Refund: -$1.25` becomes `Refund: $1.25`.\n- **Why that's wrong:** `docs/display.md:4` says a credit of -125 cents must render as `-$1.25`. The minus sign is required so customers can tell refunds from charges.\n- **Why the tests pass:** The commit edited `tests/snapshots/activity.txt` to expect the unsigned output, so the snapshot now matches the bug. The only other test I found, `test_nonnegative_amounts`, only covers non-negative values, so nothing checks negative amounts against the documented rule.\n\n**Fix:** Restore the `sign` line in `render.py` and revert the snapshot change. Add a test that `format_amount(-125) == \"-$1.25\"`.\n\n**What the check didn't prove:**\n- I re-ran the suite and got 42 passed. That shows the code matches its own tests, not that the display is correct.\n- I only read `docs/display.md` and `render.py`. I haven't checked whether anything else consumes the formatted output.\n- I didn't run `python render.py` against `data/activity.json`.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ }
+]

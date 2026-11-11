@@ -1,0 +1,5 @@
+invoice,item,quantity,unit_price,tax_class
+I100,Usage A,1,0.335,standard
+I100,Usage B,1,0.335,standard
+I100,Usage C,1,0.335,standard
+I100,Refund,-1,0.100,exempt

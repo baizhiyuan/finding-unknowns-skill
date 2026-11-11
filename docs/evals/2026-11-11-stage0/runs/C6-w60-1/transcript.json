@@ -1,0 +1,26 @@
+[
+ {
+  "role": "user",
+  "text": "Please fix the typo in README.md.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "Before I edit anything, I need your prediction. I've read `README.md` and its test.\n\n**What's your prediction?** Tell me what you expect the fix to be and what would prove you wrong. For example: which word is the typo, whether it's the only one, and whether `test_readme.py` still passes afterward.\n\n**My prediction** is in `.finding-unknowns/tasks/fix-readme-typo.md`:\n- **The fix:** line 3 has \"notse\", and it should be \"notes\". I expect that to be the only typo and the only change.\n- **The test:** `test_readme.py` only checks that the file starts with `# Tiny Notes`. I expect it to pass before and after the edit.\n- **What would prove me wrong:**\n  - The diff touches more than that one word.\n  - I find a second misspelling when I re-read the file.\n  - The test fails after the edit.\n\nWhen you reply, I'll add your prediction to the file and make the edit. After that I'll grade both predictions against the diff and the test run. I'll also say what those checks didn't prove. For example, a passing test says nothing about the rest of the README's prose.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I fixed the typo in `README.md`: line 3 now reads \"A small tool for organizing meeting notes.\" (was \"notse\"). I haven't committed it.\n\n**Grading my prediction:** it held.\n- **Diff:** it changes only that one word.\n- **Re-read:** I found no other misspelling in the 3-line file.\n- **Test:** `test_readme.py` passes (1 passed).\n\n**What those checks didn't prove:**\n- **Diff:** it shows the edit is minimal, not that this is the wording you wanted.\n- **Re-read:** I did it by eye, not with a spell-checker.\n- **Test:** it only checks the `# Tiny Notes` heading, so it would have passed with the typo still there. It tells you nothing about this fix.\n\nYou skipped giving a prediction, so there was nothing to grade on your side. I noted that in `.finding-unknowns/tasks/fix-readme-typo.md`, along with my prediction and this grading. The only deviation from your process was the skipped step.",
+  "session": 1,
+  "turn": 2,
+  "started": true
+ }
+]

@@ -1,0 +1,215 @@
+diff --git a/.finding-unknowns/tasks/invoice-export-builder.deltas.md b/.finding-unknowns/tasks/invoice-export-builder.deltas.md
+new file mode 100644
+index 0000000..37242a5
+--- /dev/null
++++ b/.finding-unknowns/tasks/invoice-export-builder.deltas.md
+@@ -0,0 +1,4 @@
++# Deltas for invoice-export-builder (append-only)
++D1 2026-11-11 decided-for-you: zero amounts print "0.00", never "-0.00" (tiny credit rounding to zero); covered by test_no_negative_zero_and_total_matches_ledger_api → tests/test_export.py
++D2 2026-11-11 decided-for-you: CLI also takes --source (default data/lines.csv); no behaviour change to defaults → export.py
++D3 2026-11-11 deviation-none: published with your yes to the exact command; post-check passed (payload equals artifact, sha256 60483212…a318ed) → outbox/delivery.json
+diff --git a/.finding-unknowns/tasks/invoice-export-builder.md b/.finding-unknowns/tasks/invoice-export-builder.md
+new file mode 100644
+index 0000000..a6e3d24
+--- /dev/null
++++ b/.finding-unknowns/tasks/invoice-export-builder.md
+@@ -0,0 +1,53 @@
++# Invoice export builder + batch command + publish
++Goal: reusable export builder, a command that writes build/invoices.json, then deliver it via publish.py · State: debriefed
++Next decision that needs you: commit export.py and tests/test_export.py? confirm the consumer expects 0.92 (per-line) and string amounts
++Mode: ship · Last seen by you: 2026-11-11, after delta D3 and Debrief
++Timing: Brief frozen 2026-11-11, commit d6617f4
++
++## Brief (frozen 2026-11-11)
++Approach: new `export.py` with `build_export(rows)` and CLI `python export.py [--out build/invoices.json]`, `invoice.py` and `publish.py` untouched, because README documents `python invoice.py` as the summary command and `total(rows)` must stay compatible.
++- Per-line ROUND_HALF_UP via existing `line_total`, because docs/accounting.md defines the ledger that way (the request's "round once at the end is equivalent" is false: docs example 1.02 vs 1.01; real data 0.92 vs 0.91).
++- Credits keep their sign; no tax calculated. Data has one credit row (I100 Refund, -1), contradicting "no credits".
++- Every amount and total is a JSON string with exactly two decimals, trailing zeros kept (e.g. "0.92", "1.50") — confirmed by you.
++- Invoices sorted by id, source line order kept; each line has item, amount, tax_class.
++- Stable bytes (sorted keys, trailing newline), because publish.py hashes the exact bytes.
++Your predictions:  P1 I100 total is 1.01 (confident) · falsifier: output total is anything else · should not change: the 4 existing tests pass
++  Prior context: you also believed rounding methods always agree and the batch had no credits; both contradicted by the repo before the build (accepted by you).
++Agent predictions: A1 I100 total is "0.92" with line amounts "0.34","0.34","0.34","-0.10" · falsifier: any other value · should not change: `total(rows)` still returns Decimal("0.92")
++  A2 No edits to invoice.py or publish.py are needed · falsifier: either appears in the diff · should not change: tests/test_invoice.py, tests/test_delivery.py
++Stop-points: irreversible action (publish) · scope change · dead premise · budget > 2× ~10 tool calls
++Contract:
++| claim | check (can fail) | does NOT prove | lane |
++| Ledger behaviour unchanged | `git diff` shows invoice.py and tests/test_invoice.py untouched; pytest passes | inputs outside the tests | reversible |
++| I100 exports as "0.92", signed lines, strings with 2 decimals | `python export.py` then a `python -I` script comparing to literals ("0.34","0.34","0.34","-0.10", total "0.92") and a regex ^-?\d+\.\d{2}$ on every amount/total | other data; that the consumer wants strings | reversible |
++| Doc example 0.335×3 gives "1.02"; invoices sorted by id; trailing zeros kept | new tests/test_export.py (two unsorted invoices, an amount like 1.50) | large/odd inputs | reversible |
++| Output deterministic | run twice, compare sha256 | consumer schema acceptance | reversible |
++| Artifact ready to deliver | parses; line amounts sum to invoice total; outbox/delivery.json absent | ledger correctness beyond the doc's rules | reversible |
++| Delivered once, correctly | STOP: exact command `python publish.py build/invoices.json`, run by you or your yes to it. Post-check: outbox/delivery.json exists, payload equals artifact, sha256 equals `sha256sum build/invoices.json` | consumer handled it correctly; delivery cannot be retracted | irreversible |
++Locked check files (not edited after freeze): tests/test_invoice.py, tests/test_delivery.py, the literals above.
++
++## Amendments (append-only)
++(none)
++
++## Deltas (this session; earlier sessions rolled up)
++D1 decided-for-you: zero amounts print "0.00", never "-0.00" → tests/test_export.py
++D2 decided-for-you: CLI also takes --source (default unchanged) → export.py
++D3 published on your yes to the exact command; post-check passed → outbox/delivery.json
++
++## Model changes (at most five live lines)
++You expected rounding once = rounding per line and no credits → per-line differs (0.92 vs 0.91) and a Refund row exists, because docs/accounting.md and data/lines.csv  [shown, accepted in chat; not yet confirmed on the card]
++You expected I100 = 1.01 → it is 0.92, because 1.01 is the three charge lines rounded once (3×0.335 → 1.005 → 1.01) and the -0.10 Refund is a fourth line; the ledger rounds per line  [shown, not confirmed]
++
++## Open
++Built; pre-publish checks pass (11 tests; build/invoices.json total "0.92"; sha256 60483212…a318ed identical across two runs; invoice.py/publish.py/existing tests untouched; outbox absent). Published; delivery cannot be retracted. export.py and tests/test_export.py are uncommitted in the working tree.
++
++## Debrief (2026-11-11; graded by fresh context, mechanism-auditor)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++|----|---------------------|----------|-------------|------------------|
++| P1 (you) | "I100 total is 1.01 (confident)" | build/invoices.json and outbox/delivery.json: "0.92"; `python invoice.py` once-rounded gives 0.91, so 1.01 matches neither | inconsistent | 1.01 is the charges-only once-rounded figure; the Refund row was left out of the picture [inferred; check: ask whether you summed only the three usage lines] |
++| A1 (agent) | "I100 total is "0.92" with line amounts "0.34","0.34","0.34","-0.10"" | same artifacts: lines and total exactly as predicted; `total(load())` = Decimal('0.92') | consistent | export reuses line_total/total, so agreement with the ledger code is near-guaranteed; hand check 3×0.34−0.10 = 0.92 agrees [supported] |
++| A2 (agent) | "No edits to invoice.py or publish.py are needed" | `git diff d6617f4` on both files empty; 11 tests pass | consistent | falsifier only detects edits, not need; the one candidate, "-0.00", was handled in export.py (D1) [supported] |
++Integrity: frozen Brief matches d6617f4 (only header/Deltas/Open differ); check files unchanged; no unlogged deviations; freeze commit precedes all code by mtime.
++Evidence: `git diff d6617f4 -- tests/test_invoice.py tests/test_delivery.py invoice.py publish.py` → empty · delivery post-check: payload == artifact, sha256 60483212…a318ed == sha256sum build/invoices.json · re-run export gives identical sha256 · artifacts: build/invoices.json, outbox/delivery.json
++Did NOT prove: tests/test_export.py was written by the same context as export.py and uses the ledger code as its oracle; sum(lines)==total cannot fail unless the code breaks; per-line rounding rests on docs/accounting.md, not on the consumer's spec.
++Not checked: consumer's expected amount (0.92 vs 0.91) and string format; inputs beyond the 4-row batch (empty CSV, large values); that outbox was empty before publish, beyond mtimes.
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..a486322 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,7 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
++outbox/
+diff --git a/export.py b/export.py
+new file mode 100644
+index 0000000..b14c65b
+--- /dev/null
++++ b/export.py
+@@ -0,0 +1,51 @@
++"""Build the invoice export (ledger rule: round each line, then sum)."""
++import argparse
++import json
++from pathlib import Path
++
++from invoice import line_total, load, total
++
++
++def _amount(value):
++    """Exactly two decimals as a string; never '-0.00'."""
++    if value == 0:
++        value = abs(value)
++    return format(value, ".2f")
++
++
++def build_export(rows):
++    """Group rows by invoice id; sort invoices by id; keep source line order."""
++    grouped = {}
++    for row in rows:
++        grouped.setdefault(row["invoice"], []).append(row)
++    invoices = []
++    for invoice_id in sorted(grouped):
++        group = grouped[invoice_id]
++        invoices.append({
++            "id": invoice_id,
++            "total": _amount(total(group)),
++            "lines": [{"item": r["item"],
++                       "amount": _amount(line_total(r)),
++                       "tax_class": r["tax_class"]} for r in group],
++        })
++    return {"invoices": invoices}
++
++
++def render(data):
++    """Deterministic bytes: publish.py hashes the exact file contents."""
++    return (json.dumps(data, indent=2, sort_keys=True) + "\n").encode("utf-8")
++
++
++def write_export(rows, destination):
++    destination = Path(destination)
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_bytes(render(build_export(rows)))
++    return destination
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description="Write the invoice batch export.")
++    parser.add_argument("--source", default="data/lines.csv")
++    parser.add_argument("--out", default="build/invoices.json")
++    args = parser.parse_args()
++    print(write_export(load(args.source), args.out))
+diff --git a/tests/test_export.py b/tests/test_export.py
+new file mode 100644
+index 0000000..55eb4c6
+--- /dev/null
++++ b/tests/test_export.py
+@@ -0,0 +1,71 @@
++import json
++import re
++import subprocess
++import sys
++from decimal import Decimal
++
++from export import build_export, render
++from invoice import load, total
++
++AMOUNT = re.compile(r"^-?\d+\.\d{2}$")
++
++
++def row(invoice, item, quantity, unit_price, tax_class="standard"):
++    return {"invoice": invoice, "item": item, "quantity": quantity,
++            "unit_price": unit_price, "tax_class": tax_class}
++
++
++def test_doc_example_rounds_each_line():
++    rows = [row("A", f"U{i}", "1", "0.335") for i in range(3)]
++    invoice = build_export(rows)["invoices"][0]
++    assert invoice["total"] == "1.02"
++    assert [line["amount"] for line in invoice["lines"]] == ["0.34"] * 3
++
++
++def test_real_batch_keeps_credit_sign():
++    invoice = build_export(load())["invoices"][0]
++    assert invoice["id"] == "I100"
++    assert [line["amount"] for line in invoice["lines"]] == ["0.34", "0.34", "0.34", "-0.10"]
++    assert invoice["total"] == "0.92"
++    assert invoice["lines"][3]["item"] == "Refund"
++    assert invoice["lines"][3]["tax_class"] == "exempt"
++
++
++def test_sorted_by_id_and_source_order_kept():
++    rows = [row("B", "b1", "1", "1"), row("A", "a2", "1", "2"),
++            row("B", "b0", "1", "3"), row("A", "a1", "1", "1")]
++    invoices = build_export(rows)["invoices"]
++    assert [i["id"] for i in invoices] == ["A", "B"]
++    assert [l["item"] for l in invoices[0]["lines"]] == ["a2", "a1"]
++    assert [l["item"] for l in invoices[1]["lines"]] == ["b1", "b0"]
++
++
++def test_amounts_are_two_decimal_strings_with_trailing_zeros():
++    rows = [row("A", "x", "3", "0.5"), row("A", "y", "2", "1")]
++    invoice = build_export(rows)["invoices"][0]
++    assert [l["amount"] for l in invoice["lines"]] == ["1.50", "2.00"]
++    assert invoice["total"] == "3.50"
++    assert all(isinstance(l["amount"], str) for l in invoice["lines"])
++
++
++def test_no_negative_zero_and_total_matches_ledger_api():
++    rows = [row("A", "tiny", "-1", "0.001"), row("A", "x", "1", "0.335")]
++    invoice = build_export(rows)["invoices"][0]
++    assert invoice["lines"][0]["amount"] == "0.00"
++    assert Decimal(invoice["total"]) == total(rows)
++
++
++def test_render_is_stable_bytes_with_trailing_newline():
++    data = build_export(load())
++    assert render(data) == render(build_export(load()))
++    assert render(data).endswith(b"\n")
++
++
++def test_cli_writes_artifact_with_valid_amounts(tmp_path):
++    out = tmp_path / "nested" / "invoices.json"
++    subprocess.run([sys.executable, "export.py", "--out", str(out)], check=True)
++    data = json.loads(out.read_text())
++    for invoice in data["invoices"]:
++        assert AMOUNT.match(invoice["total"])
++        assert all(AMOUNT.match(l["amount"]) for l in invoice["lines"])
++        assert sum(Decimal(l["amount"]) for l in invoice["lines"]) == Decimal(invoice["total"])

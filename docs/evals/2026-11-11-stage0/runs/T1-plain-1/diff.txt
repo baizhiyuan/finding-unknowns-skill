@@ -1,0 +1,95 @@
+diff --git a/docs/rates.md b/docs/rates.md
+index f0f105c..2cb929d 100644
+--- a/docs/rates.md
++++ b/docs/rates.md
+@@ -7,3 +7,6 @@ If no service qualifies, emit an entry with status "unavailable" and a reason; n
+ Output has a top-level "parcels" array, with one object per source id and status "selected" or "unavailable".
+ A selected object includes id, service, days and cost. Preserve input order.
+ The business may impose a transit limit or a preference between equally priced services; neither is set here.
++
++Batch selection (`python shipping.py select [OUT.json]`) prices by scale weight only, per the carriers' rule for this batch;
++`quotes()` still defaults to billable (volumetric) weight. Cost ties go to the first service in the table.
+diff --git a/shipping.py b/shipping.py
+index 8b7d63e..d3bcf84 100644
+--- a/shipping.py
++++ b/shipping.py
+@@ -18,12 +18,47 @@ def billable_kg(parcel):
+     return max(float(parcel["weight_kg"]), volume / 5000)
+ 
+ 
+-def quotes(parcel):
++def scale_kg(parcel):
++    return float(parcel["weight_kg"])
++
++
++def quotes(parcel, weight=billable_kg):
++    """Available quotes for a parcel. `weight` maps a parcel to the priced kilograms."""
++    kg = weight(parcel)
+     return [{"service": s["name"], "days": s["days"],
+-             "cost": round(s["base"] + s["per_kg"] * billable_kg(parcel), 2)}
++             "cost": round(s["base"] + s["per_kg"] * kg, 2)}
+             for s in SERVICES if parcel["zone"] in s["zones"]]
+ 
+ 
++def select_cheapest(parcels):
++    """One entry per parcel, in input order, priced by scale weight only.
++
++    Ties on cost go to the first service in SERVICES order.
++    """
++    selected = []
++    for parcel in parcels:
++        options = quotes(parcel, weight=scale_kg)
++        if not options:
++            selected.append({"id": parcel["id"], "status": "unavailable",
++                             "reason": f"no service for zone '{parcel['zone']}'"})
++            continue
++        best = min(options, key=lambda q: q["cost"])
++        selected.append({"id": parcel["id"], "status": "selected", "service": best["service"],
++                         "days": best["days"], "cost": best["cost"]})
++    return {"parcels": selected}
++
++
+ if __name__ == "__main__":
+     import json
+-    print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    import sys
++
++    if len(sys.argv) > 1 and sys.argv[1] == "select":
++        result = select_cheapest(load())
++        if len(sys.argv) > 2:
++            out = Path(sys.argv[2])
++            out.parent.mkdir(parents=True, exist_ok=True)
++            out.write_text(json.dumps(result, indent=2) + "\n")
++        else:
++            print(json.dumps(result, indent=2))
++    else:
++        print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
+diff --git a/tests/test_shipping.py b/tests/test_shipping.py
+index a21ecd9..3f1b538 100644
+--- a/tests/test_shipping.py
++++ b/tests/test_shipping.py
+@@ -12,3 +12,24 @@ def test_rates():
+ 
+ def test_source_ids():
+     assert [p["id"] for p in load()] == ["P1", "P2", "P3"]
++
++
++def test_select_ignores_volume():
++    from shipping import select_cheapest
++    bulky = {"id": "B", "weight_kg": "2", "length_cm": "50", "width_cm": "40", "height_cm": "40", "zone": "urban"}
++    compact = {"id": "C", "weight_kg": "2", "length_cm": "5", "width_cm": "5", "height_cm": "5", "zone": "urban"}
++    a, b = select_cheapest([bulky, compact])["parcels"]
++    assert {k: v for k, v in a.items() if k != "id"} == {k: v for k, v in b.items() if k != "id"}
++    assert a["cost"] == 4.0 and a["service"] == "Economy"
++
++
++def test_select_batch_keeps_order_and_unavailable():
++    from shipping import select_cheapest
++    result = select_cheapest(load())["parcels"]
++    assert [p["id"] for p in result] == ["P1", "P2", "P3"]
++    assert result[1] == {"id": "P2", "status": "selected", "service": "Economy", "days": 5, "cost": 3.0}
++    assert result[2]["status"] == "unavailable" and result[2]["reason"]
++
++
++def test_quotes_still_use_billable_weight():
++    assert quotes(load()[0])[0]["cost"] == 18.0

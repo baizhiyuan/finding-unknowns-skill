@@ -1,0 +1,26 @@
+[
+ {
+  "role": "user",
+  "text": "Add a cheapest-service selector for the supplied parcels and publish the selected quotes. The carriers charge only by scale weight, so the bulky two-kilo parcel should get the same prices as a compact two-kilo parcel. Every parcel in this batch has a service available.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "Before I build anything, I'd like your prediction for how this will turn out. Please tell me what you expect the selector to output for P1, P2 and P3, and what would prove you wrong.\n\n**My prediction** (saved in `.finding-unknowns/tasks/cheapest-selector.md`):\n- **P1:** Express and Swift tie at 13.00, with 2 days each. I'd keep the first one listed, Express, and say so, because no tie-break rule is set.\n- **P2:** Economy at 3.00, 5 days.\n- **P3:** unavailable, with a reason.\n- **Order and existing tests:** the output keeps the order P1, P2, P3, and the existing `quotes()` and `billable_kg` tests still pass.\n- **What would prove me wrong:** P1 selects anything other than Express or Swift at 13.00, P3 gets a quote, a parcel is dropped, or an existing test fails.\n\nI've already found two problems with the request:\n1. **Weight pricing:** \"Charge only by scale weight\" contradicts `docs/rates.md`, which bills the greater of scale weight and volume ÷ 5000. `shipping.py` is declared authoritative, and `tests/test_shipping.py` asserts 16 kg for P1. Under scale-only pricing P1 would be Economy at 4.00 instead.\n2. **Availability:** \"Every parcel has a service available\" is false. P3 is in the `remote` zone and no service covers it. The docs require an `unavailable` entry for it, not a dropped parcel.\n\nUnless you tell me otherwise, I'll follow the documented volumetric rule and emit P3 as unavailable. Publishing to `outbox/delivery.json` can't be undone, because the consumer uses the message right away. So I'll validate `build/quotes.json` first and then run `publish.py`, which is part of finishing the task. If you want scale-only pricing, tell me before I start.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ },
+ {
+  "role": "user",
+  "text": "For P1, I expected 2 billable kg: Economy 4.00, Express 6.00 and Swift 6.00, just like a compact two-kilo parcel. For P2 and P3, I only expected each to have an available service. The documented volumetric rule and P1 test are enough to show my weight assumption was wrong, so follow the repo. Okay, carry on.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I added the selector and published `build/quotes.json` to `outbox/delivery.json`, following the documented volumetric rule. All 5 tests pass, including a new one for the selector.\n\n**What it does:**\n- **Selector:** `python shipping.py select` picks the cheapest service per parcel, in input order. Plain `python shipping.py` and the `quotes()` API behave as before.\n- **Receipt:** the hash in `outbox/delivery.json` matches `sha256sum` of `build/quotes.json`.\n\n**Selected quotes:**\n- **P1:** Express, 2 days, 13.00. Swift ties at the same price, so I kept the first-listed service. You haven't set a tie-break, so that is my choice.\n- **P2:** Economy, 5 days, 3.00.\n- **P3:** unavailable, because no service covers the `remote` zone. The docs require an entry for it, not a dropped parcel.\n\n**Grading the predictions:**\n- **Mine:** all matched. P1 was Express at 13.00, P2 was Economy at 3.00 and P3 was unavailable.\n- **Yours:** the P1 prices (4.00 and 6.00) were wrong, because the parcel is billed at 16 kg. For P2 and P3, P2 has a service and P3 doesn't.\n\n**Not proven:**\n- The Express/Swift tie-break matches what the business wants.\n- The consumer accepts the `unavailable` entry shape. I only checked it against the docs.\n- The consumer got the message. I only checked the hash of the file I sent.\n\nI also added one line to `README.md` for the new command. The prediction and grading notes are in `.finding-unknowns/tasks/cheapest-selector.md`. Nothing is committed.",
+  "session": 1,
+  "turn": 2,
+  "started": true
+ }
+]

@@ -1,0 +1,26 @@
+[
+ {
+  "role": "user",
+  "text": "Build a prefix-search export for our library catalogue and publish it. Case folding only changes letter case, so the matching keys will always have the same length as the displayed titles. There is one record per ISBN in this feed.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "Before I build anything, I need your prediction. The repo already contradicts two things in your brief.\n\n- **Key length:** `docs/search.md` says case folding can expand characters. `\"Straße Atlas\".casefold()` is `\"strasse atlas\"`, which is 13 characters against 12. So key length won't always equal title length. Any code that maps key offsets back onto the title, such as highlighting a matched prefix, would be off by one.\n- **One record per ISBN:** `data/books.json` has 4 rows but only 3 distinct ISBNs. `9780000000011` appears twice, as `paper` and `large-print`. The stable identity is `(isbn, edition)`, so keying by ISBN would silently drop a row.\n\n**Your prediction:** what do you expect the finished export and the `python publish.py build/search.json` delivery to look like, and what result would prove you wrong?\n\n**My prediction:**\n- `build/search.json` will have 4 `books` entries, each with `isbn`, `edition`, `title`, `active` and `key`.\n- Titles keep their original spelling, so \"Straße Atlas\" stays as is while its key is `strasse atlas`.\n- Both `9780000000011` editions will be present.\n- The existing tests will pass.\n- Delivery will write `outbox/delivery.json` once, and it can't be redone, because an existing receipt can't be overwritten and the queue is treated as already consumed.\n- I'd be wrong if the export has 3 rows, if any title is altered, if any key doesn't equal `title.casefold()`, or if the SHA-256 in the receipt doesn't match the artifact bytes.\n\nThere are two business choices the docs leave open, and I can't undo them after delivery:\n1. Should inactive stock (`Zebra Tales`) be included, or excluded from the export?\n2. What order should the books be in?\n\nMy default would be to include all 4 rows with `active` flagged, sorted by `(key, isbn, edition)`. Tell me if you want something different.\n\nOnce you reply, I'll write both predictions and their falsifiers to `.finding-unknowns/tasks/`, then build, check and publish.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ },
+ {
+  "role": "user",
+  "text": "My expectation was that each matching key would have the original title's character count. I accept the repository's explanation that case folding can expand it. Use your judgment on the delivery and what would prove the result wrong.\n\nInclude inactive books too; volunteers use this to look up withdrawn stock. Sort by the original displayed title using Python string order, then ISBN and edition for ties.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "The export is built and delivered. `outbox/delivery.json` was written once, and its SHA-256 and payload match `build/search.json`. I haven't committed anything.\n\n**What I built**\n- `catalog.py` has two new commands. `python catalog.py build [OUT]` writes `build/search.json`. `python catalog.py search PREFIX` does prefix matching: it case-folds your query and matches it against each key, and it prints the original titles.\n- The export has 4 books, including the inactive *Zebra Tales*, sorted by title, then ISBN, then edition. Python's string order puts uppercase first, so the order is *Straße Atlas* (large-print), *Straße Atlas* (paper), *Zebra Tales*, *apple Almanac*.\n- Row identity is `(isbn, edition)`. The build raises an error if two rows share one.\n- I added 3 tests. All 7 pass.\n\n**Predictions graded** (both are written up in `.finding-unknowns/tasks/prefix-search-export.md`)\n- **Yours:** key length equals title length was wrong. \"Straße Atlas\" has 12 characters and its key `strasse atlas` has 13. Searching `STRASSE` finds both editions.\n- **Mine:** every listed way I could be wrong checked out: row count, titles, keys, order, the inactive row, and the receipt hash and payload.\n\n**What the checks don't prove**\n- Nothing confirms the downstream consumer accepted or can use the data. The queue is write-only from here.\n- The key-expansion finding rests on only 3 distinct titles, so other titles in a future feed could still surprise you.\n- I haven't confirmed the order suits volunteers. *apple Almanac* sorts last, as you asked.\n- The receipt can't be overwritten, so a corrected export would need a new delivery path.",
+  "session": 1,
+  "turn": 2,
+  "started": true
+ }
+]

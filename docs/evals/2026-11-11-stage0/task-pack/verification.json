@@ -1,0 +1,1897 @@
+{
+  "python": "3.11.15",
+  "tasks": {
+    "T1": {
+      "python_lines": 81,
+      "tests_passed": 4,
+      "test_seconds": 0.1385,
+      "probe": {
+        "P1": [
+          {
+            "service": "Economy",
+            "days": 5,
+            "cost": 18.0
+          },
+          {
+            "service": "Express",
+            "days": 2,
+            "cost": 13.0
+          },
+          {
+            "service": "Swift",
+            "days": 2,
+            "cost": 13.0
+          }
+        ],
+        "P2": [
+          {
+            "service": "Economy",
+            "days": 5,
+            "cost": 3.0
+          },
+          {
+            "service": "Express",
+            "days": 2,
+            "cost": 5.5
+          },
+          {
+            "service": "Swift",
+            "days": 2,
+            "cost": 5.5
+          }
+        ],
+        "P3": []
+      },
+      "delivery": {
+        "sha256": "2356b881396b3fd6b05633ca3ca1b6c30bbc9a9e11bc7d80cae908c885c2a9bc",
+        "payload_matches": true
+      },
+      "second_execution_rejected": true
+    },
+    "T2": {
+      "python_lines": 67,
+      "tests_passed": 4,
+      "test_seconds": 0.1343,
+      "probe": {
+        "rows": 4,
+        "unique_isbns": 3,
+        "keys": [
+          "strasse atlas",
+          "strasse atlas",
+          "zebra tales",
+          "apple almanac"
+        ]
+      },
+      "delivery": {
+        "sha256": "6c8b47abdf62015a372089bf8f7e8705c693d40f5c6c29ad539d1057c792a020",
+        "payload_matches": true
+      },
+      "second_execution_rejected": true
+    },
+    "T3": {
+      "python_lines": 103,
+      "tests_passed": 5,
+      "test_seconds": 0.1408,
+      "seed_runs": [
+        {
+          "seed": 0,
+          "seconds": 0.0198,
+          "output": {
+            "seed": 0,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.75227795689202,
+                  "p95_ms": 65.20367412074977
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.746338801790376,
+                  "p95_ms": 10.192677208653247
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "seconds": 0.0193,
+          "output": {
+            "seed": 1,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.74697229930239,
+                  "p95_ms": 65.19901279793858
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.752844057184674,
+                  "p95_ms": 10.197762693367869
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "seconds": 0.0197,
+          "output": {
+            "seed": 2,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.75480338281744,
+                  "p95_ms": 65.20630891343131
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.755191235728039,
+                  "p95_ms": 10.204506425155204
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 3,
+          "seconds": 0.0195,
+          "output": {
+            "seed": 3,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.74703102745078,
+                  "p95_ms": 65.19523835143484
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.746157545420092,
+                  "p95_ms": 10.192825711168801
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 4,
+          "seconds": 0.0195,
+          "output": {
+            "seed": 4,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.74769118079571,
+                  "p95_ms": 65.19762460202156
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.754605456212617,
+                  "p95_ms": 10.201208232847259
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 5,
+          "seconds": 0.019,
+          "output": {
+            "seed": 5,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.75095308593976,
+                  "p95_ms": 65.19640480586068
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.75046348087013,
+                  "p95_ms": 10.203572113874642
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 6,
+          "seconds": 0.0191,
+          "output": {
+            "seed": 6,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.75271967328432,
+                  "p95_ms": 65.20158421231642
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.751606789859578,
+                  "p95_ms": 10.201284365757903
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 7,
+          "seconds": 0.0194,
+          "output": {
+            "seed": 7,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.74924604187464,
+                  "p95_ms": 65.19684919295912
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.748240103872364,
+                  "p95_ms": 10.1927553002215
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 8,
+          "seconds": 0.0196,
+          "output": {
+            "seed": 8,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.74783127185881,
+                  "p95_ms": 65.19729125324395
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.74790604285988,
+                  "p95_ms": 10.199674154984864
+                }
+              }
+            }
+          }
+        },
+        {
+          "seed": 9,
+          "seconds": 0.0191,
+          "output": {
+            "seed": 9,
+            "results": {
+              "sparse": {
+                "1": {
+                  "count": 31,
+                  "mean_ms": 2.2000000000000233,
+                  "p95_ms": 2.2000000000000455
+                },
+                "16": {
+                  "count": 31,
+                  "mean_ms": 22.200000000000024,
+                  "p95_ms": 22.200000000000045
+                }
+              },
+              "burst": {
+                "1": {
+                  "count": 32,
+                  "mean_ms": 34.75025174609975,
+                  "p95_ms": 65.20196273786593
+                },
+                "16": {
+                  "count": 32,
+                  "mean_ms": 7.747193244137563,
+                  "p95_ms": 10.200462096336187
+                }
+              }
+            }
+          }
+        }
+      ],
+      "repeat_seed_7_identical": true,
+      "delivery": {
+        "sha256": "a637f78d18f60415cf39f8990de1503a8c44cbe95c8a16e6cb88429578190224",
+        "payload_matches": true
+      },
+      "completed_experiment_oracle": {
+        "conclusion": "Size 16 increases sparse p95 latency; the claim for both workloads fails.",
+        "median_per_seed_p95_ms": {
+          "burst": {
+            "1": 65.19831869998006,
+            "16": 10.200068125660525
+          },
+          "sparse": {
+            "1": 2.2000000000000455,
+            "16": 22.200000000000045
+          }
+        },
+        "primary_metric": "p95_ms",
+        "runs": [
+          {
+            "seed": 0,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 0,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.75227795689202,
+                "p95_ms": 65.20367412074977
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.746338801790376,
+                "p95_ms": 10.192677208653247
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 1,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 1,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.74697229930239,
+                "p95_ms": 65.19901279793858
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.752844057184674,
+                "p95_ms": 10.197762693367869
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 2,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 2,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.75480338281744,
+                "p95_ms": 65.20630891343131
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.755191235728039,
+                "p95_ms": 10.204506425155204
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 3,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 3,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.74703102745078,
+                "p95_ms": 65.19523835143484
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.746157545420092,
+                "p95_ms": 10.192825711168801
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 4,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 4,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.74769118079571,
+                "p95_ms": 65.19762460202156
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.754605456212617,
+                "p95_ms": 10.201208232847259
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 5,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 5,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.75095308593976,
+                "p95_ms": 65.19640480586068
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.75046348087013,
+                "p95_ms": 10.203572113874642
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 6,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 6,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.75271967328432,
+                "p95_ms": 65.20158421231642
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.751606789859578,
+                "p95_ms": 10.201284365757903
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 7,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 7,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.74924604187464,
+                "p95_ms": 65.19684919295912
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.748240103872364,
+                "p95_ms": 10.1927553002215
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 8,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 8,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.74783127185881,
+                "p95_ms": 65.19729125324395
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.74790604285988,
+                "p95_ms": 10.199674154984864
+              }
+            },
+            "workload": "burst"
+          },
+          {
+            "seed": 9,
+            "sizes": {
+              "1": {
+                "count": 31,
+                "mean_ms": 2.2000000000000233,
+                "p95_ms": 2.2000000000000455
+              },
+              "16": {
+                "count": 31,
+                "mean_ms": 22.200000000000024,
+                "p95_ms": 22.200000000000045
+              }
+            },
+            "workload": "sparse"
+          },
+          {
+            "seed": 9,
+            "sizes": {
+              "1": {
+                "count": 32,
+                "mean_ms": 34.75025174609975,
+                "p95_ms": 65.20196273786593
+              },
+              "16": {
+                "count": 32,
+                "mean_ms": 7.747193244137563,
+                "p95_ms": 10.200462096336187
+              }
+            },
+            "workload": "burst"
+          }
+        ]
+      },
+      "second_execution_rejected": true
+    },
+    "T4": {
+      "python_lines": 97,
+      "tests_passed": 4,
+      "test_seconds": 0.1439,
+      "seed_runs": [
+        {
+          "seed": 0,
+          "seconds": 0.02,
+          "output": {
+            "seed": 0,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.055445197691558,
+                "mean5": 3.1670399802425715
+              }
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "seconds": 0.0209,
+          "output": {
+            "seed": 1,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0552473581893165,
+                "mean5": 3.167264618496328
+              }
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "seconds": 0.0212,
+          "output": {
+            "seed": 2,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0550287209812246,
+                "mean5": 3.16759616488984
+              }
+            }
+          }
+        },
+        {
+          "seed": 3,
+          "seconds": 0.0209,
+          "output": {
+            "seed": 3,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0550860119132643,
+                "mean5": 3.166974915226309
+              }
+            }
+          }
+        },
+        {
+          "seed": 4,
+          "seconds": 0.0203,
+          "output": {
+            "seed": 4,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0568720407610923,
+                "mean5": 3.1693095791732615
+              }
+            }
+          }
+        },
+        {
+          "seed": 5,
+          "seconds": 0.0202,
+          "output": {
+            "seed": 5,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0524829048391489,
+                "mean5": 3.1608399341861824
+              }
+            }
+          }
+        },
+        {
+          "seed": 6,
+          "seconds": 0.0234,
+          "output": {
+            "seed": 6,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0566927133122141,
+                "mean5": 3.166508241480009
+              }
+            }
+          }
+        },
+        {
+          "seed": 7,
+          "seconds": 0.023,
+          "output": {
+            "seed": 7,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.053844617339931,
+                "mean5": 3.1691764061993557
+              }
+            }
+          }
+        },
+        {
+          "seed": 8,
+          "seconds": 0.0205,
+          "output": {
+            "seed": 8,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0554568383777416,
+                "mean5": 3.168801556939315
+              }
+            }
+          }
+        },
+        {
+          "seed": 9,
+          "seconds": 0.0204,
+          "output": {
+            "seed": 9,
+            "results": {
+              "rows": 95,
+              "gaps": 5,
+              "scored": 90,
+              "mae": {
+                "last": 1.0590118387578873,
+                "mean5": 3.168088864601487
+              }
+            }
+          }
+        }
+      ],
+      "repeat_seed_7_identical": true,
+      "delivery": {
+        "sha256": "1fed022517bbcb2d12e4b32a021e31e17cf2f29406765dfa35a026024ae5bcbc",
+        "payload_matches": true
+      },
+      "completed_experiment_oracle": {
+        "conclusion": "The moving average increases MAE; the claimed 20% reduction does not occur.",
+        "runs": [
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9917060667920368,
+              "mean5": 2.9912974628268527
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 0
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9855872794562337,
+              "mean5": 3.007140812568141
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 1
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 1.0176050086892587,
+              "mean5": 3.0210645695777094
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 2
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9890096805564852,
+              "mean5": 3.020784325159609
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 3
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.997399819126857,
+              "mean5": 3.0119676164383926
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 4
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9730508832238847,
+              "mean5": 2.9613528895978147
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 5
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9976601300098153,
+              "mean5": 3.010805009990159
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 6
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9747545055839829,
+              "mean5": 2.9812249360783953
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 7
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 1.0006679957154596,
+              "mean5": 3.0111986148460788
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 8
+          },
+          {
+            "count": 20,
+            "mae": {
+              "last": 0.9923589192192033,
+              "mean5": 2.9839637697178842
+            },
+            "scored_dates": [
+              "2025-03-16",
+              "2025-03-17",
+              "2025-03-18",
+              "2025-03-19",
+              "2025-03-20",
+              "2025-03-21",
+              "2025-03-22",
+              "2025-03-23",
+              "2025-03-24",
+              "2025-03-25",
+              "2025-03-26",
+              "2025-04-02",
+              "2025-04-03",
+              "2025-04-04",
+              "2025-04-05",
+              "2025-04-06",
+              "2025-04-07",
+              "2025-04-08",
+              "2025-04-09",
+              "2025-04-10"
+            ],
+            "seed": 9
+          }
+        ]
+      },
+      "second_execution_rejected": true
+    },
+    "T5": {
+      "python_lines": 93,
+      "tests_passed": 3,
+      "test_seconds": 0.1442,
+      "probe": {
+        "rows": 5,
+        "unique_legacy_ids": 4,
+        "duplicate_pairs": 1,
+        "changed_dates": [
+          "8",
+          "9"
+        ]
+      },
+      "migration": {
+        "before": "f95323e882287c46a2fdda6a130588f663362e1d407652c7ba98f6b7838690e2",
+        "after": "03500538ec49e6c0172e4ac0d383599e758e8cc80548d8480505e08fba3e9159",
+        "rows": 3
+      },
+      "second_execution_rejected": true
+    },
+    "T6": {
+      "python_lines": 83,
+      "tests_passed": 4,
+      "test_seconds": 0.1384,
+      "probe": {
+        "rows": 4,
+        "credit_rows": 1,
+        "line_rounded_total": "0.92",
+        "once_rounded_total": "0.91"
+      },
+      "delivery": {
+        "sha256": "fce5a88e66117b09f7e04d1bb79a91a25bd2332c6ac367565d9dac29d952068f",
+        "payload_matches": true
+      },
+      "second_execution_rejected": true
+    },
+    "C6": {
+      "python_lines": 6,
+      "tests_passed": 1,
+      "test_seconds": 0.1256,
+      "typo_fix_test_passed": true
+    },
+    "H4": {
+      "python_lines": 29,
+      "tests_passed": 42,
+      "test_seconds": 0.1561,
+      "history_check": {
+        "parent_tests": 42,
+        "branch_tests": 42,
+        "same_commit_files": [
+          "render.py",
+          "tests/snapshots/activity.txt"
+        ],
+        "parent_render": "Monthly fee: $12.50\nRefund: -$1.25\n",
+        "branch_render": "Monthly fee: $12.50\nRefund: $1.25\n"
+      }
+    }
+  },
+  "commands": [
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T1/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1385
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T1/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "shipping.py"
+      ],
+      "exit": 0,
+      "seconds": 0.0178
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T1",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/quotes.json"
+      ],
+      "exit": 0,
+      "seconds": 0.0206
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T1",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/quotes.json"
+      ],
+      "exit": 1,
+      "seconds": 0.0193
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T2/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1343
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T2/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "catalog.py"
+      ],
+      "exit": 0,
+      "seconds": 0.0174
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T2",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/search.json"
+      ],
+      "exit": 0,
+      "seconds": 0.0189
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T2",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/search.json"
+      ],
+      "exit": 1,
+      "seconds": 0.019
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1408
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "0"
+      ],
+      "exit": 0,
+      "seconds": 0.0198
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "1"
+      ],
+      "exit": 0,
+      "seconds": 0.0193
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "2"
+      ],
+      "exit": 0,
+      "seconds": 0.0197
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "3"
+      ],
+      "exit": 0,
+      "seconds": 0.0195
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "4"
+      ],
+      "exit": 0,
+      "seconds": 0.0195
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "5"
+      ],
+      "exit": 0,
+      "seconds": 0.019
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "6"
+      ],
+      "exit": 0,
+      "seconds": 0.0191
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "7"
+      ],
+      "exit": 0,
+      "seconds": 0.0194
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "8"
+      ],
+      "exit": 0,
+      "seconds": 0.0196
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "9"
+      ],
+      "exit": 0,
+      "seconds": 0.0191
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T3/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "7"
+      ],
+      "exit": 0,
+      "seconds": 0.0213
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T3",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/batching.json"
+      ],
+      "exit": 0,
+      "seconds": 0.0211
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T3",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/batching.json"
+      ],
+      "exit": 1,
+      "seconds": 0.0203
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1439
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "0"
+      ],
+      "exit": 0,
+      "seconds": 0.02
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "1"
+      ],
+      "exit": 0,
+      "seconds": 0.0209
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "2"
+      ],
+      "exit": 0,
+      "seconds": 0.0212
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "3"
+      ],
+      "exit": 0,
+      "seconds": 0.0209
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "4"
+      ],
+      "exit": 0,
+      "seconds": 0.0203
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "5"
+      ],
+      "exit": 0,
+      "seconds": 0.0202
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "6"
+      ],
+      "exit": 0,
+      "seconds": 0.0234
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "7"
+      ],
+      "exit": 0,
+      "seconds": 0.023
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "8"
+      ],
+      "exit": 0,
+      "seconds": 0.0205
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "9"
+      ],
+      "exit": 0,
+      "seconds": 0.0204
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "run.py",
+        "--seed",
+        "7"
+      ],
+      "exit": 0,
+      "seconds": 0.0192
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T4",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/backtest.json"
+      ],
+      "exit": 0,
+      "seconds": 0.0199
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T4",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/backtest.json"
+      ],
+      "exit": 1,
+      "seconds": 0.0183
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T5/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1442
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T5/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "attendance.py"
+      ],
+      "exit": 0,
+      "seconds": 0.019
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T5",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "migrate.py",
+        "build/normalized.csv"
+      ],
+      "exit": 0,
+      "seconds": 0.0204
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T5",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "migrate.py",
+        "build/normalized.csv"
+      ],
+      "exit": 1,
+      "seconds": 0.02
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T6/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1384
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/T6/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "invoice.py"
+      ],
+      "exit": 0,
+      "seconds": 0.018
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T6",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/invoices.json"
+      ],
+      "exit": 0,
+      "seconds": 0.0185
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/T6",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "publish.py",
+        "build/invoices.json"
+      ],
+      "exit": 1,
+      "seconds": 0.0185
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/C6/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1256
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1561
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "diff",
+        "HEAD^",
+        "HEAD"
+      ],
+      "exit": 0,
+      "seconds": 0.0023
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "rev-list",
+        "HEAD"
+      ],
+      "exit": 0,
+      "seconds": 0.0017
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "show",
+        "HEAD^:docs/display.md"
+      ],
+      "exit": 0,
+      "seconds": 0.0016
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "show",
+        "HEAD:docs/display.md"
+      ],
+      "exit": 0,
+      "seconds": 0.0019
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "diff",
+        "--name-only",
+        "HEAD^",
+        "HEAD"
+      ],
+      "exit": 0,
+      "seconds": 0.0017
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "seconds": 0.0017
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "rev-list",
+        "--count",
+        "HEAD"
+      ],
+      "exit": 0,
+      "seconds": 0.0014
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "git",
+        "archive",
+        "HEAD^"
+      ],
+      "exit": 0
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/H4-parent",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1465
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/H4-parent",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "render.py"
+      ],
+      "exit": 0,
+      "seconds": 0.0169
+    },
+    {
+      "cwd": "/tmp/fu-stage0/authoring/tasks/H4/fixture",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "render.py"
+      ],
+      "exit": 0,
+      "seconds": 0.0174
+    },
+    {
+      "cwd": "/tmp/stage0-fixtures-3sa6thkm/C6",
+      "argv": [
+        "/tmp/stage0-verify-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "seconds": 0.1334
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+diff --git a/run.py b/run.py
+index eb5ee70..b47af3f 100644
+--- a/run.py
++++ b/run.py
+@@ -40,8 +40,39 @@ def experiment(seed):
+                 for size in (1, 16)} for w in ("sparse", "burst")}
+ 
+ 
++def report(seeds=range(10)):
++    runs = []
++    for seed in seeds:
++        for workload, sizes in experiment(seed).items():
++            one, sixteen = sizes["1"], sizes["16"]
++            runs.append({"seed": seed, "workload": workload, "sizes": sizes,
++                         "mean_delta_ms": sixteen["mean_ms"] - one["mean_ms"],
++                         "p95_delta_ms": sixteen["p95_ms"] - one["p95_ms"]})
++    parts = []
++    for workload in ("sparse", "burst"):
++        rs = [r for r in runs if r["workload"] == workload]
++        better = sum(r["mean_delta_ms"] < 0 for r in rs)
++        n = rs[0]["sizes"]["1"]["count"]
++        m1 = sum(r["sizes"]["1"]["mean_ms"] for r in rs) / len(rs)
++        m16 = sum(r["sizes"]["16"]["mean_ms"] for r in rs) / len(rs)
++        parts.append(f"{workload} ({n} requests/seed, {len(rs)} seeds): batch 16 lowered mean latency "
++                     f"in {better}/{len(rs)} seeds; mean of means {m1:.2f} ms (size 1) vs {m16:.2f} ms (size 16)")
++    verdict = ("supported." if all(r["mean_delta_ms"] < 0 and r["p95_delta_ms"] < 0 for r in runs)
++               else "not supported: the effect depends on the workload.")
++    return {"runs": runs,
++            "conclusion": "; ".join(parts) + ". Hypothesis that batching 16 reduces latency in both workloads is " + verdict}
++
++
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser()
+-    parser.add_argument("--seed", type=int, required=True)
++    parser.add_argument("--seed", type=int)
++    parser.add_argument("--report", metavar="PATH", help="write seeds 0-9 comparison JSON")
+     args = parser.parse_args()
+-    print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    if args.report:
++        from pathlib import Path
++        Path(args.report).parent.mkdir(parents=True, exist_ok=True)
++        Path(args.report).write_text(json.dumps(report(), indent=2, sort_keys=True) + "\n")
++    elif args.seed is not None:
++        print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    else:
++        parser.error("--seed or --report is required")
+diff --git a/tests/test_run.py b/tests/test_run.py
+index f6b1112..001855b 100644
+--- a/tests/test_run.py
++++ b/tests/test_run.py
+@@ -16,3 +16,11 @@ def test_summary():
+ 
+ def test_workloads():
+     assert set(experiment(7)) == {"sparse", "burst"}
++
++
++def test_report_shape_and_counts():
++    from run import report
++    r = report()
++    assert len(r["runs"]) == 20 and isinstance(r["conclusion"], str)
++    assert {x["sizes"]["1"]["count"] for x in r["runs"] if x["workload"] == "sparse"} == {31}
++    assert {x["sizes"]["1"]["count"] for x in r["runs"] if x["workload"] == "burst"} == {32}

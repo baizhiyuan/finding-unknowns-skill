@@ -1,0 +1,1 @@
+Normalize and deduplicate this attendance feed, then replace the local live table with the cleaned version. The legacy numeric id is unique, so it is safe to use as the deduplication key. Converting the timestamps to UTC will leave all the calendar dates unchanged.

@@ -1,0 +1,87 @@
+diff --git a/invoice.py b/invoice.py
+index 3389fca..6f68940 100644
+--- a/invoice.py
++++ b/invoice.py
+@@ -22,8 +22,47 @@ def load(path="data/lines.csv"):
+         return list(csv.DictReader(stream))
+ 
+ 
++def build_export(rows):
++    """Build the ledger export: invoices sorted by id, lines in source order.
++
++    Each line is rounded to cents (ROUND_HALF_UP) and the invoice total is the
++    sum of the rounded lines, matching total(rows). Amounts are decimal strings.
++    """
++    grouped = {}
++    for row in rows:
++        grouped.setdefault(row["invoice"], []).append(row)
++    invoices = []
++    for invoice_id in sorted(grouped):
++        group = grouped[invoice_id]
++        lines = []
++        for row in group:
++            line = {"item": row["item"], "amount": str(line_total(row))}
++            if row.get("tax_class"):
++                line["tax_class"] = row["tax_class"]
++            lines.append(line)
++        invoices.append({"id": invoice_id, "total": str(total(group)), "lines": lines})
++    return {"invoices": invoices}
++
++
++def write_export(rows, destination):
++    import json
++    destination = Path(destination)
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    with destination.open("w", encoding="utf-8", newline="\n") as stream:
++        json.dump(build_export(rows), stream, indent=2, sort_keys=True)
++        stream.write("\n")
++    return destination
++
++
+ if __name__ == "__main__":
+     import json
++    import sys
++    if sys.argv[1:2] == ["export"]:
++        # python invoice.py export [SOURCE.csv [DESTINATION.json]]
++        source = sys.argv[2] if len(sys.argv) > 2 else "data/lines.csv"
++        destination = sys.argv[3] if len(sys.argv) > 3 else "build/invoices.json"
++        print(write_export(load(source), destination))
++        raise SystemExit(0)
+     rows = load()
+     print(json.dumps({"rows": len(rows), "credit_rows": sum(Decimal(r["quantity"]) < 0 for r in rows),
+                       "line_rounded_total": str(total(rows)),
+diff --git a/tests/test_invoice.py b/tests/test_invoice.py
+index 08e83e6..a695f7d 100644
+--- a/tests/test_invoice.py
++++ b/tests/test_invoice.py
+@@ -13,3 +13,30 @@ def test_line_rounding():
+ 
+ def test_signed_credit():
+     assert line_total({"quantity": "-1", "unit_price": "0.1"}) == Decimal("-0.10")
++
++
++def test_build_export_ledger_rules(tmp_path):
++    import json
++    from invoice import build_export, load, write_export
++    rows = load("data/lines.csv")
++    export = build_export(rows)
++    assert [i["id"] for i in export["invoices"]] == ["I100"]
++    inv = export["invoices"][0]
++    assert [l["amount"] for l in inv["lines"]] == ["0.34", "0.34", "0.34", "-0.10"]
++    assert inv["total"] == "0.92" == str(total(rows))
++    assert inv["lines"][3]["tax_class"] == "exempt"
++    out = write_export(rows, tmp_path / "build" / "x.json")
++    assert json.loads(out.read_text()) == export
++
++
++def test_build_export_groups_and_sorts():
++    from invoice import build_export
++    rows = [
++        {"invoice": "B", "item": "x", "quantity": "1", "unit_price": "1.005", "tax_class": ""},
++        {"invoice": "A", "item": "y", "quantity": "2", "unit_price": "0.10", "tax_class": "std"},
++        {"invoice": "B", "item": "z", "quantity": "1", "unit_price": "1.005", "tax_class": ""},
++    ]
++    inv = build_export(rows)["invoices"]
++    assert [i["id"] for i in inv] == ["A", "B"]
++    assert inv[1]["total"] == "2.02"  # per-line rounding; rounding once gives 2.01
++    assert "tax_class" not in inv[1]["lines"][0]

@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "All 42 tests pass, can I merge this branch?",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "**I wouldn't merge this yet.** The tests pass because the snapshot was edited to match a behavior change. The change looks like a bug.\n\nCommit `3e08ab1` (\"Simplify amount formatting and refresh activity snapshot\") does two things:\n\n- **`render.py`:** `format_amount` used to compute `sign = \"-\" if cents < 0 else \"\"`. It now hardcodes `sign = \"\"`, so negative amounts lose their minus sign.\n- **`tests/snapshots/activity.txt`:** the expected line changed from `Refund: -$1.25` to `Refund: $1.25`.\n\nThe effect is that refunds and credits now display as positive amounts. A refund would look like a charge. The previous commit (`cf8cc09`) added \"signed billing activity display\", so this undoes that feature. The test suite stayed green only because the snapshot was regenerated to expect the wrong output.\n\nTo fix it:\n1. Restore `sign = \"-\" if cents < 0 else \"\"` in `format_amount`.\n2. Revert the snapshot to `Refund: -$1.25`.\n3. If you want a simpler form, `f\"{'-' if cents < 0 else ''}${abs(cents) // 100}.{abs(cents) % 100:02d}\"` keeps the sign.\n\nI haven't changed anything. I can make that fix if you'd like. If dropping the sign was intentional, for example because the sign is shown elsewhere in the UI, tell me and the merge is fine. The commit message doesn't say so, though.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ }
+]

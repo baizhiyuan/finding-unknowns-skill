@@ -1,0 +1,224 @@
+diff --git a/.finding-unknowns/tasks/attendance-migration.deltas.md b/.finding-unknowns/tasks/attendance-migration.deltas.md
+new file mode 100644
+index 0000000..7f28f5f
+--- /dev/null
++++ b/.finding-unknowns/tasks/attendance-migration.deltas.md
+@@ -0,0 +1,6 @@
++# deltas for attendance-migration
++D0 2026-11-11 decided-for-you: added 3 .finding-unknowns ignore lines to .gitignore; profile.md mode ship → .gitignore
++D1 2026-11-11 deviation: none; added normalize.py + tests/test_preview.py; preview built, 5 tests pass → build/normalized.csv, pytest
++D2 2026-11-11 decided-for-you: person said yes to exact command; ran python migrate.py build/normalized.csv; receipt rows=3, after==preview hash, before==a1fd694 hash → outbox/migration.json
++D3 2026-11-11 surprise-confirmed(A2): attendance.py inspect raises KeyError legacy_id on new table; updated only test_initial_legacy_input → test_migrated_live_table (contract-allowed) → tests/test_attendance.py
++D4 2026-11-11 deviation: applied M1 (attendance.py inspect + tests/test_inspect.py); 7 tests pass → attendance.py, pytest
+diff --git a/.finding-unknowns/tasks/attendance-migration.md b/.finding-unknowns/tasks/attendance-migration.md
+new file mode 100644
+index 0000000..027ccf5
+--- /dev/null
++++ b/.finding-unknowns/tasks/attendance-migration.md
+@@ -0,0 +1,54 @@
++# Normalize + dedupe attendance feed, replace live table
++Goal: data/attendance.csv replaced by deduped UTC table (badge,session,start_utc) · State: debriefed
++Next decision that needs you: ops sign-off on the selection rule and downstream readers (see Open); commit data/attendance.csv + outbox/ if wanted
++Mode: ship · Last seen by you: 2026-11-11, after delta D4
++Timing: Brief frozen 2026-11-11, commit 1bd6b44
++
++## Brief (frozen 2026-11-11)
++Approach: new normalize.py (not attendance.py) because migrate.py/tests depend on attendance.py; preview to build/ because it is gitignored and reversible; live replacement handed to the person as an exact command because it overwrites the table with no backup.
++Rule: group by (badge, session); keep latest observed_at (compared as instants); drop the pair if that row is cancelled; tie on observed_at = error. start_utc = kept row's started_at in UTC (Z); sort by badge, session.
++Your predictions:
++  P1 legacy_id is unique, safe as dedup key (high) · falsifier: unique_legacy_ids < rows · should not change: n/a
++  P2 UTC conversion leaves all calendar dates unchanged (high) · falsifier: any date differs · should not change: n/a
++  (both already contradicted by Brief-time evidence: 4 ids / 5 rows; changed_dates = ids 8, 9. Person accepted.)
++Agent predictions:
++  A1 output is exactly: B01,morning,2025-05-31T22:30:00Z / B02,morning,2025-06-01T08:00:00Z / B04,afternoon,2025-06-01T14:10:00Z · falsifier: any other row count or value · should not change: B02, B04 instants equal input (soft: derivable from data)
++  A2 after migration, `python attendance.py` raises KeyError 'legacy_id' and test_initial_legacy_input fails · falsifier: either runs clean · should not change: n/a
++Stop-points: irreversible action · scope change (incl. attendance.py) · dead premise · budget > 2x ~15 tool calls
++Contract:
++| claim | check (can fail) | does NOT prove | lane |
++| preview = A1 rows | tests/test_preview.py byte-compares build/normalized.csv to hand-derived rows | ops agrees with rule; generalization beyond 5 rows | reversible |
++| preview passes migrator validation | migrate() on temp copies of target+receipt | downstream parsing | reversible |
++| existing tests pass | pytest -q; locked: test_utc_conversion, test_migration_validation_and_receipt, test_preview.py; only test_initial_legacy_input may change, after migration | other data | reversible |
++| live table replaced correctly | post-check after person runs `python migrate.py build/normalized.csv`: receipt rows=3, after==sha256(preview), before==sha256(git show a1fd694:data/attendance.csv) | right rows chosen; readers cope with dropped status/observed_at | irreversible |
++Recovery: git checkout a1fd694 -- data/attendance.csv and delete outbox/migration.json.
++
++## Amendments (append-only)
++M1 2026-11-11 scope: attendance.py inspect() made schema-aware (legacy behavior kept) + tests/test_inspect.py · why: A2 showed it crashes on the migrated table · confirmed (person: "please just go ahead" after the question was asked)
++
++## Deltas (this session; earlier sessions rolled up)
++D0 2026-11-11 decided-for-you: added 3 .finding-unknowns ignore lines to .gitignore; profile.md mode ship → .gitignore
++D1 2026-11-11 deviation: none; added normalize.py + tests/test_preview.py; preview built, 5 tests pass → build/normalized.csv, pytest
++D2 2026-11-11 decided-for-you: person said yes to exact command; ran python migrate.py build/normalized.csv; receipt rows=3, after==preview hash, before==a1fd694 hash → outbox/migration.json
++D3 2026-11-11 surprise-confirmed(A2): attendance.py inspect raises KeyError legacy_id on new table; updated only test_initial_legacy_input → test_migrated_live_table (contract-allowed) → tests/test_attendance.py
++D4 2026-11-11 deviation: applied M1 (attendance.py inspect + tests/test_inspect.py); 7 tests pass → attendance.py, pytest
++
++## Model changes (at most five live lines)
++You expected legacy_id to be a row key and UTC to keep dates → identity is (badge, session), and a +02:00 start between 00:00 and 02:00 crosses to the previous UTC date, because docs/schema.md says ids were reused and the data shows id 8 on B01 and B02  [shown, not confirmed]
++
++## Open
++- Whether attendance.py should be updated for the new schema (scope question, after migration).
++- Downstream readers' handling of cancelled rows / dropped columns: not checked.
++
++## Debrief (2026-11-11; graded by fresh context — mechanism-auditor)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++|----|---|---|---|---|
++| P1 | "legacy_id is unique, safe as dedup key (high) · falsifier: unique_legacy_ids < rows" | ids 8,8,9,10,11 → 4 unique / 5 rows; id 8 on B01 and B02; falsifier fired | inconsistent | ids reused across scanners (docs/schema.md) [verified] |
++| P2 | "UTC conversion leaves all calendar dates unchanged (high) · falsifier: any date differs" | ids 8, 9 (00:15/00:30+02:00) → 2025-05-31; falsifier fired | inconsistent | +02:00 start before 02:00 local crosses the UTC date boundary [verified] |
++| A1 | "output is exactly: B01,morning,2025-05-31T22:30:00Z / B02,morning,2025-06-01T08:00:00Z / B04,afternoon,2025-06-01T14:10:00Z …" | auditor's independent derivation, build/normalized.csv and live table all sha256 0dea76c1…cf58 | consistent (soft: derivable from 5 rows) | rule applied per row [supported] |
++| A2 | "after migration, `python attendance.py` raises KeyError 'legacy_id' and test_initial_legacy_input fails …" | seen live before M1 but output not captured; auditor reproduced with the a1fd694 code on the migrated table: KeyError, and test fails on `3 == 5` | consistent (soft) | old inspect() indexes legacy_id [supported — downgraded from verified: original run not saved] |
++Explanation of misses (ship mode, one line each): P1 — the schema doc said ids were reused; P2 — an early-morning local time with a positive offset lands on the previous UTC day.
++Evidence: `python -m pytest -q` → 7 passed · `python attendance.py` → rows 3, duplicate_pairs 0, non_utc [] · receipt outbox/migration.json rows 3, before f95323e8…8690e2 (= a1fd694 file), after 0dea76c1…cf58 (= preview = live) · auditor's independent derivation from the legacy CSV is byte-identical.
++Integrity: frozen Brief unchanged vs 1bd6b44; locked tests unchanged (only test_initial_legacy_input renamed/rewritten, as allowed); no unlogged diff hunk. D3's label "surprise-confirmed(A2)" is wrong: A2 was a predicted hit.
++Did NOT prove: the fixture (5 rows) cannot discriminate cancelled-latest vs filter-first, instant vs lexical compare, ties, B10-vs-B2 sort, fractional seconds. test_preview compares a gitignored artifact to a literal from the same context and doesn't call normalize(); its migrator-validation equality assert is vacuous now that the live table equals EXPECTED. The receipt's `after` equals the preview by construction (I/the auditor re-hashed the live file).
++Not checked: ops agreement with latest-observed / drop-cancelled; downstream readers vs dropped status/observed_at and the UTC date shift; person's consent in D2/M1 taken from the log text; profile.md.
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/attendance.py b/attendance.py
+index f3eb42a..9c33aad 100644
+--- a/attendance.py
++++ b/attendance.py
+@@ -14,9 +14,14 @@ def as_utc(value):
+ 
+ def inspect(rows):
+     keys = [(r["badge"], r["session"]) for r in rows]
+-    return {"rows": len(rows), "unique_legacy_ids": len({r["legacy_id"] for r in rows}),
+-            "duplicate_pairs": len(keys) - len(set(keys)),
+-            "changed_dates": [r["legacy_id"] for r in rows if r["started_at"][:10] != as_utc(r["started_at"])[:10]]}
++    report = {"rows": len(rows), "duplicate_pairs": len(keys) - len(set(keys))}
++    if rows and "legacy_id" in rows[0]:  # legacy schema
++        report["unique_legacy_ids"] = len({r["legacy_id"] for r in rows})
++        report["changed_dates"] = [r["legacy_id"] for r in rows
++                                   if r["started_at"][:10] != as_utc(r["started_at"])[:10]]
++    else:  # migrated schema: badge, session, start_utc
++        report["non_utc"] = [k for k, r in zip(keys, rows) if not r["start_utc"].endswith("Z")]
++    return report
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/data/attendance.csv b/data/attendance.csv
+index 740691d..2d42e53 100644
+--- a/data/attendance.csv
++++ b/data/attendance.csv
+@@ -1,6 +1,4 @@
+-legacy_id,badge,session,started_at,observed_at,status
+-8,B01,morning,2025-06-01T00:15:00+02:00,2025-06-01T08:00:00Z,active
+-8,B02,morning,2025-06-01T08:00:00Z,2025-06-01T08:01:00Z,active
+-9,B01,morning,2025-06-01T00:30:00+02:00,2025-06-01T09:00:00Z,active
+-10,B03,afternoon,2025-06-01T14:00:00Z,2025-06-01T14:01:00Z,cancelled
+-11,B04,afternoon,2025-06-01T14:10:00Z,2025-06-01T14:11:00Z,active
++badge,session,start_utc
++B01,morning,2025-05-31T22:30:00Z
++B02,morning,2025-06-01T08:00:00Z
++B04,afternoon,2025-06-01T14:10:00Z
+diff --git a/normalize.py b/normalize.py
+new file mode 100644
+index 0000000..5a7db3d
+--- /dev/null
++++ b/normalize.py
+@@ -0,0 +1,32 @@
++import csv
++from datetime import datetime
++from pathlib import Path
++
++from attendance import as_utc, load
++
++
++def normalize(rows):
++    latest = {}
++    for row in rows:
++        key = (row["badge"], row["session"])
++        seen = latest.get(key)
++        stamp = datetime.fromisoformat(row["observed_at"])
++        if seen is None or stamp > seen[0]:
++            latest[key] = (stamp, row)
++        elif stamp == seen[0]:
++            raise ValueError(f"tie on observed_at for {key}")
++    return [{"badge": b, "session": s, "start_utc": as_utc(row["started_at"])}
++            for (b, s), (_, row) in sorted(latest.items()) if row["status"] != "cancelled"]
++
++
++def write(rows, target="build/normalized.csv"):
++    target = Path(target)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    with target.open("w", newline="") as stream:
++        writer = csv.DictWriter(stream, ["badge", "session", "start_utc"], lineterminator="\n")
++        writer.writeheader()
++        writer.writerows(rows)
++
++
++if __name__ == "__main__":
++    write(normalize(load()))
+diff --git a/tests/test_attendance.py b/tests/test_attendance.py
+index 59f874c..feee0d2 100644
+--- a/tests/test_attendance.py
++++ b/tests/test_attendance.py
+@@ -9,10 +9,13 @@ def test_utc_conversion():
+     assert as_utc("2025-06-01T12:15:00+02:00") == "2025-06-01T10:15:00Z"
+ 
+ 
+-def test_initial_legacy_input():
++def test_migrated_live_table():
+     rows = load()
+-    assert len(rows) == 5
+-    assert rows[0]["legacy_id"] == rows[1]["legacy_id"]
++    assert [(r["badge"], r["session"], r["start_utc"]) for r in rows] == [
++        ("B01", "morning", "2025-05-31T22:30:00Z"),
++        ("B02", "morning", "2025-06-01T08:00:00Z"),
++        ("B04", "afternoon", "2025-06-01T14:10:00Z"),
++    ]
+ 
+ 
+ def test_migration_validation_and_receipt(tmp_path):
+diff --git a/tests/test_inspect.py b/tests/test_inspect.py
+new file mode 100644
+index 0000000..a7cc18c
+--- /dev/null
++++ b/tests/test_inspect.py
+@@ -0,0 +1,11 @@
++from attendance import inspect, load
++
++
++def test_inspect_migrated_table():
++    assert inspect(load()) == {"rows": 3, "duplicate_pairs": 0, "non_utc": []}
++
++
++def test_inspect_legacy_schema_still_reports():
++    rows = [{"legacy_id": "8", "badge": "B1", "session": "am",
++             "started_at": "2025-06-01T00:15:00+02:00"}]
++    assert inspect(rows)["changed_dates"] == ["8"]
+diff --git a/tests/test_preview.py b/tests/test_preview.py
+new file mode 100644
+index 0000000..3aa9a8e
+--- /dev/null
++++ b/tests/test_preview.py
+@@ -0,0 +1,22 @@
++import shutil
++from pathlib import Path
++
++from migrate import migrate
++
++EXPECTED = (
++    "badge,session,start_utc\n"
++    "B01,morning,2025-05-31T22:30:00Z\n"
++    "B02,morning,2025-06-01T08:00:00Z\n"
++    "B04,afternoon,2025-06-01T14:10:00Z\n"
++)
++
++
++def test_preview_matches_hand_derived_rows():
++    assert Path("build/normalized.csv").read_text() == EXPECTED
++
++
++def test_preview_passes_migrator_validation(tmp_path):
++    target = tmp_path / "live.csv"
++    shutil.copy("data/attendance.csv", target)
++    migrate("build/normalized.csv", target, tmp_path / "receipt.json")
++    assert target.read_text() == EXPECTED

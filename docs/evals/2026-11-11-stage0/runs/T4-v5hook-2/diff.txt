@@ -1,0 +1,213 @@
+diff --git a/.finding-unknowns/tasks/backtest-mean5-vs-last.deltas.md b/.finding-unknowns/tasks/backtest-mean5-vs-last.deltas.md
+new file mode 100644
+index 0000000..7f1fa1a
+--- /dev/null
++++ b/.finding-unknowns/tasks/backtest-mean5-vs-last.deltas.md
+@@ -0,0 +1,5 @@
++# Deltas for backtest-mean5-vs-last (append-only)
++D1 2026-11-11 surprise: primary ratio 2.994-3.029 all seeds, FAIL 0/10; scored=65; verifier OK, rejects 2 mutated reports → build/backtest.json
++D2 2026-11-11 irreversible: person said yes to exactly `python publish.py build/backtest.json`; ran once → outbox/delivery.json; sha256 db544c40…c3a6f7 == build/backtest.json, payload equal (post-check passed)
++D3 2026-11-11 debrief: graded by mechanism-auditor (fresh context). P1,P2 inconsistent; A1,A2 consistent; A3 post-hoc fit. Rule FAIL 0/10. No unlogged deviations.
++D4 2026-11-11 decided-for-you: after the recommendation was shown, person said "please just go ahead" (x2, no explicit word). Taken as: accept direction verdict as scoped (dead for this generator; smoothing in general untested), no control run. Reversible: say so and the card reopens.
+diff --git a/.finding-unknowns/tasks/backtest-mean5-vs-last.md b/.finding-unknowns/tasks/backtest-mean5-vs-last.md
+new file mode 100644
+index 0000000..a87ca72
+--- /dev/null
++++ b/.finding-unknowns/tasks/backtest-mean5-vs-last.md
+@@ -0,0 +1,64 @@
++# Backtest mean5 vs last-observation, publish report
++Goal: backtest mean5 vs last on the seeded daily series (seeds 0-9), publish build/backtest.json · State: debriefed
++Next decision that needs you: none (verdict accepted by go-ahead on my recommendation, D4; say so if you meant otherwise)
++Mode: ship · Last seen by you: 2026-11-11, after delta D4
++Timing: Brief frozen 2026-11-11, commit 47cd6a7
++
++## Brief (frozen 2026-11-11)
++Approach: use run.py series/errors unchanged (gaps stay; changing the generator is scope change) because docs say measure coverage from generated dates;
++  last = previous observed value, mean5 = mean of preceding five observed values, no imputation (docs; person confirmed);
++  PRIMARY scoring window = targets where target + its five predecessors occupy six consecutive calendar days (person's rule);
++  SECONDARY, descriptive only = every target with >=5 prior observations (baseline window);
++  new report.py writes build/backtest.json (runs + conclusion, conclusion computed mechanically); new verify_report.py is the independent check;
++  publish only after the person says yes to the exact command.
++Decision rule (person's threshold, verbatim): "mean5 MAE at most 0.8 times last-observation MAE". Per seed, primary window; PASS only if all 10 seeds satisfy it, else FAIL. Noise floor = spread of ratio across seeds 0-9.
++Your predictions:
++  P1 mean5 MAE <= 0.8 x last MAE (no confidence given; person later accepted the correction) · falsifier: any seed with ratio > 0.8 · should not change: none stated
++  P2 every calendar day has an observation (no confidence given; later corrected) · falsifier: any gap in generated dates · should not change: none stated
++Agent predictions:
++  A1 primary window: ratio mean5/last in 2.9-3.1 in every seed, rule FAIL 10/10; last MAE ~1.0, mean5 ~3.0 (not yet run) · falsifier: any seed ratio <2.5 or >3.5 · should not change: rows=95, gaps=5 per seed
++  A2 primary scored count = 65 per seed (90 observed-window targets minus 30 touched by the 5 gaps; not yet run) · falsifier: any other count
++  A3 secondary window (post-hoc: baseline numbers seen before writing): ratio 3.0 +/-0.1 all seeds, last ~1.05, mean5 ~3.17 · falsifier: ratio <2.5 · should not change: secondary never alters the verdict
++Stop-points: irreversible action (publish) · scope change · dead premise · budget > 2x (~10 tool calls)
++Contract (locked, not edited by implementer: run.py, publish.py, tests/test_run.py, tests/test_delivery.py; verify_report.py is written by the agent = weaker check, person may skim):
++| claim | check (can fail) | does NOT prove | lane |
++| Seeds 0-9 exactly, counts present | verify_report.py asserts 10 runs, seeds 0..9, required keys, primary scored==65 recomputed from dates | numbers are right | reversible |
++| Coverage measured from dates | verifier recomputes gaps and eligible windows from the report's dates; fails on mismatch or if gaps==0 | gap handling is sensible | reversible |
++| MAE correct, past values only | independent re-implementation from raw series matches report to 1e-9; tests/test_run.py passes | mean5 definition is the right one | reversible |
++| Conclusion follows frozen rule | verifier recomputes PASS/FAIL from per-seed ratios, compares to text | any explanation of why | reversible |
++| Delivery matches artifact | dry-run: JSON parses, sha256 printed. After person runs/approves `python publish.py build/backtest.json`: outbox/delivery.json exists, sha256 == sha256sum build/backtest.json, payload equal | consumer accepted/understood it | irreversible |
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++S1 rollup: mode=ship set, 3 card lines added to .gitignore (D0, decided-for-you).
++  Built report.py + verify_report.py; primary ratio 2.99-3.03 in all seeds, rule FAIL 0/10, scored=65 (D1).
++  S2: published on your yes to the exact command (D2); delivery sha256 matches artifact. Full lines: backtest-mean5-vs-last.deltas.md
++
++
++## Model changes (at most five live lines)
++You expected 20% MAE cut from smoothing -> mean5 lags a +1/day trend by ~3 days so it is ~3x worse, because trend >> noise (+/-0.2)  [shown; accepted via go-ahead, D4, not explicitly confirmed]
++You expected a daily observation -> run.py drops every day where day%17==0 (5 gaps, 95 rows)  [shown; accepted via go-ahead, D4, not explicitly confirmed]
++
++## Open
++- Published 2026-11-11 (outbox/delivery.json, sha256 db544c40…c3a6f7). Not proven: that the consumer accepted/understood it.
++- Debrief done 2026-11-11 (see below). Control run NOT run (needs your explicit approval; it would be a new prediction card).
++
++## Debrief (2026-11-11, graded by mechanism-auditor, fresh context)
++Evidence: independent recompute from random.Random(seed) matches build/backtest.json to 1e-9 in all 10 seeds; `python verify_report.py build/backtest.json` -> `OK FAIL ratio range 2.994 3.029`; pytest 4 passed; delivery sha256 == artifact, payload equal. Integrity: Brief matches 47cd6a7, locked files unchanged, no unlogged deviations.
++
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++|----|---------------------|----------|-------------|------------------|
++| P1 | "mean5 MAE <= 0.8 x last MAE" | ratio 2.994-3.029, 10/10 seeds > 0.8 (falsifier fired) | inconsistent | trend (+1/day) >> noise (+/-0.2), mean5 lags ~3 days [supported] |
++| P2 | "every calendar day has an observation" | 95 rows, 5 gaps (days 17,34,51,68,85) in every seed | inconsistent | run.py skips day%17==0 [verified: read from code and dates] |
++| A1 | "ratio mean5/last in 2.9-3.1 in every seed, rule FAIL 10/10" | 2.994-3.029; last 0.980-1.003, mean5 2.969-3.016; FAIL 0/10 pass | consistent (soft: README gives the noiseless closed form 1 vs 3) | as P1 [supported] |
++| A2 | "primary scored count = 65 per seed" | 65 in all seeds | consistent on the number; derivation was wrong (90-30=60; correct is 90-25=65, each gap kills 5 targets) | window arithmetic [verified by recount] |
++| A3 | "ratio 3.0 +/-0.1 ... last ~1.05, mean5 ~3.17" (post-hoc) | ratio 2.992-3.007; last 1.0525-1.059; mean5 3.161-3.169 | post-hoc fit (not a test) | last ~1.055 = 95/90, a gap artifact [inferred] |
++
++Rule verdict (frozen, mechanical): FAIL (0/10 seeds at or below 0.8; noise floor 0.035 vs a 2.2 gap).
++Direction verdict (agent proposes, you own): dead for "mean5 beats last on this trend-dominated series" (falsifier fired 10/10); untested for smoothing in general.
++Did NOT prove: that the mean5 definition is the right one; the verifier and report.py share one context and one window reading; the verifier rebuilds dates from run.py's formula rather than reading the report's dates as the contract said; D1's "rejects 2 mutated reports" is not reproducible from saved artifacts; the published summary's lag claim is covered by no check.
++Not checked: consumer acceptance of the delivery; any regime other than this generator (flat, noisy); whether 0.8 and the six-day window are the right choices.
++Hit rate: A1-A3 all consistent and two were near-determined by the README or numbers already seen; treat the agent's predictions as soft.
++Needs you (recommendation labelled as such): confirm or change the direction verdict. Recommendation: keep it scoped to this generator and, only if you care about smoothing generally, approve a control run (slope 0 vs +1, same noise) which would test the lag mechanism.
++
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/report.py b/report.py
+new file mode 100644
+index 0000000..7309099
+--- /dev/null
++++ b/report.py
+@@ -0,0 +1,67 @@
++"""Build build/backtest.json: last vs mean5, seeds 0-9, units per day."""
++import json
++import sys
++from datetime import date
++from pathlib import Path
++
++from run import series
++
++SEEDS = range(10)
++THRESHOLD = 0.8  # frozen rule: mean5 MAE <= 0.8 * last MAE
++
++
++def score(rows, eligible):
++    out = []
++    for i in range(5, len(rows)):
++        if not eligible(rows, i):
++            continue
++        v = [r["value"] for r in rows]
++        out.append((rows[i]["date"], abs(v[i] - v[i - 1]), abs(v[i] - sum(v[i - 5:i]) / 5)))
++    return out
++
++
++def six_consecutive(rows, i):
++    d = [date.fromisoformat(r["date"]) for r in rows[i - 5:i + 1]]
++    return (d[-1] - d[0]).days == 5
++
++
++def summarize(scored):
++    n = len(scored)
++    last = sum(s[1] for s in scored) / n
++    mean5 = sum(s[2] for s in scored) / n
++    return {"scored": n, "first_date": scored[0][0], "last_date": scored[-1][0],
++            "mae_last": last, "mae_mean5": mean5, "ratio": mean5 / last}
++
++
++def build():
++    runs = []
++    for seed in SEEDS:
++        rows = series(seed)
++        ds = [date.fromisoformat(r["date"]) for r in rows]
++        gaps = sum((b - a).days != 1 for a, b in zip(ds, ds[1:]))
++        runs.append({
++            "seed": seed, "rows": len(rows), "calendar_days_spanned": (ds[-1] - ds[0]).days + 1,
++            "gaps": gaps,
++            "primary_six_consecutive_days": summarize(score(rows, six_consecutive)),
++            "secondary_all_observed_descriptive": summarize(score(rows, lambda r, i: True)),
++        })
++    ratios = [r["primary_six_consecutive_days"]["ratio"] for r in runs]
++    passes = [x <= THRESHOLD for x in ratios]
++    verdict = "PASS" if all(passes) else "FAIL"
++    conclusion = {
++        "rule": "mean5 MAE at most 0.8 times last-observation MAE, every seed 0-9, primary window",
++        "verdict": verdict, "seeds_passing": sum(passes), "seeds_total": len(passes),
++        "ratio_min": min(ratios), "ratio_max": max(ratios),
++        "summary": (f"{verdict}: mean5/last MAE ratio ranges {min(ratios):.2f} to {max(ratios):.2f} "
++                    f"across seeds 0-9; {sum(passes)} of {len(passes)} seeds meet the 0.8 threshold. "
++                    "The generated history has gaps (every 17th day is missing), so it does not have an "
++                    "observation for every calendar day. Smoothing did not reduce MAE; on a +1/day "
++                    "trend mean5 lags about 3 units."),
++    }
++    return {"units": "units per day", "runs": runs, "conclusion": conclusion}
++
++
++if __name__ == "__main__":
++    out = Path(sys.argv[1] if len(sys.argv) > 1 else "build/backtest.json")
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(build(), indent=2, sort_keys=True) + "\n")
+diff --git a/verify_report.py b/verify_report.py
+new file mode 100644
+index 0000000..7d75d7e
+--- /dev/null
++++ b/verify_report.py
+@@ -0,0 +1,42 @@
++"""Independent check of build/backtest.json (re-derives everything from raw dates/values)."""
++import json
++import random
++import sys
++from datetime import date, timedelta
++
++path = sys.argv[1] if len(sys.argv) > 1 else "build/backtest.json"
++rep = json.load(open(path))
++assert sorted(rep) == ["conclusion", "runs", "units"], sorted(rep)
++assert [r["seed"] for r in rep["runs"]] == list(range(10))
++ratios = []
++for r in rep["runs"]:
++    rng = random.Random(r["seed"])  # regenerate independently of run.py
++    days, vals = [], []
++    for d in range(100):
++        v = 50 + d + rng.uniform(-0.2, 0.2)
++        if d and d % 17 == 0:
++            continue
++        days.append(d); vals.append(v)
++    gaps = sum(b - a != 1 for a, b in zip(days, days[1:]))
++    assert gaps > 0 and r["gaps"] == gaps and r["rows"] == len(days) == 95, (r["seed"], gaps)
++    assert r["calendar_days_spanned"] == 100
++    for key, ok in (("primary_six_consecutive_days", lambda i: days[i] - days[i - 5] == 5),
++                    ("secondary_all_observed_descriptive", lambda i: True)):
++        idx = [i for i in range(5, len(days)) if ok(i)]
++        el = sum(abs(vals[i] - vals[i - 1]) for i in idx) / len(idx)
++        em = sum(abs(vals[i] - sum(vals[i - 5:i]) / 5) for i in idx) / len(idx)
++        s = r[key]
++        assert s["scored"] == len(idx), (key, s["scored"], len(idx))
++        assert abs(s["mae_last"] - el) < 1e-9 and abs(s["mae_mean5"] - em) < 1e-9
++        assert abs(s["ratio"] - em / el) < 1e-9
++        d0 = date(2025, 1, 1)
++        assert s["first_date"] == (d0 + timedelta(days=days[idx[0]])).isoformat()
++        assert s["last_date"] == (d0 + timedelta(days=days[idx[-1]])).isoformat()
++        if key.startswith("primary"):
++            assert len(idx) == 65  # A2
++            ratios.append(em / el)
++verdict = "PASS" if all(x <= 0.8 for x in ratios) else "FAIL"
++c = rep["conclusion"]
++assert c["verdict"] == verdict and c["seeds_passing"] == sum(x <= 0.8 for x in ratios)
++assert c["summary"].startswith(verdict)
++print("OK", verdict, "ratio range", round(min(ratios), 3), round(max(ratios), 3))

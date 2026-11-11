@@ -1,0 +1,6 @@
+bacd49f chore(card): close backtest-mean5-vs-last (verdict accepted, no control run)
+adbce01 chore(card): debrief backtest-mean5-vs-last
+3d903f8 chore(card): stop backtest-mean5-vs-last (published)
+1b1857c chore(card): session rollup backtest-mean5-vs-last
+00343e3 chore(card): stop backtest-mean5-vs-last
+47cd6a7 chore(card): brief backtest-mean5-vs-last

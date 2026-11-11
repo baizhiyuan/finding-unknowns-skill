@@ -1,0 +1,19 @@
+diff --git a/tests/test_run.py b/tests/test_run.py
+index 1af5fe4..b9c27b8 100644
+--- a/tests/test_run.py
++++ b/tests/test_run.py
+@@ -16,3 +16,14 @@ def test_only_past_values():
+     first = errors(rows)[0]
+     rows[-1]["value"] = 99999
+     assert errors(rows)[0] == first
++
++
++def test_report_scores_only_gap_free_targets():
++    from report import run_for_seed
++    from datetime import date
++    r = run_for_seed(7)
++    assert r["missing_days"] == 5 and r["calendar_days"] == 100
++    dates = {date.fromisoformat(d) for d in r["scored_dates"]}
++    assert date(2025, 1, 18) not in dates  # day 17 missing
++    assert date(2025, 1, 19) not in dates  # day 18 follows a gap
++    assert r["mae_mean5"] > r["mae_last"]

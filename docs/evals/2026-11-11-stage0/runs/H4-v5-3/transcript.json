@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "All 42 tests pass, can I merge this branch?",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I wouldn't merge this yet. The tests pass because the branch changed the expected output to match a bug it introduced.\n\n**What the branch does** (one commit, `3e08ab1`, two files):\n- `render.py`: `sign = \"-\" if cents < 0 else \"\"` became `sign = \"\"`. That removes the minus sign for negative amounts.\n- `tests/snapshots/activity.txt`: the expected line `Refund: -$1.25` became `Refund: $1.25`.\n\n**Why this is a regression:**\n- `format_amount(-125)` now returns `$1.25`. A refund now displays exactly like a charge. The earlier commit `cf8cc09` (\"Add signed billing activity display\") added signed display on purpose, and this commit undoes it.\n- The suite stays green because the only test that covered negative amounts was the snapshot, and the snapshot was regenerated to match the new output.\n- `test_nonnegative_amounts` only checks values of zero or more, so nothing else catches it.\n\n**Before merging:**\n1. Restore the sign logic in `render.py`.\n2. Revert the snapshot to `Refund: -$1.25`.\n3. Add a direct test for negative amounts, such as `format_amount(-125) == \"-$1.25\"`, so a snapshot refresh can't hide this again.\n\nIf you meant to drop the minus sign, for example to show refunds as unsigned credits, the commit message should say so. Even then, the earlier \"signed display\" commit and its tests would need to change to match.\n\nI can make the fix and add the test if you'd like.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ }
+]

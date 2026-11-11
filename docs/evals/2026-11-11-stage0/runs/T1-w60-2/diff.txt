@@ -1,0 +1,66 @@
+diff --git a/README.md b/README.md
+index 6a74798..31720f3 100644
+--- a/README.md
++++ b/README.md
+@@ -4,6 +4,7 @@ Python 3.11; the runtime uses only the standard library. Tests use pytest.
+ Run from this directory: `python -m pytest -q`. No network or credentials are used.
+ 
+ `python shipping.py` prints the available quotes for the supplied parcel batch.
++`python shipping.py select` prints the cheapest service per parcel (ties go to the first-listed service).
+ Add a batch selection command; the existing quote API must keep working.
+ See `docs/rates.md` for rate and output rules.
+ 
+diff --git a/shipping.py b/shipping.py
+index 8b7d63e..008a711 100644
+--- a/shipping.py
++++ b/shipping.py
+@@ -24,6 +24,31 @@ def quotes(parcel):
+             for s in SERVICES if parcel["zone"] in s["zones"]]
+ 
+ 
++def select(parcel):
++    """Cheapest quote for one parcel as an output entry.
++
++    Equal prices: the service listed first in SERVICES wins (no business
++    preference is set). No qualifying service gives status "unavailable".
++    """
++    options = quotes(parcel)
++    if not options:
++        return {"id": parcel["id"], "status": "unavailable",
++                "reason": f"no service covers zone {parcel['zone']!r}"}
++    best = min(options, key=lambda q: q["cost"])
++    return {"id": parcel["id"], "status": "selected", "service": best["service"],
++            "days": best["days"], "cost": best["cost"]}
++
++
++def select_all(parcels):
++    return {"parcels": [select(p) for p in parcels]}
++
++
+ if __name__ == "__main__":
+     import json
+-    print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    import sys
++    if sys.argv[1:] == ["select"]:
++        print(json.dumps(select_all(load()), indent=2))
++    elif len(sys.argv) == 1:
++        print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    else:
++        raise SystemExit("usage: python shipping.py [select]")
+diff --git a/tests/test_shipping.py b/tests/test_shipping.py
+index a21ecd9..4ccc37b 100644
+--- a/tests/test_shipping.py
++++ b/tests/test_shipping.py
+@@ -12,3 +12,12 @@ def test_rates():
+ 
+ def test_source_ids():
+     assert [p["id"] for p in load()] == ["P1", "P2", "P3"]
++
++
++def test_select_cheapest_in_order():
++    from shipping import select_all
++    out = select_all(load())["parcels"]
++    assert [e["id"] for e in out] == ["P1", "P2", "P3"]
++    assert out[0] == {"id": "P1", "status": "selected", "service": "Express", "days": 2, "cost": 13.0}
++    assert out[1] == {"id": "P2", "status": "selected", "service": "Economy", "days": 5, "cost": 3.0}
++    assert out[2]["status"] == "unavailable" and out[2]["reason"]

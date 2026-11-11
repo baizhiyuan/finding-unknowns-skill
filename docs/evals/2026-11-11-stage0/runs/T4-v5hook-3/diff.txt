@@ -1,0 +1,326 @@
+diff --git a/.finding-unknowns/predictions/ma5-vs-last-backtest.md b/.finding-unknowns/predictions/ma5-vs-last-backtest.md
+new file mode 100644
+index 0000000..a778cb2
+--- /dev/null
++++ b/.finding-unknowns/predictions/ma5-vs-last-backtest.md
+@@ -0,0 +1,19 @@
++Timing: frozen 2026-11-11, commit 3f57388
++
++Claim under test   : a five-day moving average cuts MAE by >=20% vs the last observation on this demand series
++Mechanism chain    : smoothing removes noise (A) -> noise dominates forecast error (B) -> removing it lowers MAE by >=20% (C). B fails: the trend is +1/day, noise only +-0.2, and a trailing mean lags a trend by ~3 units
++Your prediction    : MA5 MAE >=20% lower, all seeds (confidence not stated)
++Agent prediction   : last ~1.00, mean5 ~3.00, mean5 ~3x worse, every seed
++Should not change  : ordering under the all-rows sensitivity run; existing tests; `run.py --seed 7` output
++Noise floor        : spread across 10 seeds (deterministic per seed, so no reruns); expected seed sd ~0.02 for last, ~0.02 for mean5; floor is derived, not measured, until the run
++Stopping rule      : all seeds 0-9 once, then verdict
++Falsifier          : P1: any seed or pooled reduction <20%. A1: any seed with mean5 < 1.5x last
++Decision rule      : "Supported iff mean5 MAE is at least 20% below last MAE in the pooled comparison and in all 10 seeds."
++Data budget        : synthetic seeded data, no holdout; seeds 0-9 spent on this one run
++Trials so far      : 1 configuration (plus 1 labelled sensitivity run, same hypothesis); effective independent hypotheses: 1
++Terms              : eligible = target and its 5 preceding observations occupy 6 consecutive calendar days; MAE in units/day; reduction = (MAE_last - MAE_mean5) / MAE_last
++Written            : 2026-11-11, before running any experiment (run.py/report code read only)
++
++## Run table (append-only)
++| date | run | config | what changed | result | cumulative trials | data spent |
++| 2026-11-11 | R1 | eligible-only, seeds 0-9, report.py | first and only run per stopping rule | pooled last 0.9975, mean5 2.9992, reduction -200.7% (per-seed -202.9%..-199.4%); 650 scored, 5 gaps/seed; verdict NOT SUPPORTED by frozen rule; sensitivity (all rows) last 1.055, mean5 3.167 | 1 | seeds 0-9 |
+diff --git a/.finding-unknowns/tasks/ma5-vs-last-backtest.deltas.md b/.finding-unknowns/tasks/ma5-vs-last-backtest.deltas.md
+new file mode 100644
+index 0000000..4f6b7f7
+--- /dev/null
++++ b/.finding-unknowns/tasks/ma5-vs-last-backtest.deltas.md
+@@ -0,0 +1,6 @@
++# Deltas for ma5-vs-last-backtest (append-only)
++D1 2026-11-11 deviation: sensitivity run (all rows) written as plain per-seed list, not a full run object → build/sensitivity.json
++D2 2026-11-11 decided-for-you: per-run field names beyond the doc schema: rows, gaps, scored, scored_dates, mae{last,mean5} → report.py
++D3 2026-11-11 surprise: none; all 10 seeds sit inside A1's bands (last 0.980-1.003, mean5 2.969-3.016), 5 gaps and 65 scored per seed (A2) → build/backtest.json
++D4 2026-11-11 deviation: tightened two loose assertions in tests/test_report.py before implementing (not after) → tests/test_report.py
++D5 2026-11-11 irreversible: person said yes to exact command; ran 'python publish.py build/backtest.json' (exit 0); post-check passed → outbox/delivery.json
+diff --git a/.finding-unknowns/tasks/ma5-vs-last-backtest.md b/.finding-unknowns/tasks/ma5-vs-last-backtest.md
+new file mode 100644
+index 0000000..c5e3978
+--- /dev/null
++++ b/.finding-unknowns/tasks/ma5-vs-last-backtest.md
+@@ -0,0 +1,57 @@
++# Backtest 5-day moving average vs last observation, publish report
++Goal: seeds 0-9 MAE comparison under the calendar-eligibility rule; deliver build/backtest.json · State: debriefed
++Next decision that needs you: none; follow-up test only if you ask for it
++Mode: ship · Last seen by you: 2026-11-11, after D5 and the Debrief
++Timing: Brief frozen 2026-11-11, commit 3f57388
++
++## Brief (frozen 2026-11-11)
++Approach: new report.py, run.py untouched, because existing tests and the `run.py --seed 7` baseline keep their meaning;
++  eligibility = target plus its 5 preceding observations cover 6 consecutive calendar days, no fill, because that is the person's rule;
++  both methods scored on the same eligible dates using only earlier values, because a paired comparison removes sample effects;
++  gaps measured from generated dates, because the docs forbid assuming coverage from the loop bound;
++  all-rows sensitivity run goes to build/sensitivity.json, not delivered, because the doc schema is only `runs` and `conclusion`.
++Your predictions:
++  P1 five-day MA cuts MAE by >=20% vs last observation (confidence not stated) · falsifier: any seed or the pooled result shows <20% · should not change: existing tests, `run.py --seed 7` output
++  P2 the history has an observation for every calendar day · falsifier: any measured missing date · should not change: nothing
++  (Person later accepted the repo's explanation that smoothing can make this trend worse; P1 is graded as originally stated.)
++Agent predictions (derived from reading docs/backtest.md and run.py, not from a run):
++  A1 every seed: last MAE ~1.00 (+-0.05), mean5 MAE ~3.00 (+-0.10), mean5 ~3x worse (~ -200%) · falsifier: any seed with mean5 MAE < 1.5x last MAE · should not change: all-rows sensitivity keeps the ordering, both MAEs slightly higher
++  A2 5 missing dates per seed (2025-01-18, 02-04, 02-21, 03-10, 03-27) and 65 scored dates per seed · falsifier: any other count · should not change: dates identical across seeds
++Decision rule: "Supported iff mean5 MAE is at least 20% below last MAE in the pooled comparison and in all 10 seeds."
++Stop-points: irreversible action (publish) · scope change · dead premise · budget > 2x ~20 tool calls
++Contract (check files are written first and not edited by the implementer; tests/test_run.py and tests/test_delivery.py locked):
++| claim | check (can fail) | does NOT prove | lane |
++| eligibility follows the rule | tests/test_report.py on hand-built gapped series + independent calendar-set count of 65/seed | the rule is right for the business | reversible |
++| only past values, same dates for both methods | perturb target and later values, forecasts unchanged; identical date lists | every other leakage | reversible |
++| existing behavior intact | `python -m pytest -q` | the report is correct | reversible |
++| report complete and correct | schema check (seeds 0-9); separate script recomputes each seed's MAE from listed scored dates to 1e-9 | the conclusion wording is sound | reversible |
++| conclusion obeys the frozen rule | script compares pooled and per-seed reductions with 20% and checks the verdict | judgment about the direction | reversible |
++| artifact final before delivery | dry run: parse JSON, record sha256, confirm outbox/delivery.json absent; writes nothing | the consumer reads it as intended | reversible |
++| delivered bytes are the checked artifact | post-check after the person's yes to `python publish.py build/backtest.json`: outbox/delivery.json exists, sha256 equals `sha256sum build/backtest.json`, payload equals artifact | the consumer read it correctly | irreversible |
++Note: publish uses exclusive create, so no re-publish; a mistake after delivery is the person's decision.
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++S1 built report.py, tests/test_report.py, checks/verify_report.py; 10 tests pass; verify_report OK (650 dates, MAE recomputed by calendar lookup to 1e-9); result NOT SUPPORTED, mean5 about 3x worse.
++Freeze: person's reply "Use your judgment on that" taken as yes to the Brief; it is not a yes to publishing.
++
++## Model changes (at most five live lines)
++You expected smoothing to cut MAE by >=20% (recall answer: mean5 <= 0.8x last) -> measured mean5 is ~3x worse (-200.7% pooled), because the series has a +1/day trend and a trailing mean lags it. confirmed by you 2026-11-11 (your acceptance; evidence tier unchanged). Mechanism tier [inferred]: the lag story restates docs/backtest.md; no test would have failed if it were false.
++
++## Open
++- Published (D5); post-check passed. Work committed in 1133714; only outbox/ is untracked (left uncommitted on purpose).
++- Unlogged hunk: the .gitignore card lines (harmless plumbing). Frozen Brief contains the line "(Person later accepted the repo's explanation...)", odd for a frozen block; P1 is graded as quoted.
++- Optional follow-up, not started: a pre-registered test on a series with little or no trend (needs new data and your explicit approval; write the prediction card first).
++
++## Debrief (2026-11-11; graded by fresh context)
++Rule verdict (frozen rule, verbatim): "Supported iff mean5 MAE is at least 20% below last MAE in the pooled comparison and in all 10 seeds." -> NOT SUPPORTED (pooled -200.7%, per-seed -202.9%..-199.4%). Direction: P1 inverted, not just missed.
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++| P1 | "five-day MA cuts MAE by >=20% vs last observation" | last 0.9975, mean5 2.9992 pooled; every seed ~3x worse | inconsistent (should-not-change half held: 10 tests pass, run.py unchanged) | trend lag, +1/day vs +-0.2 noise [inferred] |
++| P2 | "the history has an observation for every calendar day" | 5 missing dates per seed (2025-01-18, 02-04, 02-21, 03-10, 03-27) | inconsistent (falsifier fired on all seeds) | generator skips day%17 [verified: measured directly] |
++| A1 | "every seed: last MAE ~1.00 (+-0.05), mean5 MAE ~3.00 (+-0.10), mean5 ~3x worse" | last 0.980-1.003, mean5 2.969-3.016; sensitivity 1.0555 / 3.1672, ordering kept | consistent (largely a restatement of the doc) | doc arithmetic [inferred] |
++| A2 | "5 missing dates per seed (...) and 65 scored per seed" | gaps=5, scored=65, identical dates in all 10 seeds | consistent | rule + generator [supported] |
++Evidence: pytest -q -> 10 passed; sha256 build/backtest.json == outbox/delivery.json == 3cf2bc44...c9aa; auditor recomputed MAEs and gap dates from build/backtest.json and run.series.
++Did NOT prove: the lag mechanism (no ablation); that MA5 is bad on real demand (one synthetic ramp, seeds vary only noise); that the eligibility rule fits the business; leakage beyond the builder's own perturbation test; that the check files were written before report.py (they were not in the freeze commit, so only self-reported).
++Not checked: pre-change `run.py --seed 7` baseline output (none saved); the consumer's reading of the delivery; order in which the new files were written.
++Hit rate: person 0/2; agent 2/2, with A1 mostly derived from the doc, so soft.
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/checks/verify_report.py b/checks/verify_report.py
+new file mode 100644
+index 0000000..7690c3e
+--- /dev/null
++++ b/checks/verify_report.py
+@@ -0,0 +1,41 @@
++"""Independent verification of build/backtest.json. Usage: python checks/verify_report.py FILE [--dry-run-publish]
++Recomputes every MAE from listed scored dates with calendar-date lookups (not row arithmetic)."""
++import hashlib, json, sys
++from datetime import date, timedelta
++from pathlib import Path
++sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
++from run import series
++
++raw = Path(sys.argv[1]).read_bytes()
++rep = json.loads(raw)
++assert set(rep) == {"runs", "conclusion"}, set(rep)
++assert [r["seed"] for r in rep["runs"]] == list(range(10))
++pooled = {"last": 0.0, "mean5": 0.0}
++n = 0
++reductions = []
++for r in rep["runs"]:
++    val = {date.fromisoformat(x["date"]): x["value"] for x in series(r["seed"])}
++    span = (max(val) - min(val)).days + 1
++    assert r["rows"] == len(val) and r["gaps"] == span - len(val), "coverage not measured from dates"
++    assert r["scored"] == len(r["scored_dates"])
++    l = m = 0.0
++    for s in r["scored_dates"]:
++        t = date.fromisoformat(s)
++        prev = [t - timedelta(days=k) for k in range(1, 6)]
++        assert t in val and all(p in val for p in prev), f"ineligible date scored: {s}"
++        l += abs(val[t] - val[prev[0]])
++        m += abs(val[t] - sum(val[p] for p in prev) / 5)
++    k = r["scored"]
++    assert abs(l / k - r["mae"]["last"]) < 1e-9 and abs(m / k - r["mae"]["mean5"]) < 1e-9, r["seed"]
++    pooled["last"] += l; pooled["mean5"] += m; n += k
++    reductions.append(1 - (m / k) / (l / k))
++pl, pm = pooled["last"] / n, pooled["mean5"] / n
++pooled_red = 1 - pm / pl
++supported = pooled_red >= 0.20 and all(x >= 0.20 for x in reductions)
++head = rep["conclusion"].split(":")[0].strip().upper()
++assert head == ("SUPPORTED" if supported else "NOT SUPPORTED"), (head, supported)
++print(f"OK n={n} pooled last={pl:.4f} mean5={pm:.4f} reduction={pooled_red:+.1%} "
++      f"per-seed range {min(reductions):+.1%}..{max(reductions):+.1%} verdict={head}")
++print("sha256", hashlib.sha256(raw).hexdigest())
++if "--dry-run-publish" in sys.argv:
++    print("outbox/delivery.json exists:", Path("outbox/delivery.json").exists())
+diff --git a/report.py b/report.py
+new file mode 100644
+index 0000000..661a480
+--- /dev/null
++++ b/report.py
+@@ -0,0 +1,88 @@
++"""Backtest report: 5-observation mean vs last observation on calendar-eligible targets.
++
++A target is eligible only if it and its five preceding observations occupy six
++consecutive calendar days. Missing days are never filled. All errors are in units/day.
++"""
++import argparse
++from datetime import date
++import json
++from pathlib import Path
++
++from run import series
++
++THRESHOLD = 0.20  # frozen decision rule: mean5 MAE at least 20% below last MAE
++
++
++def eligible_indices(rows):
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    return [i for i in range(5, len(rows)) if (days[i] - days[i - 5]).days == 5]
++
++
++def score_rows(rows, indices=None):
++    values = [r["value"] for r in rows]
++    indices = eligible_indices(rows) if indices is None else indices
++    return [{"date": rows[i]["date"],
++             "last": abs(values[i] - values[i - 1]),
++             "mean5": abs(values[i] - sum(values[i - 5:i]) / 5)} for i in indices]
++
++
++def _mae(scored):
++    return {name: sum(e[name] for e in scored) / len(scored) for name in ("last", "mean5")}
++
++
++def _reduction(mae):
++    return 1 - mae["mean5"] / mae["last"]
++
++
++def _run(seed):
++    rows = series(seed)
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    scored = score_rows(rows)
++    return {"seed": seed, "rows": len(rows),
++            "gaps": (days[-1] - days[0]).days + 1 - len(rows),  # measured from dates
++            "scored": len(scored), "scored_dates": [e["date"] for e in scored],
++            "mae": _mae(scored)}, scored
++
++
++def build_report(seeds):
++    runs, pooled = [], []
++    for seed in seeds:
++        run, scored = _run(seed)
++        runs.append(run)
++        pooled += scored
++    pm = _mae(pooled)
++    reds = [_reduction(r["mae"]) for r in runs]
++    supported = _reduction(pm) >= THRESHOLD and all(x >= THRESHOLD for x in reds)
++    verdict = "SUPPORTED" if supported else "NOT SUPPORTED"
++    conclusion = (
++        f"{verdict}: the five-observation mean {'cuts' if _reduction(pm) > 0 else 'does not cut'} "
++        f"MAE by at least 20% versus the last observation. Pooled over {len(runs)} seeds and "
++        f"{len(pooled)} eligible dates, MAE (units/day) is {pm['last']:.3f} for last and "
++        f"{pm['mean5']:.3f} for mean5, a change of {_reduction(pm):+.1%} "
++        f"(per-seed {min(reds):+.1%} to {max(reds):+.1%}; negative means mean5 is worse). "
++        f"Targets are eligible only when the target and its five preceding observations occupy "
++        f"six consecutive calendar days; each seed has {runs[0]['gaps']} missing calendar days "
++        f"and no days are filled. On a +1 unit/day trend a trailing mean lags the level, so "
++        f"smoothing adds error here.")
++    return {"runs": runs, "conclusion": conclusion}
++
++
++def sensitivity(seeds):
++    """All-rows variant (windows may span gaps), for comparison only; never delivered."""
++    out = []
++    for seed in seeds:
++        rows = series(seed)
++        out.append({"seed": seed, "scored": len(rows) - 5,
++                    "mae": _mae(score_rows(rows, list(range(5, len(rows)))))})
++    return out
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--out", default="build/backtest.json")
++    parser.add_argument("--sensitivity-out", default="build/sensitivity.json")
++    args = parser.parse_args()
++    seeds = range(10)
++    for path, payload in ((args.out, build_report(seeds)), (args.sensitivity_out, sensitivity(seeds))):
++        Path(path).parent.mkdir(parents=True, exist_ok=True)
++        Path(path).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+diff --git a/tests/test_report.py b/tests/test_report.py
+new file mode 100644
+index 0000000..830a3a4
+--- /dev/null
++++ b/tests/test_report.py
+@@ -0,0 +1,68 @@
++"""Contract checks for report.py. Written before the implementation; not edited by it."""
++from datetime import date, timedelta
++from run import series
++from report import eligible_indices, score_rows, build_report
++
++
++def mk(days, start=date(2025, 1, 1), value=lambda d: float(d)):
++    return [{"date": (start + timedelta(days=d)).isoformat(), "value": value(d)} for d in days]
++
++
++def calendar_eligible(rows):
++    """Independent implementation: calendar-set membership, no row arithmetic."""
++    have = {date.fromisoformat(r["date"]) for r in rows}
++    return [r["date"] for r in rows
++            if all(date.fromisoformat(r["date"]) - timedelta(days=k) in have for k in range(0, 6))]
++
++
++def test_rule_on_handbuilt_gap():
++    rows = mk([0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14])  # day 7 missing
++    scored = [rows[i]["date"] for i in eligible_indices(rows)]
++    assert scored == [mk([d])[0]["date"] for d in (5, 6, 13, 14)]
++    assert scored == [d for d in calendar_eligible(rows) if d > rows[4]["date"]]
++
++
++def test_first_five_never_scored_and_no_gap_scores_all_after():
++    rows = mk(range(10))
++    assert eligible_indices(rows) == [5, 6, 7, 8, 9]
++
++
++def test_65_eligible_per_seed_and_matches_independent_count():
++    for seed in range(10):
++        rows = series(seed)
++        assert len(rows) == 95
++        idx = eligible_indices(rows)
++        assert [rows[i]["date"] for i in idx] == [d for d in calendar_eligible(rows)
++                                                  if d >= rows[5]["date"]]
++        assert len(idx) == 65
++
++
++def test_noiseless_trend_errors_and_same_dates():
++    rows = mk(range(12))
++    out = score_rows(rows)
++    assert [e["date"] for e in out] == [rows[i]["date"] for i in eligible_indices(rows)]
++    assert all(e["last"] == 1.0 and e["mean5"] == 3.0 for e in out)
++
++
++def test_only_past_values():
++    rows = mk(range(12))
++    before = score_rows(rows)[0]
++    rows[5]["value"] = 99999.0           # target itself
++    rows[6]["value"] = -5.0              # later values
++    after = score_rows(rows)[0]
++    # forecasts unchanged: error moves only through the target's own value
++    forecast_last = rows[4]["value"]
++    assert after["last"] == abs(99999.0 - forecast_last)
++    assert after["mean5"] == abs(99999.0 - sum(r["value"] for r in rows[0:5]) / 5)
++    assert before["date"] == after["date"]
++
++
++def test_report_schema_and_seeds():
++    rep = build_report(range(10))
++    assert set(rep) == {"runs", "conclusion"}
++    assert [r["seed"] for r in rep["runs"]] == list(range(10))
++    for r in rep["runs"]:
++        assert r["rows"] == 95 and r["gaps"] == 5 and r["scored"] == 65
++        assert len(r["scored_dates"]) == 65
++        assert set(r["mae"]) == {"last", "mean5"}
++    assert isinstance(rep["conclusion"], str) and rep["conclusion"]

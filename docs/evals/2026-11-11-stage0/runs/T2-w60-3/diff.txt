@@ -1,0 +1,89 @@
+diff --git a/catalog.py b/catalog.py
+index 97301a9..8d97dc3 100644
+--- a/catalog.py
++++ b/catalog.py
+@@ -10,7 +10,49 @@ def load(path="data/books.json"):
+     return json.loads(Path(path).read_text())
+ 
+ 
++def build_export(rows):
++    """Search export rows: all stock (inactive included), identity (isbn, edition),
++    ordered by displayed title (Python str order), then isbn, then edition."""
++    seen = set()
++    books = []
++    for r in rows:
++        ident = (r["isbn"], r["edition"])
++        if ident in seen:
++            raise ValueError(f"duplicate row identity: {ident}")
++        seen.add(ident)
++        books.append({"isbn": r["isbn"], "edition": r["edition"], "title": r["title"],
++                      "active": r["active"], "key": search_key(r["title"])})
++    books.sort(key=lambda b: (b["title"], b["isbn"], b["edition"]))
++    return {"books": books}
++
++
++def write_export(path="build/search.json", source="data/books.json"):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(build_export(load(source)), ensure_ascii=False, indent=2) + "\n",
++                    encoding="utf-8")
++
++
++def prefix_search(export, prefix):
++    """Books whose key starts with the case-folded prefix; titles are returned unchanged."""
++    p = search_key(prefix)
++    return [b for b in export["books"] if b["key"].startswith(p)]
++
++
++def main(argv):
++    if not argv:
++        rows = load()
++        print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
++                          "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    elif argv[0] == "build" and len(argv) <= 2:
++        write_export(*argv[1:])
++    elif argv[0] == "search" and len(argv) == 2:
++        for b in prefix_search(build_export(load()), argv[1]):
++            print(f'{b["isbn"]}\t{b["edition"]}\t{"active" if b["active"] else "inactive"}\t{b["title"]}')
++    else:
++        raise SystemExit("usage: python catalog.py [build [OUT] | search PREFIX]")
++
++
+ if __name__ == "__main__":
+-    rows = load()
+-    print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
+-                      "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    import sys
++    main(sys.argv[1:])
+diff --git a/tests/test_catalog.py b/tests/test_catalog.py
+index 02881ee..d3cbcbf 100644
+--- a/tests/test_catalog.py
++++ b/tests/test_catalog.py
+@@ -11,3 +11,27 @@ def test_ascii_prefix():
+ 
+ def test_editions_remain_separate():
+     assert len({(r["isbn"], r["edition"]) for r in load()}) == 4
++
++
++def test_export_keeps_all_editions_inactive_and_sorted():
++    from catalog import build_export
++    books = build_export(load())["books"]
++    assert [(b["isbn"], b["edition"]) for b in books] == [
++        ("9780000000011", "large-print"), ("9780000000011", "paper"),
++        ("9780000000028", "paper"), ("9780000000035", "paper")]
++    assert [b["title"] for b in books] == ["Straße Atlas", "Straße Atlas", "Zebra Tales", "apple Almanac"]
++    assert any(not b["active"] for b in books)
++    assert all(b["key"] == b["title"].casefold() for b in books)
++
++
++def test_key_can_be_longer_than_title():
++    from catalog import build_export
++    b = build_export(load())["books"][0]
++    assert (len(b["title"]), len(b["key"])) == (12, 13)
++
++
++def test_prefix_search_folds_query_and_keeps_title():
++    from catalog import build_export, prefix_search
++    hits = prefix_search(build_export(load()), "STRASSE")
++    assert len(hits) == 2 and {h["title"] for h in hits} == {"Straße Atlas"}
++    assert [h["title"] for h in prefix_search(build_export(load()), "Zeb")] == ["Zebra Tales"]

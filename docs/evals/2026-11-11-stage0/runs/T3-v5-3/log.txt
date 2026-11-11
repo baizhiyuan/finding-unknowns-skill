@@ -1,0 +1,5 @@
+5f3b6ae Add batching report generator and validator; confirm card model change
+f4c3d89 chore(card): debrief seen queue-batching-16
+185d936 chore(card): debrief queue-batching-16
+ebbb46e chore(card): stop queue-batching-16
+9ffecb0 chore(card): brief queue-batching-16

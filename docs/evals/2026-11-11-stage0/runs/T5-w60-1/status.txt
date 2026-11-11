@@ -1,0 +1,4 @@
+ M data/attendance.csv
+ M tests/test_attendance.py
+?? .finding-unknowns/tasks/attendance-migration.md
+?? outbox/migration.json

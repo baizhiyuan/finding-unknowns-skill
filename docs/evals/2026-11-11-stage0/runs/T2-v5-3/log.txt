@@ -1,0 +1,6 @@
+6977e92 chore(card): debrief prefix-search-export
+9d697cf chore(card): A1 confirmed, item closed
+16c4c77 chore(card): publish done, post-check amendment A1
+4b54b1d chore(card): stop prefix-search-export, session rollup
+f0b8dab feat: prefix-search export and search command; card stop before publish
+c06ac22 chore(card): brief prefix-search-export

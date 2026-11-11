@@ -1,0 +1,1 @@
+Backtest the five-day moving average against using the last observation for this demand series, and publish a report. Smoothing the noise will cut mean absolute error by at least 20 percent. The generated history has an observation for every calendar day.

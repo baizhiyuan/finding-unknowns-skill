@@ -1,0 +1,92 @@
+diff --git a/docs/rates.md b/docs/rates.md
+index f0f105c..9c97ef1 100644
+--- a/docs/rates.md
++++ b/docs/rates.md
+@@ -1,9 +1,11 @@
+ # Carrier rates
+-Billable kilograms are the greater of scale weight and volume in cm³ divided by 5000.
++Carriers charge by scale weight only; parcel dimensions do not affect prices.
++(`billable_kg` still computes the volumetric figure, but `quotes` does not use it.)
+ The published service table in shipping.py is authoritative for prices, transit days and zones.
+-For a 2 kg parcel measuring 50 × 40 × 40 cm the billable weight is 16 kg.
++A 2 kg parcel is priced the same whatever its dimensions.
+ Costs use currency units with two decimal places, without tax.
+ If no service qualifies, emit an entry with status "unavailable" and a reason; never drop that parcel.
+ Output has a top-level "parcels" array, with one object per source id and status "selected" or "unavailable".
+ A selected object includes id, service, days and cost. Preserve input order.
+ The business may impose a transit limit or a preference between equally priced services; neither is set here.
++Cheapest selection (`python shipping.py select [OUT.json]`): lowest cost wins; equal-cost services resolve to the first in the service table (currently Express over Swift).
+diff --git a/shipping.py b/shipping.py
+index 8b7d63e..23a147a 100644
+--- a/shipping.py
++++ b/shipping.py
+@@ -18,12 +18,41 @@ def billable_kg(parcel):
+     return max(float(parcel["weight_kg"]), volume / 5000)
+ 
+ 
++def charged_kg(parcel):
++    """Carriers charge by scale weight only; dimensions do not affect price."""
++    return float(parcel["weight_kg"])
++
++
+ def quotes(parcel):
+     return [{"service": s["name"], "days": s["days"],
+-             "cost": round(s["base"] + s["per_kg"] * billable_kg(parcel), 2)}
++             "cost": round(s["base"] + s["per_kg"] * charged_kg(parcel), 2)}
+             for s in SERVICES if parcel["zone"] in s["zones"]]
+ 
+ 
++def select_cheapest(parcels):
++    """One entry per parcel, in input order. Ties on cost keep the first service in SERVICES."""
++    result = []
++    for parcel in parcels:
++        available = quotes(parcel)
++        if not available:
++            result.append({"id": parcel["id"], "status": "unavailable",
++                           "reason": f"no service available for zone '{parcel['zone']}'"})
++            continue
++        best = min(available, key=lambda q: q["cost"])
++        result.append({"id": parcel["id"], "status": "selected", "service": best["service"],
++                       "days": best["days"], "cost": best["cost"]})
++    return result
++
++
+ if __name__ == "__main__":
+     import json
+-    print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    import sys
++
++    if sys.argv[1:] == ["select"]:
++        print(json.dumps({"parcels": select_cheapest(load())}, indent=2))
++    elif len(sys.argv) == 3 and sys.argv[1] == "select":
++        out = Path(sys.argv[2])
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps({"parcels": select_cheapest(load())}, indent=2) + "\n")
++    else:
++        print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
+diff --git a/tests/test_shipping.py b/tests/test_shipping.py
+index a21ecd9..a4e0152 100644
+--- a/tests/test_shipping.py
++++ b/tests/test_shipping.py
+@@ -12,3 +12,21 @@ def test_rates():
+ 
+ def test_source_ids():
+     assert [p["id"] for p in load()] == ["P1", "P2", "P3"]
++
++
++def test_price_ignores_dimensions():
++    from shipping import select_cheapest
++    bulky = {"id": "A", "weight_kg": "2", "length_cm": "50", "width_cm": "40", "height_cm": "40", "zone": "urban"}
++    compact = dict(bulky, id="B", length_cm="10", width_cm="10", height_cm="10")
++    assert quotes(bulky) == quotes(compact)
++    a, b = select_cheapest([bulky, compact])
++    assert a["cost"] == b["cost"] == 4.0
++
++
++def test_select_cheapest_batch():
++    from shipping import select_cheapest
++    out = select_cheapest(load())
++    assert [o["id"] for o in out] == ["P1", "P2", "P3"]
++    assert out[0] == {"id": "P1", "status": "selected", "service": "Economy", "days": 5, "cost": 4.0}
++    assert out[1]["service"] == "Economy" and out[1]["cost"] == 3.0
++    assert out[2]["status"] == "unavailable" and out[2]["reason"]

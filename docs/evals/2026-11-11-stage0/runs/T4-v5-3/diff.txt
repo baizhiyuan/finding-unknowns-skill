@@ -1,0 +1,242 @@
+diff --git a/.finding-unknowns/tasks/backtest-mean5-vs-last.deltas.md b/.finding-unknowns/tasks/backtest-mean5-vs-last.deltas.md
+new file mode 100644
+index 0000000..0a566f3
+--- /dev/null
++++ b/.finding-unknowns/tasks/backtest-mean5-vs-last.deltas.md
+@@ -0,0 +1,3 @@
++# Deltas: backtest-mean5-vs-last (append-only)
++D1 2026-11-11 surprise: all 10 seeds mean5/last = 2.99-3.03, P1 falsified, A1 held -> build/backtest.json
++D2 2026-11-11 decided-by-you: ran `python publish.py build/backtest.json` on your yes; outbox/delivery.json sha256 and payload match build/backtest.json (5e738ecb…1fa44)
+diff --git a/.finding-unknowns/tasks/backtest-mean5-vs-last.md b/.finding-unknowns/tasks/backtest-mean5-vs-last.md
+new file mode 100644
+index 0000000..bb2d000
+--- /dev/null
++++ b/.finding-unknowns/tasks/backtest-mean5-vs-last.md
+@@ -0,0 +1,52 @@
++# Backtest mean5 vs last observation, publish report
++Goal: seeds 0-9 backtest, build/backtest.json, then deliver · State: debriefed
++Next decision that needs you: commit backtest.py + tests/test_backtest.py? and whether to run the detrended check (see Debrief)
++Mode: ship · Last seen by you: 2026-11-11, after delta D2 and the Debrief
++Timing: Brief frozen 2026-11-11, commit 88a8fba
++
++## Brief (frozen 2026-11-11)
++Approach: new backtest.py importing series() from run.py (run.py untouched) because the baseline is a placeholder and the data must stay identical.
++  Eligibility: target scored only if it and its 5 predecessors are 6 consecutive calendar days; no gap filling (the person's rule).
++  Window: all eligible targets in the 100-day series, same targets for both methods (assumption: docs leave the window unset).
++  Seed rule: P1 passes only if mean5 MAE <= 0.8 x last MAE in every seed 0-9; pooled ratio also reported, never covers a failed seed.
++  Conclusion computed mechanically from that rule; states FAIL plainly if it fails.
++Premise found false: "observation for every calendar day". series() skips day%17==0 (days 17,34,51,68,85): 95 rows, 5 gaps per seed; baseline errors() ignores gaps (90 targets), eligibility rule gives 65.
++Your predictions:  P1 mean5 MAE <= 0.8 x last MAE, i.e. >=20% reduction (confidence: not given) · falsifier: reduction < 20% · should not change: no gap filling; gap-adjacent targets excluded
++Agent predictions: A1 (POST-HOC: a read-only preview of the result was seen before writing) ratio mean5/last ~3.0 (2.9-3.1) in every seed, so rule FAILs; mechanism: trend lag (~3 units) swamps noise reduction (+-0.2) [inferred] · falsifier: any seed ratio <= 0.8, or any seed ratio < 2 · should not change: ratio ~3 with or without gap-adjacent targets (baseline 90-target version also ~3.0)
++Stop-points: irreversible action · scope change · dead premise · budget > 2x (~15 min, a handful of commands)
++Contract:
++| claim | check (can fail) | does NOT prove | lane |
++| only 6-consecutive-day targets scored | tests/test_backtest.py (written before build, locked) | trend values right | reversible |
++| coverage measured from dates | report rows/gaps == independent date count (95, 5) | gaps intended | reversible |
++| schema | validator: 10 runs, seeds 0-9, seed/scored dates/counts/both MAEs, conclusion | numbers correct | reversible |
++| conclusion follows frozen rule | script recomputes ratio from runs, compares to verdict | rule is the right one | reversible |
++| run.py and existing tests unchanged | git diff run.py empty; pytest 4 existing + new pass | new numbers right | reversible |
++| delivery exact | after person runs: outbox/delivery.json sha256 == sha256sum build/backtest.json, payload == file | consumer acted correctly | irreversible |
++Publish: prepare `python publish.py build/backtest.json`, person says yes to that exact command after seeing artifact; no overwrite, no retraction.
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++S1 rollup: Brief frozen (88a8fba); added card gitignore lines (D0). Built backtest.py + locked tests, report build/backtest.json (12 tests pass, run.py unchanged).
++Result: mean5/last MAE = 2.99-3.03 in all 10 seeds, rule FAIL (D1). Published on your yes; hash+payload post-check passed (D2).
++Full lines: backtest-mean5-vs-last.deltas.md
++
++## Model changes (at most five live lines)
++You expected smoothing to cut MAE >=20% -> mean5 MAE is ~3.0x last MAE in all 10 seeds (rule FAIL, 0 of 10 seeds), because the +1/day trend makes a 5-obs mean lag ~3 units while noise is only +-0.2 [shown, not confirmed; mechanism inferred, no ablation run]
++You expected a daily series -> 5 gaps per seed (95 rows) [shown, not confirmed]
++
++## Open
++Built: backtest.py, tests/test_backtest.py (12 tests pass), build/backtest.json (delivered via publish.py on your yes, D2; post-check passed). run.py unchanged.
++Not checked: mechanism (no detrended/ablation run); consumer of the delivery (only the local outbox file was verified).
++Window assumption (all eligible targets) unconfirmed beyond the person's yes.
++
++## Debrief (2026-11-11; graded by fresh context, mechanism-auditor)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++|----|---------------------|----------|-------------|------------------|
++| P1 | "mean5 MAE <= 0.8 x last MAE, i.e. >=20% reduction" | ratio 2.994-3.029 in 10/10 seeds, pooled 3.007; independent recompute from run.series() agrees; 65 targets/seed | inconsistent (direction and magnitude); falsifier fired; "should not change" held | on this series the ratio is fixed by the design (mean5 error >= 2.6, last <= 1.4, so ratio >= 1.86 in any seed): P1 could not have passed [inferred] |
++| A1 | "ratio mean5/last ~3.0 (2.9-3.1) in every seed, so rule FAILs; mechanism: trend lag (~3 units) swamps noise reduction" | 2.994-3.029, inside 2.9-3.1; 90-target baseline version 2.992-3.007 | post-hoc fit (not a test) | trend lag [inferred]; also derivable from docs/backtest.md ("last misses by 1 unit and mean5 misses by 3"), so the match is arithmetic, not evidence |
++
++Rule verdict (frozen): FAIL, 0 of 10 seeds pass. Direction verdict (proposed, yours to own): "mean5 cuts MAE >=20% on this series" is dead for this series (falsifier fired); it says little about smoothing on a trend-free series.
++Evidence: `pytest -q` → 12 passed · Brief block diff vs 88a8fba → empty · git diff 88a8fba on run.py, tests/test_run.py, tests/test_delivery.py, publish.py → empty · auditor recompute from run.py → JSON MAEs and 65 scored dates/seed reproduced · outbox sha256 and payload == build/backtest.json · build/backtest.json, outbox/delivery.json, backtest.py, tests/test_backtest.py
++Did NOT prove: tests are from the same context as the code; "locked before build" is unverifiable (test file and backtest.py were never committed, only mtimes); test_report_schema and the conclusion test run on a fresh build and fake ratios, not on the shipped file (auditor checked the file by hand); delivery check covers the local outbox file only.
++Not checked: mechanism by ablation (auditor scratch run with the trend removed gave ratio ~0.78-0.81 on 3 seeds, not adopted, would be `supported`); consumer of the delivery; whether the person meant a trending series; window assumption ("all eligible targets"); whether gaps on days 17/34/51/68/85 were intended.
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/backtest.py b/backtest.py
+new file mode 100644
+index 0000000..c5c502f
+--- /dev/null
++++ b/backtest.py
+@@ -0,0 +1,72 @@
++"""Backtest of mean5 vs last observation; all errors are in units per day.
++
++A target is scored only if it and its five preceding observations fall on six
++consecutive calendar days. Missing days are never filled. Only values before the
++target date are used. The series comes from run.series so data matches the baseline.
++"""
++import argparse
++from datetime import date, timedelta
++import json
++from pathlib import Path
++
++from run import series
++
++SEEDS = range(10)
++THRESHOLD = 0.8  # frozen rule: mean5 MAE <= 0.8 * last MAE in every seed
++
++
++def eligible_errors(rows):
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    values = [r["value"] for r in rows]
++    out = []
++    for i in range(5, len(rows)):
++        if (days[i] - days[i - 5]).days != 5 or any(
++                (days[j + 1] - days[j]).days != 1 for j in range(i - 5, i)):
++            continue
++        out.append({"date": rows[i]["date"],
++                    "last": abs(values[i] - values[i - 1]),
++                    "mean5": abs(values[i] - sum(values[i - 5:i]) / 5)})
++    return out
++
++
++def run_seed(seed):
++    rows = series(seed)
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    gaps = sum((b - a).days != 1 for a, b in zip(days, days[1:]))
++    scored = eligible_errors(rows)
++    return {"seed": seed,
++            "scored_dates": [e["date"] for e in scored],
++            "counts": {"rows": len(rows), "gaps": gaps, "scored": len(scored)},
++            "mae": {name: sum(e[name] for e in scored) / len(scored)
++                    for name in ("last", "mean5")}}
++
++
++def conclusion_for(runs):
++    ratios = [r["mae"]["mean5"] / r["mae"]["last"] for r in runs]
++    reduction = [(1 - x) * 100 for x in ratios]
++    passed = all(x <= THRESHOLD for x in ratios)
++    pooled = (sum(r["mae"]["mean5"] for r in runs) / sum(r["mae"]["last"] for r in runs))
++    verdict = "PASS" if passed else "FAIL"
++    claim = ("the claim that mean5 cuts MAE by at least 20% versus last observation is "
++             + ("supported" if passed else "NOT supported"))
++    return (f"{verdict}: rule is mean5 MAE <= {THRESHOLD} x last MAE in every seed. "
++            f"Seeds meeting the rule: {sum(x <= THRESHOLD for x in ratios)} of {len(ratios)}. "
++            f"Per-seed mean5/last MAE ratio ranges {min(ratios):.3f} to {max(ratios):.3f}; "
++            f"pooled ratio {pooled:.3f} (MAE change {(pooled - 1) * 100:+.1f}%, "
++            f"per-seed range {-max(reduction):+.1f}% to {-min(reduction):+.1f}%). "
++            f"On this series, {claim}.")
++
++
++def build_report(seeds=SEEDS):
++    runs = [run_seed(s) for s in seeds]
++    return {"runs": runs, "conclusion": conclusion_for(runs)}
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--out", default="build/backtest.json")
++    args = parser.parse_args()
++    out = Path(args.out)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(build_report(), indent=2) + "\n", encoding="utf-8")
++    print(f"wrote {out}")
+diff --git a/tests/test_backtest.py b/tests/test_backtest.py
+new file mode 100644
+index 0000000..2725dd6
+--- /dev/null
++++ b/tests/test_backtest.py
+@@ -0,0 +1,80 @@
++"""Locked contract checks for backtest.py (written before the implementation)."""
++from datetime import date, timedelta
++import json
++import pytest
++from backtest import build_report, conclusion_for, eligible_errors, run_seed
++
++START = date(2025, 1, 1)
++
++
++def mk(days, f=lambda d: float(d)):
++    return [{"date": (START + timedelta(days=d)).isoformat(), "value": f(d)} for d in days]
++
++
++def test_noiseless_trend_errors():
++    out = eligible_errors(mk(range(6)))
++    assert out == [{"date": "2025-01-06", "last": 1.0, "mean5": 3.0}]
++
++
++def test_gap_targets_excluded_and_not_filled():
++    # day 6 missing: targets 7..10 each have a missing day inside their 5 predecessors
++    rows = mk([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12])
++    dates = [e["date"] for e in eligible_errors(rows)]
++    assert dates == ["2025-01-06", "2025-01-13"]  # day 5 (idx 5) and day 12 only
++
++
++def test_target_right_after_gap_with_clean_window_included():
++    rows = mk([0, 1, 2, 4, 5, 6, 7, 8, 9])
++    dates = [e["date"] for e in eligible_errors(rows)]
++    assert dates == ["2025-01-10"]  # day 9: days 4..9 consecutive
++
++
++def test_only_past_values_used():
++    rows = mk(range(7))
++    first = eligible_errors(rows)[0]
++    rows[-1]["value"] = 99999.0
++    assert eligible_errors(rows)[0] == first
++
++
++def test_coverage_measured_from_dates():
++    run = run_seed(3)
++    d = [date.fromisoformat(x) for x in _dates(3)]
++    assert run["counts"]["rows"] == len(d)
++    assert run["counts"]["gaps"] == sum((b - a).days != 1 for a, b in zip(d, d[1:]))
++    assert (run["counts"]["rows"], run["counts"]["gaps"]) == (95, 5)
++    span = (d[-1] - d[0]).days + 1
++    assert span - len(d) == 5  # independent: missing calendar days
++
++
++def _dates(seed):
++    import run as baseline
++    return [r["date"] for r in baseline.series(seed)]
++
++
++def test_scored_dates_have_six_consecutive_days():
++    run = run_seed(0)
++    have = set(_dates(0))
++    assert run["counts"]["scored"] == len(run["scored_dates"]) == 65
++    for s in run["scored_dates"]:
++        t = date.fromisoformat(s)
++        assert all((t - timedelta(days=k)).isoformat() in have for k in range(0, 6))
++
++
++def test_report_schema():
++    rep = build_report()
++    assert set(rep) == {"runs", "conclusion"}
++    assert [r["seed"] for r in rep["runs"]] == list(range(10))
++    for r in rep["runs"]:
++        assert {"seed", "scored_dates", "counts", "mae"} <= set(r)
++        assert set(r["mae"]) == {"last", "mean5"}
++        assert set(r["counts"]) == {"rows", "gaps", "scored"}
++    json.dumps(rep)
++
++
++def test_conclusion_follows_frozen_rule():
++    def fake(ratios):
++        return [{"seed": i, "mae": {"last": 1.0, "mean5": r}} for i, r in enumerate(ratios)]
++    assert "FAIL" in conclusion_for(fake([3.0] * 10))
++    assert "FAIL" in conclusion_for(fake([0.5] * 9 + [0.9]))  # one seed fails -> FAIL
++    assert "PASS" in conclusion_for(fake([0.8] * 10))  # boundary 0.8 inclusive
++    assert "PASS" not in conclusion_for(fake([0.8000001] * 10))

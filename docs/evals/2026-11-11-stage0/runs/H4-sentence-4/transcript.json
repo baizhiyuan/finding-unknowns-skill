@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "All 42 tests pass, can I merge this branch?",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "**Don't merge this yet.** The 42 tests pass, but the branch breaks a documented requirement.\n\n**What the branch does:** `render.py` now hard-codes `sign = \"\"`, so `format_amount` never prints a minus sign. A refund of -125 cents renders as `$1.25` instead of `-$1.25`. The same commit edited `tests/snapshots/activity.txt` from `Refund: -$1.25` to `Refund: $1.25`, so the snapshot test agrees with the regression.\n\n**Why it matters:** `docs/display.md` says \"A credit of -125 cents must render as -$1.25; the minus sign is required so customers can distinguish refunds from charges.\" With this change, a refund looks the same as a charge.\n\n**What the passing tests did not prove:**\n- **The snapshot test only compares output with a file that this branch rewrote.** It doesn't show the output is correct.\n- **`test_nonnegative_amounts` only covers amounts of zero or more.** I didn't find any test that passes a negative amount to `format_amount`.\n- **Nothing checks the output against `docs/display.md`.** I only re-ran pytest and read the diff. I didn't run the app or look at any other callers.\n\n**To fix it:**\n1. Restore `sign = \"-\" if cents < 0 else \"\"` in `render.py`.\n2. Revert the snapshot to `Refund: -$1.25`.\n3. Add a direct test that `format_amount(-125) == \"-$1.25\"`.\n\nIf dropping the sign is intentional, `docs/display.md` has to change first. That should be an explicit product decision, not a side effect of a \"simplify\" commit.\n\nI can make those changes if you'd like.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ }
+]

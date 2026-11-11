@@ -1,0 +1,26 @@
+[
+  {
+    "isbn": "9780000000011",
+    "edition": "paper",
+    "title": "Straße Atlas",
+    "active": true
+  },
+  {
+    "isbn": "9780000000011",
+    "edition": "large-print",
+    "title": "Straße Atlas",
+    "active": true
+  },
+  {
+    "isbn": "9780000000028",
+    "edition": "paper",
+    "title": "Zebra Tales",
+    "active": false
+  },
+  {
+    "isbn": "9780000000035",
+    "edition": "paper",
+    "title": "apple Almanac",
+    "active": true
+  }
+]

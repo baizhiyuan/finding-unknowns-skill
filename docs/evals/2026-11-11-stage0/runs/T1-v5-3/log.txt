@@ -1,0 +1,5 @@
+5409110 chore: record delivery receipt for cheapest-service quotes
+a5828f4 chore(card): debrief cheapest-service-selector
+63508d8 chore(card): stop cheapest-service-selector published
+dc6cfc7 chore(card): stop cheapest-service-selector
+1d22377 chore(card): brief cheapest-service-selector
