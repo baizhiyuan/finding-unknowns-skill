@@ -6,7 +6,19 @@ All notable changes to this project are documented in this file. The format is b
 
 ## [Unreleased]
 
+### Changed
+- `CLAUDE.md` (the passive drop-in) is now the 60-word setup tested in Stage 0. The
+  pre-registered kill rule selected it after it beat both no setup and the rebuilt 5.0
+  plugin. The README (en/zh) recommends it; the rebuilt plugin (branch `v5`) is not
+  released.
+
 ### Added
+- `docs/evals/2026-11-11-stage0/`: the simulated-user evaluation of the 5.0 design.
+  - **Scores** (of 42; noise 3.0): no setup 20.5, 60 words 31.0, rebuilt plugin 21.0.
+    These select branch 2 of the pre-registered kill rule.
+  - **Cost per build task:** no setup $0.10, 60 words $0.18, rebuilt plugin $3.72.
+  - **Included:** the pre-registration, the harness, the task pack, transcripts, both
+    graders' outputs and a verified report with its limitations.
 - `docs/design/5.0.md`: the proposed 5.0 design. The plugin is rebuilt around one task
   card per task (`/brief`, `/catch-up`, `/debrief`): predictions frozen before the work,
   four checkable stop-points, teaching at the point of error, a fresh-context Debrief,
