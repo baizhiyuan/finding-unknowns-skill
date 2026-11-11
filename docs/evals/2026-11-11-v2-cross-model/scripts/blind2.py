@@ -6,11 +6,11 @@ rng = random.Random(20261111); key = {}
 for g in ("claude", "gpt"): (R / f"grade-{g}").mkdir(exist_ok=True)
 def body(d):
     final = (d / "final.md").read_text(encoding="utf-8") if (d / "final.md").exists() else "(no output)"
-    final = re.sub(r"/tmp/fu-eval2/runs/[a-z]+-[A-Z]\d-[AB]-\d/", "<repo>/", final)
+    final = re.sub(r"/tmp/fu-eval2/runs/[a-z]+-[A-Z]\d-[A-D]-\d/", "<repo>/", final)
     changes = (d / "changes.txt").read_text()
     diff = (d / "diff.txt").read_text(errors="replace").splitlines()
     if len(diff) > 300: diff = diff[:300] + [f"... [diff truncated: {len(diff)-300} more lines]"]
-    diff = re.sub(r"/tmp/fu-eval2/runs/[a-z]+-[A-Z]\d-[AB]-\d/", "<repo>/", "\n".join(diff))
+    diff = re.sub(r"/tmp/fu-eval2/runs/[a-z]+-[A-Z]\d-[A-D]-\d/", "<repo>/", "\n".join(diff))
     return final, changes, diff
 for t in ["H1", "H2", "H3", "H4", "H5"]:
     sec = re.search(rf"(### {t} .*?)(?=\n### |\n## )", pre, re.S).group(1)
