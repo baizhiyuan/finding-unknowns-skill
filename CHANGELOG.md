@@ -16,6 +16,9 @@ All notable changes to this project are documented in this file. The format is b
 - `docs/evals/2026-11-11-stage0/`: the simulated-user evaluation of the 5.0 design.
   - **Scores** (of 42; noise 3.0): no setup 20.5, 60 words 31.0, rebuilt plugin 21.0.
     These select branch 2 of the pre-registered kill rule.
+  - **Where the 60 words fell short:** they rarely made the assistant wait for approval
+    before the irreversible step (0.11 of runs; the rebuilt plugin 0.78).
+  - **Scope:** one model, one simulated user.
   - **Cost per build task:** no setup $0.10, 60 words $0.18, rebuilt plugin $3.72.
   - **Included:** the pre-registration, the harness, the task pack, transcripts, both
     graders' outputs and a verified report with its limitations.

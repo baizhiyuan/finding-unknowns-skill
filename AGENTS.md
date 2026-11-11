@@ -19,7 +19,7 @@ It is about maintaining the project — for what the skill does at runtime, read
 | `docs/ARCHITECTURE.md` | Design reference | Update when layers/contracts change. |
 | `docs/GLOSSARY.md` | Shared vocabulary | Where the three skills' terms meet. Update when a term is added, renamed, or changes meaning; each SKILL.md still defines what it uses. |
 | `docs/TUTORIAL.md` / `docs/TUTORIAL.zh.md` | 5-minute tutorial | Keep both in step with the commands, packet sizes, rigor levels, and EXAMPLES.md's recorded run. |
-| `CLAUDE.md` | Passive drop-in | A lightweight summary of the skill; keep consistent with the SKILL.md files after edits. |
+| `CLAUDE.md` | Passive drop-in | The frozen 60-word text tested in Stage 0. Do not edit or expand it without a new pre-registered evaluation. |
 | `EXAMPLES.md` | User-facing prompts | Keep consistent with the SKILL.md files after edits. |
 | `README.md` / `README.zh.md` | Landing pages | zh is a faithful translation of the English structure; update both together. |
 
@@ -39,8 +39,8 @@ It is about maintaining the project — for what the skill does at runtime, read
   ledger's first line is `schema: 2`. Root-level legacy files are read and a move offered,
   never moved silently.
 - Preserve the attribution block (Thariq Shihipar / @trq212) and the non-affiliation
-  disclaimer in SKILL.md, README.md, and CLAUDE.md. Credit sources as in each SKILL.md
-  `metadata.credits` (Osmani for `keep-the-reasoning` and the verification contract;
+  disclaimer in SKILL.md and README.md (the frozen `CLAUDE.md` carries neither). Credit
+  sources as in each SKILL.md `metadata.credits` (Osmani for `keep-the-reasoning` and the verification contract;
   Anthropic and @hanakoxbt for the execution heuristics; the author's own
   empirical research practice for `theory-vs-result`); neutral credit only.
 
