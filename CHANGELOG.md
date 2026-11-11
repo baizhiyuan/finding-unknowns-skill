@@ -8,16 +8,21 @@ All notable changes to this project are documented in this file. The format is b
 
 ### Added
 - `docs/evals/2026-11-11-v2-cross-model/`: the second comparative eval.
-  - **Setup:** gpt-6.1-sol and claude-sonnet-5-5, with and without these skills, on five
-    harder pre-registered tasks plus a control. Two runs per cell; cross-family,
+  - **Setup:** gpt-6.1-sol and claude-sonnet-5-5, with and without these skills, on
+    five harder pre-registered tasks plus a control. Two runs per cell; cross-family,
     order-balanced blinded grading; 68 runs.
-  - **GPT:** at the ceiling, no effect (+0.25 of 25) for +71 % input tokens.
-  - **Sonnet without a nudge:** never invoked the skills on its own (0 of 10).
-  - **Sonnet with the author's one-line CLAUDE.md nudge:** +2.5 of 25 for +60 % cost.
-  - **The nudge alone, no skills installed:** +1.1. About half the gain is priming and
-    half comes from the skills when invoked.
-  - **Safety:** no arm took an unsafe action.
-  - Pre-registration with two amendments, scripts, every answer, diff and grader reply.
+  - **GPT:** can't tell (+0.25 of 25) for +71 % input tokens.
+  - **Sonnet with the skills installed:** never invoked them (0 of 10), although their
+    descriptions matched the tasks.
+  - **Sonnet with the author's one-line CLAUDE.md nudge:** +2.5 of 25, beyond the A/A
+    noise estimate, for +60 % cost.
+  - **The nudge alone, no skills:** +1.1, within that noise, so can't tell. How C's gain
+    splits between the reminder and the procedures is not established.
+  - **Safety:** no arm took an objective unsafe action.
+  - **Disclosed limitations:** post-hoc arms (pre-registered before they ran), weaker
+    run isolation, and grader noise and priming.
+  - Pre-registration with two amendments, scripts, and every answer, diff and grader
+    reply.
 
 ## [4.3.2]
 
