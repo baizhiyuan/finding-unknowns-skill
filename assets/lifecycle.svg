@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="t d">
+<title id="t">When finding-unknowns fires</title><desc id="d">Three moments around one task card: brief before the build, a quiet build, a debrief after; catch-up when you come back.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
+<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
+<marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#788C5D"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
+<linearGradient id="spec" x1="0" x2="1"><stop offset="0" stop-color="#788C5D"/><stop offset="0.5" stop-color="#D4A27F"/><stop offset="1" stop-color="#B5442E"/></linearGradient>
+</defs>
+<rect x="0.5" y="0.5" width="1199" height="619" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="619" rx="18" fill="url(#dots)" opacity="0.5"/>
+<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 01 · WHEN IT FIRES</text>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Three moments, one card</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">You predict before the work, the agent builds quietly, and the debrief grades what you both expected.</text>
+<rect x="40" y="150" width="340" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<circle cx="57" cy="160" r="4.5" fill="#D97757"/><path d="M49 172a8 7 0 0 1 16 0z" fill="#D97757"/>
+<text x="74" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">HUMAN · predict first + approve the Brief</text>
+<rect x="612" y="150" width="548" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<circle cx="629" cy="160" r="4.5" fill="#D97757"/><path d="M621 172a8 7 0 0 1 16 0z" fill="#D97757"/>
+<text x="646" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">HUMAN · irreversible step + confirm model changes</text>
+<path d="M190 178L190 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<path d="M886 178L886 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<rect x="40" y="192" width="262" height="320" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M40 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H40z" fill="#D97757"/>
+<text x="58" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">BRIEF</text>
+<text x="284" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">before the build</text>
+<text x="58" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">/fu-brief</text>
+<rect x="58" y="274" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="71.0" y="292.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">1</text>
+<text x="96" y="292" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">You predict first</text>
+<rect x="58" y="316" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="71.0" y="334.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">2</text>
+<text x="96" y="334" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Territory before questions</text>
+<rect x="58" y="358" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="71.0" y="376.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">3</text>
+<text x="96" y="376" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Then the agent predicts</text>
+<rect x="58" y="400" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="71.0" y="418.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">4</text>
+<text x="96" y="418" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Stop-points + contract</text>
+<rect x="58" y="442" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="71.0" y="460.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">5</text>
+<text x="96" y="460" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Frozen on your yes</text>
+<path d="M304 352L324 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+<rect x="326" y="192" width="262" height="320" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M326 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H326z" fill="#788C5D"/>
+<text x="344" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">BUILD</text>
+<text x="570" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">quietly</text>
+<path d="M590 352L610 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+<rect x="612" y="192" width="262" height="320" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M612 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H612z" fill="#D97757"/>
+<text x="630" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">CATCH-UP</text>
+<text x="856" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">next session</text>
+<text x="630" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">/fu-catch-up</text>
+<rect x="630" y="274" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="643.0" y="292.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">1</text>
+<text x="668" y="292" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Recall questions first</text>
+<rect x="630" y="316" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="643.0" y="334.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">2</text>
+<text x="668" y="334" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Only what changed</text>
+<rect x="630" y="358" width="26" height="26" rx="6" fill="#F5DDD1"/>
+<text x="643.0" y="376.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">3</text>
+<text x="668" y="376" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Next decision for you</text>
+<path d="M876 352L896 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+<rect x="898" y="192" width="262" height="320" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M898 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H898z" fill="#D97757"/>
+<text x="916" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">DEBRIEF</text>
+<text x="1142" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">after the work</text>
+<text x="916" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">/fu-debrief</text>
+<text x="344" y="266" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Stops only for:</text>
+<circle cx="350" cy="288" r="4" fill="#D97757"/>
+<text x="362" y="293" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">irreversible action</text>
+<circle cx="350" cy="314" r="4" fill="#D97757"/>
+<text x="362" y="319" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">scope change</text>
+<circle cx="350" cy="340" r="4" fill="#D97757"/>
+<text x="362" y="345" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">dead premise</text>
+<circle cx="350" cy="366" r="4" fill="#D97757"/>
+<text x="362" y="371" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">budget overrun</text>
+<rect x="342" y="404" width="230" height="92" rx="10" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1"/>
+<text x="356" y="428" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#788C5D" font-weight="700">Everything else:</text>
+<text x="356" y="450" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">most reversible option,</text>
+<text x="356" y="470" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">one delta line on the card</text>
+<text x="356" y="488" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#B1ADA1">D7 surprise: … → logs/r3</text>
+<rect x="914" y="270" width="230" height="64" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+<text x="928" y="294" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">mechanism-auditor</text>
+<text x="928" y="318" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">fresh context, yours first</text>
+<circle cx="922" cy="360" r="4" fill="#D97757"/>
+<text x="936" y="365" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Evidence first</text>
+<circle cx="922" cy="392" r="4" fill="#D97757"/>
+<text x="936" y="397" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Predictions quoted, graded</text>
+<circle cx="922" cy="424" r="4" fill="#D97757"/>
+<text x="936" y="429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Did NOT prove · not checked</text>
+<circle cx="922" cy="456" r="4" fill="#D97757"/>
+<text x="936" y="461" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Model changes</text>
+<rect x="40" y="534" width="1120" height="56" rx="10" fill="#F5DDD1" stroke="#F5DDD1" stroke-width="1"/>
+<rect x="40" y="534" width="5" height="56" rx="2.5" fill="#D97757"/>
+<rect x="60" y="548" width="290" height="28" rx="14" fill="#D97757"/>
+<text x="205" y="567" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700" text-anchor="middle">.finding-unknowns/tasks/{slug}.md</text>
+<text x="370" y="567" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">The card persists across sessions; committed, so the predictions' timing is provable.</text>
+</svg>

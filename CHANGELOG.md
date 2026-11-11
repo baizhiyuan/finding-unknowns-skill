@@ -75,6 +75,18 @@ not yet tested.
   - a stopping rule, and a noise floor from at least three reruns;
   - a run table for results that arrive over days.
 - **SessionStart hook** in `extras/`, not shipped until the Stage 0 evaluation supports it.
+- **Structured mode (opt-in):** `/fu-brief --structured` and `/fu-cartographer` load the
+  4.x protocol on top of the card:
+  - quadrant routing and the eight numbered techniques (`references/structured.md`);
+  - Cartographer with its ledger, gate and spec (`references/cartographer.md`, without
+    Workflow execution);
+  - the full handoff packet (`references/handoff-full.md`);
+  - the `ledger-keeper` and `prototype-smith` agents.
+
+  It is kept for high stakes and for smaller models, which may need explicit steps (a
+  hypothesis under test). It is never loaded by default.
+- **Diagrams:** eight per language in the 4.x style. They cover the overview, lifecycle,
+  architecture, quadrants, task card, stop-points, debrief and structured mode.
 
 ### Changed
 - **One skill.** `theory-vs-result` becomes `references/results.md`, with its rules
@@ -86,16 +98,15 @@ not yet tested.
   - `blindspot-scout` is kept.
 - **Install:** `install.sh` keeps a same-named file of yours as `.bak`, and removes 4.x
   files only when they carry this project's markers.
-- **Docs and diagrams:** the README is about 1,500 words. Seven diagrams per language
-  become four.
+- **Docs:** the README is rewritten around the card and keeps its explanatory
+  sections.
 
 ### Removed
-- **Cartographer:** regret scores, clarity displays, the six-condition gate, depth flags
-  and the `/cartographer` command.
+- **Cartographer as the default high-stakes path** (it now lives in opt-in structured
+  mode) and the `/cartographer` command (now `/fu-cartographer`).
 - **Workflow execution:** `references/workflows.md` and `tests/workflows/`.
 - **Skills:** `keep-the-reasoning` and `theory-vs-result` as separate skills.
-- **Agents and commands:** `ledger-keeper`, `prototype-smith`, `/blindspot` and
-  `/change-quiz`.
+- **Commands:** `/blindspot` and `/change-quiz`.
 - **Protocol narration** ("Routing:", "Rigor level:", "Packet size:") and the must-pass
   quiz.
 - **Everything removed** is still available at tag `v4.3.2`.

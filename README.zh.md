@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
   <img src="https://img.shields.io/badge/version-5.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 5.0.0">
   <img src="https://img.shields.io/badge/skills-1-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="1 个技能">
-  <img src="https://img.shields.io/badge/agents-3-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="3 个子代理">
+  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
 </p>
 
@@ -116,7 +116,26 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 
 ## 工作原理
 
-页首的图展示了整个流程：`/fu-brief` 冻结任务卡，执行期间只在四个打断点停下，`/fu-debrief` 评判冻结的预测。
+<p align="center"><img src="assets/zh/lifecycle.svg" alt="围绕一张任务卡的三个时刻：动手前的简报、安静的执行、完成后的复盘，以及回来时的回顾" width="100%"></p>
+
+`/fu-brief` 冻结任务卡，执行期间只在四个打断点停下，`/fu-catch-up` 帮你在新会话里重新进入状态，`/fu-debrief` 评判冻结的预测。
+
+### 架构
+
+<p align="center"><img src="assets/zh/framework.svg" alt="命令、技能及其参考文件、五个子代理、磁盘上的文件与原则" width="100%"></p>
+
+四个命令进入同一个技能。`SKILL.md` 只放每个时刻都需要的内容（任务卡、打断点、常驻规则），其余内容都是参考文件，到了对应时刻才加载。结构化模式是单独的一层，你不要求就不会加载。
+
+### 四类未知
+
+<p align="center"><img src="assets/zh/quadrants.svg" alt="四类未知及各自对应的方法" width="100%"></p>
+
+简报先判断缺口属于哪一类，因为每一类需要不同的方法：
+
+- **已知的已知**写在你的需求里，风险在于一直没写明，所以要先记下来。
+- **已知的未知**是你能说出口的问题；智能体会先问影响架构的问题，代码里能查到的从不问你。
+- **未知的已知**是你一看就知道、却说不清的偏好；几个真正不同的方向或一份参考实现，能把它变成明确的标准。
+- **未知的未知**是盲区；只读的盲区排查会找出潜在风险、隐含约束，以及行家会问的问题。
 
 ### 任务卡
 
@@ -171,6 +190,18 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 - **`/fu-catch-up` 里先回忆：** 在你看到任务卡之前，`ship` 模式问一个可以跳过的回忆性问题，`learn` 模式问两到三个，不设及格线。
 - **预测记录：** 你的命中率会持续记录下来，只供你本人查看，不提交到仓库。
 
+### 结构化模式（可选）
+
+<p align="center"><img src="assets/zh/cartographer.svg" alt="结构化模式：Cartographer，带台账、六项闸门条件与规格的覆盖式循环" width="100%"></p>
+
+对高风险任务，或者你希望每一步都写明（这可能对较小的模型有帮助），可以用 `/fu-brief --structured` 或 `/fu-cartographer`，在任务卡之上加上 4.x 的完整流程：
+
+- **四象限路由**与八种编号方法（盲区排查、原型、访谈、参考、计划、实施记录、说明、测验）。
+- **Cartographer：** 每个未知项都成为台账中的一条，带先验、风险值（代价 × 出错概率）、处理途径和可逆性分级。每轮显示清晰度，方便你掌控方向；六项闸门条件决定何时可以开工；带验收标准的规格成为任务卡的简报。
+- **完整交付包：** 按风险分级，九个部分，证据在前。
+
+任务卡、四个打断点和新上下文评判照常适用。
+
 ---
 
 ## 命令
@@ -180,27 +211,31 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 | `/fu-brief <任务>` | 先记下你的预测，再摸清现场，然后给出智能体的预测；约定打断点和验收标准；冻结并提交任务卡 |
 | `/fu-catch-up [slug]` | 先问回忆性问题，再只显示你上次查看之后的变化，以及需要你做的下一个决定 |
 | `/fu-debrief [slug]` | 由新上下文评判每条冻结的预测；列出证据、检查没有证明什么、你的认知修正 |
+| `/fu-cartographer <任务>` | 高风险任务的结构化模式：在任务卡之上运行 Cartographer 台账、闸门与规格 |
 
-直接说“brief me”“catch me up”“where were we”或“did it match what we expected”也可以。改错字、一行改动之类的小事不会建任务卡，也不会提问。
+直接说“brief me”“catch me up”“where were we”或“did it match what we expected”也可以。在非交互的 `claude -p` 中请使用完整名称（`/finding-unknowns:fu-brief`）。改错字、一行改动之类的小事不会建任务卡，也不会提问。
 
 | 子代理 | 职责 |
 |---|---|
 | `blindspot-scout` | 为简报做只读侦察：潜在风险、隐含背景、改写后的需求 |
 | `mechanism-auditor` | 复盘和实测结果的新上下文评判者 |
 | `quiz-master` | 可选：为 `/fu-catch-up` 起草回忆性问题，并标出没有任何增量记录能解释的改动 |
+| `ledger-keeper` | 结构化模式：维护 Cartographer 台账、评分与闸门结论 |
+| `prototype-smith` | 为“一看就知道”的偏好做几个真正不同的一次性方向（简报、结构化模式） |
 
 ---
 
 ## 设计札记
 
 - **为什么 5.0 是一次重建。** 三次评测把 4.x 技能当作提升模型输出的工具来测，没有发现可复现的提升。作者的目标一直在人这一侧，所以 5.0 围绕它来组织。设计、两份顾问意见，以及 5.0 在哪些地方没有采纳顾问意见：[docs/design/5.0.md](docs/design/5.0.md)。
-- **删掉了什么。** Cartographer（风险值、清晰度显示、六项闸门条件）、Workflow 执行和“必须通过”的测验。它们是写给模型的流程，而不是给人的解释。keep-the-reasoning 和 theory-vs-result 并入了唯一的技能。
+- **哪些内容挪了位置。** Cartographer（风险值、清晰度显示、六项闸门条件）、八种编号方法和九段交付包不再是默认流程，而是保留为**结构化模式**，只在你要求时加载。较小的模型可能需要前沿模型用不上的明确步骤（这一点仍在验证）。Workflow 执行和“必须通过”的测验已删除。keep-the-reasoning 和 theory-vs-result 并入了唯一的技能。
 - **出于设计考虑保留了什么。** 不可逆底线；检查必须可能失败，并说明它不能证明什么；先查现场再提问；先预测再看数据；两种结论分开。这些都还没有证据表明对人有帮助。
 - **实际使用中的现场记录：** [docs/field-notes](docs/field-notes/)。
 
 ### 路线图
 
 - **第 0 阶段：** 模拟用户评测，分三组（不装插件、`CLAUDE.md` 里 60 个词的说明、完整插件）。如果插件比不过那 60 个词，就改为发布那 60 个词。
+- **较小的模型：** 用同一批模拟用户任务测试 27B 到 38B 的开源模型，对比不装插件、5.0 默认流程和结构化模式。
 - **第 1 阶段：** 8 到 12 名参与者，与未装插件的 Claude Code 交叉对照，48 到 72 小时后测试理解程度。
 - **SessionStart 钩子**放在 [`extras/`](extras/session-start-hook/README.md) 中，只有第 0 阶段证明它能帮新会话找到任务卡，才会正式发布。
 
@@ -233,14 +268,14 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          插件与插件市场清单
-├── commands/                /fu-brief · /fu-catch-up · /fu-debrief（只负责转发）
+├── commands/                /fu-brief · /fu-catch-up · /fu-debrief · /fu-cartographer（只负责转发）
 ├── skills/finding-unknowns/
 │   ├── SKILL.md             任务卡、三个操作、打断点、常驻规则
-│   └── references/          card · brief · debrief · results · results-examples
-├── agents/                  blindspot-scout（sonnet）· mechanism-auditor · quiz-master（inherit）
+│   └── references/          card · brief · debrief · results · results-examples；结构化模式：structured · cartographer · handoff-full
+├── agents/                  blindspot-scout（sonnet）· mechanism-auditor · quiz-master · ledger-keeper · prototype-smith
 ├── extras/session-start-hook/   尚未发布，等待第 0 阶段评测
 ├── docs/                    design/、evals/、field-notes/、ARCHITECTURE、GLOSSARY、TUTORIAL（含 .zh）
-├── assets/                  四张示意图（SVG）；assets/zh/ 为中文版
+├── assets/                  八张示意图（SVG）；assets/zh/ 为中文版
 ├── CLAUDE.md                免安装的单文件精简版
 ├── install.sh               安装脚本；会删除能识别的 4.x 遗留文件
 ├── AGENTS.md · EXAMPLES.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE（MIT）

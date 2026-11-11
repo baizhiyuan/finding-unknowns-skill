@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
   <img src="https://img.shields.io/badge/version-5.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 5.0.0">
   <img src="https://img.shields.io/badge/skills-1-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="1 skill">
-  <img src="https://img.shields.io/badge/agents-3-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="3 agents">
+  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
 </p>
 
@@ -144,8 +144,34 @@ way of working, not a measured improvement.
 
 ## How it works
 
-The diagram at the top shows the loop: `/fu-brief` freezes the card, the build stops only at
-the four stop-points, and `/fu-debrief` grades the frozen predictions.
+<p align="center"><img src="assets/lifecycle.svg" alt="Three moments around one task card: brief before the build, a quiet build, a debrief after, and catch-up when you come back" width="100%"></p>
+
+`/fu-brief` freezes the card, the build stops only at the four stop-points, `/fu-catch-up`
+re-orients you in a new session, and `/fu-debrief` grades the frozen predictions.
+
+### Architecture
+
+<p align="center"><img src="assets/framework.svg" alt="Commands, the skill and its references, five agents, the files on disk, and the principles" width="100%"></p>
+
+Four commands enter one skill. `SKILL.md` holds only what every moment needs (the card,
+the stop-points, the always-on rules); everything else is a reference file loaded when its
+moment comes. Structured mode is a separate layer that is never loaded unless you ask.
+
+### The four kinds of unknowns
+
+<p align="center"><img src="assets/quadrants.svg" alt="The four quadrants of unknowns and the instrument for each" width="100%"></p>
+
+The Brief starts by asking what kind of gap this is, because each kind needs a different
+instrument:
+
+- **Known knowns** are in your request; the risk is that they stay implicit, so they are
+  written down.
+- **Known unknowns** are questions you can name; the agent asks them, architecture first,
+  and never asks what the code already answers.
+- **Unknown knowns** are taste you will recognise but cannot specify; a few genuinely
+  different directions, or a reference implementation, turn it into criteria.
+- **Unknown unknowns** are blind spots; a read-only blind-spot pass looks for landmines,
+  hidden constraints and the questions an expert would ask.
 
 ### The task card
 
@@ -217,6 +243,24 @@ Benchmarks, backtests, A/B tests and training runs use **Theory → Measured →
   mode, two or three in `learn` mode. There is no pass mark.
 - **Prediction log:** your hit rate over time is logged for you, not committed.
 
+### Structured mode (optional)
+
+<p align="center"><img src="assets/cartographer.svg" alt="Structured mode: Cartographer, a coverage-gated loop with a ledger, a six-condition gate and a spec" width="100%"></p>
+
+For high-stakes work, or when you want every step spelled out (which may help smaller
+models), `/fu-brief --structured` or `/fu-cartographer` adds the 4.x protocol on top of the
+card:
+
+- **Quadrant routing** and the eight numbered techniques (blind-spot pass, prototypes,
+  interview, references, plan, notes, pitch, quiz).
+- **Cartographer:** every unknown becomes a ledger row with a prior, a regret score
+  (cost × chance of being wrong), a route and a reversibility. A clarity display each
+  round lets you steer. A six-condition gate decides when building may start, and a spec
+  with a verification contract becomes the card's Brief.
+- **The full handoff packet:** stakes triage and nine sections, evidence first.
+
+The card, the four stop-points and fresh-context grading still apply.
+
 ---
 
 ## Commands
@@ -226,15 +270,19 @@ Benchmarks, backtests, A/B tests and training runs use **Theory → Measured →
 | `/fu-brief <task>` | Take your prediction, map the territory, then give the agent's; agree the stop-points and the contract; freeze and commit the card |
 | `/fu-catch-up [slug]` | Recall questions, then only what changed since you last looked, and the next decision that needs you |
 | `/fu-debrief [slug]` | Grade every frozen prediction with a fresh context; evidence, what the checks did not prove, model changes |
+| `/fu-cartographer <task>` | Structured mode for high stakes: the Cartographer ledger, gate and spec on top of the card |
 
 Saying "brief me", "catch me up", "where were we" or "did it match what we expected" works
-too. Typos and one-liners get no card and no questions.
+too. Typos and one-liners get no card and no questions. In non-interactive `claude -p`,
+use the full names (`/finding-unknowns:fu-brief`).
 
 | Agent | Role |
 |---|---|
 | `blindspot-scout` | Read-only reconnaissance for the Brief: landmines, hidden context, a rewritten request |
 | `mechanism-auditor` | Fresh-context grader for the Debrief and for measured results |
 | `quiz-master` | Optional: drafts the recall questions for `/fu-catch-up`, and flags changes no delta explains |
+| `ledger-keeper` | Structured mode: keeps the Cartographer ledger, scores and gate verdict |
+| `prototype-smith` | Divergent throwaway directions for taste you will recognise (Brief, structured mode) |
 
 ---
 
@@ -244,10 +292,12 @@ too. Typos and one-liners get no card and no questions.
   output and found none that replicated. The author's goal was always the person's side,
   so 5.0 is organised around it. The design, two advisor reviews, and where 5.0 departs
   from them: [docs/design/5.0.md](docs/design/5.0.md).
-- **What was removed.** Cartographer (regret scores, clarity displays, a six-condition
-  gate), Workflow execution and the must-pass quiz. They were protocol for the model, not
-  explanation for the person. keep-the-reasoning and theory-vs-result were merged into the
-  one skill.
+- **What moved.** Cartographer (regret scores, clarity displays, a six-condition gate),
+  the eight numbered techniques and the nine-section handoff packet are no longer the
+  default. They live on as **structured mode**, loaded only on request, because smaller
+  models may need explicit steps that frontier models do not (a hypothesis under test).
+  Workflow execution and the must-pass quiz are gone. keep-the-reasoning and
+  theory-vs-result were merged into the one skill.
 - **What was kept, on design grounds.** The irreversibility floor; "a check must be able
   to fail" and say what it does not prove; territory before questions; prediction before
   data; the two verdicts. None of these has been shown to help people yet.
@@ -258,6 +308,8 @@ too. Typos and one-liners get no card and no questions.
 - **Stage 0:** a simulated-user evaluation, three arms (no plugin, a 60-word
   `CLAUDE.md`, the plugin). If the plugin does not beat the 60 words, the 60 words ship
   instead.
+- **Smaller models:** the same simulated-user tasks with a 27–38B open-weight model,
+  comparing no plugin, 5.0 and structured mode.
 - **Stage 1:** 8–12 participants, a crossover against plain Claude Code, and a test of
   understanding 48–72 hours later.
 - **The SessionStart hook** in [`extras/`](extras/session-start-hook/README.md) ships
@@ -294,14 +346,14 @@ too. Typos and one-liners get no card and no questions.
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          Plugin and marketplace manifests
-├── commands/                /fu-brief · /fu-catch-up · /fu-debrief (thin dispatchers)
+├── commands/                /fu-brief · /fu-catch-up · /fu-debrief · /fu-cartographer (thin dispatchers)
 ├── skills/finding-unknowns/
 │   ├── SKILL.md             The card, the three operations, stop-points, always-on rules
-│   └── references/          card · brief · debrief · results · results-examples
-├── agents/                  blindspot-scout (sonnet) · mechanism-auditor · quiz-master (inherit)
+│   └── references/          card · brief · debrief · results · results-examples; structured mode: structured · cartographer · handoff-full
+├── agents/                  blindspot-scout (sonnet) · mechanism-auditor · quiz-master · ledger-keeper · prototype-smith
 ├── extras/session-start-hook/   Not shipped; pending the Stage 0 evaluation
 ├── docs/                    design/, evals/, field-notes/, ARCHITECTURE, GLOSSARY, TUTORIAL (+ .zh)
-├── assets/                  Four diagrams (SVG); assets/zh/ = Chinese versions
+├── assets/                  Eight diagrams (SVG); assets/zh/ = Chinese versions
 ├── CLAUDE.md                Passive single-file drop-in
 ├── install.sh               Installer; removes 4.x leftovers it recognises
 ├── AGENTS.md · EXAMPLES.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)

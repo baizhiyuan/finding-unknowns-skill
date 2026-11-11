@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1274" viewBox="0 0 1200 1274">
+<title>Cartographer: a coverage-gated loop, not a questionnaire</title>
+<defs>
+<marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#D97757"/></marker><marker id="ak" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#B1ADA1"/></marker><marker id="ad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#B5442E"/></marker><marker id="ao" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#788C5D"/></marker><marker id="as" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#6A9BCC"/></marker><marker id="ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#141413"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="115%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.10"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.5"/></pattern>
+<linearGradient id="fadeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="fade"><rect x="0" y="0" width="1200" height="150" fill="url(#fadeg)"/></mask>
+</defs>
+<rect x="0.5" y="0.5" width="1199" height="1273" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="1" y="1" width="1198" height="150" rx="18" fill="url(#dots)" mask="url(#fade)" opacity="0.7"/>
+<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" letter-spacing="1.5">// 07 · STRUCTURED MODE · CARTOGRAPHER</text>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Cartographer: a coverage-gated loop, not a questionnaire</text>
+<text x="40" y="120" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Optional (/fu-cartographer). Every unknown is a priced row; the gate decides when building may start.</text>
+
+<clipPath id="c1"><rect x="40" y="150" width="330" height="188" rx="12"/></clipPath><rect x="40" y="150" width="330" height="188" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="40" y="150" width="330" height="3" fill="#D97757" clip-path="url(#c1)"/>
+<circle cx="77" cy="183" r="19" fill="#D97757"/><text x="77" y="187.7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">R0</text><text x="108" y="190" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Depth + Round 0</text>
+<text x="60" y="218" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Depth is announced first; it sets breadth:</text>
+<rect x="60" y="228" width="66" height="24" rx="12.0" fill="#F5DDD1"/><text x="93" y="243.8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="600" text-anchor="middle">--quick</text>
+<rect x="132" y="228" width="152" height="24" rx="12.0" fill="#D97757"/><text x="208" y="243.8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="600" text-anchor="middle">--standard (default)</text>
+<rect x="290" y="228" width="60" height="24" rx="12.0" fill="#F5DDD1"/><text x="320" y="243.8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="600" text-anchor="middle">--deep</text>
+<text x="60" y="272" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59">deep = sweep + UU loop-until-dry</text>
+<text x="60" y="298" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">Round 0 topology gate: 1–6</text>
+<text x="60" y="314" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">independently-failing components, confirmed</text>
+<text x="60" y="330" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">in one question.</text>
+<path d="M372 244.0 L398 244.0" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c2"><rect x="400" y="150" width="760" height="188" rx="12"/></clipPath><rect x="400" y="150" width="760" height="188" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="400" y="150" width="760" height="3" fill="#D97757" clip-path="url(#c2)"/>
+<circle cx="437" cy="183" r="19" fill="#D97757"/><text x="437" y="187.7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">C0</text><text x="468" y="190" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Seed the ledger</text>
+<text x="1140" y="188" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#C15F3C" font-weight="700" text-anchor="end">.finding-unknowns/unknowns-ledger.md</text>
+<rect x="420" y="216" width="34" height="22" rx="6" fill="#141413"/><text x="437" y="231.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#FAF9F5" font-weight="700" text-anchor="middle">UU</text>
+<text x="464" y="232" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#141413">blind-spot pass · multi-lens sweep</text>
+<rect x="775" y="216" width="34" height="22" rx="6" fill="#141413"/><text x="792" y="231.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#FAF9F5" font-weight="700" text-anchor="middle">UK</text>
+<text x="819" y="232" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#141413">prototypes · references</text>
+<rect x="420" y="246" width="34" height="22" rx="6" fill="#141413"/><text x="437" y="261.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#FAF9F5" font-weight="700" text-anchor="middle">KK</text>
+<text x="464" y="262" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#141413">knowns, written down</text>
+<rect x="775" y="246" width="34" height="22" rx="6" fill="#141413"/><text x="792" y="261.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#FAF9F5" font-weight="700" text-anchor="middle">KU</text>
+<text x="819" y="262" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#141413">named gaps</text>
+<text x="420" y="291" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#5E5D59" font-weight="700">each row  =</text>
+<rect x="520" y="274" width="58.0" height="26" rx="13.0" fill="#F5DDD1"/><text x="549.0" y="291.2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="600" text-anchor="middle">prior</text>
+<rect x="586.0" y="274" width="194.8" height="26" rx="13.0" fill="#F5DDD1"/><text x="683.4" y="291.2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="600" text-anchor="middle">regret = cost × P(wrong)</text>
+<rect x="788.8" y="274" width="58.0" height="26" rx="13.0" fill="#F5DDD1"/><text x="817.8" y="291.2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="600" text-anchor="middle">route</text>
+<rect x="854.8" y="274" width="115.6" height="26" rx="13.0" fill="#B5442E"/><text x="912.6" y="291.2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#FAF9F5" font-weight="600" text-anchor="middle">reversibility</text>
+<text x="982.4" y="292" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" font-style="italic">+ domain checklist hook</text>
+<path d="M780 340 L780 378" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c3"><rect x="40" y="380" width="1120" height="270" rx="12"/></clipPath><rect x="40" y="380" width="1120" height="270" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="40" y="380" width="1120" height="3" fill="#D97757" clip-path="url(#c3)"/>
+<circle cx="77" cy="413" r="19" fill="#D97757"/><text x="77" y="417.7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">C1</text><text x="108" y="420" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Clearing loop — a router, not an interview</text>
+<text x="1140" y="412" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" text-anchor="end">soft check, no hard cap:</text>
+<text x="1140" y="429" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="600" text-anchor="end">round 10, then every 10 · every 5 under --quick</text>
+<clipPath id="c4"><rect x="60" y="450" width="190" height="150" rx="10"/></clipPath><rect x="60" y="450" width="190" height="150" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/><circle cx="80" cy="472" r="11" fill="#F5DDD1"/><text x="80" y="476.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">1</text><text x="98" y="477" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Target</text>
+<text x="74" y="502" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">highest-regret open row — or</text>
+<text x="74" y="518" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">the top 1–3 independent</text>
+<text x="74" y="534" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">interview rows</text>
+<text x="74" y="550" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B5442E">regret &lt; 1.0 → default logged,</text>
+<text x="74" y="565" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B5442E">no round. Irreversible rows</text>
+<text x="74" y="580" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#B5442E">always reach the user.</text>
+<clipPath id="c5"><rect x="280" y="450" width="360" height="150" rx="10"/></clipPath><rect x="280" y="450" width="360" height="150" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/><circle cx="300" cy="472" r="11" fill="#F5DDD1"/><text x="300" y="476.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">2</text><text x="318" y="477" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Route — how the row gets cleared</text>
+<rect x="296" y="490" width="96.0" height="22" rx="11.0" fill="#F5DDD1"/><text x="344.0" y="505.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="600" text-anchor="middle">interview</text>
+<text x="404" y="505.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">answer lives in the user’s head</text>
+<rect x="296" y="517" width="96.0" height="22" rx="11.0" fill="#DDE9F4"/><text x="344.0" y="532.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#3F6C99" font-weight="600" text-anchor="middle">territory</text>
+<text x="404" y="532.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">read code or data; never ask</text>
+<rect x="296" y="544" width="96.0" height="22" rx="11.0" fill="#EEDCC8"/><text x="344.0" y="559.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#8A5A2B" font-weight="600" text-anchor="middle">experiment</text>
+<text x="404" y="559.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">spec recorded; row stays probing</text>
+<rect x="296" y="571" width="96.0" height="22" rx="11.0" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/><text x="344.0" y="586.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#5E5D59" font-weight="600" text-anchor="middle">audit</text>
+<text x="404" y="586.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">review an artifact; stays probing</text>
+<clipPath id="c6"><rect x="670" y="450" width="200" height="150" rx="10"/></clipPath><rect x="670" y="450" width="200" height="150" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/><circle cx="690" cy="472" r="11" fill="#F5DDD1"/><text x="690" y="476.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">3</text><text x="708" y="477" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Verify · cost ≥ 4</text>
+<text x="684" y="502" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">Adversarial check: build the</text>
+<text x="684" y="518" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">strongest rival explanation</text>
+<text x="684" y="534" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">of the same evidence.</text>
+<text x="684" y="568" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#C15F3C" font-weight="600">One source →</text>
+<text x="684" y="583" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#C15F3C" font-weight="600">resolved-provisional.</text>
+<clipPath id="c7"><rect x="900" y="450" width="230" height="150" rx="10"/></clipPath><rect x="900" y="450" width="230" height="150" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/><circle cx="920" cy="472" r="11" fill="#F5DDD1"/><text x="920" y="476.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">4</text><text x="938" y="477" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" fill="#141413" font-weight="700">Re-score · every round</text>
+<text x="914" y="502" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">Four-quadrant score table</text>
+<text x="914" y="518" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">shown so the user can steer</text>
+<text x="914" y="534" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#C15F3C" font-weight="600">display only, never a gate</text>
+<rect x="912" y="545" width="206" height="44" rx="8" fill="#FFFFFF" stroke="#E3DFD3"/>
+<text x="922" y="562" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#141413" font-weight="600">ambiguity = 1 − (KK·.20 +</text>
+<text x="922" y="578" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#141413" font-weight="600">KU·.25 + UK·.25 + UU·.30)</text>
+<path d="M251 525.0 L278 525.0" fill="none" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<path d="M641 525.0 L668 525.0" fill="none" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<path d="M871 525.0 L898 525.0" fill="none" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<path d="M1015 603 C1015 658 155 658 155 605" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<rect x="425.0" y="630" width="330" height="24" rx="12" fill="#FAF9F5" stroke="#D97757"/>
+<text x="590" y="646.5" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="middle">↻  repeat until the gate passes or the user exits</text>
+<path d="M330 652 L330 704" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<text x="344" y="684" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="700">all six conditions hold</text>
+<path d="M150 704 L150 652" fill="none" stroke="#B1ADA1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4" marker-end="url(#ak)"/>
+<text x="164" y="684" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#5E5D59" font-weight="700">else: next target</text>
+<clipPath id="c8"><rect x="40" y="706" width="440" height="316" rx="12"/></clipPath><rect x="40" y="706" width="440" height="316" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="40" y="706" width="440" height="3" fill="#D97757" clip-path="url(#c8)"/>
+<circle cx="77" cy="739" r="19" fill="#D97757"/><text x="77" y="743.7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">C2</text><text x="108" y="746" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Gate · 6 conditions</text>
+<text x="60" y="772" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5E5D59" font-weight="700" letter-spacing="1.2">QUADRANTS</text>
+<rect x="60" y="783" width="14" height="14" rx="3" fill="#FAF9F5" stroke="#788C5D" stroke-width="1.6"/><path d="M63 790.5 L66 793.5 L71 787" fill="none" stroke="#788C5D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="82" y="796" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">KK</text>
+<text x="108" y="796" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">written down</text>
+<rect x="265" y="783" width="14" height="14" rx="3" fill="#FAF9F5" stroke="#788C5D" stroke-width="1.6"/><path d="M268 790.5 L271 793.5 L276 787" fill="none" stroke="#788C5D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="287" y="796" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">UU</text>
+<text x="313" y="796" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">probed</text>
+<rect x="60" y="809" width="14" height="14" rx="3" fill="#FAF9F5" stroke="#788C5D" stroke-width="1.6"/><path d="M63 816.5 L66 819.5 L71 813" fill="none" stroke="#788C5D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="82" y="822" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">KU</text>
+<text x="108" y="822" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">resolved, or deferred with a default</text>
+<rect x="60" y="835" width="14" height="14" rx="3" fill="#FAF9F5" stroke="#788C5D" stroke-width="1.6"/><path d="M63 842.5 L66 845.5 L71 839" fill="none" stroke="#788C5D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="82" y="848" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">UK</text>
+<text x="108" y="848" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">extracted, or n/a (user-confirmed)</text>
+<text x="60" y="874" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5E5D59" font-weight="700" letter-spacing="1.2">AND</text>
+<rect x="60" y="885" width="14" height="14" rx="3" fill="#FAF9F5" stroke="#788C5D" stroke-width="1.6"/><path d="M63 892.5 L66 895.5 L71 889" fill="none" stroke="#788C5D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="82" y="898" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#141413">no open row with regret ≥ 1.0</text>
+<rect x="60" y="909" width="14" height="14" rx="3" fill="#FAF9F5" stroke="#B5442E" stroke-width="1.6"/><path d="M63 916.5 L66 919.5 L71 913" fill="none" stroke="#B5442E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="82" y="922" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#B5442E" font-weight="700">every irreversible row user-confirmed</text>
+<text x="60" y="946" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600">✓ completeness critic runs before any PASS</text>
+<clipPath id="cdg"><rect x="56" y="962" width="408" height="48" rx="10"/></clipPath><rect x="56" y="962" width="408" height="48" rx="10" fill="#F5DDD1" stroke="#B5442E" stroke-width="1"/><rect x="56" y="962" width="5" height="48" fill="#B5442E" clip-path="url(#cdg)"/>
+<text x="72" y="980" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#B5442E" font-weight="700">Irreversibility floor — confidence never substitutes</text>
+<text x="72" y="996" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#B5442E" font-weight="600">for the user; exits never waive it.</text>
+<path d="M482 864.0 L518 864.0" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c9"><rect x="520" y="706" width="640" height="316" rx="12"/></clipPath><rect x="520" y="706" width="640" height="316" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="520" y="706" width="640" height="3" fill="#D97757" clip-path="url(#c9)"/>
+<circle cx="557" cy="739" r="19" fill="#D97757"/><text x="557" y="743.1" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#FAF9F5" font-weight="700" text-anchor="middle">2.5</text><text x="588" y="746" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Close-out: report + crystallized spec</text>
+<text x="540" y="778" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5E5D59" font-weight="700" letter-spacing="1.2">UNKNOWNS REPORT</text>
+<text x="540" y="798" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">executive summary · findings by</text>
+<text x="540" y="814" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">row · gaps &amp; provisional items ·</text>
+<text x="540" y="830" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">methodology</text>
+<text x="540" y="854" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5E5D59" font-weight="700" letter-spacing="1.2">CRYSTALLIZED SPEC</text>
+<rect x="540" y="864" width="187.6" height="26" rx="13.0" fill="#F5DDD1"/><text x="633.8" y="881.2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="600" text-anchor="middle">unknowns-spec-{slug}.md</text>
+<text x="540" y="912" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">marked pending approval — writing</text>
+<text x="540" y="928" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">it grants no execution permission</text>
+<rect x="540" y="946" width="200" height="26" rx="13" fill="#141413"/><text x="640" y="963.2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle" letter-spacing="1">DEFAULT END · STOP</text>
+<text x="540" y="992" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">next steps are offered, never taken</text>
+<rect x="790" y="764" width="360" height="240" rx="10" fill="#FAF9F5" stroke="#E3DFD3"/>
+<text x="800" y="786" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#C15F3C" font-weight="700" letter-spacing="1.2">VERIFICATION CONTRACT</text>
+<rect x="800" y="796" width="340" height="26" rx="6" fill="#F5DDD1"/><rect x="800" y="796" width="3" height="26" fill="#D97757"/>
+<text x="808" y="813" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700">check</text>
+<text x="872" y="813" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700">proves</text>
+<text x="934" y="813" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#B5442E" font-weight="700">does NOT prove</text>
+<text x="1046" y="813" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700">lane</text>
+<rect x="808" y="838" width="42" height="6" rx="3" fill="#B1ADA1" opacity="0.55"/>
+<rect x="872" y="838" width="38" height="6" rx="3" fill="#B1ADA1" opacity="0.55"/>
+<rect x="934" y="838" width="74" height="6" rx="3" fill="#D97757" opacity="0.7"/>
+<rect x="1044" y="831" width="88" height="20" rx="10" fill="#788C5D"/><text x="1088" y="845" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#FAF9F5" font-weight="700" text-anchor="middle">reversible</text>
+<path d="M800 857 L1140 857" stroke="#E3DFD3"/>
+<rect x="808" y="868" width="42" height="6" rx="3" fill="#B1ADA1" opacity="0.55"/>
+<rect x="872" y="868" width="38" height="6" rx="3" fill="#B1ADA1" opacity="0.55"/>
+<rect x="934" y="868" width="74" height="6" rx="3" fill="#D97757" opacity="0.7"/>
+<rect x="1044" y="861" width="88" height="20" rx="10" fill="#6A9BCC"/><text x="1088" y="875" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#FAF9F5" font-weight="700" text-anchor="middle">wide</text>
+<path d="M800 887 L1140 887" stroke="#E3DFD3"/>
+<rect x="808" y="898" width="42" height="6" rx="3" fill="#B1ADA1" opacity="0.55"/>
+<rect x="872" y="898" width="38" height="6" rx="3" fill="#B1ADA1" opacity="0.55"/>
+<rect x="934" y="898" width="74" height="6" rx="3" fill="#D97757" opacity="0.7"/>
+<rect x="1044" y="891" width="88" height="20" rx="10" fill="#B5442E"/><text x="1088" y="905" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#FAF9F5" font-weight="700" text-anchor="middle">irreversible</text>
+<path d="M800 917 L1140 917" stroke="#E3DFD3"/>
+<circle cx="804" cy="930" r="2.5" fill="#D97757"/>
+<text x="814" y="934" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">a check must be able to fail</text>
+<circle cx="804" cy="948" r="2.5" fill="#D97757"/>
+<text x="814" y="952" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">“does NOT prove” is mandatory</text>
+<circle cx="804" cy="966" r="2.5" fill="#D97757"/>
+<text x="814" y="970" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">check files locked against the implementer</text>
+<text x="800" y="1000" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="1" fill="#141413"></text>
+<path d="M640 1024 L640 1070" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<text x="654" y="1054" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#C15F3C" font-weight="700">offered after the spec · spec + contract approved</text>
+<clipPath id="c10"><rect x="40" y="1072" width="700" height="172" rx="12"/></clipPath><rect x="40" y="1072" width="700" height="172" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="40" y="1072" width="700" height="3" fill="#D97757" clip-path="url(#c10)"/>
+<circle cx="77" cy="1105" r="19" fill="#D97757"/><text x="77" y="1109.7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">E</text><text x="108" y="1112" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Next step after the spec</text>
+<text x="720" y="1111" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59" text-anchor="end">never auto-executed</text>
+<clipPath id="c11"><rect x="56.0" y="1130" width="212.0" height="100" rx="10"/></clipPath><rect x="56.0" y="1130" width="212.0" height="100" rx="10" fill="#FAF9F5" stroke="#D97757" stroke-width="1.5"/>
+<circle cx="74.0" cy="1150" r="10" fill="#F5DDD1"/><text x="74.0" y="1154.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">1</text>
+<text x="92.0" y="1155" font-family="Georgia, 'Times New Roman', serif" font-size="13.5" fill="#141413" font-weight="700">Consensus-refine</text>
+<text x="70.0" y="1173" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#C15F3C" font-weight="700" letter-spacing="1">RECOMMENDED</text>
+<text x="70.0" y="1189" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">Planner drafts, an independent</text>
+<text x="70.0" y="1204" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">reviewer attacks it (≤3 loops),</text>
+<text x="70.0" y="1219" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">then a separate yes.</text>
+<clipPath id="c12"><rect x="280.0" y="1130" width="252.0" height="100" rx="10"/></clipPath><rect x="280.0" y="1130" width="252.0" height="100" rx="10" fill="#FAF9F5" stroke="#D97757" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="298.0" cy="1150" r="10" fill="#F5DDD1"/><text x="298.0" y="1154.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">2</text>
+<text x="316.0" y="1155" font-family="Georgia, 'Times New Roman', serif" font-size="13.5" fill="#141413" font-weight="700">Build under the card</text>
+<text x="294.0" y="1173" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#C15F3C" font-weight="700" letter-spacing="0.5">AFTER A SEPARATE YES</text>
+<text x="294.0" y="1189" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">The spec becomes the card's</text>
+<text x="294.0" y="1204" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">Brief and contract; the four</text>
+<text x="294.0" y="1219" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">stop-points apply.</text>
+<clipPath id="c13"><rect x="544.0" y="1130" width="172.0" height="100" rx="10"/></clipPath><rect x="544.0" y="1130" width="172.0" height="100" rx="10" fill="#FAF9F5" stroke="#E3DFD3" stroke-width="1"/>
+<circle cx="562.0" cy="1150" r="10" fill="#F5DDD1"/><text x="562.0" y="1154.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">3</text>
+<text x="580.0" y="1155" font-family="Georgia, 'Times New Roman', serif" font-size="13.5" fill="#141413" font-weight="700">Refine further</text>
+<text x="558.0" y="1178" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">Return to the C1 loop.</text>
+<path d="M742 1158.0 L778 1158.0" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
+<clipPath id="c14"><rect x="780" y="1072" width="380" height="172" rx="12"/></clipPath><rect x="780" y="1072" width="380" height="172" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/><rect x="780" y="1072" width="380" height="3" fill="#D97757" clip-path="url(#c14)"/>
+<circle cx="817" cy="1105" r="19" fill="#D97757"/><text x="817" y="1109.7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">C3</text><text x="848" y="1112" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Ledger stays open</text>
+<circle cx="806" cy="1134" r="2.5" fill="#D97757"/>
+<text x="816" y="1138" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">Mid-build discoveries become rows; the</text>
+<text x="816" y="1153" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">conservative option is logged.</text>
+<circle cx="806" cy="1173" r="2.5" fill="#D97757"/>
+<text x="816" y="1177" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">Quiz is generated from the ledger, one question</text>
+<text x="816" y="1192" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">per high-regret row.</text>
+<circle cx="806" cy="1212" r="2.5" fill="#D97757"/>
+<text x="816" y="1216" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">Merge only if no open row has regret ≥ 1.0 and</text>
+<text x="816" y="1231" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#141413">every irreversible row is user-confirmed.</text>
+</svg>

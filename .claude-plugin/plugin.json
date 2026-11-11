@@ -1,6 +1,6 @@
 {
   "name": "finding-unknowns",
-  "description": "One task card per task, kept by you and the agent: you predict first, the agent works quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and a fresh context grades every frozen prediction at the debrief. /fu-brief, /fu-catch-up, /fu-debrief. Measured results use Theory → Measured → Consistent? → Mechanism. Agents: blindspot-scout, mechanism-auditor, quiz-master. Whether this helps people is not yet tested.",
+  "description": "One task card per task, kept by you and the agent: you predict first, the agent works quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and a fresh context grades every frozen prediction at the debrief. /fu-brief, /fu-catch-up, /fu-debrief. Measured results use Theory → Measured → Consistent? → Mechanism. Optional structured mode (/fu-cartographer, /fu-brief --structured) keeps the 4.x protocol: quadrant routing, eight techniques, the Cartographer ledger and gate, the full handoff packet. Agents: blindspot-scout, mechanism-auditor, quiz-master, ledger-keeper, prototype-smith. Whether this helps people is not yet tested.",
   "version": "5.0.0",
   "author": {
     "name": "baizhiyuan"

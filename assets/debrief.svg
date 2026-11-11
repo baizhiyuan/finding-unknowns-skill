@@ -1,50 +1,95 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="556" viewBox="0 0 1200 556" role="img" aria-labelledby="t d">
-<title id="t">Debrief</title>
-<desc id="d">At /fu-debrief a fresh context that did not do the work checks integrity and grades each frozen prediction, yours first; you see evidence first, then the table, what the checks did not prove and what changes in your model.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740" role="img" aria-labelledby="t d">
+<title id="t">Debrief</title><desc id="d">The slide from offloading to cognitive surrender, and the debrief that pushes back: evidence first, predictions quoted and graded by a fresh context, what the checks did not prove, model changes, bottom line last.</desc>
 <defs>
-<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
-<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
+<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
+<marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#788C5D"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
+<linearGradient id="spec" x1="0" x2="1"><stop offset="0" stop-color="#788C5D"/><stop offset="0.5" stop-color="#D4A27F"/><stop offset="1" stop-color="#B5442E"/></linearGradient>
 </defs>
-<rect width="1200" height="556" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
-<rect x="1" y="1" width="1198" height="554" rx="18" fill="url(#dots)"/>
-<text x="60" y="64" font-size="30" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Debrief</text>
-<text x="60" y="100" font-size="17" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#3D3929">Graded by a context that did not do the work. Predictions are quoted from the frozen card, never restated.</text>
-<text x="60" y="150" font-size="17" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Input</text>
-<text x="440" y="150" font-size="17" font-family="'JetBrains Mono', Menlo, monospace" fill="#5E7046" font-weight="700">mechanism-auditor</text>
-<text x="820" y="150" font-size="17" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">What you see (one screen)</text>
-<rect x="60" y="170" width="320" height="68" rx="10" fill="#FBEFEA" stroke="#D97757" stroke-width="1.5"/>
-<text x="76" y="200" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Frozen card</text>
-<text x="76" y="222" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">+ the freeze commit</text>
-<rect x="60" y="252" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>
-<text x="76" y="282" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Artifacts: diff, logs, results</text>
-<rect x="60" y="312" width="320" height="68" rx="10" fill="#F7F5EF" stroke="#B1ADA1" stroke-width="1.5"/>
-<text x="76" y="342" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#8C877A">The build transcript</text>
-<text x="76" y="364" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#8C877A">is not given</text>
-<rect x="440" y="170" width="320" height="112" rx="10" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5"/>
-<text x="456" y="200" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">1  Integrity</text>
-<text x="456" y="222" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Brief vs freeze commit</text>
-<text x="456" y="244" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">check files untouched</text>
-<text x="456" y="266" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">unlogged deviations listed</text>
-<rect x="440" y="296" width="320" height="90" rx="10" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5"/>
-<text x="456" y="326" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">2  Grade each prediction,</text>
-<text x="456" y="348" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">yours first: consistent · partly</text>
-<text x="456" y="370" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">· inconsistent · can't tell</text>
-<rect x="440" y="400" width="320" height="68" rx="10" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5"/>
-<text x="456" y="430" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">3  Strongest alternative</text>
-<text x="456" y="452" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">+ the cheapest check</text>
-<rect x="820" y="170" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
-<text x="836" y="200" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Evidence: commands → output</text>
-<rect x="820" y="226" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
-<text x="836" y="256" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Prediction table</text>
-<rect x="820" y="282" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
-<text x="836" y="312" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Did NOT prove · Not checked</text>
-<rect x="820" y="338" width="320" height="68" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
-<text x="836" y="368" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Model changes</text>
-<text x="836" y="390" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">[shown, not confirmed]</text>
-<rect x="820" y="416" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
-<text x="836" y="446" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Bottom line · Needs you</text>
-<path d="M382 250L436 250" stroke="#8C877A" stroke-width="2" fill="none" marker-end="url(#arr)"/>
-<path d="M762 250L816 250" stroke="#8C877A" stroke-width="2" fill="none" marker-end="url(#arr)"/>
-<text x="60" y="506" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#3D3929">The builder writes only the Mechanism, with its tier. Explanation goes where a prediction missed, yours first.</text>
-<text x="60" y="532" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#3D3929">Each graded line is added to your personal prediction log.</text>
+<rect x="0.5" y="0.5" width="1199" height="739" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="739" rx="18" fill="url(#dots)" opacity="0.5"/>
+<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 06 · DEBRIEF</text>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Hand off the work, not the judgment</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Evidence first, bottom line last: the debrief makes checking cheap and surrender visible.</text>
+<text x="40" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">THE SLIDE</text>
+<rect x="40" y="212" width="520" height="22" rx="11" fill="url(#spec)"/>
+<rect x="78.7" y="170" width="96" height="26" rx="13" fill="#D97757"/>
+<text x="126.7" y="187" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700" text-anchor="middle">stay here</text>
+<path d="M126.7 198V210" stroke="#D97757" stroke-width="2.5" marker-end="url(#ah)"/><circle cx="126.7" cy="223" r="11" fill="#FAF9F5" stroke="#141413" stroke-width="3"/>
+<text x="40" y="262" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#788C5D" font-weight="700">offloading</text>
+<text x="40" y="283" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">delegate the work,</text>
+<text x="40" y="300" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">keep ownership</text>
+<text x="213" y="262" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#C15F3C" font-weight="700">deferral</text>
+<text x="213" y="283" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">the output becomes</text>
+<text x="213" y="300" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">the next input</text>
+<text x="387" y="262" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#B5442E" font-weight="700">cognitive surrender</text>
+<text x="387" y="283" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">the output quietly becomes</text>
+<text x="387" y="300" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">your own; no urge to check</text>
+<path d="M205 246L205 306" stroke="#E3DFD3" stroke-width="1" fill="none"/>
+<path d="M379 246L379 306" stroke="#E3DFD3" stroke-width="1" fill="none"/>
+<text x="40" y="348" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">WHO GRADES</text>
+<rect x="40" y="362" width="520" height="92" rx="12" fill="#F0EEE6" stroke="#788C5D" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="40" y="372" width="5" height="72" rx="2.5" fill="#788C5D"/>
+<text x="64" y="390" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">mechanism-auditor</text>
+<text x="64" y="414" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Gets the frozen card and the artifacts, not the transcript.</text>
+<text x="64" y="436" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Fills Measured and Consistent?, your predictions first.</text>
+<rect x="40" y="468" width="520" height="92" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="40" y="478" width="5" height="72" rx="2.5" fill="#D97757"/>
+<text x="64" y="496" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#141413" font-weight="700">The builder writes only the Mechanism</text>
+<text x="64" y="520" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">with its tier: verified · supported · inferred · untested.</text>
+<text x="64" y="542" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Explanation goes where a prediction missed.</text>
+<text x="40" y="600" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#C15F3C" font-style="italic">Take the handoff where being wrong is cheap;</text>
+<text x="40" y="624" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#C15F3C" font-style="italic">keep the reasoning where others bear the consequences.</text>
+<text x="40" y="650" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">after Addy Osmani, Critical thinking when agents do the work; cognitive surrender: Shaw &amp; Nave</text>
+<text x="620" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">/fu-debrief · IN THIS ORDER</text>
+<rect x="620" y="172" width="540" height="64" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="636" y="189" width="30" height="30" rx="6" fill="#D97757"/>
+<text x="651.0" y="209.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">1</text>
+<text x="680" y="200" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Evidence</text>
+<text x="680" y="221" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">commands actually run + their output, before any prose</text>
+<rect x="1088.0" y="192" width="58.0" height="24" rx="12" fill="#D97757" stroke="#D97757" stroke-width="1"/>
+<text x="1117.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700" text-anchor="middle">FIRST</text>
+<rect x="620" y="244" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<rect x="636" y="261" width="30" height="30" rx="6" fill="#141413"/>
+<text x="651.0" y="281.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">2</text>
+<text x="680" y="272" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Integrity</text>
+<text x="680" y="293" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">vs freeze commit · check files · unlogged deviations</text>
+<rect x="1030.4" y="264" width="116" height="24" rx="12" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.2"/>
+<text x="1088.2" y="280.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#6A9BCC" font-weight="700" text-anchor="middle">fresh context</text>
+<rect x="620" y="316" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<rect x="636" y="333" width="30" height="30" rx="6" fill="#141413"/>
+<text x="651.0" y="353.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">3</text>
+<text x="680" y="344" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Predictions, quoted and graded</text>
+<text x="680" y="365" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">yours first: consistent · partly · inconsistent · can't tell</text>
+<rect x="1030.4" y="336" width="116" height="24" rx="12" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.2"/>
+<text x="1088.2" y="352.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#6A9BCC" font-weight="700" text-anchor="middle">fresh context</text>
+<rect x="620" y="388" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<rect x="636" y="405" width="30" height="30" rx="6" fill="#141413"/>
+<text x="651.0" y="425.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">4</text>
+<text x="680" y="416" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">What the checks did NOT prove</text>
+<text x="680" y="437" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">one line per check; same-context tests flagged</text>
+<rect x="620" y="460" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<rect x="636" y="477" width="30" height="30" rx="6" fill="#141413"/>
+<text x="651.0" y="497.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">5</text>
+<text x="680" y="488" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Not checked</text>
+<text x="680" y="509" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">at least one thing nobody verified</text>
+<rect x="1044.8" y="480" width="101" height="24" rx="12" fill="#FFFFFF" stroke="#B5442E" stroke-width="1.2"/>
+<text x="1095.4" y="496.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#B5442E" font-weight="700" text-anchor="middle">never empty</text>
+<rect x="620" y="532" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<rect x="636" y="549" width="30" height="30" rx="6" fill="#141413"/>
+<text x="651.0" y="569.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">6</text>
+<text x="680" y="560" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Model changes</text>
+<text x="680" y="581" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">you expected X → it is Y, because Z</text>
+<rect x="980.0" y="552" width="166" height="24" rx="12" fill="#FFFFFF" stroke="#D4A27F" stroke-width="1.2"/>
+<text x="1063.0" y="568.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#D4A27F" font-weight="700" text-anchor="middle">shown, not confirmed</text>
+<rect x="620" y="604" width="540" height="64" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="636" y="621" width="30" height="30" rx="6" fill="#D97757"/>
+<text x="651.0" y="641.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">7</text>
+<text x="680" y="632" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Bottom line · needs you</text>
+<text x="680" y="653" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">one line; decisions stay with you</text>
+<rect x="1095.2" y="624" width="50.8" height="24" rx="12" fill="#D97757" stroke="#D97757" stroke-width="1"/>
+<text x="1120.6" y="640.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700" text-anchor="middle">LAST</text>
+<text x="1160" y="686" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59" text-anchor="end">Structured mode: the full nine-section packet.</text>
 </svg>

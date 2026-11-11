@@ -46,15 +46,10 @@ remove_if_ours() {  # <file> <marker regex>
     echo "Removed 4.x file -> $1"
   fi
 }
-for old in cartographer workflows; do
-  remove_if_ours "$dest/references/$old.md" 'Cartographer|fu-execute|Workflow'
-done
+remove_if_ours "$dest/references/workflows.md" 'fu-execute|Workflow'
 for old in keep-the-reasoning theory-vs-result; do
   remove_if_ours "$CONFIG_DIR/skills/$old/SKILL.md" "^name: $old\$"
   rmdir "$CONFIG_DIR/skills/$old" 2>/dev/null || true
-done
-for old in ledger-keeper prototype-smith; do
-  remove_if_ours "$AGENT_DEST/$old.md" 'for the finding-unknowns skill'
 done
 for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasoning theory-vs-result; do
   f="$CMD_DEST/$old.md"
@@ -64,6 +59,7 @@ for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasonin
 done
 
 echo
-echo "Done. Skill: finding-unknowns. Commands: /fu-brief, /fu-catch-up, /fu-debrief."
-echo "Agents (blindspot-scout, mechanism-auditor, quiz-master) are delegated to by the skill."
+echo "Done. Skill: finding-unknowns. Commands: /fu-brief, /fu-catch-up, /fu-debrief, /fu-cartographer."
+echo "Agents (blindspot-scout, mechanism-auditor, quiz-master; ledger-keeper and prototype-smith for structured mode)"
+echo "are delegated to by the skill."
 echo "Cards live in .finding-unknowns/tasks/ in each project; see the skill's references/card.md."

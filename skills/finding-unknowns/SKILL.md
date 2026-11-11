@@ -137,6 +137,14 @@ output, what each check did NOT prove, not checked: never empty); model changes 
 `shown, not confirmed` until the person confirms; append to the prediction log; commit.
 For measured results, the card's rows use `references/results.md`.
 
+## Structured mode (optional)
+
+Only when the person asks: "structured mode", `/fu-brief --structured`, or
+`/fu-cartographer` for high stakes. Load `references/structured.md`: quadrant routing, the
+eight numbered techniques, Cartographer (`references/cartographer.md`, with `ledger-keeper`)
+and the full handoff packet (`references/handoff-full.md`). The card, the four
+stop-points and fresh-context grading still apply. Never load it by default.
+
 </Steps>
 
 <References>
@@ -147,4 +155,7 @@ For measured results, the card's rows use `references/results.md`.
 | `references/debrief.md` | `/fu-debrief`, a handoff, recall questions |
 | `references/results.md` | a benchmark, backtest, A/B test, training run or reproducible failure; any measured prediction |
 | `references/results-examples.md` | an example card is needed |
+| `references/structured.md` | structured mode only (on request) |
+| `references/cartographer.md` | Cartographer mode only (`/fu-cartographer`) |
+| `references/handoff-full.md` | structured mode or a Cartographer merge |
 </References>
