@@ -1,6 +1,6 @@
 {
   "name": "finding-unknowns",
-  "description": "Surface your unknowns before they get expensive, and keep your judgment when agents hand work back. finding-unknowns: eight discovery techniques plus Cartographer mode (coverage-gated, regret-ordered unknowns ledger with reversibility floor, verification contract, the spec as its default end, and experimental Workflow execution, graph-ordered and approval-gated). keep-the-reasoning: stakes-triaged handoff packets — evidence first, what checks did not prove, what went unchecked, and decisions listed at high stakes. theory-vs-result: every measured result reported as Theory → Measured → Consistent? → Mechanism — prediction before data, noise floor, evidence-tiered mechanism, rule verdict kept apart from direction verdict, plus a debug path for reproducible failures. Five companion agents: blindspot-scout, prototype-smith, ledger-keeper, quiz-master, mechanism-auditor.",
+  "description": "One task card per task, kept by you and the agent: you predict first, the agent works quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and a fresh context grades every frozen prediction at the debrief. /brief, /catch-up, /debrief. Measured results use Theory → Measured → Consistent? → Mechanism. Agents: blindspot-scout, mechanism-auditor, quiz-master. Whether this helps people is not yet tested.",
   "version": "4.3.2",
   "author": {
     "name": "baizhiyuan"

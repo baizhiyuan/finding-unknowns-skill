@@ -1,24 +1,18 @@
 #!/usr/bin/env bash
-# Install the skills (finding-unknowns, keep-the-reasoning, theory-vs-result), their references, the
-# companion agents, and the slash commands into the global Claude Code config directory.
+# Install the finding-unknowns skill (with its references), the companion agents and the
+# slash commands into the global Claude Code config directory. Removes 4.x leftovers only
+# when they match files this project installed.
 set -euo pipefail
 
 CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Skills (each with optional references/)
-for skill_dir in "$SRC"/skills/*/; do
-  name="$(basename "$skill_dir")"
-  dest="$CONFIG_DIR/skills/$name"
-  mkdir -p "$dest"
-  cp "$skill_dir/SKILL.md" "$dest/SKILL.md"
-  echo "Installed skill  -> $dest/SKILL.md"
-  if [ -d "$skill_dir/references" ]; then
-    mkdir -p "$dest/references"
-    cp "$skill_dir"/references/*.md "$dest/references/"
-    echo "Installed refs   -> $dest/references/"
-  fi
-done
+# Skill and references
+dest="$CONFIG_DIR/skills/finding-unknowns"
+mkdir -p "$dest/references"
+cp "$SRC/skills/finding-unknowns/SKILL.md" "$dest/SKILL.md"
+cp "$SRC"/skills/finding-unknowns/references/*.md "$dest/references/"
+echo "Installed skill  -> $dest (SKILL.md + references/)"
 
 # Companion agents
 AGENT_DEST="$CONFIG_DIR/agents"
@@ -36,20 +30,31 @@ for cmd in "$SRC"/commands/*.md; do
   echo "Installed command -> $CMD_DEST/$(basename "$cmd")"
 done
 
-# Remove our old pass-through commands (pre-4.3.0): they shared a name with a skill and
-# shadowed it. Only files that look like our pass-through are removed.
-for old in finding-unknowns keep-the-reasoning theory-vs-result; do
-  stale="$CMD_DEST/$old.md"
-  if [ -f "$stale" ] && grep -q 'description:' "$stale" \
-      && grep -qE 'Skill tool|SKILL\.md' "$stale"; then
-    rm "$stale"
-    echo "Removed stale command -> $stale (the /$old skill now answers to /$old)"
+# 4.x leftovers. Each is removed only if it carries a marker of this project.
+remove_if_ours() {  # <file> <marker regex>
+  if [ -f "$1" ] && grep -qE "$2" "$1"; then
+    rm "$1"
+    echo "Removed 4.x file -> $1"
+  fi
+}
+for old in cartographer workflows; do
+  remove_if_ours "$dest/references/$old.md" 'Cartographer|fu-execute|Workflow'
+done
+for old in keep-the-reasoning theory-vs-result; do
+  remove_if_ours "$CONFIG_DIR/skills/$old/SKILL.md" "^name: $old\$"
+  rmdir "$CONFIG_DIR/skills/$old" 2>/dev/null || true
+done
+for old in ledger-keeper prototype-smith; do
+  remove_if_ours "$AGENT_DEST/$old.md" 'for the finding-unknowns skill'
+done
+for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasoning theory-vs-result; do
+  f="$CMD_DEST/$old.md"
+  if [ -f "$f" ] && grep -qE 'Skill tool|SKILL\.md' "$f"; then
+    remove_if_ours "$f" 'finding-unknowns|keep-the-reasoning|theory-vs-result'
   fi
 done
 
 echo
-echo "Done. Skills: finding-unknowns, keep-the-reasoning, theory-vs-result (invoke as /finding-unknowns,"
-echo "/keep-the-reasoning, /theory-vs-result, or via the Skill tool)."
-echo "Commands: /blindspot, /cartographer, /change-quiz."
-echo "Agents (blindspot-scout, prototype-smith, ledger-keeper, quiz-master, mechanism-auditor)"
-echo "are available to the Agent tool and are delegated to automatically by the skill."
+echo "Done. Skill: finding-unknowns. Commands: /brief, /catch-up, /debrief."
+echo "Agents (blindspot-scout, mechanism-auditor, quiz-master) are delegated to by the skill."
+echo "Cards live in .finding-unknowns/tasks/ in each project; see the skill's references/card.md."
