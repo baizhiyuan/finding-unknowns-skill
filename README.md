@@ -28,7 +28,7 @@
 
 **Step 1: Install**
 
-Plugin marketplace (recommended). These are Claude Code slash commands — enter them **one at a time**:
+Plugin marketplace (the 4.x plugin). These are Claude Code slash commands — enter them **one at a time**:
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
@@ -47,7 +47,7 @@ git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
 cd finding-unknowns-skill && bash install.sh
 ```
 
-No install at all? Copy [`CLAUDE.md`](CLAUDE.md) into a project root for lightweight, always-on guidance.
+**Recommended setup:** copy the 60-word [`CLAUDE.md`](CLAUDE.md) into a project root (or into `~/.claude/CLAUDE.md`). In the simulated-user evaluation it beat both no setup and a rebuilt 5.0 plugin; see [What the evals show](#what-the-evals-show).
 
 <details>
 <summary><b>Manual copy (skills only)</b></summary>
@@ -172,9 +172,24 @@ That means:
 - a build that does not keep interrupting you;
 - a debrief that says whether the result matched and, if not, which link broke and why.
 
-All of it serves one goal: you keep your judgment and learn while the agent works. That
-is the next evaluation. Until then, treat these skills as a way of working for you, not
-as a measured boost to the model.
+**A fourth evaluation (Stage 0) tested that side with a simulated user.**
+
+- **Setup:** a simulated user with unstated requirements and one wrong belief worked
+  with Sonnet on six build tasks. The three arms were no setup, the 60-word `CLAUDE.md`,
+  and a rebuilt 5.0 plugin.
+- **The 60 words won clearly:** 31.0 of 42, against 20.5 for no setup (noise 3.0).
+- **The rebuilt plugin scored 21.0,** at about 38 times the cost of no setup. It lost
+  points mainly because its own procedures kept interrupting the user.
+
+So the 60-word [`CLAUDE.md`](CLAUDE.md) is the recommended setup today, and the rebuilt
+plugin is not released. The limitations, detailed in [the report](docs/evals/2026-11-11-stage0/README.md),
+include:
+
+- one model, one simulated user;
+- tasks written by a model;
+- the 60 words also ask for a prediction before a typo fix.
+
+Whether any of this helps real people is still untested.
 
 ---
 
