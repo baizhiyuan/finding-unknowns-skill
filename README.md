@@ -137,8 +137,8 @@ Three blinded, pre-registered evaluations ([docs/evals](docs/evals/)) asked whet
 5.0 was rebuilt around the side those evals never measured: **your** understanding and
 decisions ([design](docs/design/5.0.md)). Whether it helps people is **not yet tested**.
 A simulated-user evaluation with a pre-registered kill rule decides whether 5.0 is
-released at all; a study with real participants follows. Until then, treat this as a way of working, not a measured
-improvement.
+released at all; a study with real participants follows. Until then, treat this as a
+way of working, not a measured improvement.
 
 ---
 
