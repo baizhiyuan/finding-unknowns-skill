@@ -95,7 +95,7 @@ Graders agreed on 416 of 465 item scores (89 %).
   debrief reply onward and the first session-2 reply (the verifier's approximate coding)
   gives:
   - v5 about 24.5;
-  - v5 − plain about +4.0, beyond the noise;
+  - v5 − plain about +4.0, probably beyond the noise of 3.0 (the ranges would also change);
   - v5 − w60 about −6.5, so branch 2 still holds.
 
   The verdict "v5 did not beat plain" therefore rests on M4 as pre-registered. The verdict
@@ -112,6 +112,7 @@ Graders agreed on 416 of 465 item scores (89 %).
 |---|---|
 | Cost per build-task run (USD) | plain 0.10 · w60 0.18 · **v5 3.72** |
 | Assistant turns per run | plain 1.4 · w60 2.2 · v5 10.8 |
+| Tokens per build-task run (input incl. cache / output) | v5 1067k in / 19.8k out · w60 178k in / 5.5k out · plain 122k in / 3.5k out |
 | Final-report words | plain 217 · w60 247 · v5 178 |
 | Card integrity (v5) | 18 of 18 frozen Briefs unchanged at the end |
 | H4 sentence test | plain 3.5 of 5 · sentence 5 of 5 · v5 4 of 5 |
@@ -217,8 +218,8 @@ The author's predictions, written in PREREG before the runs.
 - **Who wrote the harness.** The plugin's author wrote the task specification, the
   harness and the aggregation script.
 - **First tool calls.** The hook analysis reads first tool calls from the per-turn event
-  logs, which are not committed. The H4 and M4 exposure figures above come from the
-  verifier's recomputation.
+  logs, which are not committed. The H4, M4-exposure and patience figures above come
+  from the verifier's recomputation.
 - **Raw event logs** are not committed. Transcripts, per-turn metadata (including the
   Bash commands each turn ran), diffs, simulator scripts and both graders' outputs are in
   [runs/](runs/) and [results/](results/).
