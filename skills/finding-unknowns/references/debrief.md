@@ -55,7 +55,7 @@ Did NOT prove: {one line per check; flag tests written in the same context as th
 Not checked: {at least one item; never empty}
 Model changes: {at most five lines}
 Bottom line: {one line: what holds, what did not}
-Needs you: {decisions; recommendation labelled as such}
+Needs you: {X} (recommendation: {Y})
 ```
 
 `Consistent?` is one of `consistent · partly · inconsistent · can't tell`; `post-hoc fit`
@@ -68,9 +68,12 @@ when the prediction was written after the result was seen.
 - **Every check states what it did not prove.** A test written by the context that wrote
   the code can share its mistake and still pass; say when that is the case.
 - **"Not checked" is never empty.**
+- **End with the bottom line**, then "Needs you: X (recommendation: Y)" as one line,
+  stated, not asked. No request to reply, no menus, no further work unless the person
+  asks.
 - **High-consequence decisions** (what to build, ship or not, who it affects): two or
-  three options with trade-offs and a labelled recommendation. The decision stays with the
-  person.
+  three options with trade-offs are written under Open on the card; the reply carries
+  only the single recommendation line. The decision stays with the person.
 - **No rescue.** An Amendment or a good story explains a miss; it does not turn it into
   a hit.
 - **Hit rate.** If the agent's predictions are consistent on nearly every card, they are

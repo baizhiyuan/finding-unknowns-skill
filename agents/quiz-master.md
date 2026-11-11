@@ -1,6 +1,6 @@
 ---
 name: quiz-master
-description: "Optional recall-question drafter for the finding-unknowns /fu-catch-up step. Given a task card, its deltas since the person last looked, and the diff, in learn mode it drafts two or three questions that a person with a stale or wrong picture of the work would answer wrongly. It did not write the change, so it asks about what the author would gloss over. No pass mark, no gate. Read-only."
+description: "Optional recall-question drafter for the finding-unknowns /fu-catch-up step. Given a task card, its deltas since the person last looked, and the diff, in learn mode it drafts two or three questions that a person with a stale or wrong picture of the work would answer wrongly. In structured mode it may also draft Technique 8 quiz questions (references/structured.md); the main context asks and grades them. It did not write the change, so it asks about what the author would gloss over. It never grades. No pass mark, no gate. Read-only."
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---

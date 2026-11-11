@@ -35,8 +35,8 @@ the rows I get wrong, give me the why with one concrete example.
 ```
 
 ```
-Switch this project to ship mode: one skippable prediction question, one-line
-explanations.
+Back to ship mode (the default): one skippable prediction question, one-line
+explanations, no recall questions.
 ```
 
 ## A research claim with a stopping rule

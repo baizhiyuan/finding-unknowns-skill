@@ -14,7 +14,7 @@ techniques and a ledger. That is a hypothesis under test, not a finding.
 - Phase 0 classifies the gap on the quadrant map and announces the routing, and the
   numbered techniques below replace the short instrument list in `brief.md`. Phase 0 and
   Techniques 1–5 run inside the Brief, after the person's prediction; Technique 5's
-  Definition of verified becomes the card's contract.
+  Definition of verified becomes the card's contract. The card records `Structured: yes`.
 - High-stakes work can escalate to Cartographer (`cartographer.md`): ledger, regret
   ordering, clarity display, six-condition gate, spec with verification contract.
 - The debrief uses the full nine-section packet (`handoff-full.md`).
@@ -44,7 +44,8 @@ Mode selection:
 - Low/medium stakes, one dominant quadrant → run the matching technique(s) from Phase 1–3
 - High stakes (hard to reverse, wide blast radius, unfamiliar territory + long horizon) →
   offer Cartographer mode explicitly; do not silently escalate. Before entering, read
-  `cartographer.md` in full
+  `cartographer.md` in full; on entering, change the card's flag to
+  `Structured: cartographer`
 
 **Default deliverable (lightweight mode):** analysis outputs — the Phase 0 routing
 analysis, the Technique 1 blind-spot pass, and Technique 4 reference extraction — end in

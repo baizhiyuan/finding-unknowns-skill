@@ -39,7 +39,9 @@ cases.
 3. One self-contained artifact (`.finding-unknowns/prototypes/{slug}.html` for
    visual work, Markdown otherwise), each direction with a one-line thesis and what it
    optimises for and gives up. Fake every backend; never touch the real application.
-4. Three to five questions that help the person say what they like.
+4. Three to five reaction prompts inside the artifact that help the person say what
+   they like. They are not questions that need answers before building and do not count
+   toward the /fu-brief question limits.
 
 Convert the reactions into explicit criteria in the Brief before any real code.
 
@@ -55,14 +57,21 @@ Convert the reactions into explicit criteria in the Brief before any real code.
 
 ## Interview
 
+The default flow allows two asks before the Brief: the first message (the person's
+prediction plus any choice the repository cannot answer: audience, out of scope,
+definition of done, business preferences; at most three questions), and after the sweep
+at most one bundled follow-up. Structured mode follows its own interview and ledger
+rules (`structured.md`, `cartographer.md`).
+
 1. Read everything established; never ask what is answered or discoverable.
 2. Sort open questions by blast radius: architecture first (data model, interfaces,
    approach), then behaviour (edge cases, failure modes, defaults), polish last
    (propose and move on).
 3. Ask with clickable options when the host offers them: up to three **independent**
-   questions per round, each with the context that makes it matter, two or three
+   questions in the follow-up, each with the context that makes it matter, two or three
    concrete options and your recommendation. A question whose framing depends on another
-   answer waits for the next round. "You decide" is an answer you then own.
+   answer is not asked: take the most reversible default and state it in the Brief.
+   "You decide" is an answer you then own.
 4. If an answer contradicts an earlier decision, say so at once.
 
 Stop when the remaining unknowns are cheaper to find during the build than to ask about,

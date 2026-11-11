@@ -28,7 +28,7 @@
 /fu-brief make the nightly order export resumable after a crash
 ```
 
-在一个项目中第一次使用时，智能体会问一次：选 `ship` 还是 `learn`。这里选 `learn`。随后，在阅读任何代码之前，它先请你做出预测：
+智能体不会询问用哪种模式：除非你另有说明，它都按交付模式（`ship`）工作。在这次演示中，请告诉它你想学习，它会把学习模式（`learn`）记入 `profile.md`。随后，在向你展示任何代码内容之前，它先请你做出预测：
 
 ```
 Before I look: if the export crashes halfway and resumes, how long will the resumed
@@ -86,7 +86,7 @@ Post-check: EXPLAIN on the batch query shows an Index Scan.
 /fu-catch-up
 ```
 
-在展示任务卡之前，先提回忆性问题（learn 模式两到三个；ship 模式一个，可以跳过）：
+在学习模式（`learn`）下，展示任务卡之前会先提两到三个回忆性问题；交付模式（`ship`）不提问：
 
 ```
 1. What does the checkpoint store, and why not created_at alone?

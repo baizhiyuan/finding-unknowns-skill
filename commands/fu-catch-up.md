@@ -8,8 +8,9 @@ argument-hint: "[slug]"
 ## Dispatch
 
 1. Invoke the `finding-unknowns` skill with the Skill tool and run its **/fu-catch-up**
-   steps on the card named by the argument, or list the open cards under
-   `.finding-unknowns/tasks/` and suggest the most recently changed.
+   steps on the card named by the argument. With several open cards under
+   `.finding-unknowns/tasks/` and no argument, take the most recently changed and say so
+   in one line; do not ask.
 2. Read the card's header, including its `Structured` flag: with `yes` or `cartographer`,
    also load `references/structured.md` (and, for `cartographer`, the ledger and
    `references/cartographer.md` § Resume).

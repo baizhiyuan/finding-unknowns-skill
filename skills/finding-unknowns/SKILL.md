@@ -35,7 +35,7 @@ Spend words only where they change a decision or the person's model.
 <Do_Not_Use_When>
 - Typos, one-liners, obvious fixes, lookups: just do them. No card, no question
 - The person says "just do it": state the single biggest risk in one line, then proceed.
-  An irreversible step still gets the build rule (exact command, a yes for that command)
+  An irreversible step still gets the build rule.
 - Pure option generation with a clear goal: brainstorm directly
 </Do_Not_Use_When>
 
@@ -70,26 +70,27 @@ dated, append-only Amendments, and every original prediction is still graded.
 ## /fu-brief — create and freeze the card
 
 1. **Mode: `ship` unless the person asks to learn.** Never ask for it; record `learn` in
-   `.finding-unknowns/profile.md` only when the person says so. Read 4.x files in place
-   (`unknowns-ledger.md`, `unknowns-spec-*.md`, `implementation-notes.md`,
-   `predictions/`) and offer once to fold them into a card. If
-   `.gitignore` hides `.finding-unknowns/` entirely, offer once to replace that line
-   (`references/card.md`); never edit it silently.
-2. **The person predicts first.** In one message, ask what they expect, with a
-   confidence (one skippable question in ship mode, up to three in learn mode), together
-   with any choice the repository explicitly leaves to them; at most three questions in
-   total, none the repository answers. This is their prior; record it before any sweep.
-   Predictions are claims about what you do not control (where the bug is, how many
-   callers break, a number, an outcome), each with a falsifier and a "should not change"
-   half. Things you make true belong in the contract.
+   `.finding-unknowns/profile.md` only when the person says so. Read 4.x files in place and
+   offer once to fold them into a card. If `.gitignore` hides `.finding-unknowns/`
+   entirely, offer once to replace that line (`references/card.md`); never edit it
+   silently.
+2. **The person predicts first.** A silent, read-only look at the repository may come
+   first; nothing from it is shown. Then, in one message, ask what they expect, with a
+   confidence (one skippable question in ship mode, up to three in learn mode), plus any
+   choice the repository cannot answer (audience, out of scope, definition of done,
+   business preferences): at most three questions in that message. This is their prior:
+   record it before any sweep; never ask for it again. Predictions are claims about what
+   you do not control (where the bug is, a number, an outcome), each with a falsifier and
+   a "should not change" half. Things you make true belong in the contract.
 3. **Map the territory.** Use the instruments in `references/brief.md` as the gap
    requires: blind-spot pass (`blindspot-scout` for a real sweep, given the prior so it
    reports Surprises), divergent directions, references, interview, a plan that leads
-   with the decisions likely to change. Never ask again for a prior already recorded.
-4. **Write the Brief:** approach with a one-line why per decision (more on request), the
-   person's predictions and then yours, the four stop-points with this task's budget
-   multiple, and the contract (claim · check · does NOT prove · lane). Say that the card
-   will be committed; declining is remembered in `profile.md`.
+   with the decisions likely to change. After the sweep, at most one bundled follow-up
+   before the Brief.
+4. **Write the Brief:** approach with a one-line why per decision, the person's
+   predictions and then yours, the four stop-points with this task's budget multiple, and
+   the contract (claim · check · does NOT prove · lane). Say that the card will be
+   committed; declining is remembered in `profile.md`.
 5. **Freeze on the person's yes** to the Brief and its contract. Commit per
    `references/card.md`, then write the Timing line in the header.
 
@@ -117,17 +118,15 @@ optional follow-ups go under Open.
 Everything else: take the most reversible option, log a one-line delta
 (`deviation | surprise | decided-for-you`, with an evidence pointer), keep going. A dead
 premise with a reversible path left gets an Amendment tagged `decided-for-you`, shown at
-the next stop. Non-urgent questions wait in Open. Commit the card at each stop
-(`references/card.md`). At a session's end, roll the deltas up to three lines on the card
-(full lines stay in `{slug}.deltas.md`).
+the next stop. Commit the card at each stop (`references/card.md`). At a session's end,
+roll the deltas up to three lines on the card.
 
 ## /fu-catch-up — re-orient without restarting
 
-1. Several open cards: list them one line each and ask which; default the most recent.
+1. Several open cards: take the most recently changed and say so in one line.
    4.x files and no card: offer once to fold them into one.
 2. **Recall before showing, in learn mode only:** two or three questions from the deltas
-   and wrong predictions since Last seen; a two-sentence teach-back counts. `quiz-master`
-   may draft them. Ship mode: none.
+   and wrong predictions since Last seen (`references/debrief.md`).
 3. Show only what changed after Last seen: state, deltas, Amendments, model changes,
    the next decision that needs the person. Reconcile with the files and runs first;
    never summarise an old summary.
@@ -135,21 +134,23 @@ the next stop. Non-urgent questions wait in Open. Commit the card at each stop
 
 ## /fu-debrief — grade against the frozen card
 
-Read `references/debrief.md`. In short: quote each prediction by ID, never restate it;
-a fresh context (`mechanism-auditor`) given the frozen card and artifact paths fills
-Measured and Consistent?; you write only the Mechanism with its tier; the person's predictions are
-graded first; explanation goes on the rows that missed; evidence block (commands run →
-output, what each check did NOT prove, not checked: never empty); model changes marked
-`shown, not confirmed` until the person confirms; append to the prediction log; commit.
-End with the bottom line and a "Needs you" list stated, not asked; no menus, no further
-work unless asked.
+Read `references/debrief.md`. Quote each prediction by ID, never restate it; a fresh
+context (`mechanism-auditor`) given the frozen card and artifact paths fills Measured and
+Consistent?; you write only the Mechanism with its tier; the person's predictions are
+graded first; explanation goes on the rows that missed; evidence block (what each check
+did NOT prove; not checked: never empty); model changes marked `shown, not confirmed`
+until the person confirms; append to the prediction log; commit. End with the bottom
+line and "Needs you: X (recommendation: Y)" stated, not asked; no menus, no further work
+unless asked.
 For measured results, the card's rows use `references/results.md`.
 
 ## Structured mode (optional)
 
 Only on request ("structured mode", `/fu-brief --structured`, `/fu-cartographer`): load
-`references/structured.md` first. Its Routing, Depth and Packet-size lines override *No
-protocol narration*; the card, stop-points and grading still apply. Never by default.
+`references/structured.md` first and record the flag on the card. Its Routing, Depth
+and Packet-size lines override *No protocol narration*; its interview and ledger rules
+replace the question limits above; card, stop-points and grading still apply. Never by
+default.
 
 </Steps>
 

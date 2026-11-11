@@ -104,8 +104,9 @@ Packet size: full — {reason}
 6. Did I miss anything? — the fresh context's answer to that question, verbatim-short.
 7. Not checked         — at least one thing nobody verified. Never empty.
 8. Answerability       — "Would you bet on this in front of whoever maintains it?"
-                         For code, offer the comprehension quiz (`structured.md`,
-                         Technique 8) when the change is large.
+                         For a large code change, note the comprehension quiz
+                         (`structured.md`, Technique 8) under Open; no offer in
+                         the reply.
 9. Summary             — last, and short.
 ```
 

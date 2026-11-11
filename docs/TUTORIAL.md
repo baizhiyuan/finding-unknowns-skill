@@ -31,8 +31,9 @@ crashes, it starts over. You want it to resume.
 /fu-brief make the nightly order export resumable after a crash
 ```
 
-On first use in a project the agent asks once: `ship` or `learn`. Choose `learn`. Then,
-before it reads any code, it asks for your prediction:
+The agent never asks for a mode: it works in `ship` mode unless you say otherwise. For
+this walkthrough, say you want to learn; it records `learn` in `profile.md`. Then,
+before it shows you anything from the code, it asks for your prediction:
 
 ```
 Before I look: if the export crashes halfway and resumes, how long will the resumed
@@ -98,8 +99,8 @@ or say yes to that one command. You leave. Nothing ran on production; the card r
 /fu-catch-up
 ```
 
-Recall comes before the card (learn mode: two or three questions; ship mode: one,
-skippable):
+Recall comes before the card (learn mode only: two or three questions; ship mode asks
+none):
 
 ```
 1. What does the checkpoint store, and why not created_at alone?

@@ -21,10 +21,13 @@ Gitignore lines:
 .finding-unknowns/logs/
 .finding-unknowns/profile.md
 .finding-unknowns/predictions-log.md
+.finding-unknowns/prototypes/
+.finding-unknowns/change-report.md
+.finding-unknowns/implementation-notes.md
 ```
 
 **4.x projects** ignore the whole `.finding-unknowns/` directory, which hides the card.
-Offer once to replace that line with the three above. Until the person agrees, cards are
+Offer once to replace that line with the lines above. Until the person agrees, cards are
 not committed and their Timing reads `self-reported`.
 
 ## Template
@@ -85,8 +88,8 @@ Evidence: {commands run → output, trimmed} · Did NOT prove: … · Not checke
   card by a three-line rollup.
 - **Last seen** is updated by the agent, only after `/fu-catch-up` or `/fu-debrief` has shown
   the card to the person.
-- **Several open cards:** commands accept a slug; without one, list the open cards and
-  suggest the most recently changed.
+- **Several open cards:** commands accept a slug; without one, take the most recently
+  changed card and say so in one line (no question).
 - **Model changes** stay `shown, not confirmed` until the person confirms. An
   explanation delivered is not an explanation understood.
 - **Detail goes to `logs/`**; the card holds pointers.
