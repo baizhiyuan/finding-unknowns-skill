@@ -30,7 +30,7 @@
 
 **第 1 步：安装**
 
-推荐通过插件市场安装。以下是 Claude Code 的斜杠命令，请**逐条**输入：
+也可以通过插件市场安装 4.x 插件。以下是 Claude Code 的斜杠命令，请**逐条**输入：
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
