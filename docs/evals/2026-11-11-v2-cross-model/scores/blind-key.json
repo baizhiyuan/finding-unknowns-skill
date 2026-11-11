@@ -1,0 +1,402 @@
+{
+ "H1-gpt-B1": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H1-gpt-B2": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H1-sonnet-B1": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H1-sonnet-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H1-sonnet-C1": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H1-sonnet-C2": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H2-gpt-B1": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H2-gpt-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H2-sonnet-B1": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H2-sonnet-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H2-sonnet-C1": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H2-sonnet-C2": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H3-gpt-B1": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H3-gpt-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H3-sonnet-B1": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H3-sonnet-B2": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H3-sonnet-C1": {
+  "claude": {
+   "X": "C",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "C"
+  }
+ },
+ "H3-sonnet-C2": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H4-gpt-B1": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H4-gpt-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H4-sonnet-B1": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H4-sonnet-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H4-sonnet-C1": {
+  "claude": {
+   "X": "C",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "C"
+  }
+ },
+ "H4-sonnet-C2": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H5-gpt-B1": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H5-gpt-B2": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H5-sonnet-B1": {
+  "claude": {
+   "X": "B",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "B"
+  }
+ },
+ "H5-sonnet-B2": {
+  "claude": {
+   "X": "A",
+   "Y": "B"
+  },
+  "gpt": {
+   "X": "B",
+   "Y": "A"
+  }
+ },
+ "H5-sonnet-C1": {
+  "claude": {
+   "X": "A",
+   "Y": "C"
+  },
+  "gpt": {
+   "X": "C",
+   "Y": "A"
+  }
+ },
+ "H5-sonnet-C2": {
+  "claude": {
+   "X": "C",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "C"
+  }
+ },
+ "H1-sonnet-D1": {
+  "claude": {
+   "X": "A",
+   "Y": "D"
+  },
+  "gpt": {
+   "X": "D",
+   "Y": "A"
+  }
+ },
+ "H1-sonnet-D2": {
+  "claude": {
+   "X": "D",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "D"
+  }
+ },
+ "H2-sonnet-D1": {
+  "claude": {
+   "X": "A",
+   "Y": "D"
+  },
+  "gpt": {
+   "X": "D",
+   "Y": "A"
+  }
+ },
+ "H2-sonnet-D2": {
+  "claude": {
+   "X": "D",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "D"
+  }
+ },
+ "H3-sonnet-D1": {
+  "claude": {
+   "X": "D",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "D"
+  }
+ },
+ "H3-sonnet-D2": {
+  "claude": {
+   "X": "A",
+   "Y": "D"
+  },
+  "gpt": {
+   "X": "D",
+   "Y": "A"
+  }
+ },
+ "H4-sonnet-D1": {
+  "claude": {
+   "X": "A",
+   "Y": "D"
+  },
+  "gpt": {
+   "X": "D",
+   "Y": "A"
+  }
+ },
+ "H4-sonnet-D2": {
+  "claude": {
+   "X": "A",
+   "Y": "D"
+  },
+  "gpt": {
+   "X": "D",
+   "Y": "A"
+  }
+ },
+ "H5-sonnet-D1": {
+  "claude": {
+   "X": "D",
+   "Y": "A"
+  },
+  "gpt": {
+   "X": "A",
+   "Y": "D"
+  }
+ },
+ "H5-sonnet-D2": {
+  "claude": {
+   "X": "A",
+   "Y": "D"
+  },
+  "gpt": {
+   "X": "D",
+   "Y": "A"
+  }
+ }
+}

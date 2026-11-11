@@ -1,0 +1,55 @@
+diff --git a/orders/cache.py b/orders/cache.py
+index 922704f..8dc6b20 100644
+--- a/orders/cache.py
++++ b/orders/cache.py
+@@ -2,7 +2,7 @@ import pickle
+ 
+ # Bump CACHE_SCHEMA whenever Order's fields change. Workers unpickle cached Orders;
+ # a stale pickle with a different field set crashed every worker in incident 2026-08-14.
+-CACHE_SCHEMA = 3
++CACHE_SCHEMA = 4
+ _store: dict[str, bytes] = {}
+ 
+ def _key(order_id: int) -> str:
+diff --git a/orders/models.py b/orders/models.py
+index f483c0e..30deb7d 100644
+--- a/orders/models.py
++++ b/orders/models.py
+@@ -7,3 +7,5 @@ class Order:
+     customer_id: int
+     amount_cents: int
+     created_at: datetime
++    # ISO 4217 code. Defaults to CNY (the only currency before EUR); legacy rows have NULL in the DB.
++    currency: str = "CNY"
+diff --git a/orders/webhook.py b/orders/webhook.py
+index 45cc763..c323ac8 100644
+--- a/orders/webhook.py
++++ b/orders/webhook.py
+@@ -2,8 +2,13 @@ import json
+ from dataclasses import asdict
+ from .models import Order
+ 
++# Fields Acme's strict v1 schema (schemas/webhook_order_v1.json) does not know about.
++# Sending them gets the whole delivery dropped. Remove from here only once a v2 schema
++# has been agreed with Acme (30 days' notice, see docs/partners.md).
++_NOT_IN_V1 = {"currency"}
++
+ def order_created_payload(order: Order) -> str:
+     """Body POSTed to partners on order creation (see docs/partners.md)."""
+-    body = asdict(order)
++    body = {k: v for k, v in asdict(order).items() if k not in _NOT_IN_V1}
+     body["created_at"] = order.created_at.isoformat()
+     return json.dumps(body)
+diff --git a/tests/test_orders.py b/tests/test_orders.py
+index 8f9f2f0..3e66991 100644
+--- a/tests/test_orders.py
++++ b/tests/test_orders.py
+@@ -11,3 +11,8 @@ def test_daily_revenue():
+ 
+ def test_payload_has_fields():
+     assert '"amount_cents": 100' in order_created_payload(_o(1, 100))
++
++def test_payload_excludes_currency_for_v1_schema():
++    import json
++    o = Order(id=1, customer_id=1, amount_cents=100, created_at=datetime(2026, 11, 1), currency="EUR")
++    assert set(json.loads(order_created_payload(o))) == {"id", "customer_id", "amount_cents", "created_at"}

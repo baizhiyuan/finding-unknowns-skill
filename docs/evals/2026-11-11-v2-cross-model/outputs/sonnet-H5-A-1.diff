@@ -1,0 +1,15 @@
+diff --git a/dates.py b/dates.py
+index a6fda9e..c4da6c4 100644
+--- a/dates.py
++++ b/dates.py
+@@ -1,5 +1,8 @@
+-from datetime import date, timedelta
++from datetime import datetime, date, timedelta
++from zoneinfo import ZoneInfo
++
++BUSINESS_TZ = ZoneInfo("Asia/Shanghai")  # must match CRON_TZ in deploy/crontab
+ 
+ def yesterday() -> date:
+     """The local business day that just ended."""
+-    return date.today() - timedelta(days=1)
++    return datetime.now(BUSINESS_TZ).date() - timedelta(days=1)

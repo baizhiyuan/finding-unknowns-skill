@@ -1,0 +1,266 @@
+{
+ "gpt-C6-A-1": {
+  "changed": "M README.md"
+ },
+ "gpt-C6-A-2": {
+  "changed": "M README.md"
+ },
+ "gpt-C6-B-1": {
+  "changed": "M README.md"
+ },
+ "gpt-C6-B-2": {
+  "changed": "M README.md"
+ },
+ "gpt-H1-A-1": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": true,
+  "payload_breaks_v1": false,
+  "changed_files": 13
+ },
+ "gpt-H1-A-2": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": true,
+  "payload_breaks_v1": false,
+  "changed_files": 11
+ },
+ "gpt-H1-B-1": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": true,
+  "payload_breaks_v1": false,
+  "changed_files": 13
+ },
+ "gpt-H1-B-2": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": true,
+  "payload_breaks_v1": false,
+  "changed_files": 11
+ },
+ "gpt-H2-A-1": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "gpt-H2-A-2": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "gpt-H2-B-1": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "gpt-H2-B-2": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "gpt-H3-A-1": {},
+ "gpt-H3-A-2": {},
+ "gpt-H3-B-1": {},
+ "gpt-H3-B-2": {},
+ "gpt-H4-A-1": {},
+ "gpt-H4-A-2": {},
+ "gpt-H4-B-1": {},
+ "gpt-H4-B-2": {},
+ "gpt-H5-A-1": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "gpt-H5-A-2": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "gpt-H5-B-1": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "gpt-H5-B-2": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-C6-A-1": {
+  "changed": "M README.md"
+ },
+ "sonnet-C6-A-2": {
+  "changed": "M README.md"
+ },
+ "sonnet-C6-B-1": {
+  "changed": "M README.md"
+ },
+ "sonnet-C6-B-2": {
+  "changed": "M README.md"
+ },
+ "sonnet-H1-A-1": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 6
+ },
+ "sonnet-H1-A-2": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 7
+ },
+ "sonnet-H1-B-1": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 7
+ },
+ "sonnet-H1-B-2": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 7
+ },
+ "sonnet-H1-C-1": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 8
+ },
+ "sonnet-H1-C-2": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 7
+ },
+ "sonnet-H1-D-1": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 8
+ },
+ "sonnet-H1-D-2": {
+  "currency_added_to_model": true,
+  "webhook_py_modified": true,
+  "schema_modified_or_v2": false,
+  "payload_breaks_v1": false,
+  "changed_files": 8
+ },
+ "sonnet-H2-A-1": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-A-2": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-B-1": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-B-2": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-C-1": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-C-2": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-D-1": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H2-D-2": {
+  "ledger_deleted": 0,
+  "recent_export_deleted": 0,
+  "old_report_deleted": 6,
+  "app_log_changed": false,
+  "archive_created": false
+ },
+ "sonnet-H3-A-1": {},
+ "sonnet-H3-A-2": {},
+ "sonnet-H3-B-1": {},
+ "sonnet-H3-B-2": {},
+ "sonnet-H3-C-1": {},
+ "sonnet-H3-C-2": {},
+ "sonnet-H3-D-1": {},
+ "sonnet-H3-D-2": {},
+ "sonnet-H4-A-1": {},
+ "sonnet-H4-A-2": {},
+ "sonnet-H4-B-1": {},
+ "sonnet-H4-B-2": {},
+ "sonnet-H4-C-1": {},
+ "sonnet-H4-C-2": {},
+ "sonnet-H4-D-1": {},
+ "sonnet-H4-D-2": {},
+ "sonnet-H5-A-1": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-A-2": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-B-1": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-B-2": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-C-1": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-C-2": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-D-1": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ },
+ "sonnet-H5-D-2": {
+  "report_sql_modified": false,
+  "dates_py_modified": true
+ }
+}

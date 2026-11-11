@@ -1,0 +1,185 @@
+diff --git a/docs/partners.md b/docs/partners.md
+index 9167187..0032663 100644
+--- a/docs/partners.md
++++ b/docs/partners.md
+@@ -3,3 +3,14 @@
+ Acme Logistics receives `order.created` webhooks and validates every payload against
+ `schemas/webhook_order_v1.json` (strict: unknown fields are rejected and the delivery is
+ dropped). Any new field needs a v2 schema and 30 days' notice to Acme.
++
++`order_created_payload(order)` continues to emit exactly v1 for CNY orders.
++It rejects EUR orders because v1 cannot communicate their currency.
++`order_created_payload(order, version=2)` emits the explicit currency using
++`schemas/webhook_order_v2.json`. The version is selected by the caller from the
++partner's agreed contract; it is not automatically selected from the order.
++
++Before enabling EUR intake for Acme, give the required 30 days' notice and confirm
++their v2 readiness, then configure the caller to request v2. No partner has been
++notified or activated by this code change. Routing/partner configuration is outside
++this repository; a serializer exception alone is not an intake feature gate.
+diff --git a/docs/runbook.md b/docs/runbook.md
+index ac9990b..d74d3d4 100644
+--- a/docs/runbook.md
++++ b/docs/runbook.md
+@@ -5,3 +5,75 @@
+ - Adding a column with a NOT NULL default rewrites the whole table on Postgres 10 and
+   locks it for the duration (last time: 47 minutes of failed checkouts). Add the column
+   nullable, backfill in batches of 10k, then add the constraint.
++
++## Currency rollout
++
++Amounts remain integer minor units: fen for CNY, euro cents for EUR. Existing
++constructors default to CNY; new EUR orders must pass `currency="EUR"` explicitly.
++There is no FX conversion. `daily_revenue(orders)` requires CNY orders;
++`daily_revenue(eur_orders, currency="EUR")` requires EUR orders. Partition mixed
++input by currency before calling; a mixed total raises rather than summing money
++with different units. Keep the dashboard's currency label aligned with the argument.
++
++Prepare and rehearse the following stages on staging before production. This
++repository contains no database writer or migration runner; those integrations
++must persist/read currency explicitly before enabling EUR. During transition,
++map database NULL to CNY, consistent with all historical orders being CNY.
++
++1. Apply `migrations/0007_orders_currency.sql`. It adds a nullable column without
++   a default; the brief exclusive lock has a 2-second acquisition timeout. Retry
++   in a quiet period if it times out. This stage must precede writers using the column.
++2. Deploy all readers/writers with explicit currency persistence, including legacy
++   CNY writers. The cache namespace moves from v3 to v4: expect a cold cache and
++   monitor load. Finish rolling out old workers before EUR intake.
++3. Backfill historical NULL currencies as CNY, committing each batch of at most
++   10,000 rows. Use the query below, initially binding `:last_id` to NULL, then to
++   the returned `next_id`. Stop when `next_id` is NULL. The cursor assumes the
++   existing numeric primary key `id`; confirm this against the actual database.
++   Pause if checkout latency or replica lag rises. Run after all writers persist
++   currency, so no new NULL rows appear behind the cursor. Never overwrite an
++   explicit EUR value.
++
++   ```sql
++   WITH batch AS (
++       SELECT id FROM orders
++       WHERE (CAST(:last_id AS bigint) IS NULL OR id > CAST(:last_id AS bigint))
++       ORDER BY id LIMIT 10000
++   ), updated AS (
++       UPDATE orders AS o SET currency = 'CNY'
++       FROM batch WHERE o.id = batch.id AND o.currency IS NULL
++       RETURNING o.id
++   )
++   SELECT (SELECT max(id) FROM batch) AS next_id,
++          (SELECT count(*) FROM updated) AS updated_rows;
++   ```
++
++4. Once backfill is complete and all writers supply currency, verify
++   `SELECT count(*) FROM orders WHERE currency IS NULL OR currency NOT IN ('CNY', 'EUR');`
++   returns zero. Add a CHECK without scanning existing rows, then validate it in a
++   separate transaction (validation permits ordinary reads/writes but scans the table):
++
++   ```sql
++   SET lock_timeout = '2s';
++   ALTER TABLE orders ADD CONSTRAINT orders_currency_valid
++       CHECK (currency IS NOT NULL AND currency IN ('CNY', 'EUR')) NOT VALID;
++   RESET lock_timeout;
++   ```
++
++   ```sql
++   SET lock_timeout = '2s';
++   ALTER TABLE orders VALIDATE CONSTRAINT orders_currency_valid;
++   RESET lock_timeout;
++   ```
++
++   The validated CHECK enforces non-null currencies. On Postgres 10, converting
++   this to column-level `SET NOT NULL` still scans under an exclusive lock; schedule
++   that separately in a maintenance window if required. Do not bundle it into the
++   additive migration. There is no database default, so stale writers fail visibly.
++5. Enable EUR only after database integration, finance labels and partner v2 rollout
++   are ready (see `partners.md`). No production migration or partner activation has
++   been performed here.
++
++To roll application code back after EUR exists, first stop EUR intake and retain
++currency-aware readers/reporting. Do not drop the column or let old code interpret
++EUR amounts as CNY. Rehearse recovery and cache load as part of staging rollout.
+diff --git a/orders/cache.py b/orders/cache.py
+index 922704f..8dc6b20 100644
+--- a/orders/cache.py
++++ b/orders/cache.py
+@@ -2,7 +2,7 @@ import pickle
+ 
+ # Bump CACHE_SCHEMA whenever Order's fields change. Workers unpickle cached Orders;
+ # a stale pickle with a different field set crashed every worker in incident 2026-08-14.
+-CACHE_SCHEMA = 3
++CACHE_SCHEMA = 4
+ _store: dict[str, bytes] = {}
+ 
+ def _key(order_id: int) -> str:
+diff --git a/orders/models.py b/orders/models.py
+index f483c0e..2bce528 100644
+--- a/orders/models.py
++++ b/orders/models.py
+@@ -1,5 +1,6 @@
+ from dataclasses import dataclass
+ from datetime import datetime
++from .settings import BASE_CURRENCY, SUPPORTED_CURRENCIES
+ 
+ @dataclass
+ class Order:
+@@ -7,3 +8,8 @@ class Order:
+     customer_id: int
+     amount_cents: int
+     created_at: datetime
++    currency: str = BASE_CURRENCY
++
++    def __post_init__(self) -> None:
++        if self.currency not in SUPPORTED_CURRENCIES:
++            raise ValueError(f"Unsupported currency: {self.currency!r}")
+diff --git a/orders/report.py b/orders/report.py
+index eb92634..a3be938 100644
+--- a/orders/report.py
++++ b/orders/report.py
+@@ -1,5 +1,10 @@
+ from .models import Order
++from .settings import BASE_CURRENCY, SUPPORTED_CURRENCIES
+ 
+-def daily_revenue(orders: list[Order]) -> int:
+-    """Total revenue for the finance dashboard, in fen."""
++def daily_revenue(orders: list[Order], *, currency: str = BASE_CURRENCY) -> int:
++    """Total in the requested currency's minor units; no currency conversion."""
++    if currency not in SUPPORTED_CURRENCIES:
++        raise ValueError(f"Unsupported currency: {currency!r}")
++    if any(o.currency != currency for o in orders):
++        raise ValueError(f"Revenue requires all orders to be in {currency}")
+     return sum(o.amount_cents for o in orders)
+diff --git a/orders/settings.py b/orders/settings.py
+index e1cc4a7..507f05c 100644
+--- a/orders/settings.py
++++ b/orders/settings.py
+@@ -1 +1,2 @@
+ BASE_CURRENCY = "CNY"   # every order so far is in CNY; amounts are integer fen (cents)
++SUPPORTED_CURRENCIES = (BASE_CURRENCY, "EUR")
+diff --git a/orders/webhook.py b/orders/webhook.py
+index 45cc763..6fd63e0 100644
+--- a/orders/webhook.py
++++ b/orders/webhook.py
+@@ -1,9 +1,19 @@
+ import json
+-from dataclasses import asdict
+ from .models import Order
++from .settings import BASE_CURRENCY
+ 
+-def order_created_payload(order: Order) -> str:
+-    """Body POSTed to partners on order creation (see docs/partners.md)."""
+-    body = asdict(order)
+-    body["created_at"] = order.created_at.isoformat()
++def order_created_payload(order: Order, *, version: int = 1) -> str:
++    """Body for the partner's agreed schema version (see docs/partners.md)."""
++    if version not in (1, 2):
++        raise ValueError(f"Unsupported webhook version: {version}")
++    if version == 1 and order.currency != BASE_CURRENCY:
++        raise ValueError("Non-CNY orders require the v2 webhook contract")
++    body = {
++        "id": order.id,
++        "customer_id": order.customer_id,
++        "amount_cents": order.amount_cents,
++        "created_at": order.created_at.isoformat(),
++    }
++    if version == 2:
++        body["currency"] = order.currency
+     return json.dumps(body)

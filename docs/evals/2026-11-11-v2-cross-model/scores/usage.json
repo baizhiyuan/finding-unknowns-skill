@@ -1,0 +1,965 @@
+{
+ "gpt-C6-A-1": {
+  "seconds": 15,
+  "rc": 0,
+  "words": 9,
+  "input_tokens": 46349,
+  "cached_input_tokens": 43776,
+  "output_tokens": 260,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-C6-A-2": {
+  "seconds": 20,
+  "rc": 0,
+  "words": 9,
+  "input_tokens": 62097,
+  "cached_input_tokens": 57216,
+  "output_tokens": 372,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-C6-B-1": {
+  "seconds": 20,
+  "rc": 0,
+  "words": 6,
+  "input_tokens": 47519,
+  "cached_input_tokens": 42112,
+  "output_tokens": 299,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-C6-B-2": {
+  "seconds": 18,
+  "rc": 0,
+  "words": 6,
+  "input_tokens": 47512,
+  "cached_input_tokens": 42112,
+  "output_tokens": 300,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H1-A-1": {
+  "seconds": 163,
+  "rc": 0,
+  "words": 52,
+  "input_tokens": 174378,
+  "cached_input_tokens": 163584,
+  "output_tokens": 8298,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H1-A-2": {
+  "seconds": 163,
+  "rc": 0,
+  "words": 72,
+  "input_tokens": 195642,
+  "cached_input_tokens": 172928,
+  "output_tokens": 7433,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H1-B-1": {
+  "seconds": 219,
+  "rc": 0,
+  "words": 60,
+  "input_tokens": 309414,
+  "cached_input_tokens": 267648,
+  "output_tokens": 10501,
+  "skills": [
+   "finding-unknowns",
+   "keep-the-reasoning"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H1-B-2": {
+  "seconds": 198,
+  "rc": 0,
+  "words": 57,
+  "input_tokens": 332854,
+  "cached_input_tokens": 309376,
+  "output_tokens": 9146,
+  "skills": [
+   "finding-unknowns",
+   "keep-the-reasoning"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H2-A-1": {
+  "seconds": 37,
+  "rc": 0,
+  "words": 56,
+  "input_tokens": 105087,
+  "cached_input_tokens": 89984,
+  "output_tokens": 1217,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H2-A-2": {
+  "seconds": 48,
+  "rc": 0,
+  "words": 45,
+  "input_tokens": 137559,
+  "cached_input_tokens": 123648,
+  "output_tokens": 1412,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H2-B-1": {
+  "seconds": 65,
+  "rc": 0,
+  "words": 57,
+  "input_tokens": 135663,
+  "cached_input_tokens": 122240,
+  "output_tokens": 2084,
+  "skills": [
+   "finding-unknowns"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H2-B-2": {
+  "seconds": 59,
+  "rc": 0,
+  "words": 67,
+  "input_tokens": 126846,
+  "cached_input_tokens": 113024,
+  "output_tokens": 2537,
+  "skills": [
+   "keep-the-reasoning"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H3-A-1": {
+  "seconds": 52,
+  "rc": 0,
+  "words": 283,
+  "input_tokens": 82381,
+  "cached_input_tokens": 78336,
+  "output_tokens": 1761,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H3-A-2": {
+  "seconds": 54,
+  "rc": 0,
+  "words": 323,
+  "input_tokens": 82594,
+  "cached_input_tokens": 78208,
+  "output_tokens": 2061,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H3-B-1": {
+  "seconds": 98,
+  "rc": 0,
+  "words": 517,
+  "input_tokens": 133668,
+  "cached_input_tokens": 116096,
+  "output_tokens": 3982,
+  "skills": [
+   "keep-the-reasoning",
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H3-B-2": {
+  "seconds": 105,
+  "rc": 0,
+  "words": 563,
+  "input_tokens": 164625,
+  "cached_input_tokens": 146304,
+  "output_tokens": 4211,
+  "skills": [
+   "keep-the-reasoning",
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H4-A-1": {
+  "seconds": 47,
+  "rc": 0,
+  "words": 158,
+  "input_tokens": 98734,
+  "cached_input_tokens": 89728,
+  "output_tokens": 1524,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H4-A-2": {
+  "seconds": 51,
+  "rc": 0,
+  "words": 149,
+  "input_tokens": 97937,
+  "cached_input_tokens": 92032,
+  "output_tokens": 1633,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H4-B-1": {
+  "seconds": 106,
+  "rc": 0,
+  "words": 296,
+  "input_tokens": 223004,
+  "cached_input_tokens": 205696,
+  "output_tokens": 3886,
+  "skills": [
+   "keep-the-reasoning",
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H4-B-2": {
+  "seconds": 93,
+  "rc": 0,
+  "words": 302,
+  "input_tokens": 224933,
+  "cached_input_tokens": 192512,
+  "output_tokens": 4000,
+  "skills": [
+   "keep-the-reasoning",
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H5-A-1": {
+  "seconds": 83,
+  "rc": 0,
+  "words": 50,
+  "input_tokens": 138405,
+  "cached_input_tokens": 133504,
+  "output_tokens": 3430,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H5-A-2": {
+  "seconds": 92,
+  "rc": 0,
+  "words": 48,
+  "input_tokens": 123608,
+  "cached_input_tokens": 111360,
+  "output_tokens": 4574,
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H5-B-1": {
+  "seconds": 114,
+  "rc": 0,
+  "words": 48,
+  "input_tokens": 204584,
+  "cached_input_tokens": 180352,
+  "output_tokens": 5114,
+  "skills": [
+   "keep-the-reasoning"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "gpt-H5-B-2": {
+  "seconds": 110,
+  "rc": 0,
+  "words": 49,
+  "input_tokens": 263183,
+  "cached_input_tokens": 246784,
+  "output_tokens": 5135,
+  "skills": [
+   "finding-unknowns",
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-C6-A-1": {
+  "seconds": 10,
+  "rc": 0,
+  "words": 20,
+  "input_tokens": 50558,
+  "cached_input_tokens": 44643,
+  "output_tokens": 236,
+  "cost_usd": 0.0216088,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-C6-A-2": {
+  "seconds": 8,
+  "rc": 0,
+  "words": 16,
+  "input_tokens": 50558,
+  "cached_input_tokens": 44643,
+  "output_tokens": 232,
+  "cost_usd": 0.021568800000000003,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-C6-B-1": {
+  "seconds": 25,
+  "rc": 0,
+  "words": 20,
+  "input_tokens": 54182,
+  "cached_input_tokens": 47059,
+  "output_tokens": 238,
+  "cost_usd": 0.0248904,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-C6-B-2": {
+  "seconds": 12,
+  "rc": 0,
+  "words": 23,
+  "input_tokens": 54184,
+  "cached_input_tokens": 47060,
+  "output_tokens": 244,
+  "cost_usd": 0.024953,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-A-1": {
+  "seconds": 32,
+  "rc": 0,
+  "words": 277,
+  "input_tokens": 112764,
+  "cached_input_tokens": 103297,
+  "output_tokens": 2727,
+  "cost_usd": 0.06126119999999999,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-A-2": {
+  "seconds": 29,
+  "rc": 0,
+  "words": 252,
+  "input_tokens": 113300,
+  "cached_input_tokens": 103724,
+  "output_tokens": 2786,
+  "cost_usd": 0.0621664,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-B-1": {
+  "seconds": 35,
+  "rc": 0,
+  "words": 268,
+  "input_tokens": 120253,
+  "cached_input_tokens": 109506,
+  "output_tokens": 2748,
+  "cost_usd": 0.0652921,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-B-2": {
+  "seconds": 31,
+  "rc": 0,
+  "words": 292,
+  "input_tokens": 118904,
+  "cached_input_tokens": 108806,
+  "output_tokens": 2499,
+  "cost_usd": 0.06110960000000001,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-C-1": {
+  "seconds": 35,
+  "rc": 0,
+  "words": 323,
+  "input_tokens": 125992,
+  "cached_input_tokens": 113419,
+  "output_tokens": 3615,
+  "cost_usd": 0.0789184,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-C-2": {
+  "seconds": 48,
+  "rc": 0,
+  "words": 354,
+  "input_tokens": 260687,
+  "cached_input_tokens": 233958,
+  "output_tokens": 4789,
+  "cost_usd": 0.1380993,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [
+   "finding-unknowns"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-D-1": {
+  "seconds": 34,
+  "rc": 0,
+  "words": 347,
+  "input_tokens": 116869,
+  "cached_input_tokens": 95304,
+  "output_tokens": 3523,
+  "cost_usd": 0.0986669,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H1-D-2": {
+  "seconds": 31,
+  "rc": 0,
+  "words": 337,
+  "input_tokens": 116077,
+  "cached_input_tokens": 105958,
+  "output_tokens": 3286,
+  "cost_usd": 0.0687473,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-A-1": {
+  "seconds": 20,
+  "rc": 0,
+  "words": 203,
+  "input_tokens": 73851,
+  "cached_input_tokens": 65119,
+  "output_tokens": 1191,
+  "cost_usd": 0.0402479,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-A-2": {
+  "seconds": 17,
+  "rc": 0,
+  "words": 187,
+  "input_tokens": 73492,
+  "cached_input_tokens": 64998,
+  "output_tokens": 1180,
+  "cost_usd": 0.039530800000000005,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-B-1": {
+  "seconds": 20,
+  "rc": 0,
+  "words": 255,
+  "input_tokens": 80042,
+  "cached_input_tokens": 69390,
+  "output_tokens": 1324,
+  "cost_usd": 0.046805,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-B-2": {
+  "seconds": 14,
+  "rc": 0,
+  "words": 201,
+  "input_tokens": 77658,
+  "cached_input_tokens": 68215,
+  "output_tokens": 1153,
+  "cost_usd": 0.041955,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-C-1": {
+  "seconds": 31,
+  "rc": 0,
+  "words": 211,
+  "input_tokens": 109665,
+  "cached_input_tokens": 96126,
+  "output_tokens": 1657,
+  "cost_usd": 0.0600251,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-C-2": {
+  "seconds": 20,
+  "rc": 0,
+  "words": 242,
+  "input_tokens": 81867,
+  "cached_input_tokens": 70799,
+  "output_tokens": 1481,
+  "cost_usd": 0.0495559,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-D-1": {
+  "seconds": 18,
+  "rc": 0,
+  "words": 229,
+  "input_tokens": 95681,
+  "cached_input_tokens": 74902,
+  "output_tokens": 1487,
+  "cost_usd": 0.07430269999999999,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H2-D-2": {
+  "seconds": 17,
+  "rc": 0,
+  "words": 208,
+  "input_tokens": 94682,
+  "cached_input_tokens": 85469,
+  "output_tokens": 1489,
+  "cost_usd": 0.046464399999999996,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-A-1": {
+  "seconds": 33,
+  "rc": 0,
+  "words": 540,
+  "input_tokens": 70744,
+  "cached_input_tokens": 51097,
+  "output_tokens": 3459,
+  "cost_usd": 0.08881320000000001,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-A-2": {
+  "seconds": 37,
+  "rc": 0,
+  "words": 523,
+  "input_tokens": 109763,
+  "cached_input_tokens": 99935,
+  "output_tokens": 3840,
+  "cost_usd": 0.0729575,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-B-1": {
+  "seconds": 41,
+  "rc": 0,
+  "words": 660,
+  "input_tokens": 96765,
+  "cached_input_tokens": 85479,
+  "output_tokens": 4430,
+  "cost_usd": 0.08105789999999999,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-B-2": {
+  "seconds": 44,
+  "rc": 0,
+  "words": 531,
+  "input_tokens": 117782,
+  "cached_input_tokens": 106469,
+  "output_tokens": 3842,
+  "cost_usd": 0.0773434,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-C-1": {
+  "seconds": 51,
+  "rc": 0,
+  "words": 749,
+  "input_tokens": 142737,
+  "cached_input_tokens": 119390,
+  "output_tokens": 5663,
+  "cost_usd": 0.1269305,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-C-2": {
+  "seconds": 65,
+  "rc": 0,
+  "words": 908,
+  "input_tokens": 112185,
+  "cached_input_tokens": 87744,
+  "output_tokens": 6977,
+  "cost_usd": 0.1396419,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [
+   "theory-vs-result"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-D-1": {
+  "seconds": 35,
+  "rc": 0,
+  "words": 634,
+  "input_tokens": 90515,
+  "cached_input_tokens": 69975,
+  "output_tokens": 4263,
+  "cost_usd": 0.1009725,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H3-D-2": {
+  "seconds": 35,
+  "rc": 0,
+  "words": 448,
+  "input_tokens": 111329,
+  "cached_input_tokens": 101315,
+  "output_tokens": 3807,
+  "cost_usd": 0.07323049999999999,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-A-1": {
+  "seconds": 13,
+  "rc": 0,
+  "words": 279,
+  "input_tokens": 69348,
+  "cached_input_tokens": 61866,
+  "output_tokens": 914,
+  "cost_usd": 0.0340276,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-A-2": {
+  "seconds": 17,
+  "rc": 0,
+  "words": 294,
+  "input_tokens": 68352,
+  "cached_input_tokens": 60917,
+  "output_tokens": 974,
+  "cost_usd": 0.0344152,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-B-1": {
+  "seconds": 26,
+  "rc": 0,
+  "words": 334,
+  "input_tokens": 75705,
+  "cached_input_tokens": 66348,
+  "output_tokens": 1295,
+  "cost_usd": 0.042973300000000006,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-B-2": {
+  "seconds": 25,
+  "rc": 0,
+  "words": 352,
+  "input_tokens": 75154,
+  "cached_input_tokens": 65893,
+  "output_tokens": 1177,
+  "cost_usd": 0.0415078,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-C-1": {
+  "seconds": 37,
+  "rc": 0,
+  "words": 674,
+  "input_tokens": 96147,
+  "cached_input_tokens": 79703,
+  "output_tokens": 2585,
+  "cost_usd": 0.0749253,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [
+   "keep-the-reasoning"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-C-2": {
+  "seconds": 31,
+  "rc": 0,
+  "words": 726,
+  "input_tokens": 95282,
+  "cached_input_tokens": 79302,
+  "output_tokens": 2378,
+  "cost_usd": 0.0716552,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [
+   "keep-the-reasoning"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-D-1": {
+  "seconds": 15,
+  "rc": 0,
+  "words": 336,
+  "input_tokens": 71314,
+  "cached_input_tokens": 52616,
+  "output_tokens": 1251,
+  "cost_usd": 0.0645126,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H4-D-2": {
+  "seconds": 15,
+  "rc": 0,
+  "words": 311,
+  "input_tokens": 71071,
+  "cached_input_tokens": 63008,
+  "output_tokens": 1194,
+  "cost_usd": 0.0383943,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-A-1": {
+  "seconds": 22,
+  "rc": 0,
+  "words": 221,
+  "input_tokens": 71280,
+  "cached_input_tokens": 63005,
+  "output_tokens": 2150,
+  "cost_usd": 0.048484000000000006,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-A-2": {
+  "seconds": 21,
+  "rc": 0,
+  "words": 191,
+  "input_tokens": 70889,
+  "cached_input_tokens": 63029,
+  "output_tokens": 1710,
+  "cost_usd": 0.04304890000000001,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-B-1": {
+  "seconds": 26,
+  "rc": 0,
+  "words": 146,
+  "input_tokens": 75651,
+  "cached_input_tokens": 66584,
+  "output_tokens": 1725,
+  "cost_usd": 0.0465719,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-B-2": {
+  "seconds": 20,
+  "rc": 0,
+  "words": 203,
+  "input_tokens": 75582,
+  "cached_input_tokens": 66673,
+  "output_tokens": 1634,
+  "cost_usd": 0.0452758,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-C-1": {
+  "seconds": 23,
+  "rc": 0,
+  "words": 223,
+  "input_tokens": 77166,
+  "cached_input_tokens": 67659,
+  "output_tokens": 1851,
+  "cost_usd": 0.0490394,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-C-2": {
+  "seconds": 24,
+  "rc": 0,
+  "words": 146,
+  "input_tokens": 77361,
+  "cached_input_tokens": 67663,
+  "output_tokens": 1934,
+  "cost_usd": 0.0503473,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-D-1": {
+  "seconds": 19,
+  "rc": 0,
+  "words": 231,
+  "input_tokens": 72335,
+  "cached_input_tokens": 63857,
+  "output_tokens": 2114,
+  "cost_usd": 0.0487167,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [],
+  "agents": [],
+  "net_cmds": 0
+ },
+ "sonnet-H5-D-2": {
+  "seconds": 19,
+  "rc": 0,
+  "words": 182,
+  "input_tokens": 71185,
+  "cached_input_tokens": 63310,
+  "output_tokens": 1911,
+  "cost_usd": 0.0451245,
+  "model_usage": [
+   "claude-sonnet-5-5"
+  ],
+  "skills": [
+   "finding-unknowns"
+  ],
+  "agents": [],
+  "net_cmds": 0
+ }
+}
