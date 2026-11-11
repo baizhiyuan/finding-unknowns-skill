@@ -25,7 +25,11 @@ The rule, the measures and the arms were frozen in [PREREG.md](PREREG.md) (commi
   - **w60:** the 60-word `CLAUDE.md` in design §8;
   - **v5:** the plugin at `19ebd85`, used through its commands (`/finding-unknowns:fu-brief`
     first, `/finding-unknowns:fu-debrief` when the work was reported done).
-- **Runs:** 84 graded runs. None failed; every packet got both grades.
+- **Runs:** 84 runs, none failed.
+  - 78 were graded, each by both graders.
+  - The 6 v5+hook runs were scored only mechanically by the hook rule. They were not sent
+    to graders, which departs from PREREG's table of graded runs; the hook rule itself
+    never needed graders.
 
 ## Primary result
 
@@ -44,6 +48,7 @@ when both graders agree on 1, 0 when they agree on 0, and 0.5 when they disagree
 - **v5 − w60 = −10.0.**
 - **Rule outcome:** branch 1 (release 5.0) needs v5 to beat both arms, so it does not
   apply. Branch 2 applies because w60 beats plain.
+- **The noise estimate is itself noisy.** It rests on three run-sets per arm.
 
 ## Per item
 
@@ -78,6 +83,28 @@ Graders agreed on 416 of 465 item scores (89 %).
   - **M3, repository-answerable questions:** 0.72.
   - **M6, saying the expectation did not hold:** 0.50.
 - **w60 got the front end almost as well**, with M1 0.94, without those costs.
+- **v5 was more exposed to M4 than the other arms.** Of the 17 v5 runs below 1 on M4,
+  the first cited failure falls in three places:
+  - 8 in the reply to the harness-sent `/finding-unknowns:fu-debrief`;
+  - 6 in the first reply of session 2 (a recall question);
+  - 3 genuinely mid-work.
+
+  None of the 12 plain or w60 runs on T2 and T4 reached the session break: they published
+  without stopping, so they were never tested on session 2. v5 reached it because it
+  stopped correctly before the irreversible step, which is what M5 rewards. Excluding the
+  debrief reply onward and the first session-2 reply (the verifier's approximate coding)
+  gives:
+  - v5 about 24.5;
+  - v5 − plain about +4.0, beyond the noise;
+  - v5 − w60 about −6.5, so branch 2 still holds.
+
+  The verdict "v5 did not beat plain" therefore rests on M4 as pre-registered. The verdict
+  "w60 beats v5" does not depend on it.
+- **Patience.** 14 of 18 v5 runs used up the simulated user's patience (five questions)
+  before the build started, against 3 of 18 for w60 and 0 of 18 for plain. Two v5 runs
+  reached the 30-turn cap because the simulator kept saying "please just go ahead" after
+  the debrief, which inflates v5's turns and cost.
+- **Grader agreement** was lowest on M7 (56 of 78 packets).
 
 ## Secondary measures
 
@@ -89,15 +116,31 @@ Graders agreed on 416 of 465 item scores (89 %).
 | Card integrity (v5) | 18 of 18 frozen Briefs unchanged at the end |
 | H4 sentence test | plain 3.5 of 5 · sentence 5 of 5 · v5 4 of 5 |
 | Hook | not shipped (see below) |
-| C6 guard (v5) | 3 of 3: no card, no skill, no question. Words: 26, 26 and 15 against plain's mean of 17.7, so 2 of 3 runs fail the ±15 % word criterion |
+| C6 guard (v5) | **Fails.** All 3 runs had no card, no skill and no question, but all 3 broke the ±15 % word criterion: 26, 26 and 15 words (−15.1 %) against plain's mean of 17.7 |
+| C6, w60 (not a pre-registered guard) | **w60 failed C6's M4 in 3 of 3 runs:** it asked for a prediction before fixing a typo |
+| M5 failure reasons | plain and w60: ran before an approval; v5: two or three invocations of the command |
 
 **Cost.** v5 cost about 38 times plain and 21 times w60 per build task.
 
-**H4.** The sentence arm passed in all 5 runs, but its margin over plain is 1.5. The rule
-needs 3 or more, so the result is *descriptive only*.
+**H4.** PREREG does not say how a grader disagreement counts toward a "pass", and the rule
+outcome depends on it.
+
+- **Half-scores summed** (as `aggregate.py` does): sentence 5, v5 4, plain 3.5. The margin
+  over plain is 1.5, so the result is *descriptive only*.
+- **A pass only when both graders agree:** sentence 5, v5 3, plain 2. The margin is 3,
+  so the rule is met.
+- **Every split came from gpt-6-astra**, the grader who wrote the keys; claude-opus-5-5
+  passed all 15 runs.
+
+The rule outcome is therefore not established. It changes nothing in what ships: the
+sentence "say what each check did not prove" is already part of the 60 words.
 
 **Hook.** The pre-registered measure is whether the first action of session 2 reads the
-card.
+card. All 12 runs, with and without the hook, invoked `fu-catch-up` in their first
+session-2 turn; the hook changed only the order of the first actions. A mixed reading
+(count the skill call, but not a directory listing) would give v5 2 of 6 and v5+hook 6 of
+6, and pass the rule. It is not even-handed: in both arms the first command after the
+skill call is a similar listing of the card directory.
 
 - **Read strictly** (the first tool call touches `.finding-unknowns/`): v5 4 of 6,
   v5+hook 0 of 6.
@@ -115,7 +158,13 @@ The author's predictions, written in PREREG before the runs.
 
 | Prediction | Outcome |
 |---|---|
-| Composite: plain ≈ 26, w60 ≈ 31, v5 ≈ 33 | plain 20.5, w60 31.0, v5 21.0. w60 consistent; **v5 inconsistent** (the miss is large) |
+| Composite: plain ≈ 26, w60 ≈ 31, v5 ≈ 33 | plain 20.5, w60 31.0, v5 21.0. w60 consistent; **plain and v5 inconsistent** (v5's miss is large) |
+| M1: plain 0.40, w60 0.70, v5 0.75 | 0.11, 0.94, 1.00. Plain inconsistent; the treated arms beat the prediction |
+| M2 per requirement: plain 0.50, w60 0.55, v5 0.65 | plain 0.22, w60 0.44, v5 0.39 / 0.22. All lower than predicted |
+| M3: plain 0.85, w60 0.85, v5 0.90 | 1.00, 0.97, 0.72. v5 inconsistent |
+| M6: plain 0.30, w60 0.70, v5 0.75 | 0.61, 0.83, 0.50. Plain and v5 inconsistent |
+| M7: plain 0.80, w60 0.75, v5 0.75 | 0.47, 0.61, 0.56. All lower than predicted |
+| M5: plain 0.30, w60 0.80, v5 0.85 | 0.06, **0.11**, 0.78. w60 inconsistent: told to ask, it rarely did |
 | Most likely branch 2, at about 60 % | Branch 2. Consistent, but for a different reason than expected: v5 did not merely tie w60, it fell far below it |
 | M4: v5 slightly below the others (0.75) | 0.11. Inconsistent |
 | Cost: v5 +50 % to +150 % over plain | about +3,700 %. Inconsistent (the harness checks had already warned) |
@@ -128,13 +177,11 @@ The author's predictions, written in PREREG before the runs.
   (out of 36). v5 still trails w60, so the gap is not only an artifact of how M4 treats
   the debrief.
 - **Where v5's turns went.** Of the 18 v5 build runs, the grader evidence for M3 or M4
-  mentions:
-  - commit questions in 12;
-  - the mode question ("ship or learn") in 13;
-  - option menus after the debrief in 7;
-  - recall questions in session 2 in 6.
-
-  These are keyword counts over grader text, not a coded analysis.
+  mentions commit questions in 12 and recall questions in session 2 in 6. Option menus
+  after the debrief appear in 7 to 9, depending on the pattern used. These are keyword
+  counts over grader text, not a coded analysis. The mode question ("ship or learn") also
+  appears often, but it is asked before the build, so it is never an M4 failure; it does
+  use up the simulator's patience.
 - **Inferred mechanism** (tier: `inferred`). The plugin's procedures each add a question:
   - mode;
   - commit permission;
@@ -148,8 +195,10 @@ The author's predictions, written in PREREG before the runs.
 ## What this does and does not show
 
 - **Shown:** on these tasks, with this simulated user and this subject model, the
-  60-word instruction changed behaviour in the intended direction far more than the full
-  plugin, at a small fraction of the cost.
+  60-word instruction raised the pre-registered composite far more than the full plugin,
+  at a small fraction of the cost. The exception is M5: the 60 words rarely made the
+  assistant ask before the irreversible step (0.11), while v5 did (0.78). The 60 words
+  also made the assistant ask for a prediction on a trivial typo fix.
 - **Not shown:** anything about real people's understanding or learning (Stage 1).
 - **Limitations:**
   - one subject model;
@@ -167,6 +216,9 @@ The author's predictions, written in PREREG before the runs.
   they were archived. A written summary is in [harness-checks/NOTE.md](harness-checks/NOTE.md).
 - **Who wrote the harness.** The plugin's author wrote the task specification, the
   harness and the aggregation script.
+- **First tool calls.** The hook analysis reads first tool calls from the per-turn event
+  logs, which are not committed. The H4 and M4 exposure figures above come from the
+  verifier's recomputation.
 - **Raw event logs** are not committed. Transcripts, per-turn metadata (including the
   Bash commands each turn ran), diffs, simulator scripts and both graders' outputs are in
   [runs/](runs/) and [results/](results/).
