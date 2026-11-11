@@ -28,7 +28,9 @@
 
 **Step 1: Install**
 
-Plugin marketplace (the 4.x plugin). These are Claude Code slash commands — enter them **one at a time**:
+**Recommended setup:** append the text of the 60-word [`CLAUDE.md`](CLAUDE.md) to `~/.claude/CLAUDE.md`, the user-level file where it was tested, or to a project's `CLAUDE.md`. In the simulated-user evaluation it beat both no setup and a rebuilt 5.0 plugin; see [What the evals show](#what-the-evals-show).
+
+**The 4.x plugin** installs from the plugin marketplace. These are Claude Code slash commands; enter them **one at a time**:
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
@@ -46,8 +48,6 @@ Prefer a clone? `install.sh` installs all three skills, `references/`, the five 
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
 cd finding-unknowns-skill && bash install.sh
 ```
-
-**Recommended setup:** copy the 60-word [`CLAUDE.md`](CLAUDE.md) into a project root (or into `~/.claude/CLAUDE.md`). In the simulated-user evaluation it beat both no setup and a rebuilt 5.0 plugin; see [What the evals show](#what-the-evals-show).
 
 <details>
 <summary><b>Manual copy (skills only)</b></summary>
@@ -69,6 +69,8 @@ cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
 /blindspot "src/auth"                                        # read-only recon: landmines, hidden context, expert questions
 /change-quiz main..HEAD                                      # change report + must-pass comprehension quiz before merge
 ```
+
+With `CLAUDE.md` alone there are no commands to run. Start a task as usual, and the assistant will first ask for your prediction.
 
 **New to the plugin?** The [5-minute tutorial](docs/TUTORIAL.md) walks through three copy-paste exercises: a blind-spot pass on a real open-source repo, a handoff packet, and a theory-vs-result card. Every term the skills share (prior, lane, rigor level, packet size, mode, fresh-context refutation) is defined once in the [Glossary](docs/GLOSSARY.md).
 
@@ -148,9 +150,9 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 ### What the evals show
 
-Three blinded, pre-registered evaluations ([docs/evals](docs/evals/)) asked whether
-these skills make current models catch more planted traps on single-turn coding and
-analysis tasks:
+Four pre-registered evaluations have been run ([docs/evals](docs/evals/)). The
+first three asked whether these skills make current models catch more planted traps on
+single-turn coding and analysis tasks:
 
 - **No gain that survived replication.** Installing the skills on these tasks gave no
   replicated gain. Baselines were already 22–23 of 25, leaving about 2–3 traps of
@@ -165,21 +167,27 @@ analysis tasks:
   the literal request were invoked every time. Ours need the model to first judge the
   request as high-stakes, and it mostly doesn't.
 
-None of the evals tested the side these skills exist for: your own understanding.
+None of those three tested the side these skills exist for: your own understanding.
 That means:
 
 - the principles and expected results laid out before the work;
 - a build that does not keep interrupting you;
 - a debrief that says whether the result matched and, if not, which link broke and why.
 
-**A fourth evaluation (Stage 0) tested that side with a simulated user.**
+**A fourth evaluation (Stage 0) tested whether the assistant works this way with a
+simulated user.** It did not measure your understanding; Stage 1, a study with real
+people, will.
 
 - **Setup:** a simulated user with unstated requirements and one wrong belief worked
   with Sonnet on six build tasks. The three arms were no setup, the 60-word `CLAUDE.md`,
   and a rebuilt 5.0 plugin.
 - **The 60 words won clearly:** 31.0 of 42, against 20.5 for no setup (noise 3.0).
 - **The rebuilt plugin scored 21.0,** at about 38 times the cost of no setup. It lost
-  points mainly because its own procedures kept interrupting the user.
+  points partly because its own procedures kept interrupting the user. It also lost
+  points on questions the repository answers and on reporting that the expectation did
+  not hold.
+- **The 60 words rarely made the assistant wait for approval before the irreversible
+  step:** 0.11 of runs, against 0.78 for the rebuilt plugin.
 
 So the 60-word [`CLAUDE.md`](CLAUDE.md) is the recommended setup today, and the rebuilt
 plugin is not released. The limitations, detailed in [the report](docs/evals/2026-11-11-stage0/README.md),
@@ -551,7 +559,7 @@ What field tests and reviews changed:
 Not done yet:
 
 - **Run `fu-execute-verified` in a live Workflow runtime** — so far exercised only against a stubbed agent runtime.
-- **Evaluate the human side** — a multi-turn eval with a simulated user who holds unstated requirements and a wrong expectation, measuring rework, the questions asked, and whether the expectation gets corrected. The three model-only evals found no replicated gain from installing the skills (see [What the evals show](#what-the-evals-show)).
+- **Evaluate the human side.** The simulated-user part is done (Stage 0, [report](docs/evals/2026-11-11-stage0/README.md)). The study with real people (Stage 1) is pending; it now tests the 60-word `CLAUDE.md`.
 - **Move the remaining prompted guarantees into code** where the runtime allows.
 - **Ontology / entity-convergence tracking** — consciously deferred in v3.6.0 because the Round 0 topology gate covers convergence more cheaply; to revisit if component drift shows up in tests.
 
@@ -611,7 +619,7 @@ finding-unknowns-skill/
 ├── assets/                  README diagrams (SVG); assets/zh/ = Chinese versions
 ├── AGENTS.md                Repository guide for coding agents and contributors
 ├── EXAMPLES.md              Copy-paste, end-to-end prompts
-├── CLAUDE.md                Passive single-file drop-in
+├── CLAUDE.md                The 60-word setup tested in Stage 0
 ├── install.sh               Installer (skills + references + agents + commands)
 ├── CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)
 └── README.md (English, canonical) · README.zh.md (简体中文)

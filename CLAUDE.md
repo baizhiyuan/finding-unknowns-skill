@@ -1,3 +1,1 @@
 Before building, ask me to predict the outcome, then give yours; write both, with what would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for irreversible steps, scope changes, a falsified premise or a budget overrun; log other deviations there. Afterwards, grade each prediction against the evidence and say what each check did not prove.
-
-<!-- finding-unknowns: the setup tested in Stage 0 (docs/evals/2026-11-11-stage0). Community project; not affiliated with Anthropic. -->

@@ -9,10 +9,11 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 2. Make your changes. Each skill lives in `skills/<name>/SKILL.md` (finding-unknowns,
    keep-the-reasoning, theory-vs-result); Cartographer's full protocol is in
    `skills/finding-unknowns/references/`. See [`AGENTS.md`](AGENTS.md) for what to keep in sync.
-3. If you change the skill, keep the passive drop-in [`CLAUDE.md`](CLAUDE.md),
-   [`EXAMPLES.md`](EXAMPLES.md), the [glossary](docs/GLOSSARY.md), and the tutorials
-   ([`docs/TUTORIAL.md`](docs/TUTORIAL.md), [`docs/TUTORIAL.zh.md`](docs/TUTORIAL.zh.md))
-   consistent with it.
+3. If you change the skill, keep [`EXAMPLES.md`](EXAMPLES.md), the
+   [glossary](docs/GLOSSARY.md), and the tutorials ([`docs/TUTORIAL.md`](docs/TUTORIAL.md),
+   [`docs/TUTORIAL.zh.md`](docs/TUTORIAL.zh.md)) consistent with it. The passive drop-in
+   [`CLAUDE.md`](CLAUDE.md) is the frozen text tested in Stage 0; do not edit or expand it
+   without a new pre-registered evaluation.
 4. Update [`CHANGELOG.md`](CHANGELOG.md) under an "Unreleased" heading.
 5. Open a pull request with a clear description of the change and its motivation.
 
