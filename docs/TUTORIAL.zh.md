@@ -1,12 +1,14 @@
 # 5 分钟教程
 
-本教程面向第一次使用本插件的读者：先安装，再用真实的材料把三个技能各试一次。下面的提示词都可以直接复制。你得到的输出在措辞上会与示例不同，需要核对的是输出的*结构*。[English](TUTORIAL.md)
+用一张任务卡走完全程：简报、一次打断、下一次会话中的回顾，以及复盘。[English](TUTORIAL.md)
 
-提示词保留英文原文，与英文版教程和录制记录一致；你也可以直接用中文提问。
+> **这是示意，不是真实会话的记录。** 任务、数字和输出都是为说明结构而编写的。你得到的措辞会不同，需要核对的是结构。这套流程是否对人有帮助，目前尚未检验（见 [README](../README.zh.md)）。
 
-## 安装（1 分钟）
+代码块中的命令和输出保留英文原文，与英文版教程和任务卡模板一致；你也可以直接用中文提问。
 
-在 Claude Code 会话中逐条输入：
+## 1. 安装（1 分钟）
+
+在 Claude Code 中逐条输入：
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
@@ -16,110 +18,126 @@
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-安装后即可使用三个技能、五个子代理和三个斜杠命令（`/blindspot`、`/cartographer`、`/change-quiz`）。三个技能直接以 `/finding-unknowns`、`/keep-the-reasoning`、`/theory-vs-result` 调用，因为 Claude Code 会把技能作为斜杠命令提供。其他安装方式见 [README](../README.zh.md#快速开始)。
+安装后有一个技能、三个子代理和三个命令：`/brief-me`、`/catch-up`、`/debrief`。其他安装方式见 [README](../README.zh.md)。
 
-技能写入的文件都放在项目中的 `.finding-unknowns/` 目录下。这些是工作过程中的状态文件，默认做法是把 `.finding-unknowns/` 加入 `.gitignore`。如果要在拉取请求中审阅未知项台账和规格，请改用 [README](../README.zh.md#命令) 中的三行写法（git 无法重新纳入已被忽略目录中的文件）。
+## 2. 简报（2 分钟）
 
-## 练习 1：在陌生仓库上做一次盲区排查（2 分钟）
-
-目的：修改陌生代码之前，先找出你没有意识到的盲区。这里用一个小型开源库练习：
-
-```bash
-git clone https://github.com/pallets/itsdangerous.git
-cd itsdangerous && git checkout 672971d   # 录制记录所用的提交
-claude
-```
-
-然后在 Claude Code 中写明目标，*同时*写明你的预期（你认为答案会是什么）：
+任务：一个每晚运行的作业把 `orders` 表按每批 10,000 行导出为 CSV。作业崩溃后会从头重跑，你希望它能从中断处续跑。
 
 ```
-/blindspot I'm a grad student new to this library. I want to add secret-key rotation to
-itsdangerous so our Flask app can change its SECRET_KEY without logging everyone out.
-Where should I start?
-Prior: I think I'll need to add a new parameter to Signer and change how signatures are
-verified.
+/brief-me make the nightly order export resumable after a crash
 ```
 
-你应当按以下顺序得到三部分内容：
-
-1. **与预期不符之处（Surprises）**：代码与你的预期相矛盾的地方。在这个例子中，该功能已经存在：`secret_key` 可以接收一个按从旧到新排列的密钥列表。
-2. **主要发现（Top findings）**：最多三项，按影响范围排序，每项都注明 `file:line`。对于排查时看不到的内容（Flask 本身、你的应用），会标明把握程度。
-3. **改写后的需求（Rewritten request）**：根据排查结果改进后的需求，可以直接作为下一条提示词。
-
-可以与 [EXAMPLES.md 中的录制记录](../EXAMPLES.md#a-real-blind-spot-pass-recorded)（英文）对照。如果输出中没有引用位置，或者你给出了预期却没有“与预期不符之处”一节，说明运行有问题。
-
-## 练习 2：验收改动时保留自己的判断（1 分钟）
-
-目的：验收智能体的成果时，不在不知不觉中放弃自己的判断。练习 1 已经发现，签名器（Signer）层面本来就支持密钥轮换，而且 `test_secret_keys`（`tests/test_itsdangerous/test_signer.py:94-102`）已经覆盖了这一点：`Signer(["a", "b"])` 可以验证用 `"a"` 签名的值。但 Flask 应用是用 `URLSafeTimedSerializer` 为会话签名的，而 `test_serializer.py`、`test_timed.py` 和 `test_url_safe.py` 中没有任何测试用密钥列表构造序列化器（这些测试的夹具都只传入一个字符串密钥）。因此本练习测试的是这一层。先在虚拟环境中准备好克隆下来的仓库：
-
-```bash
-python3 -m venv .venv && . .venv/bin/activate
-pip install -e . pytest freezegun   # test_timed.py 依赖 freezegun
-```
-
-然后让 Claude 做一个小改动：
+在一个项目中第一次使用时，智能体只问一次：`ship` 还是 `learn`。这里选 `learn`。随后，在阅读任何代码之前，它先请你做预测：
 
 ```
-Add a test that a URLSafeTimedSerializer token signed with secret_key="old" still loads
-after the serializer is rebuilt with secret_key=["old", "new"]. Do not modify the library.
+Before I look: if the export crashes halfway and resumes, how long will the resumed
+run take, compared with today's full run? Give a confidence, or say "no idea".
 ```
 
-接着要求它给出交付报告，并说明改动要提交到哪里：
+你回答：“完整跑一次大约 6 分钟，所以大约 3 分钟。把握 70 %。”这就是你的先验预期。此后智能体才去摸清代码现状，报告与你的预期相矛盾之处，再给出它自己的预测。你确认之后，任务卡被冻结并提交到 git。节选如下：
 
 ```
-/keep-the-reasoning the test you just added — it goes into a PR to the shared repo
+# Make the nightly order export resumable
+Goal: a crashed export resumes where it stopped · State: building
+Next decision that needs you: none
+Mode: learn · Last seen by you: 2026-11-12, at the Brief
+Timing: Brief frozen 2026-11-12, commit 3f9c2ab
+
+## Brief (frozen 2026-11-12)
+Approach: checkpoint the last exported (created_at, id) after each batch, because the
+  job already writes in batches
+Your predictions:  P1 resuming at the halfway point takes about half of today's 6 min
+  (70 %) · falsifier: resume ≥ 6 min on the 5M-row fixture · should not change: an
+  uninterrupted run's row count and checksum
+Agent predictions: A1 created_at repeats across batch boundaries; the importer stamps
+  a whole import with one time (importer.py:88) · falsifier: no repeat at any boundary
+  in the fixture · should not change: rows with unique timestamps keep today's order
+Stop-points: irreversible action · scope change · dead premise · budget > 2× 1 h
+Contract:
+| claim | check (can fail) | does NOT prove | lane |
+| each row exported exactly once after a crash | tests/test_export_resume.py kills the
+  job at 3 batch boundaries, compares ID sets with a full run | a crash between writing
+  a batch and writing its checkpoint | reversible |
 ```
 
-技能会先根据风险高低确定**交付报告大小**：`offload`（一句话）、`compact`（精简交付报告）或 `full`（完整交付报告）。决定大小的是改动的去向。只留在你自己克隆仓库中的测试，即使出错代价也很低，且只影响你本人，因此属于 `offload`。提交到共享仓库的拉取请求会影响他人，但可以撤销，并且有持续集成把关，因此属于中等风险，适用精简交付报告：先列证据，最后写结论。
+P1 预测的是智能体无法控制的事情：数据库的实际表现。“测试会通过”是智能体自己能让它成立的事，所以它写在验收标准（Contract）里，并注明它**不能**证明什么。每条预测都带有证伪条件（falsifier）和“不应改变”的一半。
+
+## 3. 一次打断（30 秒）
+
+构建过程默认安静进行：小的取舍都记成任务卡上的一行增量记录。会话快结束时，智能体停了下来：
 
 ```
-Packet size: compact — new test in a PR to a shared library, reversible, behind CI.
-Evidence           — the commands actually run and their real output
-                     (e.g. `pytest tests/test_itsdangerous -q` → N passed)
-What the checks did NOT prove
-                   — e.g. that a real Flask session cookie survives rotation
-Not checked        — at least one thing nobody verified. Never empty.
-Prior vs result    — your Exercise 1 prior (a new Signer parameter would be needed)
-                     against what came back (key lists already work)
-Summary            — last, and short.
+Stopped: scope change, production (irreversible lane).
+D4 surprise: resume from 50 % took 9 min 40 s on the fixture (3 runs, ±20 s)
+  → logs/export-resumable-resume.txt
+No index matches ORDER BY created_at, id. With that index on the fixture: 3 min 05 s.
+The fix is an index on production, outside the Brief. Run this yourself, or say yes
+to this exact command:
+  CREATE INDEX CONCURRENTLY orders_created_at_id ON orders (created_at, id);
+Post-check: EXPLAIN on the batch query shows an Index Scan.
 ```
 
-之所以出现 Prior vs result（预期与结果对照）一行，是因为练习 1 记录了预期；没有记录预期时，精简交付报告只有其余四节。请先读 What the checks did NOT prove（检查未能证明的内容）一节。如果其中声称检查已经证明了一切，就应当追问。
+这里同时触发了两个打断点：改动超出简报范围，并且涉及生产环境，属于不可逆一类。智能体只准备好确切的命令，由你亲自执行，或者对这条具体命令说“可以”。你暂时离开了。生产环境上什么都没有执行，任务卡的状态是 `waiting on you`。
 
-## 练习 3：理论与实测（1 分钟）
-
-目的：在看到数字之前先写下预期，让数字有机会与你的预期不一致。下面是两种情形。
-
-**（a）测量：运行之前先预测。** 技能会根据结果关系到什么来确定**严谨级别**（`note`、`report` 或 `decision`）。
+## 4. 下一次会话：`/catch-up`（1 分钟）
 
 ```
-/theory-vs-result I'm about to benchmark verify_signature with 1 key vs 3 keys in the list.
-Write the prediction card first: direction, rough size, where it should show up (valid
-token signed with the newest key vs an invalid token), the noise floor, and the result
-that would prove me wrong. Stop before I run anything.
+/catch-up
 ```
 
-此时应当只得到一张预测卡（Claim、Mechanism chain、Prediction、Noise floor、Falsifier、Written 等字段），没有其他内容。运行之后带着数字再问一次，就会得到一张“理论预期 → 实测 → 是否一致 → 机理”卡片。
-
-**（b）失败的测试：调试路径。** 每次都以同样方式复现的失败没有噪声下限，因此走更轻量的调试路径，而不是某个严谨级别。练习时，可以故意把练习 2 中的测试改坏：改为只用 `secret_key=["new"]` 重建序列化器（相当于过早停用了旧密钥），运行一次，然后输入：
+在展示任务卡之前，先提回忆问题（learn 模式两到三个；ship 模式一个，可以跳过）：
 
 ```
-/theory-vs-result the key-rotation test fails the same way on every run. Take the Debug path.
+1. What does the checkpoint store, and why not created_at alone?
+2. Your P1 expected about 3 minutes; the resume took longer than a full run.
+   Where would you look first?
 ```
 
-应当得到六项记录：复现命令及其实际输出、你的预期、至少两种相互竞争的解释、每种解释一项代价最低的检查及其结果、修复内容，以及重跑同一复现命令并加上一个不应改变的相邻用例。
+也可以用两句话复述来代替回答。这里没有及格线。之后你只会看到上次查看以来的变化：增量记录 D1 到 D4，以及需要你做的下一个决定，也就是那个索引。你回复：“现在不做，我会在周四的维护窗口执行。”这一项进入 Open，没有执行，“Last seen” 更新到 D4。
 
-## 什么时候不需要用
+## 5. `/debrief`（1 分钟）
 
-- **简单修改**：拼写错误、重命名，或者你已经完全理解的一行改动。
-- **规格已经很详细**：需求已经具体且经过审阅时，直接实施即可。
-- **没有决定依赖的数字**：一句话（“测得 X，符合预期”）就够了。
+```
+/debrief
+```
 
-“这里没有重要的未知项”本身就是有效的结论，这些技能也会如实这样说。
+这一步是新上下文评判：`mechanism-auditor` 拿到冻结的任务卡和产物路径，而不是构建过程的对话记录。它先评判你的预测：
 
-## 延伸阅读
+```
+Evidence: `pytest tests/test_export_resume.py -q` → 3 passed · `bench/resume.sh` →
+  9:41, 9:22, 9:58
+Graded by: fresh context.
 
-- [README](../README.zh.md)：全部功能、命令和默认值
-- [术语表](GLOSSARY.md)（英文）：共用术语，包括预期（prior）、可逆性类别（lane）、严谨级别（rigor level）、交付报告大小（packet size）、模式（mode）、独立上下文反驳（fresh-context refutation）
-- [架构](ARCHITECTURE.md)（英文）：命令、技能、子代理和产出文件如何配合
-- [EXAMPLES.md](../EXAMPLES.md)（英文）：更多可直接复制的提示词
+| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
+|----|---------------------|----------|-------------|------------------|
+| P1 | "resuming at the halfway point takes about half of today's 6 min" | 9 min 40 s, 3 runs ±20 s; full-run checksum unchanged | inconsistent; should-not-change half held | each batch is its own query and sorts the table [verified: with the index, 3 min 05 s] |
+| A1 | "created_at repeats across batch boundaries" | at 37 of 499 boundaries | consistent | one timestamp per import [supported] |
+
+Why P1 missed: today's job reads the table once, through one cursor. A resumable job
+asks "rows after this key" for every batch; with no index matching the sort, each of
+the 250 remaining queries scans and sorts all 5M rows. Resuming skips batches, but each
+batch became far more expensive.
+
+Did NOT prove: a crash between a batch write and its checkpoint; the resume test was
+  written in the same context as the code
+Not checked: the production row count and its existing indexes
+Model changes: you expected resume ≈ half a full run → without the index it is slower
+  than a full run, because each batch re-sorts the table [shown, not confirmed]
+Bottom line: resume is correct (no duplicates or gaps in 3 kill tests) and slow until
+  the index exists.
+Needs you: the production index (Open)
+```
+
+表格按“理论预期 → 实测 → 是否一致 → 机理”的顺序读。P1 的结论是不一致，A1 是一致；机理分别标为已验证和有数据支持。P1 为什么没猜中：原来的作业用一个游标把整张表读一遍；可续跑的作业每一批都要单独查询“这个键之后的行”，而没有与排序匹配的索引时，剩下的 250 次查询每次都要扫描并排序全部 500 万行。续跑省掉了一半批次，但每一批都变贵了很多。
+
+解释写在没猜中的那一行上，而不是事先讲一大段。每条被评判的预测都会在你个人的预测日志里追加一行，任务卡再次提交。用你自己的话复述这条模型变化（Model changes），它的状态就从 `shown, not confirmed` 变为 `confirmed`。
+
+## 什么时候不用
+
+改错字、一行改动，以及你本来就会直接做的事：不建任务卡，也不提问。没有任何可如实预测内容的任务，任务卡会写明 “No real prediction here; contract only”。
+
+## 下一步
+
+[README](../README.zh.md) · [术语表](GLOSSARY.md)（英文） · [架构](ARCHITECTURE.md)（英文） ·
+[EXAMPLES.md](../EXAMPLES.md)（可复制的提示词，英文） · [5.0 设计](design/5.0.md)（英文）

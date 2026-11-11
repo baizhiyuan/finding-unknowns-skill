@@ -14,7 +14,7 @@ so honesty here is structural, not a promise of self-criticism.
    - every diff hunk is explained by a delta, an Amendment or a contract item; any other
      hunk is an **unlogged deviation** and is listed.
 
-   With `timing: self-reported`, say that the first two checks could not run.
+   With `timing: self-reported`, say that these checks could not run.
 3. **Fresh-context grading.** Give `mechanism-auditor` (or any fresh subagent) the frozen
    card and the paths of the artifacts behind every result: not the build transcript and
    not your conclusions. It fills **Measured** and **Consistent?** for every prediction

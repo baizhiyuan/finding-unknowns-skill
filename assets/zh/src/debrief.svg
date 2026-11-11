@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="556" viewBox="0 0 1200 556" role="img" aria-labelledby="t d">
+<title id="t">复盘</title>
+<desc id="d">在 /debrief 中，由未参与执行的新上下文检查完整性，并逐条评判冻结的预测，先评你的；你先看到证据，再看到评判表、检查没有证明什么，以及你的认知修正。</desc>
+<defs>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
+</defs>
+<rect width="1200" height="556" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="1" y="1" width="1198" height="554" rx="18" fill="url(#dots)"/>
+<text x="60" y="64" font-size="30" font-family="Noto Sans SC" fill="#141413" font-weight="700">复盘</text>
+<text x="60" y="100" font-size="17" font-family="Noto Sans SC" fill="#3D3929">由未参与执行的上下文评判。预测按原文引用自冻结的任务卡，不重新表述。</text>
+<text x="60" y="150" font-size="17" font-family="Noto Sans SC" fill="#141413" font-weight="700">输入</text>
+<text x="440" y="150" font-size="17" font-family="'JetBrains Mono', Menlo, monospace" fill="#5E7046" font-weight="700">mechanism-auditor</text>
+<text x="820" y="150" font-size="17" font-family="Noto Sans SC" fill="#141413" font-weight="700">你看到的内容（一屏）</text>
+<rect x="60" y="170" width="320" height="68" rx="10" fill="#FBEFEA" stroke="#D97757" stroke-width="1.5"/>
+<text x="76" y="200" font-size="15" font-family="Noto Sans SC" fill="#141413">冻结的任务卡</text>
+<text x="76" y="222" font-size="15" font-family="Noto Sans SC" fill="#141413">及冻结时的提交</text>
+<rect x="60" y="252" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>
+<text x="76" y="282" font-size="15" font-family="Noto Sans SC" fill="#141413">产出：改动、日志、结果</text>
+<rect x="60" y="312" width="320" height="68" rx="10" fill="#F7F5EF" stroke="#B1ADA1" stroke-width="1.5"/>
+<text x="76" y="342" font-size="15" font-family="Noto Sans SC" fill="#8C877A">不提供执行过程</text>
+<text x="76" y="364" font-size="15" font-family="Noto Sans SC" fill="#8C877A">的对话记录</text>
+<rect x="440" y="170" width="320" height="112" rx="10" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5"/>
+<text x="456" y="200" font-size="15" font-family="Noto Sans SC" fill="#141413">1  完整性检查</text>
+<text x="456" y="222" font-size="15" font-family="Noto Sans SC" fill="#141413">简报与冻结提交是否一致</text>
+<text x="456" y="244" font-size="15" font-family="Noto Sans SC" fill="#141413">检查文件是否被改动</text>
+<text x="456" y="266" font-size="15" font-family="Noto Sans SC" fill="#141413">列出未记录的偏离</text>
+<rect x="440" y="296" width="320" height="90" rx="10" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5"/>
+<text x="456" y="326" font-size="15" font-family="Noto Sans SC" fill="#141413">2  逐条评判预测，先评你的：</text>
+<text x="456" y="348" font-size="15" font-family="Noto Sans SC" fill="#141413">一致 · 部分一致 · 不一致 ·</text>
+<text x="456" y="370" font-size="15" font-family="Noto Sans SC" fill="#141413">无法判断</text>
+<rect x="440" y="400" width="320" height="68" rx="10" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5"/>
+<text x="456" y="430" font-size="15" font-family="Noto Sans SC" fill="#141413">3  最有力的另一种解释，</text>
+<text x="456" y="452" font-size="15" font-family="Noto Sans SC" fill="#141413">以及最省事的区分检查</text>
+<rect x="820" y="170" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+<text x="836" y="200" font-size="15" font-family="Noto Sans SC" fill="#141413">证据：命令 → 输出</text>
+<rect x="820" y="226" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+<text x="836" y="256" font-size="15" font-family="Noto Sans SC" fill="#141413">预测评判表</text>
+<rect x="820" y="282" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+<text x="836" y="312" font-size="15" font-family="Noto Sans SC" fill="#141413">没有证明什么 · 未检查</text>
+<rect x="820" y="338" width="320" height="68" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+<text x="836" y="368" font-size="15" font-family="Noto Sans SC" fill="#141413">认知修正</text>
+<text x="836" y="390" font-size="15" font-family="Noto Sans SC" fill="#141413">［已展示，未确认］</text>
+<rect x="820" y="416" width="320" height="46" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+<text x="836" y="446" font-size="15" font-family="Noto Sans SC" fill="#141413">结论 · 需要你决定的事</text>
+<path d="M382 250L436 250" stroke="#8C877A" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M762 250L816 250" stroke="#8C877A" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<text x="60" y="506" font-size="15" font-family="Noto Sans SC" fill="#3D3929">执行者只写机理及其证据层级。讲解放在预测落空的地方，先讲你的。</text>
+<text x="60" y="532" font-size="15" font-family="Noto Sans SC" fill="#3D3929">每条评判结果都记入你个人的预测记录。</text>
+</svg>

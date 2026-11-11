@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="756" viewBox="0 0 1200 756" role="img" aria-labelledby="t d">
+<title id="t">任务卡</title>
+<desc id="d">finding-unknowns 任务卡的结构：页头、冻结的简报、修订、增量记录、认知修正、待办、复盘，以及各部分由谁、在何时写入。</desc>
+<defs>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
+</defs>
+<rect width="1200" height="756" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="1" y="1" width="1198" height="754" rx="18" fill="url(#dots)"/>
+<text x="60" y="64" font-size="30" font-family="Noto Sans SC" fill="#141413" font-weight="700">任务卡</text>
+<text x="60" y="100" font-size="17" font-family="Noto Sans SC" fill="#3D3929">每个任务一个文件，你和智能体共同阅读，可跨会话保留。</text>
+<text x="60" y="126" font-size="15" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">.finding-unknowns/tasks/{slug}.md</text>
+<rect x="56" y="144" width="512" height="582" rx="12" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>
+<rect x="66" y="150" width="492" height="74" rx="8" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="172" font-size="15" font-family="Noto Sans SC" fill="#141413" font-weight="700">页头</text>
+<text x="80" y="192" font-size="13" font-family="Noto Sans SC" fill="#3D3929">目标 · 状态 · 需要你做的下一个决定</text>
+<text x="80" y="213" font-size="13" font-family="Noto Sans SC" fill="#3D3929">上次查看：D7 · 时间：提交 3f2a91c</text>
+<path d="M562 187.0L604 187.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="181.0" font-size="15" font-family="Noto Sans SC" fill="#141413">帮你重新进入状态：/catch-up 只显示</text>
+<text x="612" y="203.0" font-size="15" font-family="Noto Sans SC" fill="#141413">上次查看之后的变化。</text>
+<rect x="66" y="234" width="492" height="150" rx="8" fill="#FBEFEA" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="256" font-size="15" font-family="Noto Sans SC" fill="#C15F3C" font-weight="700">简报（已冻结）</text>
+<text x="80" y="276" font-size="13" font-family="Noto Sans SC" fill="#3D3929">做法：按批次重试，因为……</text>
+<text x="80" y="297" font-size="13" font-family="Noto Sans SC" fill="#3D3929">P1（你，70%）：…… · 反证条件 · 不应改变</text>
+<text x="80" y="318" font-size="13" font-family="Noto Sans SC" fill="#3D3929">A1（智能体）：…… · 反证条件 · 不应改变</text>
+<text x="80" y="339" font-size="13" font-family="Noto Sans SC" fill="#3D3929">打断点 · 预算上限为估计的 2 倍</text>
+<text x="80" y="360" font-size="13" font-family="Noto Sans SC" fill="#3D3929">验收标准：检查 | 不能证明什么 | 类别</text>
+<path d="M562 309.0L604 309.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="292.0" font-size="15" font-family="Noto Sans SC" fill="#141413">在 /brief-me 中写成，经你确认后冻结并提交，</text>
+<text x="612" y="314.0" font-size="15" font-family="Noto Sans SC" fill="#141413">之后不再修改。你的预测在看到智能体的</text>
+<text x="612" y="336.0" font-size="15" font-family="Noto Sans SC" fill="#141413">预测之前就已记录。</text>
+<rect x="66" y="394" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="416" font-size="15" font-family="Noto Sans SC" fill="#141413" font-weight="700">修订</text>
+<text x="80" y="436" font-size="13" font-family="Noto Sans SC" fill="#3D3929">M1 11-12 前提失效 · 原因 · 代你决定</text>
+<path d="M562 420.0L604 420.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="414.0" font-size="15" font-family="Noto Sans SC" fill="#141413">写明日期，只追加。用来解释预测落空，</text>
+<text x="612" y="436.0" font-size="15" font-family="Noto Sans SC" fill="#141413">不会删掉任何预测。</text>
+<rect x="66" y="456" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="478" font-size="15" font-family="Noto Sans SC" fill="#141413" font-weight="700">增量记录</text>
+<text x="80" y="498" font-size="13" font-family="Noto Sans SC" fill="#3D3929">D7 意外：缓存键含会话 ID → logs/r3</text>
+<path d="M562 482.0L604 482.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="476.0" font-size="15" font-family="Noto Sans SC" fill="#141413">每条偏离、意外或代你做的决定各记一行，</text>
+<text x="612" y="498.0" font-size="15" font-family="Noto Sans SC" fill="#141413">按会话汇总。</text>
+<rect x="66" y="518" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="540" font-size="15" font-family="Noto Sans SC" fill="#141413" font-weight="700">认知修正</text>
+<text x="80" y="560" font-size="13" font-family="Noto Sans SC" fill="#3D3929">你原以为 X → 实际是 Y，因为 Z</text>
+<path d="M562 544.0L604 544.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="538.0" font-size="15" font-family="Noto Sans SC" fill="#141413">你的认知需要哪些修正；在你确认之前，</text>
+<text x="612" y="560.0" font-size="15" font-family="Noto Sans SC" fill="#141413">一直标为“已展示，未确认”。</text>
+<rect x="66" y="580" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="602" font-size="15" font-family="Noto Sans SC" fill="#141413" font-weight="700">待办</text>
+<text x="80" y="622" font-size="13" font-family="Noto Sans SC" fill="#3D3929">第 4/5 次运行待完成 · 是否保留 v1 接口？</text>
+<path d="M562 606.0L604 606.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="611.0" font-size="15" font-family="Noto Sans SC" fill="#141413">等待你做的决定和尚未完成的运行。</text>
+<rect x="66" y="642" width="492" height="74" rx="8" fill="#EEF1E8" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="664" font-size="15" font-family="Noto Sans SC" fill="#5E7046" font-weight="700">复盘</text>
+<text x="80" y="684" font-size="13" font-family="Noto Sans SC" fill="#3D3929">| P1 | 原文引用 | 实测 | 部分一致 | 机理［层级］|</text>
+<text x="80" y="705" font-size="13" font-family="Noto Sans SC" fill="#3D3929">证据 · 检查没有证明什么 · 未检查</text>
+<path d="M562 679.0L604 679.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="673.0" font-size="15" font-family="Noto Sans SC" fill="#141413">由新上下文评判，先评你的预测；</text>
+<text x="612" y="695.0" font-size="15" font-family="Noto Sans SC" fill="#141413">证据在前，结论在后。</text>
+</svg>

@@ -223,7 +223,7 @@ approval.
 - A good mechanism never turns a rule `FAIL` into a `PASS`; it only justifies a new,
   pre-registered test. A descriptive result is never upgraded into an adoption decision
   in the same report. A screen (a cheap pre-filter before the real test) can only
-eliminate: passing it means "not eliminated", never PASS or confirmation. A pooled result never covers for a
+  eliminate: passing it means "not eliminated", never PASS or confirmation. A pooled result never covers for a
   failed independent batch: report that batch first.
 
 ## Fresh-context audit

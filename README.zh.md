@@ -120,6 +120,8 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 ### 任务卡
 
+<p align="center"><img src="assets/zh/card.svg" alt="任务卡的结构：页头、冻结的简报、修订、增量记录、认知修正、待办、复盘" width="100%"></p>
+
 任务卡位于 `.finding-unknowns/tasks/{slug}.md`，默认提交到 git，用提交记录证明预测写在结果之前。卡上包括：
 
 - 页头：目标、当前状态、需要你做的下一个决定；
@@ -133,6 +135,8 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 ### 四个打断点
 
+<p align="center"><img src="assets/zh/stop-points.svg" alt="四个打断点及各自的处理方式；其余情况记录在案，工作继续" width="100%"></p>
+
 只有出现以下情况之一，智能体才会停下来找你：
 
 1. **不可逆操作：** 删除或改写数据、生产环境、资金、对外发布、对他人的承诺。智能体准备好确切的命令，由你执行，或者你明确同意执行这一条命令。
@@ -143,6 +147,8 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 其余情况一律选择最容易撤回的做法，并记在任务卡上。
 
 ### 复盘
+
+<p align="center"><img src="assets/zh/debrief.svg" alt="复盘：输入、新上下文评判的三个步骤，以及你在一屏内看到的内容" width="100%"></p>
 
 - **引用而不复述：** 每条预测都按编号原文引用自冻结的任务卡。
 - **由新上下文评判：** `mechanism-auditor` 只看任务卡和产出文件，不看执行过程，并且先评你的预测。
@@ -234,7 +240,7 @@ finding-unknowns-skill/
 ├── agents/                  blindspot-scout（sonnet）· mechanism-auditor · quiz-master（inherit）
 ├── extras/session-start-hook/   尚未发布，等待第 0 阶段评测
 ├── docs/                    design/、evals/、field-notes/、ARCHITECTURE、GLOSSARY、TUTORIAL（含 .zh）
-├── assets/                  示意图（SVG）；assets/zh/ 为中文版
+├── assets/                  四张示意图（SVG）；assets/zh/ 为中文版
 ├── CLAUDE.md                免安装的单文件精简版
 ├── install.sh               安装脚本；会删除能识别的 4.x 遗留文件
 ├── AGENTS.md · EXAMPLES.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE（MIT）

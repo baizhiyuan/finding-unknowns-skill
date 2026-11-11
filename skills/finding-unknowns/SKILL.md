@@ -131,7 +131,7 @@ the next stop. Non-urgent questions wait in Open. Commit the card at each stop
 
 Read `references/debrief.md`. In short: quote each prediction by ID, never restate it;
 a fresh context (`mechanism-auditor`) given the frozen card and artifact paths fills
-Consistent?; you write only the Mechanism with its tier; the person's predictions are
+Measured and Consistent?; you write only the Mechanism with its tier; the person's predictions are
 graded first; explanation goes on the rows that missed; evidence block (commands run →
 output, what each check did NOT prove, not checked: never empty); model changes marked
 `shown, not confirmed` until the person confirms; append to the prediction log; commit.

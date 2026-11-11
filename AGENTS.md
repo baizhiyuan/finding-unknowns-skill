@@ -1,59 +1,83 @@
 # Repository guide for coding agents
 
 This file orients AI coding agents (and human contributors) working **on** this repository.
-It is about maintaining the project — for what the skill does at runtime, read
-`skills/finding-unknowns/SKILL.md`, `skills/keep-the-reasoning/SKILL.md`, and
-`skills/theory-vs-result/SKILL.md`.
+It is about maintaining the project. For what the plugin does at runtime, read
+`skills/finding-unknowns/SKILL.md` and its references; for why it is built this way, read
+[`docs/design/5.0.md`](docs/design/5.0.md).
 
 ## Layout and single-source-of-truth rules
 
 | Path | Role | Rule |
 |------|------|------|
-| `skills/finding-unknowns/SKILL.md` | The protocol (before/during work) | The ONLY place procedure lives for this skill, except Cartographer (next row). All behavioural changes happen here first. |
-| `skills/finding-unknowns/references/cartographer.md` | Full Cartographer protocol | Normative for Cartographer. `SKILL.md` holds only its summary. |
-| `skills/finding-unknowns/references/workflows.md` | Workflow templates | Dynamic-workflow scripts; keep consistent with the Cartographer reference. |
-| `skills/keep-the-reasoning/SKILL.md` | The handoff protocol | Single source of truth for that skill; invoked directly as `/keep-the-reasoning` (no command file). |
-| `skills/theory-vs-result/SKILL.md` | The measured-result protocol | Single source of truth for that skill; invoked directly as `/theory-vs-result` (no command file). `agents/mechanism-auditor.md` is its read-only fresh-context audit. |
-| `commands/*.md` | Slash-command dispatchers (`/blindspot`, `/cartographer`, `/change-quiz`) | Thin: invoke the skill with the Skill tool, name a section, and pass `$ARGUMENTS`. Never restate procedure or hard-code a SKILL.md path. Never name a command after a skill: the skills already answer to `/finding-unknowns`, `/keep-the-reasoning`, `/theory-vs-result`, and a same-named command shadows the skill. |
-| `agents/*.md` | Specialist subagents | Each declares tools, model tier, and an I/O contract. Keep read-only agents read-only. |
-| `docs/ARCHITECTURE.md` | Design reference | Update when layers/contracts change. |
-| `docs/GLOSSARY.md` | Shared vocabulary | Where the three skills' terms meet. Update when a term is added, renamed, or changes meaning; each SKILL.md still defines what it uses. |
-| `docs/TUTORIAL.md` / `docs/TUTORIAL.zh.md` | 5-minute tutorial | Keep both in step with the commands, packet sizes, rigor levels, and EXAMPLES.md's recorded run. |
-| `CLAUDE.md` | Passive drop-in | A lightweight summary of the skill; keep consistent with the SKILL.md files after edits. |
-| `EXAMPLES.md` | User-facing prompts | Keep consistent with the SKILL.md files after edits. |
-| `README.md` / `README.zh.md` | Landing pages | zh is a faithful translation of the English structure; update both together. |
+| `docs/design/5.0.md` | The design | The reasons and the evaluation plan. A behavioural change that contradicts it needs a design change first. |
+| `skills/finding-unknowns/SKILL.md` | The only skill | Holds the card, the three operations, the four stop-points and the rules that must always be loaded. At most 1,500 words. Everything else goes in a reference. |
+| `skills/finding-unknowns/references/*.md` | Per-phase detail | `card.md` (template, files, commits, prediction log) · `brief.md` (discovery instruments, contract) · `debrief.md` (grading, evidence block, recall) · `results.md` (Theory → Measured → Consistent? → Mechanism) · `results-examples.md`. Normative for their topic; the SKILL.md body holds only the short form. On conflict, fix whichever contradicts the design. |
+| `commands/*.md` | `/brief-me`, `/catch-up`, `/debrief` | Thin: invoke the skill with the Skill tool and name the operation. Never restate procedure or hard-code a SKILL.md path. Never name a command after a skill or a Claude Code built-in (`/brief`, `/status` and `/resume` collide). |
+| `agents/*.md` | `blindspot-scout`, `mechanism-auditor`, `quiz-master` | Each declares tools, model tier and an I/O contract. All three are read-only. |
+| `extras/session-start-hook/` | Unshipped hook | Stays outside the plugin's `hooks/` until the Stage 0 hook sub-arm supports it (design §8). |
+| `docs/evals/`, `docs/field-notes/` | Evidence and field notes | Protected: do not rewrite results or notes after the fact. |
+| `docs/ARCHITECTURE.md`, `docs/GLOSSARY.md` | Reference | Update when a part, a file or a term changes. |
+| `docs/TUTORIAL.md` / `docs/TUTORIAL.zh.md` | 5-minute tutorial | One illustrative card; keep both in step with the commands and with each other. |
+| `CLAUDE.md` | Passive drop-in | The habits without the plugin; keep consistent with SKILL.md. |
+| `EXAMPLES.md` | Copy-paste prompts | Keep consistent with SKILL.md. Keep the `#a-real-blind-spot-pass-recorded` anchor; `docs/recordings/` links to it. |
+| `README.md` / `README.zh.md` | Landing pages | English is canonical. The Chinese README must match it heading for heading (`##` and `###`); update both together. |
+| `assets/zh/src/*.svg` | Chinese diagram sources | Edit here, then outline the glyphs: `python3 scripts/outline_cjk.py --fonts /path/to/noto-sans-sc --out assets/zh assets/zh/src/*.svg`. Never hand-edit `assets/zh/*.svg`. |
+
+## Protected rules
+
+These came from 4.x and must keep a home in 5.0 (design §9). Do not weaken or drop them:
+
+- The irreversibility floor, the three lanes and the build rule (SKILL.md body).
+- The contract: a check must be able to fail; the "does NOT prove" column; checks locked
+  against the implementer (SKILL.md short form; `references/brief.md` full form).
+- Never ask what the territory can answer; absence claims cite the hit or the empty
+  search; remote targets cite the recorded access path; late priors are recorded before
+  checks (SKILL.md body).
+- Interview rules: up to three independent questions per round, architecture first,
+  dependent questions one at a time (`references/brief.md`).
+- The compact evidence packet, surrender signals and the prediction habit
+  (`references/debrief.md`).
+- theory-vs-result in full: verdicts, mechanism tiers, Chinese labels, the mismatch walk,
+  the Debug path, the threshold gate, the two-verdict rule (`references/results.md`).
+- Credits: Thariq Shihipar, Addy Osmani, the author's research practice.
 
 ## Invariants to preserve
 
-- YAML frontmatter values containing `:` must be quoted (a colon in an unquoted
-  description has broken parsing before).
-- `blindspot-scout`, `quiz-master`, and `mechanism-auditor` stay read-only (no Write/Edit in `tools:`).
-- `prototype-smith` writes throwaway files only; `ledger-keeper` touches only the ledger.
-- The Cartographer summary in `finding-unknowns/SKILL.md` and `references/cartographer.md`
-  must stay consistent; on conflict the reference is correct, so fix the summary.
-- Every technique must remain runnable inline — no hard dependency on agents or commands.
-- One vocabulary (see `docs/GLOSSARY.md`): "lane" means reversibility only; use *rigor level*
-  (`theory-vs-result`), *packet size* (`keep-the-reasoning`), *mode* (lightweight vs
-  Cartographer), and *prior* for any expectation recorded before a result.
-- Every file the skills write goes under `.finding-unknowns/` at the project root; the
-  ledger's first line is `schema: 2`. Root-level legacy files are read and a move offered,
-  never moved silently.
-- Preserve the attribution block (Thariq Shihipar / @trq212) and the non-affiliation
-  disclaimer in SKILL.md, README.md, and CLAUDE.md. Credit sources as in each SKILL.md
-  `metadata.credits` (Osmani for `keep-the-reasoning` and the verification contract;
-  Anthropic and @hanakoxbt for the execution heuristics; the author's own
-  empirical research practice for `theory-vs-result`); neutral credit only.
+- **SKILL.md stays at or under 1,500 words.** New detail goes in a reference loaded by the
+  phase that needs it.
+- **No protocol narration.** Nothing tells the person a mode, level, route or packet size
+  ("Routing:", "Rigor level:", "Depth:"). Quadrants are internal vocabulary.
+- **The token rule.** Spend words on the card, delta lines, raw evidence and explanation
+  at the point of error. Do not add score tables, a rule stated three times, or text that
+  loads on trivial tasks.
+- **Evidence-honest claims.** The value to people is untested; say so. Claim nothing beyond
+  the design and the evals. A pattern found after the fact is a `post-hoc fit`, not a
+  finding.
+- **Never commit raw eval logs** (for example the `events.jsonl` run logs).
+- YAML frontmatter values containing `:` must be quoted.
+- Every step stays runnable inline: agents are optional, and without them grading is
+  labelled `same-context — weaker`.
+- "Lane" means reversibility only: `reversible` · `wide` · `irreversible`.
+- Every file the plugin writes goes under `.finding-unknowns/`. 4.x files are read in
+  place and a fold-in is offered, never moved silently; `.gitignore` is never edited
+  silently.
+- No em dash `——` in the Chinese README or tutorial (the validator rejects it).
+- Preserve the attribution (Thariq Shihipar / @trq212; Addy Osmani) and the
+  non-affiliation disclaimer in SKILL.md, README.md, README.zh.md and CLAUDE.md. Neutral
+  credit only.
+
+Removed in 5.0 and not to be reintroduced without a design change: Cartographer, the
+ledger, regret, clarity scores, the six-condition gate, Workflow execution, the must-pass
+quiz, `ledger-keeper`, `prototype-smith`, and the separate keep-the-reasoning and
+theory-vs-result skills. 4.x is at tag `v4.3.2`.
 
 ## After any change
 
-1. Validate (the same two commands run in CI on every push to `main` and every pull request):
+1. Validate (CI runs the same on every push to `main` and every pull request):
    ```bash
-   python3 scripts/validate.py      # frontmatter, JSON, SVG safety, links, fences, en/zh
-                                    # README parity, em dashes in zh docs,
-                                    # version/count drift, install.sh
-   node tests/workflows/run.mjs     # Workflow templates, extracted from workflows.md
+   python3 scripts/validate.py   # frontmatter, JSON, SVG safety, links, fences, en/zh
+                                 # README parity, em dashes in zh docs,
+                                 # version/count drift, install.sh
    ```
-   When you change a Workflow template, add a scenario to `tests/workflows/run.mjs` that
-   fails on the old code and passes on the new.
 2. Bump `version` in `.claude-plugin/plugin.json` (SemVer) and add a `CHANGELOG.md` entry.
 3. Use Conventional Commits (`feat:`, `fix:`, `docs:`, …).

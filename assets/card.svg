@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="756" viewBox="0 0 1200 756" role="img" aria-labelledby="t d">
+<title id="t">The task card</title>
+<desc id="d">Anatomy of a finding-unknowns task card: header, frozen Brief, Amendments, Deltas, Model changes, Open, Debrief, and who writes each.</desc>
+<defs>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
+</defs>
+<rect width="1200" height="756" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="1" y="1" width="1198" height="754" rx="18" fill="url(#dots)"/>
+<text x="60" y="64" font-size="30" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">The task card</text>
+<text x="60" y="100" font-size="17" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#3D3929">One file per task, read by you and the agent. It survives sessions: .finding-unknowns/tasks/{slug}.md</text>
+<rect x="56" y="144" width="512" height="582" rx="12" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>
+<rect x="66" y="150" width="492" height="74" rx="8" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="172" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Header</text>
+<text x="80" y="192" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Goal · State · Next decision that needs you</text>
+<text x="80" y="213" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Last seen: D7 · Timing: commit 3f2a91c</text>
+<path d="M562 187.0L604 187.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="181.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Re-orients you: /catch-up shows only</text>
+<text x="612" y="203.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">what changed since Last seen.</text>
+<rect x="66" y="234" width="492" height="150" rx="8" fill="#FBEFEA" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="256" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#C15F3C" font-weight="700">Brief (frozen)</text>
+<text x="80" y="276" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Approach: retry per batch, because …</text>
+<text x="80" y="297" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">P1 (you, 70%): … · falsifier · should not change</text>
+<text x="80" y="318" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">A1 (agent): … · falsifier · should not change</text>
+<text x="80" y="339" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Stop-points · budget 2× the estimate</text>
+<text x="80" y="360" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Contract: check | does NOT prove | lane</text>
+<path d="M562 309.0L604 309.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="292.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Written at /brief-me, frozen on your yes and</text>
+<text x="612" y="314.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">committed; never edited afterwards. Your</text>
+<text x="612" y="336.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">prediction is recorded before you see the agent's.</text>
+<rect x="66" y="394" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="416" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Amendments</text>
+<text x="80" y="436" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">M1 11-12 premise died · why · decided-for-you</text>
+<path d="M562 420.0L604 420.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="414.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Dated, append-only. Explains a miss;</text>
+<text x="612" y="436.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">never removes a prediction.</text>
+<rect x="66" y="456" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="478" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Deltas</text>
+<text x="80" y="498" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">D7 surprise: key holds session id → logs/r3</text>
+<path d="M562 482.0L604 482.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="476.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">One line per deviation, surprise or decision</text>
+<text x="612" y="498.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">made for you; rolled up per session.</text>
+<rect x="66" y="518" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="540" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Model changes</text>
+<text x="80" y="560" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">You expected X → it is Y, because Z</text>
+<path d="M562 544.0L604 544.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="538.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">What changes in your picture; marked</text>
+<text x="612" y="560.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">"shown, not confirmed" until you confirm.</text>
+<rect x="66" y="580" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="602" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413" font-weight="700">Open</text>
+<text x="80" y="622" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">run 4 of 5 pending · keep the v1 webhook?</text>
+<path d="M562 606.0L604 606.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="611.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Decisions and runs waiting for you.</text>
+<rect x="66" y="642" width="492" height="74" rx="8" fill="#EEF1E8" stroke="#E3DFD3" stroke-width="1.5"/>
+<text x="80" y="664" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#5E7046" font-weight="700">Debrief</text>
+<text x="80" y="684" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">| P1 | quoted | measured | partly | why [tier] |</text>
+<text x="80" y="705" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Evidence · did NOT prove · not checked</text>
+<path d="M562 679.0L604 679.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+<text x="612" y="673.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Graded by a fresh context, yours first;</text>
+<text x="612" y="695.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">evidence before the bottom line.</text>
+</svg>

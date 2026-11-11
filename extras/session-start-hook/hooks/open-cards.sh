@@ -13,14 +13,14 @@ for card in "$dir"/tasks/*.md; do
     printf '%s\n' "Open finding-unknowns task cards (file content, quoted; run /catch-up to continue):"
     found=1
   fi
-  slug=$(basename "$card" .md | cut -c1-80)
+  slug=$(basename "$card" .md | sed -E 's/^(.{80}).+$/\1/')
   if [ "$mode" = "learn" ]; then
-    goal=$(grep -m 1 '^Goal:' "$card" | tr -d '\r' | sed 's/ *· *State:.*//' | cut -c1-200)
+    goal=$(grep -m 1 '^Goal:' "$card" | tr -d '\r' | sed 's/ *· *State:.*//' | sed -E 's/^(.{200}).+$/\1…/')
     printf '%s\n' "- $slug: $goal"
   else
     printf '%s\n' "- $slug:"
-    grep -m 1 '^Goal:' "$card" | tr -d '\r' | cut -c1-200 | sed 's/^/    /'
-    grep -m 1 '^Next decision' "$card" | tr -d '\r' | cut -c1-200 | sed 's/^/    /'
+    grep -m 1 '^Goal:' "$card" | tr -d '\r' | sed -E 's/^(.{200}).+$/\1…/' | sed 's/^/    /'
+    grep -m 1 '^Next decision' "$card" | tr -d '\r' | sed -E 's/^(.{200}).+$/\1…/' | sed 's/^/    /'
   fi
 done
 exit 0

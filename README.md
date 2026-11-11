@@ -145,6 +145,8 @@ the four stop-points, and `/debrief` grades the frozen predictions.
 
 ### The task card
 
+<p align="center"><img src="assets/card.svg" alt="Anatomy of a task card: header, frozen Brief, Amendments, Deltas, Model changes, Open, Debrief" width="100%"></p>
+
 `.finding-unknowns/tasks/{slug}.md`, committed to git by default so the commit shows the
 predictions came before the results. It holds:
 
@@ -164,6 +166,8 @@ prediction. Many tasks honestly have no prediction; the card then says so.
 
 ### Four stop-points
 
+<p align="center"><img src="assets/stop-points.svg" alt="The four stop-points and what happens at each; everything else is logged and work continues" width="100%"></p>
+
 The agent stops for you only when one of these holds:
 
 1. **Irreversible action:** deleting or rewriting data, production, money, publishing,
@@ -176,6 +180,8 @@ The agent stops for you only when one of these holds:
 Everything else takes the most reversible option and is logged on the card.
 
 ### Debrief
+
+<p align="center"><img src="assets/debrief.svg" alt="Debrief: inputs, the fresh-context grader's three steps, and what you see on one screen" width="100%"></p>
 
 - **Predictions quoted, not restated:** each is quoted by ID from the frozen card.
 - **Graded by a fresh context:** `mechanism-auditor` sees the card and the artifacts, not
@@ -291,7 +297,7 @@ finding-unknowns-skill/
 ├── agents/                  blindspot-scout (sonnet) · mechanism-auditor · quiz-master (inherit)
 ├── extras/session-start-hook/   Not shipped; pending the Stage 0 evaluation
 ├── docs/                    design/, evals/, field-notes/, ARCHITECTURE, GLOSSARY, TUTORIAL (+ .zh)
-├── assets/                  The diagram (SVG); assets/zh/ = Chinese version
+├── assets/                  Four diagrams (SVG); assets/zh/ = Chinese versions
 ├── CLAUDE.md                Passive single-file drop-in
 ├── install.sh               Installer; removes 4.x leftovers it recognises
 ├── AGENTS.md · EXAMPLES.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)

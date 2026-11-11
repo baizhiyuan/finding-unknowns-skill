@@ -1,7 +1,9 @@
 # Recording: blind-spot pass on pallets/itsdangerous
 
-Raw record of a real run, kept verbatim so the copy in
-[EXAMPLES.md](../../EXAMPLES.md#a-real-blind-spot-pass-recorded) can be checked against it.
+Raw record of a real run, kept verbatim. It was made with 4.2.0, before the 5.0 rebuild:
+`/blindspot` and Phase 0 routing no longer exist, and in 5.0 the same `blindspot-scout`
+sweep runs inside `/brief-me`. [EXAMPLES.md](../../EXAMPLES.md#a-real-blind-spot-pass-recorded)
+summarises it.
 
 - **Date:** 2026-11-10
 - **Plugin:** finding-unknowns v4.2.0 (`blindspot-scout` agent, compact report)

@@ -1,72 +1,88 @@
 # Glossary
 
-One vocabulary across the three skills (`finding-unknowns`, `keep-the-reasoning`,
-`theory-vs-result`), the five agents and the three commands. Each skill still defines what it
-uses, because skills are installed standalone; this page is where the terms meet.
+The 5.0 vocabulary. [SKILL.md](../skills/finding-unknowns/SKILL.md) and its references
+define each term where it is used; this page is where they meet. Chinese labels follow
+[`references/results.md`](../skills/finding-unknowns/references/results.md).
 
-- **KK / KU / UK / UU** — the quadrant map of a gap: Known Knowns (stated; write them down),
-  Known Unknowns (nameable gaps), Unknown Knowns ("I'll know it when I see it" taste), Unknown
-  Unknowns (blind spots). The quadrant picks the discovery technique. *Used in:*
-  finding-unknowns Phase 0, Cartographer ledger rows and clarity scores.
-- **Regret** — `cost-if-wrong (1–5) × P(wrong)` for one ledger row. It *orders* the work; it
-  never decides what must reach the user (reversibility does). *Used in:* Cartographer C0–C2,
-  `ledger-keeper`.
-- **Route** — how a ledger row gets cleared: `interview` · `territory` · `experiment` ·
-  `audit`. Regret picks the row; route picks the instrument. *Used in:* Cartographer C1.
-- **Lane** — reserved for **reversibility**: `reversible` · `wide` · `irreversible`. A row's,
-  a contract criterion's, or a task's lane decides who may close it; irreversible work is
-  prepared by the agent and executed by the user. *Used in:* Cartographer C0, the verification
-  contract's `lane` column, Phase E, `fu-execute-verified`.
-- **Rigor level** — how much of `theory-vs-result` a measured result gets: `note` (one line) ·
-  `report` (cards + table) · `decision` (adds the frozen rule and the rule/direction split).
-  A reproducible, deterministic failure takes the lighter **debug path** instead. *Used in:*
-  theory-vs-result Step 0, `mechanism-auditor`.
-- **Packet size** — how much of the handoff packet `keep-the-reasoning` delivers: `offload`
-  (one line) · `compact` (four sections) · `full` (nine sections). Scales with consequence,
-  not effort. *Used in:* keep-the-reasoning Step 0, Cartographer merge (always `full`).
-- **Mode** — finding-unknowns' operating mode: **lightweight** (techniques 1–8, short report)
-  or **Cartographer** (ledger, gate, spec). Cartographer's breadth is its **depth**
-  (`--quick` · `--standard` · `--deep`). *Used in:* finding-unknowns Phase 0, `/cartographer`.
-- **Prior** — any expectation recorded before the result is seen: the user's or the agent's.
-  A theory-vs-result **Theory** (prior + mechanism chain) and its **prediction card** are the
-  measured-claim form of a prior. A prior recorded by any of the three skills in a session is
-  reused, never asked again. *Used in:* finding-unknowns Phase 0, ledger `prior:` entries,
-  keep-the-reasoning Step 1 and Prior vs result, theory-vs-result Step 1.
-- **Verification contract / "verified"** — per claim or acceptance criterion, written before
-  the work: the check, its artifact, what it proves, what it does NOT prove. A claim is
-  "verified" only when its contract checks ran and could have failed. A plan's **Definition of
-  verified** (Technique 5) is the same contract at plan scale. *Used in:* keep-the-reasoning
-  Step 1, Cartographer spec (C2.5), Phase E.
-- **Mechanism tier** — the evidence behind an explanation of a measured result: `verified`
-  (a discriminating test ran) · `supported` · `inferred` · `untested`. The tier word
-  `verified` grades a *mechanism*; it is not the contract sense above. *Used in:*
-  theory-vs-result Step 3, `mechanism-auditor`, Cartographer `experiment` mapping.
-- **Fresh-context refutation** — the shared primitive: a context that did not produce a claim
-  tries to refute it from the same evidence and returns the strongest alternative explanation
-  plus the cheapest discriminating check. Without a separate context, the fallback is labelled
-  `same-context — weaker`. Canonical in keep-the-reasoning ("Fresh-context refutation (shared
-  primitive)"). *Used in:* the full packet's Strongest counterargument / Did I miss anything?,
-  theory-vs-result Fresh_Context_Check and `mechanism-auditor`, Cartographer C1 step 3.5 and
-  `fu-verify-panel`.
-- **Ledger** — `.finding-unknowns/unknowns-ledger.md`: header + one row per unknown (quadrant,
-  prior, regret, route, lane, status). It is the Cartographer resume state; rows are never
-  deleted. *Used in:* Cartographer, `ledger-keeper`, `quiz-master`.
-- **Spec** — `.finding-unknowns/unknowns-spec-{slug}.md`, written on gate PASS: goal,
-  constraints, acceptance criteria, verification contract; pending approval, and the default
-  end of Cartographer. *Used in:* Cartographer C2.5, Phase E.
-- **Artifact directory** — `.finding-unknowns/` at the project root holds every file the
-  skills write (ledger, spec, `implementation-notes.md`, `prototypes/`, `change-report.md`,
-  `predictions/`, handoff packets written to disk). It is working state, ignored by default
-  (`.gitignore` line `.finding-unknowns/`). To review ledgers and specs in PRs, ignore the
-  contents instead and re-include the two files (git cannot re-include a file inside an
-  ignored directory):
-  ```
-  .finding-unknowns/*
-  !.finding-unknowns/unknowns-ledger.md
-  !.finding-unknowns/unknowns-spec-*.md
-  ```
-  *Used in:* all three skills, `ledger-keeper`, `prototype-smith`, `quiz-master`.
-- **Schema** — the ledger format version, the ledger's first line (`schema: 2` since 4.3.0;
-  no line = schema 1, pre-4.3). On resume, `ledger-keeper` upgrades schema 1 by adding the
-  missing header fields and reports what it added. *Used in:* Cartographer C0 and Resume,
-  `ledger-keeper`.
+## The card
+
+- **Task card** — one Markdown file per task, `.finding-unknowns/tasks/{slug}.md`, read by
+  the person and kept current by the agent. Header, frozen Brief, Amendments, Deltas, Model
+  changes, Open, Debrief. Committed by default.
+- **Brief** — the top of the card, written by `/brief-me` and frozen on the person's yes:
+  approach with one line of why per decision, both sides' predictions, the stop-points with
+  a budget multiple, and the contract. Never edited after it freezes.
+- **Amendment** — a dated, append-only change to the approach or a premise, tagged
+  `decided-for-you` (reversible path remained) or `confirmed` (the person agreed). It
+  explains a miss; it never removes a prediction from grading.
+- **Delta** — one line logged during the build: `deviation`, `surprise` or
+  `decided-for-you`, with an evidence pointer. All deltas go to `{slug}.deltas.md`; the
+  card shows the current session's and a three-line rollup of earlier ones.
+- **Model change** — "You expected X → it is Y, because Z". At most five live lines, each
+  `shown, not confirmed` until the person confirms it.
+- **Last seen** — the delta the person last saw, updated only after `/catch-up` or
+  `/debrief` has shown the card. `/catch-up` shows only what came after it.
+- **Timing** — the header line recording when the Brief froze: `commit {hash}` when the
+  card was committed, else `self-reported` (no git, an ignored path, other work staged,
+  history mid-operation, a failing hook, or commits declined).
+- **Mode** — `ship` or `learn`, asked once per project and stored in `profile.md`. Ship:
+  one skippable prediction question, one-line explanations. Learn: up to three questions,
+  a short why with one concrete example on misses. Never announced during work.
+
+## Predictions and checks
+
+- **Prediction vs contract check** — a prediction is a claim about something the agent
+  does not control: where the bug is, how many callers break, a number, an outcome. What
+  the agent makes true ("the tests will pass") is a contract check. A card may honestly
+  say "No real prediction here; contract only".
+- **Falsifier** — the result that would show a prediction wrong. Every prediction also has
+  a "should not change" half: where the effect should be absent.
+- **Contract** — `claim | check (can fail) | does NOT prove | lane`. A check must be able to
+  fail; the "does NOT prove" column is mandatory; checks named in it are not edited by the
+  implementer.
+- **Prediction log** — `.finding-unknowns/predictions-log.md`, personal and not committed:
+  one line per graded prediction (date, slug, ID, owner, verdict, confidence). The
+  person's hit rate is a learning signal; an agent hit rate near 100 % means its
+  predictions are too soft.
+
+## Interruptions
+
+- **Stop-point** — one of the four conditions on which the build stops for the person:
+  irreversible action, scope change, dead premise (no reversible path left), budget
+  overrun past the agreed multiple. Everything else becomes a delta.
+- **Lane** — reversibility only: `reversible` (contained, cheap to undo) · `wide`
+  (undoable, touches shared surface) · `irreversible` (data rewritten or dropped,
+  deletion, production data, money, external publication, commitments to people).
+  Classify upward when unsure.
+- **Irreversibility floor** — confidence never substitutes for the person on an
+  irreversible item; downgrading from `irreversible` needs the person's yes.
+- **Build rule** — for an irreversible step, the agent prepares the exact command; the
+  person runs it or says yes to that command (a general "go ahead" is not one); the
+  contract's post-check runs before the item closes.
+
+## Grading
+
+- **Fresh-context grading** — `mechanism-auditor` (or any fresh subagent) receives the
+  frozen card and the artifact paths, never the build transcript, and fills Measured and
+  Consistent?. Without subagents the Debrief is labelled `same-context — weaker`.
+- **Theory → Measured → Consistent? → Mechanism** (理论预期 → 实测 → 是否一致 → 机理) —
+  the four-part card every measured prediction is graded in. Research claims add a
+  stopping rule (how many runs before any verdict) and an append-only run table.
+- **Consistent? verdicts** — `consistent` 一致 · `partly` 部分一致 · `inconsistent` 不一致 ·
+  `can't tell` 无法判断. The interval governs: an interval holding both 0 and the
+  predicted size is `can't tell`.
+- **Post-hoc fit** (事后拟合) — a prediction written after the result was seen. Not a test;
+  its mechanism tier is at most `inferred`, and it never feeds a rule verdict.
+- **Mechanism tiers** — `verified` 已验证 (a test that would have come out differently if
+  the mechanism were false) · `supported` 有数据支持 (fits, no discriminating test) ·
+  `inferred` 推断 (a story with no check) · `untested` 未检验 (named so it can be tested).
+- **Rule verdict vs direction verdict** — the rule verdict is mechanical, in the frozen
+  rule's own labels (e.g. `PASS · FAIL · UNCERTAIN`) or `descriptive only`. The direction
+  verdict, `alive` 仍成立 · `alive-but-constrained` 有条件成立 · `weakened` 已削弱 ·
+  `dead` 已否定, is proposed by the agent and owned by the person. A good story never
+  turns a FAIL into a PASS.
+- **Void** (作废) — a run marked `void: pipeline defect`, only with evidence that the
+  defect changes the headline number. The original verdict stays visible.
+
+*Removed in 5.0:* quadrants as announced routing, the ledger, regret, clarity scores, the
+six-condition gate, rigor level and packet size announcements. See tag `v4.3.2`.

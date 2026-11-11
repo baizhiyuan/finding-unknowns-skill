@@ -16,7 +16,7 @@ echo "Installed skill  -> $dest (SKILL.md + references/)"
 
 # Copy a file; if a file of the same name exists and is not ours, keep it as .bak first.
 install_file() {  # <src> <dest>
-  if [ -f "$2" ] && ! grep -q 'finding-unknowns' "$2"; then
+  if [ -f "$2" ] && ! grep -qE 'finding-unknowns|theory-vs-result|keep-the-reasoning' "$2"; then
     cp "$2" "$2.bak"
     echo "Kept your own $(basename "$2") as $2.bak"
   fi
