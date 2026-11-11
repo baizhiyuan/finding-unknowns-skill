@@ -14,11 +14,20 @@ cp "$SRC/skills/finding-unknowns/SKILL.md" "$dest/SKILL.md"
 cp "$SRC"/skills/finding-unknowns/references/*.md "$dest/references/"
 echo "Installed skill  -> $dest (SKILL.md + references/)"
 
+# Copy a file; if a file of the same name exists and is not ours, keep it as .bak first.
+install_file() {  # <src> <dest>
+  if [ -f "$2" ] && ! grep -q 'finding-unknowns' "$2"; then
+    cp "$2" "$2.bak"
+    echo "Kept your own $(basename "$2") as $2.bak"
+  fi
+  cp "$1" "$2"
+}
+
 # Companion agents
 AGENT_DEST="$CONFIG_DIR/agents"
 mkdir -p "$AGENT_DEST"
 for agent in "$SRC"/agents/*.md; do
-  cp "$agent" "$AGENT_DEST/$(basename "$agent")"
+  install_file "$agent" "$AGENT_DEST/$(basename "$agent")"
   echo "Installed agent  -> $AGENT_DEST/$(basename "$agent")"
 done
 
@@ -26,7 +35,7 @@ done
 CMD_DEST="$CONFIG_DIR/commands"
 mkdir -p "$CMD_DEST"
 for cmd in "$SRC"/commands/*.md; do
-  cp "$cmd" "$CMD_DEST/$(basename "$cmd")"
+  install_file "$cmd" "$CMD_DEST/$(basename "$cmd")"
   echo "Installed command -> $CMD_DEST/$(basename "$cmd")"
 done
 
@@ -55,6 +64,6 @@ for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasonin
 done
 
 echo
-echo "Done. Skill: finding-unknowns. Commands: /brief, /catch-up, /debrief."
+echo "Done. Skill: finding-unknowns. Commands: /brief-me, /catch-up, /debrief."
 echo "Agents (blindspot-scout, mechanism-auditor, quiz-master) are delegated to by the skill."
 echo "Cards live in .finding-unknowns/tasks/ in each project; see the skill's references/card.md."

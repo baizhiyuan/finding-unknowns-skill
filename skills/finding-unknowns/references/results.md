@@ -27,7 +27,9 @@ Decide silently; do not announce it.
 | **Decision** | adopt or reject, ship or not, a pre-registered test, money or production | Report, plus the frozen rule quoted verbatim, and the rule verdict kept apart from the direction verdict. No frozen rule: propose one (threshold gate below) and stop; the decision is the person's. A rule approved after this result was seen does not apply to it; the result stays `descriptive only` |
 
 A **reproducible, deterministic failure** (same input, same wrong output; a crash; a
-failing test) takes the Debug path instead.
+failing test) takes the Debug path instead. A failure whose cause the error message
+already names (a typo, a missing import, a stack trace pointing at one line): just fix
+it.
 
 ## Debug path
 
@@ -52,7 +54,15 @@ the failure is flaky (a noise floor exists: Report) or a ship decision rides on 
 
 This is the Brief for a claim. Save it in `.finding-unknowns/predictions/{slug}.md`
 before running anything, or before opening a result that already exists, and commit it
-per `card.md`. An unsaved card whose timing cannot be shown counts as `post-hoc`.
+per `card.md`. Like a task card, the file starts with a header line
+`Timing: frozen {date}, commit {hash} | self-reported`, written after the commit and
+outside the frozen block. Timing:
+
+- **commit:** the strongest evidence that the prediction came first;
+- **self-reported:** graded as a prediction, but every verdict that rests on it carries
+  the label `timing: self-reported`;
+- **written after the result was opened,** or not saved before the run: `post-hoc`,
+  whatever the Timing line says.
 
 ```
 Claim under test   : {the belief, one sentence}
@@ -68,7 +78,7 @@ Data budget        : the data this run uses up (holdout, fresh traffic, forward 
 Trials so far      : raw configurations tried for this claim, and the effective number of
                      independent hypotheses among them (both cumulative across reports)
 Terms              : definitions of any term that could shift meaning
-Written            : {commit | timestamp | "before opening <path>"}
+Written            : {date; "before running" | "before opening <path>"}
 ```
 
 1. **Scale the card.** At the Note level the prediction line alone is enough.
@@ -145,9 +155,10 @@ Mechanism   : {why} [verified | supported | inferred | untested]
 
 **Verdicts**
 
-- **The interval governs.** Direction matches only when the interval excludes 0;
-  magnitude only when it excludes sizes that would contradict the prediction. An interval
-  holding both 0 and the predicted size is `can't tell`.
+- **The interval governs.** Direction matches only when the interval (CI, or the spread
+  across reruns) excludes 0; magnitude only when it excludes sizes that would contradict
+  the prediction. An interval holding both 0 and the predicted size is `can't tell`. The
+  noise floor informs how wide that interval is; it does not replace it.
 - **consistent:** direction and magnitude both match, beyond the noise floor.
 - **partly:** direction matches but magnitude or location does not, or some segments do
   and others don't. Say which.
@@ -157,7 +168,7 @@ Mechanism   : {why} [verified | supported | inferred | untested]
 - **can't tell:** inside the noise floor, or the comparison was unfair. Say what n or
   design would settle it.
 - **A predicted null** is `consistent` when the interval excludes any effect large enough
-  to matter. State that size.
+  to matter. State that size; otherwise it is `can't tell`.
 - **untraceable:** the number cannot be found in the artifacts; treat it as `can't tell`
   until traced.
 - **post-hoc fit:** see the prediction card, item 7.
@@ -202,14 +213,17 @@ approval.
   `descriptive only`, or `void`. Computed mechanically on the rule's own metric as
   defined when it was frozen. An argument that the metric was a proxy feeds the direction
   verdict and the next rule proposal, never this verdict. A result exactly on a boundary
-  the rule does not cover: say so and ask.
+  the rule does not cover: say so and ask. Do not resolve it in your own favour.
 - **Direction verdict:** `alive · alive-but-constrained · weakened · dead`, with the
   reason. **The agent proposes it; the person owns it.** When the person's hypothesis is
   under test, quote their words from the frozen card. `dead` needs a fired falsifier or
-  independent failures naming the same broken link; otherwise `weakened` at most.
+  independent failures naming the same broken link; otherwise `weakened` at most. A
+  single failed run rarely makes a direction `dead`: one configuration failed; say which
+  assumption the failure constrains.
 - A good mechanism never turns a rule `FAIL` into a `PASS`; it only justifies a new,
   pre-registered test. A descriptive result is never upgraded into an adoption decision
-  in the same report. A screen can only eliminate. A pooled result never covers for a
+  in the same report. A screen (a cheap pre-filter before the real test) can only
+eliminate: passing it means "not eliminated", never PASS or confirmation. A pooled result never covers for a
   failed independent batch: report that batch first.
 
 ## Fresh-context audit

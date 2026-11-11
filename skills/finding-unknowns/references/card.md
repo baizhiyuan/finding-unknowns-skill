@@ -98,7 +98,8 @@ Brief (a hash cannot appear in the commit that produces it, and adding it later 
 edit the frozen Brief).
 
 **When:** the Brief freezes; each stop; after the Debrief. Paths: the card, its deltas
-file and, for a research claim, `predictions/{slug}.md`.
+file and, for a research claim, `predictions/{slug}.md`. Create the deltas file (a
+one-line header) when the Brief freezes, so every path exists at the first commit.
 
 **Skip checks, run before anything is staged.** Skip the commit, write
 `timing: self-reported` and say so in one line when:
@@ -107,7 +108,8 @@ file and, for a research claim, `predictions/{slug}.md`.
 - a path is ignored;
 - a merge, rebase or cherry-pick is in progress, or HEAD is detached;
 - other changes are already staged (a commit hook could act on the person's work);
-- `profile.md` says `commits: no`.
+- `profile.md` says `commits: no` (the Brief announces the commit; a "no" is recorded
+  there).
 
 **Commit:**
 

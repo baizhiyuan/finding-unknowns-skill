@@ -45,6 +45,60 @@ All notable changes to this project are documented in this file. The format is b
   evals found no replicated gain from installing the skills, the costs, the one narrow recurring effect, and that
   the human side is untested. The roadmap adds a human-side eval.
 
+## [5.0.0] - unreleased (pending the Stage 0 evaluation)
+
+A rebuild around the person's side of the work. Design, advisor reviews and the
+evaluation plan: [docs/design/5.0.md](docs/design/5.0.md). Whether 5.0 helps people is
+not yet tested.
+
+### Added
+- **The task card** (`.finding-unknowns/tasks/{slug}.md`):
+  - a frozen Brief, with the person's predictions recorded before the agent's;
+  - append-only Amendments and deltas;
+  - model changes and a Debrief table.
+  - The card is committed by default, so the commit shows the predictions came first.
+- **Commands:** `/brief-me`, `/catch-up` and `/debrief`.
+- **Four stop-points** are the only interruptions: an irreversible action, a scope
+  change, a dead premise, a budget overrun.
+- **Fresh-context grading:** `mechanism-auditor` grades every frozen prediction from the
+  card and the artifacts, the person's first. It also checks the Brief against the freeze
+  commit, checks that the contract's check files are untouched, and lists unlogged
+  deviations.
+- **Learning:**
+  - `ship` and `learn` modes;
+  - explanation where a prediction missed;
+  - recall questions at `/catch-up`, with no pass mark;
+  - a personal prediction log.
+- **Research claims:**
+  - the person's and the agent's predictions on separate lines;
+  - a stopping rule, and a noise floor from at least three reruns;
+  - a run table for results that arrive over days.
+- **SessionStart hook** in `extras/`, not shipped until the Stage 0 evaluation supports it.
+
+### Changed
+- **One skill.** `theory-vs-result` becomes `references/results.md`, with its rules
+  unchanged and the additions above. keep-the-reasoning's compact packet and surrender
+  signals become the Debrief.
+- **Agents:**
+  - `mechanism-auditor` is generalised to grade task-card predictions;
+  - `quiz-master` only drafts recall questions, with no gate;
+  - `blindspot-scout` is kept.
+- **Install:** `install.sh` keeps a same-named file of yours as `.bak`, and removes 4.x
+  files only when they carry this project's markers.
+- **Docs and diagrams:** the README is about 1,500 words. Seven diagrams per language
+  become four.
+
+### Removed
+- **Cartographer:** regret scores, clarity displays, the six-condition gate, depth flags
+  and the `/cartographer` command.
+- **Workflow execution:** `references/workflows.md` and `tests/workflows/`.
+- **Skills:** `keep-the-reasoning` and `theory-vs-result` as separate skills.
+- **Agents and commands:** `ledger-keeper`, `prototype-smith`, `/blindspot` and
+  `/change-quiz`.
+- **Protocol narration** ("Routing:", "Rigor level:", "Packet size:") and the must-pass
+  quiz.
+- **Everything removed** is still available at tag `v4.3.2`.
+
 ## [4.3.2]
 
 Driven by the first comparative eval: gpt-6.1-sol in Codex with and without these skills,
@@ -738,6 +792,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[5.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/compare/v4.3.2...v5
 [4.3.2]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.2
 [4.3.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.1
 [4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0

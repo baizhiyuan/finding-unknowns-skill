@@ -1,71 +1,57 @@
 # finding-unknowns (passive drop-in)
 
-Drop this file into a project root (or paste into your own CLAUDE.md) if you want the
-finding-unknowns habits **without** installing the skill or plugin. It's a lighter, always-on
-nudge; the full skill (with copy-paste prompts and Cartographer mode) lives in
-[`skills/finding-unknowns/SKILL.md`](skills/finding-unknowns/SKILL.md), and the handoff
-sibling in [`skills/keep-the-reasoning/SKILL.md`](skills/keep-the-reasoning/SKILL.md), and the
-measured-result sibling in [`skills/theory-vs-result/SKILL.md`](skills/theory-vs-result/SKILL.md).
+Drop this file into a project root (or paste it into your own CLAUDE.md) for the
+finding-unknowns habits **without** installing the plugin. The full version, with the
+task card, the commands and the fresh-context grader, is
+[`skills/finding-unknowns/SKILL.md`](skills/finding-unknowns/SKILL.md). Whether either
+version helps people is not yet tested.
 
-> The map is not the territory. The bottleneck on long-horizon work is clarifying your
-> *unknowns*. Before building something ambiguous or unfamiliar, spend cheap words to find
-> them — it's always cheaper than rework.
+## Before building something I will have to stand behind
 
-## When a task is fuzzy or unfamiliar, first locate the unknown
+- Ask me what I expect first (one skippable question; "no idea" is fine). Then look at
+  the code, docs and data before asking anything else; never ask what they can answer.
+  Then give your own prediction.
+- A prediction is about something you do not control: where the bug is, how many callers
+  break, a number. "The tests will pass" is a check, not a prediction. If there is no
+  real prediction, say so.
+- Write both predictions, each with what would prove it wrong, in
+  `.finding-unknowns/tasks/{slug}.md`, plus each check you will run and what it does
+  **not** prove. Do not edit those lines afterwards; add dated amendments below them.
 
-- **Unknown Unknowns** (blind spots) → run a **blind-spot pass**: landmines, hidden context,
-  what "good" looks like, and the questions an expert would ask. Do not implement yet.
-- **Unknown Knowns** ("I'll know it when I see it") → **brainstorm** several throwaway
-  directions or **point at reference code**, so tacit taste becomes explicit.
-- **Known Unknowns** (nameable gaps) → **interview** with up to 3 independent questions
-  per round (dependent questions one at a time), architecture first; or write a **plan
-  that leads with the decisions most likely to change**.
-- **Known Knowns** → just write them down before they drift.
+## While building
 
-## During and after
+- Stop for me only for: an irreversible step (data rewritten or deleted, production,
+  money, publishing, commitments to people), a scope change, a premise that died with no
+  reversible path left, or a budget overrun.
+- For an irreversible step, prepare the exact command; I run it or say yes to that
+  command. "Go ahead" is not a yes to a specific command.
+- Everything else: take the most reversible option and log one line on the card.
 
-- Mid-build, keep **implementation notes**: log any deviation and the conservative choice.
-- Write notes, ledgers and prediction cards under `.finding-unknowns/` at the project root
-  (gitignored by default).
-- Before merge, **quiz** yourself on what actually changed. Comprehension is the gate.
-- When handing work over for acceptance, lead with evidence, say what each check did **not**
-  prove, list the decisions you made, and name what went unchecked (`keep-the-reasoning`).
+## Afterwards
 
-## When reporting a measured result
+- Quote each prediction as written, mine first, and grade it against the evidence:
+  consistent, partly, inconsistent or can't tell. Use a fresh subagent to grade when you
+  can; otherwise say the grading is same-context.
+- Show the commands you ran and their output first, then what each check did not prove,
+  then at least one thing nobody checked. Explain where a prediction missed, not
+  everywhere.
 
-- Write the **prediction before the data** (direction, rough size, where it should show up,
-  and the noise floor); a theory written after the result is labelled `post-hoc`.
-- Report each result as one card: **Theory → Measured → Consistent? → Mechanism**
-  (理论预期 → 实测 → 是否一致 → 机理). Compare like with like: same data, seeds, metric.
-- Consistency is consistent / partly / inconsistent / can't tell (inside the noise).
-  Tag every mechanism `verified`, `supported`, `inferred`, or `untested`, and never present
-  an `inferred` mechanism as established. A theory written after the result is a
-  `post-hoc fit`, not a test.
-- On a mismatch, walk pipeline → comparison → metric → theory → environment, name the
-  broken link, and give the smallest check that would tell the explanations apart.
-- Keep two verdicts apart: the pre-agreed **rule**, in the rule's own labels (e.g. PASS /
-  FAIL / UNCERTAIN, or descriptive only / void), and the **direction** (alive /
-  alive-but-constrained / weakened / dead). Neither a good story nor a rerun on spent data
-  turns a FAIL into a PASS.
-- Explain any new or tighter threshold in plain words and get approval before applying it.
-- A failure that reproduces the same way every time (a failing test, a crash) needs no
-  noise floor: record the repro and its output, your expectation, at least two competing
-  explanations with one cheap check each, the fix, and the repro re-run plus one
-  neighbouring case that should not change.
+## Measured results
 
-## Guardrails
-
-- Discovery ends at understanding — don't slide into implementation.
-- Prioritize architecture-changing unknowns over trivia.
-- Gate on blast radius, not confidence: an unknown guarding an irreversible step always
-  goes to the user.
-- "No significant unknowns here" is a valid, valuable result.
+- Write the prediction before the data: direction, rough size, where it shows up, a
+  stopping rule, and a noise floor from at least three reruns.
+- Report each result as **Theory → Measured → Consistent? → Mechanism**
+  (理论预期 → 实测 → 是否一致 → 机理). Tag each mechanism `verified`, `supported`,
+  `inferred` or `untested`. A theory written after the result is a `post-hoc fit`, not a
+  test.
+- Keep the pre-agreed rule's verdict apart from the verdict on the idea. A good story
+  never turns a FAIL into a PASS.
 
 ---
 
-*Distilled from Thariq Shihipar's essay "A Field Guide to Fable: Finding Your Unknowns"
-([@trq212](https://x.com/trq212/status/2073100352921215386)). Handoff guidance draws on
-Addy Osmani's "Critical thinking when agents do the work"
-([source](https://x.com/addyosmani/status/2117512471930167377)). Result-reporting guidance is
-distilled from the author's own empirical research practice. Community project; not
-affiliated with or endorsed by Anthropic.*
+*Discovery techniques from Thariq Shihipar's "A Field Guide to Fable: Finding Your
+Unknowns" ([@trq212](https://x.com/trq212/status/2073100352921215386)). Handoff guidance
+from Addy Osmani's "Critical thinking when agents do the work"
+([source](https://x.com/addyosmani/status/2117512471930167377)). Result reporting from the
+author's own research practice. Community project; not affiliated with or endorsed by
+Anthropic.*

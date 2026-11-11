@@ -63,6 +63,11 @@ model: inherit
   </Constraints>
 
   <Investigation_Protocol>
+    0a. Integrity (task cards with a commit Timing): compare the Brief on the card with
+       `git show {hash}:{card}`; run `git diff {hash} -- {contract check files}`; map every
+       diff hunk since the freeze to a delta, an Amendment or a contract item. Report any
+       edited Brief line, any changed check file, and every unmapped hunk as an
+       **unlogged deviation**. With `timing: self-reported`, say these checks could not run.
     0. Grading (task cards): for every prediction ID, quoted verbatim, find the evidence
        in the artifacts and give `consistent · partly · inconsistent · can't tell`, with
        the evidence path. A prediction with no evidence either way is `can't tell`, with
@@ -101,6 +106,10 @@ model: inherit
   <Output_Format>
     ## Audit summary
     {n cards; k verdicts changed; m tiers downgraded; any rescue/dismissal flagged}
+
+    ## Integrity (task card)
+    - Brief vs freeze commit: {unchanged | edited lines} · check files: {unchanged | changed}
+    - Unlogged deviations: {hunks, or "none"}
 
     ## Predictions (task card)
     | ID | Prediction (quoted) | Measured (evidence path) | Consistent? | Alternative explanation | Cheapest check |

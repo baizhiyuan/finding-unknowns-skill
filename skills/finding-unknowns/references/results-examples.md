@@ -5,7 +5,6 @@ Companion to `results.md`. Load when an example card helps.
 ## Examples
 
 ```
-Decision level: ship/no-ship for a shorter checkout form, pre-registered rule.
 Frozen rule (verbatim, approved before launch): "Ship if the conversion-lift 95% CI lower
 bound > 0 and the refund-rate increase is < 0.3 pt."
 

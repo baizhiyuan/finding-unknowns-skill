@@ -1,47 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns v4.3.2</title><desc id="d">Banner: a pin clearing fog on a dotted map. Map the territory before you build. Keep the reasoning when agents hand it back.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="t d">
+<title id="t">finding-unknowns v5.0.0</title>
+<desc id="d">One task card per task. /brief-me: you predict first; the territory is checked; then the agent predicts; the card is frozen on your yes. Quiet build: stops only for an irreversible action, a scope change, a dead premise or a budget overrun; everything else is logged on the card. /catch-up: recall first, then what changed. /debrief: a fresh context grades every frozen prediction, yours first; what the checks did not prove; what changes in your model.</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
-<pattern id="dotsb" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#D97757" opacity="0.75"/></pattern>
-<filter id="fog" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter>
-<clipPath id="clr"><circle cx="930" cy="215" r="105"/></clipPath>
-<clipPath id="frame"><rect width="1200" height="420" rx="18"/></clipPath>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
 </defs>
-<rect width="1200" height="420" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
-<g clip-path="url(#frame)">
-<rect width="1200" height="420" fill="url(#dots)"/>
-<g fill="none" stroke="#B1ADA1" stroke-opacity="0.55" stroke-width="1.2">
-<path d="M640 360C700 300 760 330 830 300S960 340 1040 290S1150 260 1210 300"/>
-<path d="M660 330C720 270 770 300 840 270S960 310 1030 260S1140 230 1210 270"/>
-<path d="M690 300C740 245 790 270 850 240S960 280 1020 230S1120 200 1210 240"/>
-<path d="M720 270C770 215 810 240 860 210S960 250 1010 200S1100 170 1210 210"/>
-<ellipse cx="930" cy="215" rx="230" ry="150"/><ellipse cx="930" cy="215" rx="170" ry="108"/>
+<rect width="1200" height="500" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="1" y="1" width="1198" height="498" rx="18" fill="url(#dots)"/>
+<g font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">
+<text x="60" y="78" font-size="40" font-weight="700">finding-unknowns</text>
+<text x="424" y="78" font-size="20" font-weight="600" fill="#C15F3C">v5.0.0</text>
+<text x="60" y="114" font-size="19" fill="#3D3929">One task card per task. You predict first; the agent builds quietly;</text>
+<text x="60" y="140" font-size="19" fill="#3D3929">a context that did not do the work grades what you both expected.</text>
 </g>
-<g clip-path="url(#clr)"><rect x="800" y="100" width="260" height="230" fill="url(#dotsb)" opacity="0.5"/></g>
-<g filter="url(#fog)" fill="#F0EEE6">
-<ellipse cx="1090" cy="120" rx="130" ry="70" opacity="0.75"/><ellipse cx="1010" cy="330" rx="150" ry="55" opacity="0.75"/>
-<ellipse cx="780" cy="130" rx="110" ry="50" opacity="0.75"/><ellipse cx="1130" cy="260" rx="90" ry="70" opacity="0.75"/>
-<ellipse cx="760" cy="320" rx="100" ry="45" opacity="0.75"/>
+<g font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<!-- brief -->
+<rect x="60" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+<text x="84" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/brief-me</text>
+<text x="84" y="258" font-size="16" fill="#141413">You predict first</text>
+<text x="84" y="284" font-size="16" fill="#141413">Territory, then the agent predicts</text>
+<text x="84" y="310" font-size="16" fill="#141413">Stop-points and contract</text>
+<text x="84" y="336" font-size="16" fill="#141413">Frozen on your yes, committed</text>
+<!-- build -->
+<rect x="450" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+<text x="474" y="226" font-size="22" font-weight="700" fill="#5E7046">Quiet build</text>
+<text x="474" y="258" font-size="16" fill="#141413">Stops only for:</text>
+<text x="474" y="284" font-size="16" fill="#141413">· irreversible action · scope change</text>
+<text x="474" y="310" font-size="16" fill="#141413">· dead premise · budget overrun</text>
+<text x="474" y="336" font-size="16" fill="#141413">Everything else: a line on the card</text>
+<!-- debrief -->
+<rect x="840" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+<text x="864" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/debrief</text>
+<text x="864" y="258" font-size="16" fill="#141413">Fresh context grades</text>
+<text x="864" y="284" font-size="16" fill="#141413">every prediction, yours first</text>
+<text x="864" y="310" font-size="16" fill="#141413">What the checks did not prove</text>
+<text x="864" y="336" font-size="16" fill="#141413">What changes in your model</text>
+<path d="M362 275H446" stroke="#8C877A" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M752 275H836" stroke="#8C877A" stroke-width="2" marker-end="url(#arr)"/>
+<!-- card + catch-up -->
+<rect x="380" y="388" width="440" height="46" rx="10" fill="#F0EEE6" stroke="#B1ADA1"/>
+<text x="600" y="417" font-size="16" text-anchor="middle" fill="#3D3929" font-family="'JetBrains Mono', Menlo, monospace">.finding-unknowns/tasks/{slug}.md</text>
+<path d="M600 362V386" stroke="#B1ADA1" stroke-width="2" stroke-dasharray="4 4"/>
+<text x="600" y="472" font-size="16" text-anchor="middle" fill="#3D3929"><tspan font-family="'JetBrains Mono', Menlo, monospace" font-weight="700" fill="#C15F3C">/catch-up</tspan> next session: recall, then what changed</text>
 </g>
-<circle cx="930" cy="215" r="105" fill="none" stroke="#D97757" stroke-width="1.5" stroke-dasharray="3 6"/>
-<circle cx="930" cy="215" r="70" fill="none" stroke="#D97757" stroke-opacity="0.5" stroke-width="1"/>
-<g stroke="#D97757" stroke-width="2"><path d="M930 98V118M930 312V332M813 215H833M1027 215H1047"/></g>
-<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#D97757" text-anchor="middle"><text x="930" y="88">N</text></g>
-<ellipse cx="930" cy="262" rx="26" ry="7" fill="#D97757" opacity="0.28"/>
-<path d="M930 262C900 222 890 205 890 186a40 40 0 0 1 80 0c0 19-10 36-40 76z" fill="#D97757"/>
-<circle cx="930" cy="186" r="15" fill="#FAF9F5"/><circle cx="930" cy="186" r="5" fill="#D97757"/>
-</g>
-<text x="56" y="70" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#C15F3C" letter-spacing="1.5">[ CLAUDE CODE SKILL · v4.3.2 ]</text>
-<text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#141413">finding-unknowns</text>
-<text x="56" y="198" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#141413">Map the territory before you build.</text>
-<text x="56" y="226" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">Keep the reasoning when agents hand it back.</text>
-<rect x="56" y="262" width="126" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="119.0" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">8 techniques</text>
-<rect x="192" y="262" width="169" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="276.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">Cartographer mode</text>
-<rect x="371" y="262" width="91" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="416.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">5 agents</text>
-<rect x="56" y="300" width="195" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="153.5" y="319.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">+ keep-the-reasoning</text>
-<rect x="261" y="300" width="178" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="350.0" y="319.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">+ theory-vs-result</text>
-<rect x="56" y="352" width="520" height="40" rx="8" fill="#F0EEE6" stroke="#E3DFD3"/>
-<circle cx="76" cy="372" r="4" fill="#B5442E"/><circle cx="92" cy="372" r="4" fill="#D4A27F"/><circle cx="108" cy="372" r="4" fill="#788C5D"/>
-<text x="128" y="377" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#D97757">$</text>
-<text x="144" y="377" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413">/cartographer --deep &quot;migrate billing&quot;</text>
 </svg>

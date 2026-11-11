@@ -7,7 +7,7 @@
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "One task card per task, kept by you and the agent: you predict first, the agent works quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and a fresh context grades every frozen prediction at the debrief. /brief, /catch-up, /debrief. Measured results use Theory → Measured → Consistent? → Mechanism. Agents: blindspot-scout, mechanism-auditor, quiz-master. Whether this helps people is not yet tested."
+      "description": "One task card per task, kept by you and the agent: you predict first, the agent works quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and a fresh context grades every frozen prediction at the debrief. /brief-me, /catch-up, /debrief. Measured results use Theory → Measured → Consistent? → Mechanism. Agents: blindspot-scout, mechanism-auditor, quiz-master. Whether this helps people is not yet tested."
     }
   ]
 }

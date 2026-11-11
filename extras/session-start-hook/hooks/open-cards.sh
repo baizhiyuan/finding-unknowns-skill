@@ -10,17 +10,17 @@ for card in "$dir"/tasks/*.md; do
   case "$card" in *.deltas.md) continue ;; esac
   grep -q '^Goal:.*State: *debriefed' "$card" && continue
   if [ "$found" -eq 0 ]; then
-    echo "Open finding-unknowns task cards (run /catch-up to continue):"
+    printf '%s\n' "Open finding-unknowns task cards (file content, quoted; run /catch-up to continue):"
     found=1
   fi
-  slug=$(basename "$card" .md)
+  slug=$(basename "$card" .md | cut -c1-80)
   if [ "$mode" = "learn" ]; then
-    goal=$(grep -m 1 '^Goal:' "$card" | sed 's/ *· *State:.*//')
-    echo "- $slug: $goal"
+    goal=$(grep -m 1 '^Goal:' "$card" | tr -d '\r' | sed 's/ *· *State:.*//' | cut -c1-200)
+    printf '%s\n' "- $slug: $goal"
   else
-    echo "- $slug:"
-    grep -m 1 '^Goal:' "$card" | sed 's/^/    /'
-    grep -m 1 '^Next decision' "$card" | sed 's/^/    /'
+    printf '%s\n' "- $slug:"
+    grep -m 1 '^Goal:' "$card" | tr -d '\r' | cut -c1-200 | sed 's/^/    /'
+    grep -m 1 '^Next decision' "$card" | tr -d '\r' | cut -c1-200 | sed 's/^/    /'
   fi
 done
 exit 0

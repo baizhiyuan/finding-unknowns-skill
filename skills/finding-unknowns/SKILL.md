@@ -1,12 +1,13 @@
 ---
 name: finding-unknowns
-description: "Use when the user says 'brief me', 'catch me up', 'where were we', 'what am I missing', 'did it match what we expected' or 'is this result consistent'; runs /brief, /catch-up or /debrief; or an open card exists under .finding-unknowns/tasks/. Keeps one task card: predictions frozen before the work, a quiet build with four stop-points, a debrief graded by a fresh context. Not for typos, one-liners or tasks the user says to just do."
+description: "Use when the user says 'brief me', 'catch me up', 'where were we', 'what am I missing', 'did it match what we expected' or 'is this result consistent'; runs /brief-me, /catch-up or /debrief; or an open card exists under .finding-unknowns/tasks/. Keeps one task card: predictions frozen before the work, a quiet build with four stop-points, a debrief graded by a fresh context. Not for typos, one-liners or tasks the user says to just do."
 aliases: []
 metadata:
   credits:
     discovery: "Thariq Shihipar — A Field Guide to Fable: Finding Your Unknowns (https://x.com/trq212/status/2073100352921215386)"
     handoff: "Addy Osmani — Critical thinking when agents do the work (https://x.com/addyosmani/status/2117512471930167377)"
     results: "Theory → Measured → Consistent? → Mechanism, from the author's own research practice (baizhiyuan)"
+    cognitive-surrender: "Shaw & Nave, Thinking—Fast, Slow, and Artificial (SSRN 6097646); cognitive debt: Margaret-Anne Storey"
     design: "docs/design/5.0.md, after an advisor review by Fable 5.2"
 ---
 
@@ -26,7 +27,7 @@ only where they change a decision or the person's model.
 </Purpose>
 
 <Use_When>
-- `/brief`, `/catch-up`, `/debrief`, or the phrases in the description
+- `/brief-me`, `/catch-up`, `/debrief`, or the phrases in the description
 - The person is starting work they will have to stand behind, in territory they or you
   do not know well
 - A session starts and `.finding-unknowns/tasks/` holds an open card
@@ -35,7 +36,8 @@ only where they change a decision or the person's model.
 
 <Do_Not_Use_When>
 - Typos, one-liners, obvious fixes, lookups: just do them. No card, no question
-- The person says "just do it": state the single biggest risk in one line, then proceed
+- The person says "just do it": state the single biggest risk in one line, then proceed.
+  An irreversible step still gets the build rule (exact command, a yes for that command)
 - Pure option generation with a clear goal: brainstorm directly
 </Do_Not_Use_When>
 
@@ -47,8 +49,9 @@ only where they change a decision or the person's model.
   (host entry, user, route; never key material, no network probe unless asked) or say
   none is recorded. A record can predate a migration: the first step of any plan
   touching the target confirms the login reaches the intended machine.
-- **Priors are recorded before checks**, including one stated later in a follow-up.
-  Findings that contradict a prior are surprises: list every one, never absorb them.
+- **Priors are recorded before checks.** A prior stated later (a follow-up that assumes
+  an answer) is checked like the first, inline or with a scoped scout pass. Findings that
+  contradict a prior are surprises: list every one, never absorb them.
 - **A check must be able to fail**, and each check states what it does NOT prove.
   "Looks good", "no errors" and "the model is confident" are not checks. Checks named in
   the contract are not edited by the implementer.
@@ -66,26 +69,28 @@ Path `.finding-unknowns/tasks/{slug}.md`. Template, file layout, gitignore lines
 commit procedure: `references/card.md`. The frozen Brief is never edited; changes go to
 dated, append-only Amendments, and every original prediction is still graded.
 
-## /brief — create and freeze the card
+## /brief-me — create and freeze the card
 
 1. **Mode, once per project.** If `.finding-unknowns/profile.md` lacks it, ask `ship` or
-   `learn` and whether card commits are OK (default yes). Read 4.x files in place
-   (`unknowns-ledger.md`, `implementation-notes.md`, `predictions/`) and offer once to fold
-   them into a card. If `.gitignore` hides `.finding-unknowns/` entirely, offer once to
-   replace that line (`references/card.md`); never edit it silently.
-2. **Map the territory before asking.** Use the instruments in `references/brief.md` as
-   the gap requires: blind-spot pass (`blindspot-scout` for a real sweep), divergent
-   directions, references, interview, a plan that leads with the decisions likely to
-   change.
-3. **The person predicts first.** Ask what they expect, with a confidence: one skippable
-   question in ship mode, up to three in learn mode. Show your prediction only after.
-   Predictions are claims about what you do not control (where the bug is, how many
-   callers break, a number, an outcome), each with a falsifier and a "should not change"
-   half. Things you make true belong in the contract.
-4. **Write the Brief:** approach with a one-line why per decision (more on request), both
-   sides' predictions, the four stop-points with this task's budget multiple, and the
-   contract (claim · check · does NOT prove · lane).
-5. **Freeze.** Commit per `references/card.md`, then write the Timing line in the header.
+   `learn`. Read 4.x files in place (`unknowns-ledger.md`, `unknowns-spec-*.md`,
+   `implementation-notes.md`, `predictions/`) and offer once to fold them into a card. If
+   `.gitignore` hides `.finding-unknowns/` entirely, offer once to replace that line
+   (`references/card.md`); never edit it silently.
+2. **The person predicts first.** Ask what they expect, with a confidence: one skippable
+   question in ship mode, up to three in learn mode. This is their prior; record it before
+   any sweep. Predictions are claims about what you do not control (where the bug is, how
+   many callers break, a number, an outcome), each with a falsifier and a "should not
+   change" half. Things you make true belong in the contract.
+3. **Map the territory.** Use the instruments in `references/brief.md` as the gap
+   requires: blind-spot pass (`blindspot-scout` for a real sweep, given the prior so it
+   reports Surprises), divergent directions, references, interview, a plan that leads
+   with the decisions likely to change. Never ask again for a prior already recorded.
+4. **Write the Brief:** approach with a one-line why per decision (more on request), the
+   person's predictions and then yours, the four stop-points with this task's budget
+   multiple, and the contract (claim · check · does NOT prove · lane). Say that the card
+   will be committed; declining is remembered in `profile.md`.
+5. **Freeze on the person's yes** to the Brief and its contract. Commit per
+   `references/card.md`, then write the Timing line in the header.
 
 ## Building — quiet by default
 
@@ -106,12 +111,14 @@ Stop for the person only at these points:
 Everything else: take the most reversible option, log a one-line delta
 (`deviation | surprise | decided-for-you`, with an evidence pointer), keep going. A dead
 premise with a reversible path left gets an Amendment tagged `decided-for-you`, shown at
-the next stop. Non-urgent questions wait in Open. At a session's end, roll the deltas up
-to three lines on the card (full lines stay in `{slug}.deltas.md`).
+the next stop. Non-urgent questions wait in Open. Commit the card at each stop
+(`references/card.md`). At a session's end, roll the deltas up to three lines on the card
+(full lines stay in `{slug}.deltas.md`).
 
 ## /catch-up — re-orient without restarting
 
 1. Several open cards: list them one line each and ask which; default the most recent.
+   4.x files and no card: offer once to fold them into one.
 2. **Recall before showing**, from the deltas and wrong predictions since Last seen: two
    or three questions in learn mode, one skippable in ship mode; a two-sentence
    teach-back counts. `quiz-master` may draft them.
@@ -141,12 +148,3 @@ For measured results, the card's rows use `references/results.md`.
 | `references/results.md` | a benchmark, backtest, A/B test, training run or reproducible failure; any measured prediction |
 | `references/results-examples.md` | an example card is needed |
 </References>
-
-<Final_Checklist>
-- [ ] Territory checked before any question; absences cited
-- [ ] The person predicted before seeing yours, or skipped; predictions vs contract kept apart
-- [ ] Brief frozen and timed (commit or self-reported); later changes only as Amendments
-- [ ] No stop outside the four; irreversible steps left to the person per command
-- [ ] Debrief quotes predictions by ID, graded by a fresh context or labelled `same-context — weaker`
-- [ ] Every check states what it did not prove; "not checked" non-empty
-</Final_Checklist>

@@ -16,7 +16,9 @@ into implementation.
 Delegate to `blindspot-scout` for a real codebase or domain sweep; run inline for small
 cases.
 
-1. Goal, the person's experience level (infer conservatively), and their prior.
+1. Goal, the person's experience level (infer conservatively), and the prior already
+   recorded in the Brief (never ask for it again; if none was given, infer one and say
+   so).
 2. Explore first: the module, tests, git history, conventions, prior art; for an external
    domain, what practitioners treat as table stakes.
 3. Report compactly, at most about 25 lines plus Surprises:
@@ -95,6 +97,9 @@ Written before the build, because afterwards any outcome can be rationalised.
 - **Checks are locked against the implementer.** Name the check files in the contract;
   the implementing context does not edit them. A test written with the same mistake as
   the feature passes.
+- **Irreversible-lane checks are safe dry-runs** (plan output, `--sql`, `--dry-run`);
+  anything that would perform the irreversible action is a post-check, never a contract
+  check.
 - **Irreversible-lane claims name their post-check:** what runs after the person executes
   the command, and what result closes the item.
 - The person approves the contract with the Brief.

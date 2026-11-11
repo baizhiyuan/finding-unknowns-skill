@@ -10,4 +10,6 @@ it only if the Stage 0 evaluation shows that a fresh session reads the card firs
 least 5 of 6 runs with the hook and in at most 3 of 6 without it. Until then it lives
 here, outside the plugin's `hooks/` directory, so Claude Code does not load it.
 
-To try it yourself, copy `hooks/` into the installed plugin's root.
+To try it yourself, add a SessionStart hook to your own `~/.claude/settings.json` that
+runs this script by its absolute path (`sh /path/to/open-cards.sh`). Copying it into the
+installed plugin does not last: a plugin update replaces the directory.
