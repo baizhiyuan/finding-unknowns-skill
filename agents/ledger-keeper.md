@@ -88,7 +88,7 @@ model: inherit
        one. Location: read `.finding-unknowns/unknowns-ledger.md`; if it is absent but a
        root-level `unknowns-ledger.md` exists (pre-4.3), read that one and return a
        one-line move offer for the caller to relay ("Move unknowns-ledger.md into
-       .finding-unknowns/? y/n"); never move it yourself. Schema: a ledger whose first
+       .finding-unknowns/? y/n"); never move it yourself. If the build has started, the caller writes the move under Open instead of asking. Schema: a ledger whose first
        line is not `schema: 2` is schema 1. Add the missing header fields — depth +
        source, Round 0 topology, UK status, score history — reconstructed from the rows
        where they allow it (e.g. UK rows present → UK in scope; resolution columns →

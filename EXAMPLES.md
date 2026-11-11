@@ -67,8 +67,8 @@ cumulative trials, data spent. One-line note only; no verdict yet.
 Catch me up on export-resumable. Ask me the recall questions first.
 ```
 
-With several open cards, `/fu-catch-up` lists them one line each and suggests the most
-recently changed.
+With several open cards, `/fu-catch-up` takes the most recently changed one and says
+which in one line (no list, no question).
 
 ## Debrief
 

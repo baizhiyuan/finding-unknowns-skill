@@ -72,11 +72,11 @@ dated, append-only Amendments, and every original prediction is still graded.
 1. **Mode: `ship` unless the person asks to learn.** Never ask for it; record `learn` in
    `.finding-unknowns/profile.md` only when the person says so. Read 4.x files in place and
    offer once to fold them into a card. If `.gitignore` hides `.finding-unknowns/`
-   entirely, offer once to replace that line (`references/card.md`); never edit it
+   entirely, offer once to replace that line (`references/card.md`); never
    silently.
 2. **The person predicts first.** A silent, read-only look at the repository may come
    first; nothing from it is shown. Then, in one message, ask what they expect, with a
-   confidence (one skippable question in ship mode, up to three in learn mode), plus any
+   confidence (one skippable question in ship mode, up to three in learn mode), plus step 1's offers and any
    choice the repository cannot answer (audience, out of scope, definition of done,
    business preferences): at most three questions in that message. This is their prior:
    record it before any sweep; never ask for it again. Predictions are claims about what

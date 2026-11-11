@@ -39,9 +39,13 @@ model: inherit
   </Constraints>
 
   <Output_Format>
-    ## Recall ({ship | learn}; {n} questions)
+    ## Recall (learn; {n} questions)
     1. {question}
        <details><summary>Answer</summary>{answer} — {evidence}</details>
+
+    ## Quiz (Technique 8, on request; {n} questions)
+    Same shape as Recall, with 5–8 questions weighted toward deviations, edge cases and
+    interaction effects. Draft it only when the caller asks for a quiz.
 
     **Teach-back alternative:** "In two sentences: {prompt}"
 
@@ -56,7 +60,7 @@ model: inherit
 
   <Failure_Modes_To_Avoid>
     - Softball questions a wrong mental model could still answer
-    - More questions than the mode allows
+    - More questions than the output variant allows (Recall: two or three; a requested Quiz: 5–8)
     - Grading language ("pass", "fail", "must"): there is no gate
     - Questions only about changed lines while the real effect lives in a caller
   </Failure_Modes_To_Avoid>

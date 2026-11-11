@@ -52,7 +52,8 @@ Convert the reactions into explicit criteria in the Brief before any real code.
 2. Read the implementation itself, not a summary.
 3. Extract what transfers (behaviour, invariants, structure) and say what will not
    (idioms, dependencies, scale assumptions).
-4. Confirm the extraction before reimplementing. If the reference conflicts with the host
+4. State the extraction; the person confirms it inside the single Brief-approval ask,
+   before reimplementing. If the reference conflicts with the host
    codebase's conventions, say so; do not pick silently.
 
 ## Interview
@@ -89,7 +90,10 @@ while changing them is free.
    trigger a pivot.
 4. The contract (below).
 5. Mechanical work last, compressed.
-6. End with the two to four decisions that need a yes, a no or a pick.
+6. End with the two to four decisions that need a yes, a no or a pick. They, and any
+   reference-extraction confirmation, form the single Brief-approval ask; nothing else
+   is asked after the follow-up. Offers (continue an open card, a reference, a prototype)
+   belong in the first message and count toward its three questions.
 
 ## The contract
 

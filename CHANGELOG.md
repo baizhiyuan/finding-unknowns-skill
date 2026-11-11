@@ -110,7 +110,15 @@ not yet tested.
   - once the build starts, every turn ends with a completion report or a request at
     one of the four stop-points, never an optional question or a menu;
   - recall questions at `/fu-catch-up` only in learn mode;
-  - the Debrief ends with the bottom line and "Needs you", stated, not asked;
+  - the Debrief ends with the bottom line and "Needs you: X (recommendation: Y)", stated,
+    not asked;
+  - the first look at the repository is silent and read-only, and nothing from it is
+    shown before the person's prediction;
+  - before the build, at most three questions in the first message plus one follow-up
+    round after the sweep; offers and decisions are bundled into those or into the
+    single Brief-approval ask;
+  - `/fu-catch-up` and `/fu-debrief` take the most recently changed open card and say
+    which in one line, without asking;
   - the card records `Structured: no | yes | cartographer`; with structured mode the
     Debrief uses the full packet.
 

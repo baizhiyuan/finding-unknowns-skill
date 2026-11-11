@@ -31,8 +31,8 @@
 智能体不会询问用哪种模式：除非你另有说明，它都按交付模式（`ship`）工作。在这次演示中，请告诉它你想学习，它会把学习模式（`learn`）记入 `profile.md`。随后，在向你展示任何代码内容之前，它先请你做出预测：
 
 ```
-Before I look: if the export crashes halfway and resumes, how long will the resumed
-run take, compared with today's full run? Give a confidence, or say "no idea".
+Before I show you anything: if the export crashes halfway and resumes, how long will
+the resumed run take, compared with today's full run? Give a confidence, or say "no idea".
 ```
 
 你回答：“完整跑一次大约 6 分钟，所以续跑大约 3 分钟。把握 70 %。”这就是你的预期。直到这时，智能体才去查清代码的现状，报告与你的预期不符之处，再给出它自己的预测。你确认之后，任务卡即被冻结并提交到 git。节选如下：
@@ -41,7 +41,7 @@ run take, compared with today's full run? Give a confidence, or say "no idea".
 # Make the nightly order export resumable
 Goal: a crashed export resumes where it stopped · State: building
 Next decision that needs you: none
-Mode: learn · Last seen by you: 2026-11-12, at the Brief
+Mode: learn · Structured: no · Last seen by you: 2026-11-12, at the Brief
 Timing: Brief frozen 2026-11-12, commit 3f9c2ab
 
 ## Brief (frozen 2026-11-12)
@@ -126,7 +126,7 @@ Model changes: you expected resume ≈ half a full run → without the index it 
   than a full run, because each batch re-sorts the table [shown, not confirmed]
 Bottom line: resume is correct (no duplicates or gaps in 3 kill tests) and slow until
   the index exists.
-Needs you: the production index (Open)
+Needs you: the production index (Open) (recommendation: run it in Thursday's maintenance window)
 ```
 
 表格按“理论预期 → 实测 → 是否一致 → 机理”的顺序阅读。P1 的结论是不一致，A1 是一致；两者的机理分别标为已验证和有数据支持。P1 为什么落空：原来的作业用一个游标把整张表读一遍；可续跑的作业则要为每一批单独查询“这个键之后的行”。由于没有与排序匹配的索引，剩下的 250 次查询每次都要扫描并排序全部 500 万行。续跑省掉了一半批次，但每一批的代价都高了很多。

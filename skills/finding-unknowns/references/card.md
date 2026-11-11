@@ -27,7 +27,7 @@ Gitignore lines:
 ```
 
 **4.x projects** ignore the whole `.finding-unknowns/` directory, which hides the card.
-Offer once to replace that line with the lines above. Until the person agrees, cards are
+Offer once, in the first message of `/fu-brief`, to replace that line with the lines above. Until the person agrees, cards are
 not committed and their Timing reads `self-reported`.
 
 ## Template
@@ -103,7 +103,8 @@ Brief (a hash cannot appear in the commit that produces it, and adding it later 
 edit the frozen Brief).
 
 **When:** the Brief freezes; each stop; after the Debrief. Paths: the card, its deltas
-file and, for a research claim, `predictions/{slug}.md`. Create the deltas file (a
+file and, for a research claim, `predictions/{slug}.md`; with `Structured: cartographer`,
+also `unknowns-ledger.md` and `unknowns-spec-{slug}.md`. Create the deltas file (a
 one-line header) when the Brief freezes, so every path exists at the first commit.
 
 **Skip checks, run before anything is staged.** Skip the commit, write

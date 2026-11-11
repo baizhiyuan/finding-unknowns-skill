@@ -9,7 +9,7 @@ argument-hint: "[slug]"
 
 1. Invoke the `finding-unknowns` skill with the Skill tool and follow
    `references/debrief.md` on the card named by the argument (or the most recently
-   changed open card, after confirming).
+   changed open card; say which in one line, do not ask).
 2. Hand `mechanism-auditor` the frozen card and the artifact paths, never the build
    transcript; it fills Measured and Consistent?. Measured results follow
    `references/results.md`.

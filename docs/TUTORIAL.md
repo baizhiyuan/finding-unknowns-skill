@@ -36,8 +36,8 @@ this walkthrough, say you want to learn; it records `learn` in `profile.md`. The
 before it shows you anything from the code, it asks for your prediction:
 
 ```
-Before I look: if the export crashes halfway and resumes, how long will the resumed
-run take, compared with today's full run? Give a confidence, or say "no idea".
+Before I show you anything: if the export crashes halfway and resumes, how long will
+the resumed run take, compared with today's full run? Give a confidence, or say "no idea".
 ```
 
 You answer: "A full run is about 6 minutes, so roughly 3. 70 %." That is your prior. Only
@@ -48,7 +48,7 @@ own prediction. After your yes, the card is frozen and committed. Abridged:
 # Make the nightly order export resumable
 Goal: a crashed export resumes where it stopped · State: building
 Next decision that needs you: none
-Mode: learn · Last seen by you: 2026-11-12, at the Brief
+Mode: learn · Structured: no · Last seen by you: 2026-11-12, at the Brief
 Timing: Brief frozen 2026-11-12, commit 3f9c2ab
 
 ## Brief (frozen 2026-11-12)
@@ -144,7 +144,7 @@ Model changes: you expected resume ≈ half a full run → without the index it 
   than a full run, because each batch re-sorts the table [shown, not confirmed]
 Bottom line: resume is correct (no duplicates or gaps in 3 kill tests) and slow until
   the index exists.
-Needs you: the production index (Open)
+Needs you: the production index (Open) (recommendation: run it in Thursday's maintenance window)
 ```
 
 Read the table as Theory → Measured → Consistent? → Mechanism: P1 is inconsistent and A1

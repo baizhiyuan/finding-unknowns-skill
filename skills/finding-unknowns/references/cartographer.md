@@ -9,7 +9,7 @@ protocol, including with smaller models; Workflow execution (4.x Phase E2) is no
 **How it fits the task card.** The ledger lives beside the card
 (`.finding-unknowns/unknowns-ledger.md`). The spec's priors become the card's
 predictions; its acceptance criteria and verification contract become the card's
-contract; the budget multiple is set in the Brief as usual. The card's Brief freezes on the user's approval of the spec. The four stop-points, the
+contract; the budget multiple is set in the Brief as usual. The card's Brief freezes on the user's approval of the spec; that approval, the § E1 choice and the card freeze are one ask before the build, and the build (with the turn-end rule) starts at the execution yes. Option 3 is not an approval; the card stays unfrozen. The four stop-points, the
 build rule and the `/fu-debrief` grading apply unchanged; at merge, `/fu-debrief` uses the
 full nine-section packet (`handoff-full.md`).
 
@@ -314,9 +314,9 @@ display; depth), an assumptions exposed → resolved table, the **verification c
 writing it grants no execution permission.
 
 **Default end of Cartographer: write the spec, then STOP.** On gate PASS, deliver the
-close-out report and the spec with its verification contract, and stop. Offer the next
-step per § E1 (the consensus-refine plan, option 1, recommended), and `/fu-debrief` at
-merge. That merge debrief always uses the **full** packet (`handoff-full.md`):
+close-out report and the spec with its verification contract, and stop. The next step
+is the single ask in § E1 (the consensus-refine plan, option 1, recommended); the merge
+runs `/fu-debrief`, noted as a line under Open. That merge debrief always uses the **full** packet (`handoff-full.md`):
 Cartographer is high stakes by definition.
 
 **Verification contract — define "verified" before anything is built.** Post-facto,
@@ -360,7 +360,10 @@ The default end of Cartographer is the spec (C2.5). Never auto-execute.
 #### E1 — Next step after the spec (default)
 
 After the spec, ask ONE question — "Spec ready. How to proceed?" — offering options 1
-and 3; offer `/fu-debrief` (full packet) at merge. (4.x option 2, Workflow execution, is
+and 3; the merge `/fu-debrief` (full packet) is a line under Open, not an offer. This
+question, the approval of the spec and the freeze of the card are one ask, made before
+the build; the build, and the rule that every turn ends with a completion report or a
+stop-point request, start at the execution yes. (4.x option 2, Workflow execution, is
 not part of 5.0.)
 
 - **Option 1 — Consensus-refine, then separate execution approval (recommended).** A
@@ -391,13 +394,13 @@ not part of 5.0.)
 The ledger IS the state. To resume an interrupted Cartographer session, re-read
 `.finding-unknowns/unknowns-ledger.md` (and `.finding-unknowns/implementation-notes.md` if
 the build started), announce the current gate status, and continue from the highest-regret
-open row. Do not re-seed.
+open row. After the build starts, interview-route rows are not asked; they go under Open unless they are one of the four stop-points. Do not re-seed.
 
 - **Legacy location.** If `.finding-unknowns/unknowns-ledger.md` is absent but a
   root-level `unknowns-ledger.md` exists (pre-4.3), read it — and a root-level
   `implementation-notes.md` or `unknowns-spec-*.md` likewise — and offer in one line to
   move them into `.finding-unknowns/`. Never move them silently; until the user agrees,
-  keep working on the root-level files.
+  keep working on the root-level files. If the build has started, write the move offer under Open instead of asking.
 - **Schema upgrade.** A ledger whose first line is not `schema: 2` is schema 1 (pre-4.3).
   Before the first round, `ledger-keeper` (its RESUME operation; inline otherwise) adds
   the missing header fields — depth + source, Round 0 topology, UK status, score
@@ -407,7 +410,7 @@ open row. Do not re-seed.
   `unknown (legacy)` field never satisfies a gate condition until the user confirms it;
   on confirmation the marker is removed. So a reconstructed depth or topology counts only
   once confirmed, UK `unknown (legacy)` is not "not applicable", and a missing topology
-  is re-confirmed with the user (Round 0).
+  is re-confirmed with the user (Round 0). If the build has started, write the re-confirmation under Open instead of asking.
 
 ## Settings
 
@@ -446,4 +449,5 @@ and needs no announcement.
       ran each one or gave a per-command yes; post-checks ran before the row closed
 - [ ] Nothing executed without a separate yes; plan author ≠ plan approver throughout
 - [ ] The merge debrief used the full packet (`handoff-full.md`)
-- [ ] Quiz was generated from the ledger; merge recommendation followed the pass rule
+- [ ] Quiz only if the person asked; then generated from the ledger, and the merge
+      recommendation followed the pass rule

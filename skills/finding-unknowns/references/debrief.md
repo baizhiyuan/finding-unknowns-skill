@@ -55,7 +55,7 @@ Did NOT prove: {one line per check; flag tests written in the same context as th
 Not checked: {at least one item; never empty}
 Model changes: {at most five lines}
 Bottom line: {one line: what holds, what did not}
-Needs you: {X} (recommendation: {Y})
+Needs you: {X} (recommendation: {Y})   # "Needs you: nothing" when nothing is pending
 ```
 
 `Consistent?` is one of `consistent · partly · inconsistent · can't tell`; `post-hoc fit`
@@ -63,13 +63,14 @@ when the prediction was written after the result was seen.
 
 ## Rules
 
-- **Evidence first, summary last.** The commands actually run and their actual output
-  come before any prose about them; the bottom line comes after them. A check that was not run is reported as not run.
+- **Evidence first, then the summary, then `Needs you`.** The commands actually run and
+  their actual output come before any prose about them; the bottom line comes after them.
+  A check that was not run is reported as not run.
 - **Every check states what it did not prove.** A test written by the context that wrote
   the code can share its mistake and still pass; say when that is the case.
 - **"Not checked" is never empty.**
 - **End with the bottom line**, then "Needs you: X (recommendation: Y)" as one line,
-  stated, not asked. No request to reply, no menus, no further work unless the person
+  stated, not asked ("Needs you: nothing" when nothing is pending). No request to reply, no menus, no further work unless the person
   asks.
 - **High-consequence decisions** (what to build, ship or not, who it affects): two or
   three options with trade-offs are written under Open on the card; the reply carries

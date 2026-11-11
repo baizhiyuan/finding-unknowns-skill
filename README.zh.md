@@ -173,6 +173,7 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 - **新上下文评判：** `mechanism-auditor` 只看任务卡和产出文件，不看执行过程的对话记录，并且先评判你的预测。
 - **在预测落空处讲解：** 讲解只写在预测落空的那几行。
 - **证据在前：** 先列出实际运行的命令及其输出，再说明每项检查没有证明什么，以及哪些内容没有人检查过。
+- **以结论收尾：** 最后一行写明 `Needs you: X (recommendation: Y)`（需要你：X，建议：Y），不提问；没有待决事项时写 `Needs you: nothing`。
 - **默认控制在一屏之内**，需要时再展开细节。
 
 ### 实测结果

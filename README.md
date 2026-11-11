@@ -219,6 +219,8 @@ Everything else takes the most reversible option and is logged on the card.
 - **Explanation where it was wrong:** the explanation goes on the rows that missed.
 - **Evidence first:** the commands that ran and their output, what each check did not
   prove, and what nobody checked.
+- **Ends with the bottom line:** the last line states `Needs you: X (recommendation: Y)`,
+  not a question; `Needs you: nothing` when nothing is pending.
 - **One screen by default**, with more detail on request.
 
 ### Measured results

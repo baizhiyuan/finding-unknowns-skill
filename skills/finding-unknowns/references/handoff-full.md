@@ -33,7 +33,8 @@ choose full.
    "no errors were raised", and "the model is confident" are not checks.
 3. **Brief check (intent debt).** If the brief lacks audience, out-of-scope, or a
    definition of done, ask instead of silently filling the gap — an agent that fills
-   gaps rather than challenging a fuzzy request accumulates intent debt. After two failed
+   gaps rather than challenging a fuzzy request accumulates intent debt. On a task card
+   the ask goes in the first message (within its three questions), before the build. After two failed
    rounds of correction, recommend rewriting the brief rather than tweaking it again.
 
 Skip Step 1 when the work is already done and only the handoff remains; say so in the
@@ -55,7 +56,7 @@ gets the full packet: Cartographer is high stakes by definition.
 
 ## Step 3: The handoff packet (the core deliverable)
 
-Both sizes hold the order rule: **evidence first, summary last**.
+Both sizes hold the order rule: **evidence first, then the summary, then `Needs you`**.
 
 **Compact packet (medium stakes).** Deliver in exactly this order:
 
@@ -69,6 +70,8 @@ Packet size: compact — {reason}
                        — one line per check; flag same-context checks.
 3. Not checked         — at least one thing nobody verified. Never empty.
 4. Summary             — last, and short.
+5. Needs you: {X} (recommendation: {Y}) — one line, stated, not asked;
+                         "Needs you: nothing" when nothing is pending.
 ```
 
 When a prior was recorded or the claim is measured, add a **Prior vs result** line before
@@ -108,6 +111,8 @@ Packet size: full — {reason}
                          (`structured.md`, Technique 8) under Open; no offer in
                          the reply.
 9. Summary             — last, and short.
+   Needs you: {X} (recommendation: {Y}) — one line after the Summary, stated, not
+                         asked; "Needs you: nothing" when nothing is pending.
 ```
 
 Strongest counterargument and Did I miss anything? come from one fresh-context
@@ -115,14 +120,14 @@ refutation: a context that did not produce the work. Without
 subagents, write them yourself but label them `same-context — weaker`; never skip them.
 
 For high-consequence decisions (what to build, ship or not, who it affects, what to
-sacrifice) the Summary becomes **Options and recommendation**: 2–3 options with trade-offs
-and a labelled recommendation. The decision line is left for the user.
+sacrifice), write 2–3 options with trade-offs under Open on the card. The reply ends with
+the Summary and the single `Needs you: X (recommendation: Y)` line, stated, not asked.
 
 ## Step 4: After the handoff
 
-- **Rejection becomes a rule.** When the user rejects something, offer to encode the
-  reason where it will fire next time — a test, a hook, a lint rule, project config —
-  rather than in memory. That is
+- **Rejection becomes a rule.** When the user rejects something, record the reason
+  under Open as a line to encode where it will fire next time — a test, a hook, a lint
+  rule, project config — rather than in memory. That is
   how taste compounds.
 - **Orchestration tax.** If agents are producing more than the user can stand behind —
   several large unreviewed changes pending, approvals arriving faster than a read takes —
@@ -180,6 +185,7 @@ Packet size: full — schema migration on a shared production table.
 7. Not checked: lock duration at production size; replica lag.
 8. Would you bet on this in front of the on-call? If not: run it on the staging snapshot.
 9. Summary: migration is correct on small data; production behaviour unverified.
+   Needs you: the staging-snapshot run (recommendation: before merge)
 ```
 Why good: evidence first, the checks' limits stated, the decision that changes the risk
 picture (backfill semantics) surfaced, and the prior mismatch points straight at it.
@@ -191,9 +197,10 @@ Packet size: compact — refactor of a shared date helper, behind tests.
    written in this session.
 3. Not checked: timezone handling in reports/export.ts.
 4. Summary: helper refactored; callers outside src/ unverified.
+   Needs you: nothing
 ```
 Why good: medium stakes get four sections, not nine — and still evidence first, the
-checks' limits, a non-empty "Not checked", summary last.
+checks' limits, a non-empty "Not checked", summary, then Needs you.
 
 ```
 Done! The migration is ready and all tests pass ✅. Let me know if you want any changes.

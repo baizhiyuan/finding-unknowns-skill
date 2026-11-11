@@ -300,7 +300,7 @@ def framework(zh):
              T("Commands call the skill; it loads only what each step needs, and every step leaves a file you can audit.",
                "命令调用技能，技能按阶段加载所需内容；每一步都留下可核查的文件。"))
     f.mono(40, 168, T("[ 01 ] ENTRY · SLASH COMMANDS", "[ 01 ] 入口 · 斜杠命令"), 13, ACC, "700", spacing="1.5" if not zh else None)
-    cmds = [("$ /fu-brief", T("create + freeze the card", "建卡并冻结")), ("$ /fu-catch-up", T("recall, then what changed", "先回忆，再看变化")),
+    cmds = [("$ /fu-brief", T("create + freeze the card", "建卡并冻结")), ("$ /fu-catch-up", T("what changed; recall in learn mode", "变化摘要；学习模式下先回忆")),
             ("$ /fu-debrief", T("grade the predictions", "评判预测")), ("$ /fu-cartographer", T("structured mode, high stakes", "高风险任务，结构化模式"))]
     xs = [40, 330, 620, 880]
     for (c, d), x in zip(cmds, xs):

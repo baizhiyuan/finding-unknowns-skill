@@ -132,9 +132,10 @@ an earlier decision, flag the conflict immediately.
 2. Read the underlying implementation, not a screenshot or summary.
 3. Extract the transferable essence — behavior, invariants, structure — and state what
    will NOT transfer (language idioms, deps, scale assumptions).
-4. Confirm the extraction before reimplementing.
+4. State the extraction; the person confirms it inside the single Brief-approval ask,
+   before reimplementing.
 
-Stop when the user confirms the extracted semantics. Guardrail: when the reference
+Stop when the extraction is stated; it is confirmed in the Brief-approval ask. Guardrail: when the reference
 conflicts with host-codebase conventions, surface the conflict; don't silently pick a side.
 
 ### Technique 5 — Implementation plan (KU)
@@ -188,7 +189,8 @@ logged — answer them preemptively.
 
 ### Technique 8 — Quiz (UU, post-hoc)
 
-The quiz runs inline: the main context writes the report, asks the questions and grades
+Technique 8 runs only when the person asks for a quiz (saying they want to learn
+counts as asking). The quiz runs inline: the main context writes the report, asks the questions and grades
 the answers. `quiz-master` only drafts questions, from the diff, the card and the ledger
 (a context that didn't write the change probes what its author glosses over); it never
 grades. In 5.0 this quiz is opt-in; it is a merge gate only if the person asks for one.

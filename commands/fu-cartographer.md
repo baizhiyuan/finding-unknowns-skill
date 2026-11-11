@@ -25,7 +25,7 @@ Direct entry into Cartographer mode (structured mode, high stakes).
      every round;
    - enforce the six-condition gate and the irreversibility floor (C2);
    - write the spec with its verification contract (C2.5);
-   - stop and offer the next step (§ E1).
+   - stop and ask the single § E1 question.
 4. In any build from the spec, irreversible steps are prepared, not executed (the build
    rule). Delegate ledger bookkeeping and quadrant scoring to `ledger-keeper` when
    available.
