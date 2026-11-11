@@ -1,0 +1,16 @@
+diff --git a/dates.py b/dates.py
+index a6fda9e..9a71dc0 100644
+--- a/dates.py
++++ b/dates.py
+@@ -1,5 +1,9 @@
+-from datetime import date, timedelta
++from datetime import date, datetime, timedelta, timezone
++
++# Business timezone (Asia/Shanghai, UTC+8, no DST). Explicit so it doesn't
++# depend on the container's TZ (the Dockerfile sets TZ=UTC).
++BUSINESS_TZ = timezone(timedelta(hours=8))
+ 
+ def yesterday() -> date:
+     """The local business day that just ended."""
+-    return date.today() - timedelta(days=1)
++    return datetime.now(BUSINESS_TZ).date() - timedelta(days=1)

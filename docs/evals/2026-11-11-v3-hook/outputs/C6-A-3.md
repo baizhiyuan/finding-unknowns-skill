@@ -1,0 +1,1 @@
+Fixed the typo in `README.md` line 3: "recieve" is now "receive". I didn't commit the change.

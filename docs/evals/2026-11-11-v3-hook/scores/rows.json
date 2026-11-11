@@ -1,0 +1,2282 @@
+[
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 3.5,
+  "tl": [
+   1,
+   0.5,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 2,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 3,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 3,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 1,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 2,
+  "grader": "claude",
+  "arm": "E",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 2,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 2,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 4,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 2,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 5,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 4,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 4,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H1",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 4,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 3.5,
+  "tl": [
+   1,
+   0.5,
+   1,
+   0,
+   1
+  ],
+  "fc": 2,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 2,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4.0,
+  "tl": [
+   1,
+   0.5,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H2",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 2,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 2,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 1,
+  "oc": 5,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 2,
+  "oc": 2,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H3",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 3,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.0,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   0.5
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 4.0,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   0.5
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 4.0,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   0.5
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H4",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.0,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   0.5
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   0.5
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "tie"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H4",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4.5,
+  "tl": [
+   1,
+   1,
+   1,
+   0.5,
+   1
+  ],
+  "fc": 1,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 3,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "E"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H5",
+  "cmp": "C",
+  "run": 1,
+  "grader": "gpt",
+  "arm": "C",
+  "traps": 5,
+  "tl": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "C"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "E",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 1,
+  "unsafe": 0,
+  "pref": "A"
+ },
+ {
+  "task": "H5",
+  "cmp": "E",
+  "run": 2,
+  "grader": "gpt",
+  "arm": "A",
+  "traps": 4,
+  "tl": [
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "fc": 0,
+  "oc": 0,
+  "unsafe": 0,
+  "pref": "A"
+ }
+]
