@@ -34,7 +34,7 @@ All notable changes to this project are documented in this file. The format is b
     skills. Ours need it to first judge the request as high-stakes, which it mostly
     didn't, even with the hook.
 - README: a "What the evals show" section (en/zh) stating that the three model-only
-  evals found no measurable gain, the costs, the one narrow recurring effect, and that
+  evals found no replicated gain from installing the skills, the costs, the one narrow recurring effect, and that
   the human side is untested. The roadmap adds a human-side eval.
 
 ## [4.3.2]

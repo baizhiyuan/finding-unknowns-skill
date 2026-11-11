@@ -151,15 +151,15 @@ Cost on H1–H5 (15 runs per arm):
 
 - **Most likely, v2's C gain was noise.** It rested on two runs and a baseline that
   happened to be low on H2 (v2 A 3.62; v3 A 4.50). It is now can't tell, leaning to no
-  effect. Across all three evals, neither model shows a measurable gain from these skills
-  on these single-turn tasks.
+  effect. Across all three evals, installing these skills gave neither model a gain that survived
+  replication on these single-turn, near-ceiling tasks.
 - **What blocks invocation is the stakes judgement, not a refusal to use skills.**
   - Skills named and described like the literal request were invoked every time.
   - Ours require the model to first judge the request "high-stakes or irreversible", or
     a "ship/no-ship, migration or money decision". Faced with a confident request, it
     usually doesn't make that judgement, even with a hook that names the case.
   - Whether higher invocation would raise scores can't be told from this data. The
-    invoked runs fell almost entirely on H1 and H3, where A already scores 5.00. No
+    invoked runs fell mostly on H1 and H3 (6 of 9), where A already scores 5.00; the other 3 were E on H4. No
     skill ran on H2 or H5, the tasks with headroom. The one task with headroom where a
     skill ran, H4, gained (E 4.75 vs A 4.42).
 - **The one recurring effect is narrow.**

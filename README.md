@@ -156,7 +156,7 @@ analysis tasks:
   replicated gain. Baselines were already 22–23 of 25, leaving about 2–3 traps of
   headroom. An apparent +2.5 for Sonnet in v2 did not replicate in v3 (three runs per
   arm). How much using a skill helps, as opposed to installing it, is barely measured.
-- **A measurable cost.** +15 % to +70 % cost or tokens (about 40 % in v3), longer
+- **A measurable cost.** Roughly +10 % to +70 % in input tokens or cost (about 40 % in USD in v3), longer
   answers, and more false claims or overclaims in most skill arms.
 - **One narrow effect recurred, for Sonnet only.** When `keep-the-reasoning` ran on a
   merge decision, Sonnet usually named what the tests did not prove: 4 of 5 runs,
@@ -536,7 +536,7 @@ What field tests and reviews changed:
 Not done yet:
 
 - **Run `fu-execute-verified` in a live Workflow runtime** — so far exercised only against a stubbed agent runtime.
-- **Evaluate the human side** — a multi-turn eval with a simulated user who holds unstated requirements and a wrong expectation, measuring rework, the questions asked, and whether the expectation gets corrected. The three model-only evals found no measurable gain (see [What the evals show](#what-the-evals-show)).
+- **Evaluate the human side** — a multi-turn eval with a simulated user who holds unstated requirements and a wrong expectation, measuring rework, the questions asked, and whether the expectation gets corrected. The three model-only evals found no replicated gain from installing the skills (see [What the evals show](#what-the-evals-show)).
 - **Move the remaining prompted guarantees into code** where the runtime allows.
 - **Ontology / entity-convergence tracking** — consciously deferred in v3.6.0 because the Round 0 topology gate covers convergence more cheaply; to revisit if component drift shows up in tests.
 
