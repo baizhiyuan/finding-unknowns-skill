@@ -1,0 +1,21 @@
+diff --git a/dates.py b/dates.py
+index a6fda9e..a8e3968 100644
+--- a/dates.py
++++ b/dates.py
+@@ -1,5 +1,13 @@
+-from datetime import date, timedelta
++from datetime import date, datetime, timedelta
++from zoneinfo import ZoneInfo
+ 
+-def yesterday() -> date:
++# Business timezone. Must not depend on the container's TZ (the image uses UTC,
++# while cron fires in Asia/Shanghai, so the two dates differ at 00:30 local).
++BUSINESS_TZ = ZoneInfo("Asia/Shanghai")
++
++def today(now: datetime | None = None) -> date:
++    return (now or datetime.now(BUSINESS_TZ)).astimezone(BUSINESS_TZ).date()
++
++def yesterday(now: datetime | None = None) -> date:
+     """The local business day that just ended."""
+-    return date.today() - timedelta(days=1)
++    return today(now) - timedelta(days=1)

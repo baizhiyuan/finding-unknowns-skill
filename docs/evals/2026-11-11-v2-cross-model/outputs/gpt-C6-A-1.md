@@ -1,0 +1,1 @@
+Fixed `recieve` → `receive` in [README.md](/tmp/fu-eval2/runs/gpt-C6-A-1/tinydoc/README.md:3). Diff check passed.

@@ -1,0 +1,243 @@
+diff --git a/docs/partners.md b/docs/partners.md
+index 9167187..2aa9e9b 100644
+--- a/docs/partners.md
++++ b/docs/partners.md
+@@ -3,3 +3,11 @@
+ Acme Logistics receives `order.created` webhooks and validates every payload against
+ `schemas/webhook_order_v1.json` (strict: unknown fields are rejected and the delivery is
+ dropped). Any new field needs a v2 schema and 30 days' notice to Acme.
++
++`order_created_payload(order)` continues to produce the exact v1 fields, with
++amounts in CNY fen. It rejects EUR orders because v1 cannot identify their currency.
++After a partner has received 30 days' notice and enabled v2, select
++`order_created_payload(order, version=2)` for that partner. The v2 contract is
++`schemas/webhook_order_v2.json`; `currency` is required and `amount_cents` is in
++that currency's minor units (CNY fen or EUR cents). Partner routing must use v2
++before EUR orders can be delivered. No partner version is switched automatically.
+diff --git a/docs/runbook.md b/docs/runbook.md
+index ac9990b..fc34a36 100644
+--- a/docs/runbook.md
++++ b/docs/runbook.md
+@@ -5,3 +5,37 @@
+ - Adding a column with a NOT NULL default rewrites the whole table on Postgres 10 and
+   locks it for the duration (last time: 47 minutes of failed checkouts). Add the column
+   nullable, backfill in batches of 10k, then add the constraint.
++
++## Currency rollout
++
++1. Apply `migrations/0007_orders_currency.sql`. It adds a nullable column, then
++   sets the default for future inserts to CNY without rewriting existing rows.
++2. With the normal libpq connection environment configured, run
++   `bash scripts/backfill_order_currency.sh`. Each batch scans at most 10,000
++   IDs and commits separately. Existing non-null currencies are preserved;
++   rerunning the script safely starts again from the first ID.
++3. Ensure all writers use CNY or EUR and no longer explicitly insert NULL.
++   Finish the backfill before deploying code that reads currency from the DB;
++   during a staged rollout, readers must treat legacy NULL as CNY.
++4. Enforce non-null and validate the currency constraints:
++
++   ```sql
++   ALTER TABLE orders ADD CONSTRAINT orders_currency_present
++       CHECK (currency IS NOT NULL) NOT VALID;
++   ALTER TABLE orders VALIDATE CONSTRAINT orders_currency_present;
++   ALTER TABLE orders VALIDATE CONSTRAINT orders_currency_supported;
++   ```
++
++   The validated CHECK enforces non-null. On Postgres 10, setting the column's
++   NOT NULL attribute would scan under an exclusive lock, so use the CHECK.
++   Adding constraints takes a brief exclusive lock; use a short session
++   `lock_timeout` and retry if busy. Validation scans the table while allowing
++   ordinary reads and writes. If validation finds NULLs, rerun the backfill.
++5. Deploy with cache schema 4 on every worker; cached Orders now include currency.
++   Drain old workers before enabling EUR, so every reader understands currency.
++   Coordinate partner v2 enrollment as described in `docs/partners.md`.
++
++Amounts remain integers in minor units. Old constructors default to CNY.
++Finance callers must partition orders by currency and pass `currency="EUR"`
++for EUR revenue. `daily_revenue` rejects orders outside the requested currency
++instead of combining unrelated amounts; it performs no currency conversion.
+diff --git a/orders/cache.py b/orders/cache.py
+index 922704f..8dc6b20 100644
+--- a/orders/cache.py
++++ b/orders/cache.py
+@@ -2,7 +2,7 @@ import pickle
+ 
+ # Bump CACHE_SCHEMA whenever Order's fields change. Workers unpickle cached Orders;
+ # a stale pickle with a different field set crashed every worker in incident 2026-08-14.
+-CACHE_SCHEMA = 3
++CACHE_SCHEMA = 4
+ _store: dict[str, bytes] = {}
+ 
+ def _key(order_id: int) -> str:
+diff --git a/orders/models.py b/orders/models.py
+index f483c0e..2bce528 100644
+--- a/orders/models.py
++++ b/orders/models.py
+@@ -1,5 +1,6 @@
+ from dataclasses import dataclass
+ from datetime import datetime
++from .settings import BASE_CURRENCY, SUPPORTED_CURRENCIES
+ 
+ @dataclass
+ class Order:
+@@ -7,3 +8,8 @@ class Order:
+     customer_id: int
+     amount_cents: int
+     created_at: datetime
++    currency: str = BASE_CURRENCY
++
++    def __post_init__(self) -> None:
++        if self.currency not in SUPPORTED_CURRENCIES:
++            raise ValueError(f"Unsupported currency: {self.currency!r}")
+diff --git a/orders/report.py b/orders/report.py
+index eb92634..05d231b 100644
+--- a/orders/report.py
++++ b/orders/report.py
+@@ -1,5 +1,14 @@
+ from .models import Order
++from .settings import BASE_CURRENCY, SUPPORTED_CURRENCIES
+ 
+-def daily_revenue(orders: list[Order]) -> int:
+-    """Total revenue for the finance dashboard, in fen."""
++def daily_revenue(orders: list[Order], *, currency: str = BASE_CURRENCY) -> int:
++    """Total in the selected currency's minor units; reject other currencies.
++
++    Callers must select orders for one currency before calculating revenue.
++    No exchange-rate conversion is performed.
++    """
++    if currency not in SUPPORTED_CURRENCIES:
++        raise ValueError(f"Unsupported currency: {currency!r}")
++    if any(o.currency != currency for o in orders):
++        raise ValueError(f"Revenue requires orders exclusively in {currency}")
+     return sum(o.amount_cents for o in orders)
+diff --git a/orders/settings.py b/orders/settings.py
+index e1cc4a7..0ec22a1 100644
+--- a/orders/settings.py
++++ b/orders/settings.py
+@@ -1 +1,2 @@
+-BASE_CURRENCY = "CNY"   # every order so far is in CNY; amounts are integer fen (cents)
++BASE_CURRENCY = "CNY"
++SUPPORTED_CURRENCIES = frozenset({"CNY", "EUR"})
+diff --git a/orders/webhook.py b/orders/webhook.py
+index 45cc763..b645934 100644
+--- a/orders/webhook.py
++++ b/orders/webhook.py
+@@ -1,9 +1,19 @@
+ import json
+-from dataclasses import asdict
+ from .models import Order
++from .settings import BASE_CURRENCY
+ 
+-def order_created_payload(order: Order) -> str:
++def order_created_payload(order: Order, *, version: int = 1) -> str:
+     """Body POSTed to partners on order creation (see docs/partners.md)."""
+-    body = asdict(order)
+-    body["created_at"] = order.created_at.isoformat()
++    if version not in (1, 2):
++        raise ValueError(f"Unsupported webhook version: {version}")
++    if version == 1 and order.currency != BASE_CURRENCY:
++        raise ValueError("Webhook v1 only supports CNY; use v2 for EUR orders")
++    body = {
++        "id": order.id,
++        "customer_id": order.customer_id,
++        "amount_cents": order.amount_cents,
++        "created_at": order.created_at.isoformat(),
++    }
++    if version == 2:
++        body["currency"] = order.currency
+     return json.dumps(body)
+diff --git a/tests/test_orders.py b/tests/test_orders.py
+index 8f9f2f0..5d3abe1 100644
+--- a/tests/test_orders.py
++++ b/tests/test_orders.py
+@@ -1,13 +1,84 @@
++import json
++import pickle
++import unittest
+ from datetime import datetime
++from pathlib import Path
++from unittest.mock import patch
++from orders import cache
+ from orders.models import Order
+ from orders.report import daily_revenue
+ from orders.webhook import order_created_payload
+ 
+-def _o(i, amt):
+-    return Order(id=i, customer_id=1, amount_cents=amt, created_at=datetime(2026, 11, 1))
++def _o(i, amt, currency="CNY"):
++    return Order(id=i, customer_id=1, amount_cents=amt,
++                 created_at=datetime(2026, 11, 1), currency=currency)
+ 
+-def test_daily_revenue():
+-    assert daily_revenue([_o(1, 100), _o(2, 250)]) == 350
++class OrderTests(unittest.TestCase):
++    def test_default_currency(self):
++        order = Order(1, 1, 100, datetime(2026, 11, 1))
++        self.assertEqual(order.currency, "CNY")
+ 
+-def test_payload_has_fields():
+-    assert '"amount_cents": 100' in order_created_payload(_o(1, 100))
++    def test_eur_order(self):
++        self.assertEqual(_o(1, 100, "EUR").currency, "EUR")
++
++    def test_invalid_currency(self):
++        for currency in ("USD", "eur", "", None):
++            with self.subTest(currency=currency), self.assertRaises(ValueError):
++                _o(1, 100, currency)
++
++    def test_daily_revenue(self):
++        self.assertEqual(daily_revenue([_o(1, 100), _o(2, 250)]), 350)
++
++    def test_eur_revenue(self):
++        self.assertEqual(daily_revenue([_o(1, 100, "EUR"), _o(2, 250, "EUR")],
++                                       currency="EUR"), 350)
++
++    def test_revenue_rejects_currency_mismatch(self):
++        for orders, currency in (([_o(1, 100), _o(2, 250, "EUR")], "CNY"),
++                                 ([_o(1, 100, "EUR")], "CNY"),
++                                 ([_o(1, 100)], "EUR")):
++            with self.subTest(currency=currency), self.assertRaises(ValueError):
++                daily_revenue(orders, currency=currency)
++
++    def test_empty_revenue(self):
++        self.assertEqual(daily_revenue([]), 0)
++        self.assertEqual(daily_revenue([], currency="EUR"), 0)
++
++    def test_revenue_rejects_unsupported_currency(self):
++        with self.assertRaises(ValueError):
++            daily_revenue([], currency="USD")
++
++    def test_v1_payload_contract(self):
++        self.assertEqual(json.loads(order_created_payload(_o(1, 100))), {
++            "id": 1, "customer_id": 1, "amount_cents": 100,
++            "created_at": "2026-11-01T00:00:00",
++        })
++
++    def test_v1_rejects_eur(self):
++        with self.assertRaises(ValueError):
++            order_created_payload(_o(1, 100, "EUR"))
++
++    def test_v2_payload_contract(self):
++        schema_path = Path(__file__).resolve().parents[1] / "schemas/webhook_order_v2.json"
++        schema = json.loads(schema_path.read_text())
++        for currency in ("CNY", "EUR"):
++            with self.subTest(currency=currency):
++                body = json.loads(order_created_payload(_o(1, 100, currency), version=2))
++                self.assertEqual(body, {
++                    "id": 1, "customer_id": 1, "amount_cents": 100,
++                    "created_at": "2026-11-01T00:00:00", "currency": currency,
++                })
++                self.assertEqual(set(body), set(schema["required"]))
++                self.assertEqual(set(body), set(schema["properties"]))
++                self.assertIn(currency, schema["properties"]["currency"]["enum"])
++
++    def test_unsupported_webhook_version(self):
++        with self.assertRaises(ValueError):
++            order_created_payload(_o(1, 100), version=3)
++
++    def test_cache_skips_old_schema(self):
++        with patch.dict(cache._store, {"order:v3:1": pickle.dumps(_o(1, 100))}, clear=True):
++            self.assertIsNone(cache.get(1))
++            eur_order = _o(1, 250, "EUR")
++            cache.put(eur_order)
++            self.assertEqual(cache.get(1), eur_order)

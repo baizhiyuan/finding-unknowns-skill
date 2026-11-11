@@ -1,0 +1,20 @@
+diff --git a/dates.py b/dates.py
+index a6fda9e..8036e0a 100644
+--- a/dates.py
++++ b/dates.py
+@@ -1,5 +1,13 @@
+-from datetime import date, timedelta
++from datetime import date, datetime, timedelta, timezone
++
++# Business day boundaries are Asia/Shanghai (UTC+8, no DST). Don't rely on the
++# container's TZ (the image sets TZ=UTC), or runs after local midnight but before
++# 08:00 UTC+8 would see the previous day as "today".
++BUSINESS_TZ = timezone(timedelta(hours=8))
++
++def today() -> date:
++    return datetime.now(BUSINESS_TZ).date()
+ 
+ def yesterday() -> date:
+     """The local business day that just ended."""
+-    return date.today() - timedelta(days=1)
++    return today() - timedelta(days=1)

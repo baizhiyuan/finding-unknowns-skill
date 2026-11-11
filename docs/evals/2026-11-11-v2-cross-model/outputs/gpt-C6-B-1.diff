@@ -1,0 +1,10 @@
+diff --git a/README.md b/README.md
+index fea7f6c..ec09c57 100644
+--- a/README.md
++++ b/README.md
+@@ -1,4 +1,4 @@
+ # tinydoc
+ 
+-A small static-site helper. Run `tinydoc build` and you will recieve a `site/` folder
++A small static-site helper. Run `tinydoc build` and you will receive a `site/` folder
+ with the rendered pages.
