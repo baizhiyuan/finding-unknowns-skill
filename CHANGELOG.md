@@ -8,7 +8,8 @@ All notable changes to this project are documented in this file. The format is b
 
 ### Added
 - `docs/design/5.0.md`: the proposed 5.0 design. The plugin is rebuilt around one task
-  card per task (`/brief`, `/catch-up`, `/debrief`): predictions frozen before the work,
+  card per task (`/brief`, `/catch-up`, `/debrief`, renamed `/fu-brief`, `/fu-catch-up`,
+  `/fu-debrief` in 5.0.0): predictions frozen before the work,
   four checkable stop-points, teaching at the point of error, a fresh-context Debrief,
   research claims with stopping rules, and a two-stage human-side evaluation with a
   pre-registered kill rule. Cartographer and Workflow execution are removed;
