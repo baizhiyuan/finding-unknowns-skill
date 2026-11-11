@@ -146,6 +146,33 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 > **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own). `theory-vs-result` is distilled from the author's own empirical research practice and generalized for any measured claim: a number is not a finding until you know what was expected, whether the gap beats noise, and why it came out that way.
 
+### What the evals show
+
+Three blinded, pre-registered evaluations ([docs/evals](docs/evals/)) asked whether
+these skills make current models catch more planted traps on single-turn coding and
+analysis tasks:
+
+- **No measurable gain.** With or without the skills, gpt-6.1-sol and claude-sonnet-5-5
+  caught about 22–23 of 25 traps. An apparent +2.5 for Sonnet in v2 did not replicate in
+  v3 (three runs per arm).
+- **A measurable cost.** About 40 % more cost, longer answers and more overclaims.
+- **One narrow effect recurred.** When `keep-the-reasoning` ran on a merge decision, the
+  model usually named what the tests did not prove: 4 of 5 runs, against 1 of 12
+  without it.
+- **Sonnet rarely invokes these skills unprompted.** A description that restates the
+  user's request is invoked every time.
+
+None of the evals tested the side these skills exist for: your own understanding.
+That means:
+
+- the principles and expected results laid out before the work;
+- a build that does not keep interrupting you;
+- a debrief that says whether the result matched and, if not, which link broke and why.
+
+All of it serves one goal: you keep your judgment and learn while the agent works. That
+is the next evaluation. Until then, treat these skills as a way of working for you, not
+as a measured boost to the model.
+
 ---
 
 ## Features
@@ -506,6 +533,7 @@ What field tests and reviews changed:
 Not done yet:
 
 - **Run `fu-execute-verified` in a live Workflow runtime** — so far exercised only against a stubbed agent runtime.
+- **Evaluate the human side** — a multi-turn eval with a simulated user who holds unstated requirements and a wrong expectation, measuring rework, the questions asked, and whether the expectation gets corrected. The three model-only evals found no measurable gain (see [What the evals show](#what-the-evals-show)).
 - **Move the remaining prompted guarantees into code** where the runtime allows.
 - **Ontology / entity-convergence tracking** — consciously deferred in v3.6.0 because the Round 0 topology gate covers convergence more cheaply; to revisit if component drift shows up in tests.
 

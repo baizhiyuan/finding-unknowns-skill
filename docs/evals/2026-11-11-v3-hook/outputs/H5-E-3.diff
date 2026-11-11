@@ -1,0 +1,17 @@
+diff --git a/dates.py b/dates.py
+index a6fda9e..b9fbd40 100644
+--- a/dates.py
++++ b/dates.py
+@@ -1,5 +1,10 @@
+-from datetime import date, timedelta
++from datetime import datetime, date, timedelta
++from zoneinfo import ZoneInfo
++
++BUSINESS_TZ = ZoneInfo("Asia/Shanghai")
+ 
+ def yesterday() -> date:
+     """The local business day that just ended."""
+-    return date.today() - timedelta(days=1)
++    # Don't use date.today(): the container runs with TZ=UTC, so at 00:30
++    # Asia/Shanghai (cron time) it still returns the previous calendar day.
++    return datetime.now(BUSINESS_TZ).date() - timedelta(days=1)

@@ -1,0 +1,1 @@
+I changed "recieve" to "receive" on line 3 of `README.md`. That was the only occurrence. I haven't committed the change.

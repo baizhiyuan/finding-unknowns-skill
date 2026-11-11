@@ -1,0 +1,76 @@
+diff --git a/orders/cache.py b/orders/cache.py
+index 922704f..8dc6b20 100644
+--- a/orders/cache.py
++++ b/orders/cache.py
+@@ -2,7 +2,7 @@ import pickle
+ 
+ # Bump CACHE_SCHEMA whenever Order's fields change. Workers unpickle cached Orders;
+ # a stale pickle with a different field set crashed every worker in incident 2026-08-14.
+-CACHE_SCHEMA = 3
++CACHE_SCHEMA = 4
+ _store: dict[str, bytes] = {}
+ 
+ def _key(order_id: int) -> str:
+diff --git a/orders/models.py b/orders/models.py
+index f483c0e..091cf37 100644
+--- a/orders/models.py
++++ b/orders/models.py
+@@ -1,9 +1,14 @@
+ from dataclasses import dataclass
+ from datetime import datetime
+ 
++from .settings import BASE_CURRENCY
++
+ @dataclass
+ class Order:
+     id: int
+     customer_id: int
+     amount_cents: int
+     created_at: datetime
++    # ISO 4217 code; amount_cents is in this currency's minor unit.
++    # Defaults to BASE_CURRENCY so existing call sites and legacy rows (NULL in DB) stay CNY.
++    currency: str = BASE_CURRENCY
+diff --git a/orders/webhook.py b/orders/webhook.py
+index 45cc763..bda42a3 100644
+--- a/orders/webhook.py
++++ b/orders/webhook.py
+@@ -2,8 +2,15 @@ import json
+ from dataclasses import asdict
+ from .models import Order
+ 
++# Fields that must NOT reach partners until a new schema version is agreed.
++# Acme validates against schemas/webhook_order_v1.json (additionalProperties: false) and
++# drops deliveries with unknown fields; a v2 schema needs 30 days' notice (docs/partners.md).
++_NOT_IN_V1 = ("currency",)
++
+ def order_created_payload(order: Order) -> str:
+     """Body POSTed to partners on order creation (see docs/partners.md)."""
+     body = asdict(order)
++    for field in _NOT_IN_V1:
++        body.pop(field, None)
+     body["created_at"] = order.created_at.isoformat()
+     return json.dumps(body)
+diff --git a/tests/test_orders.py b/tests/test_orders.py
+index 8f9f2f0..60b226e 100644
+--- a/tests/test_orders.py
++++ b/tests/test_orders.py
+@@ -11,3 +11,19 @@ def test_daily_revenue():
+ 
+ def test_payload_has_fields():
+     assert '"amount_cents": 100' in order_created_payload(_o(1, 100))
++
++def test_currency_defaults_to_base():
++    assert _o(1, 100).currency == "CNY"
++
++def test_webhook_payload_stays_v1_compatible():
++    import json
++    from pathlib import Path
++    schema = json.loads(Path("schemas/webhook_order_v1.json").read_text())
++    eur = Order(id=1, customer_id=1, amount_cents=100, created_at=datetime(2026, 11, 1), currency="EUR")
++    body = json.loads(order_created_payload(eur))
++    assert set(body) <= set(schema["properties"])
++    assert set(schema["required"]) <= set(body)
++
++def test_cache_schema_bumped():
++    from orders import cache
++    assert cache.CACHE_SCHEMA >= 4

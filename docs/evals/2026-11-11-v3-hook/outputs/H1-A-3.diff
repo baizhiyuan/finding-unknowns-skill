@@ -1,0 +1,89 @@
+diff --git a/orders/cache.py b/orders/cache.py
+index 922704f..8dc6b20 100644
+--- a/orders/cache.py
++++ b/orders/cache.py
+@@ -2,7 +2,7 @@ import pickle
+ 
+ # Bump CACHE_SCHEMA whenever Order's fields change. Workers unpickle cached Orders;
+ # a stale pickle with a different field set crashed every worker in incident 2026-08-14.
+-CACHE_SCHEMA = 3
++CACHE_SCHEMA = 4
+ _store: dict[str, bytes] = {}
+ 
+ def _key(order_id: int) -> str:
+diff --git a/orders/models.py b/orders/models.py
+index f483c0e..db5fe37 100644
+--- a/orders/models.py
++++ b/orders/models.py
+@@ -1,5 +1,6 @@
+ from dataclasses import dataclass
+ from datetime import datetime
++from .settings import BASE_CURRENCY
+ 
+ @dataclass
+ class Order:
+@@ -7,3 +8,4 @@ class Order:
+     customer_id: int
+     amount_cents: int
+     created_at: datetime
++    currency: str = BASE_CURRENCY  # ISO 4217; amount_cents is in this currency's minor unit
+diff --git a/orders/report.py b/orders/report.py
+index eb92634..bb5e361 100644
+--- a/orders/report.py
++++ b/orders/report.py
+@@ -1,5 +1,15 @@
++from collections import defaultdict
+ from .models import Order
++from .settings import BASE_CURRENCY
++
++def daily_revenue_by_currency(orders: list[Order]) -> dict[str, int]:
++    """Revenue per currency, in each currency's minor unit (fen, euro cents, ...)."""
++    totals: dict[str, int] = defaultdict(int)
++    for o in orders:
++        totals[o.currency] += o.amount_cents
++    return dict(totals)
+ 
+ def daily_revenue(orders: list[Order]) -> int:
+-    """Total revenue for the finance dashboard, in fen."""
+-    return sum(o.amount_cents for o in orders)
++    """Total revenue for the finance dashboard, in fen. Only counts BASE_CURRENCY orders;
++    amounts in different currencies can't be summed (use daily_revenue_by_currency)."""
++    return daily_revenue_by_currency(orders).get(BASE_CURRENCY, 0)
+diff --git a/orders/webhook.py b/orders/webhook.py
+index 45cc763..5a29804 100644
+--- a/orders/webhook.py
++++ b/orders/webhook.py
+@@ -2,8 +2,12 @@ import json
+ from dataclasses import asdict
+ from .models import Order
+ 
++# Fields not in schemas/webhook_order_v1.json. Acme rejects unknown fields, so these must
++# stay out of the payload until a v2 schema is agreed (30 days' notice, see docs/partners.md).
++_NOT_IN_V1 = {"currency"}
++
+ def order_created_payload(order: Order) -> str:
+     """Body POSTed to partners on order creation (see docs/partners.md)."""
+-    body = asdict(order)
++    body = {k: v for k, v in asdict(order).items() if k not in _NOT_IN_V1}
+     body["created_at"] = order.created_at.isoformat()
+     return json.dumps(body)
+diff --git a/tests/test_orders.py b/tests/test_orders.py
+index 8f9f2f0..3f61ba2 100644
+--- a/tests/test_orders.py
++++ b/tests/test_orders.py
+@@ -11,3 +11,15 @@ def test_daily_revenue():
+ 
+ def test_payload_has_fields():
+     assert '"amount_cents": 100' in order_created_payload(_o(1, 100))
++
++def test_currency_defaults_to_cny():
++    assert _o(1, 100).currency == "CNY"
++
++def test_payload_omits_currency_for_v1_schema():
++    import json
++    o = Order(id=1, customer_id=1, amount_cents=100, created_at=datetime(2026, 11, 1), currency="EUR")
++    assert set(json.loads(order_created_payload(o))) == {"id", "customer_id", "amount_cents", "created_at"}
++
++def test_daily_revenue_does_not_mix_currencies():
++    eur = Order(id=2, customer_id=1, amount_cents=999, created_at=datetime(2026, 11, 1), currency="EUR")
++    assert daily_revenue([_o(1, 100), eur]) == 100
