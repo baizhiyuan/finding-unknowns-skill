@@ -7,9 +7,9 @@ protocol, including with smaller models; Workflow execution (4.x Phase E2) is no
 5.0.
 
 **How it fits the task card.** The ledger lives beside the card
-(`.finding-unknowns/unknowns-ledger.md`). The spec's verification contract becomes the
-card's contract, and its acceptance criteria and priors become the card's predictions.
-The card's Brief freezes on the user's approval of the spec. The four stop-points, the
+(`.finding-unknowns/unknowns-ledger.md`). The spec's priors become the card's
+predictions; its acceptance criteria and verification contract become the card's
+contract; the budget multiple is set in the Brief as usual. The card's Brief freezes on the user's approval of the spec. The four stop-points, the
 build rule and the `/fu-debrief` grading apply unchanged; at merge, `/fu-debrief` uses the
 full nine-section packet (`handoff-full.md`).
 
@@ -73,8 +73,7 @@ from how productive the round felt.
 ### C0: Seed the ledger
 
 Create `.finding-unknowns/unknowns-ledger.md` at the project root (owned by
-`ledger-keeper` when installed; the directory and its `.gitignore` rule are in SKILL.md
-Execution_Policy, Artifacts). The file opens with a header block — first line
+`ledger-keeper` when installed; the directory and its `.gitignore` rule are in `card.md`). The file opens with a header block — first line
 `schema: 2` (the ledger format version; the fields below are schema 2), then depth +
 source, the Round 0 locked topology (components, statuses, deferral reasons), the UK
 status (in scope, or not applicable with the user's confirmation), and a per-round
@@ -381,8 +380,8 @@ not part of 5.0.)
 - Keep the ledger open through the build: every mid-build discovery becomes a row
   (quadrant + regret + reversibility), conservative option chosen and logged (the card's delta
   log feeds the ledger).
-- Post: build the quiz FROM the ledger — one question per resolved high-regret row and per
-  named UU. Merge only when no open row has regret ≥ 1.0 and every irreversible row —
+- Post: if the person wants a quiz, build it from the ledger — one question per resolved
+  high-regret row and per named UU (Technique 8: inline; `quiz-master` only drafts). Merge only when no open row has regret ≥ 1.0 and every irreversible row —
   including those discovered mid-build — is user-confirmed or deferred with an accepted
   default. Hand over at merge with `/fu-debrief` and the full packet (Cartographer is
   high stakes by definition).

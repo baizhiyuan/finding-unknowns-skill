@@ -13,5 +13,6 @@ argument-hint: "[slug]"
 2. Hand `mechanism-auditor` the frozen card and the artifact paths, never the build
    transcript; it fills Measured and Consistent?. Measured results follow
    `references/results.md`.
-3. Default view on one screen; append to the prediction log; commit per
-   `references/card.md`; update "Last seen".
+3. Default view on one screen; if the card says `Structured: yes` or
+   `Structured: cartographer`, use the full packet (`references/handoff-full.md`) instead.
+   Append to the prediction log; commit per `references/card.md`; update "Last seen".

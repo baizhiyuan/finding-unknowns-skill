@@ -8,10 +8,12 @@ the reasons. Whether any of this helps people is untested.
 
 ```
 commands/        /fu-brief · /fu-catch-up · /fu-debrief   thin dispatchers, no procedure
+                 /fu-cartographer, /fu-brief --structured  structured mode (opt-in)
 skills/finding-unknowns/
   SKILL.md       the card, the three operations, the stop-points, always-on rules
   references/    loaded only by the phase that needs it
-agents/          blindspot-scout · mechanism-auditor · quiz-master   (all read-only)
+agents/          blindspot-scout · mechanism-auditor · quiz-master   (read-only)
+                 ledger-keeper · prototype-smith   structured mode; write only their own files
 extras/session-start-hook/   not shipped; pending the Stage 0 evaluation
 ```
 
@@ -23,9 +25,14 @@ extras/session-start-hook/   not shipped; pending the Stage 0 evaluation
 | `references/debrief.md` | Grading steps, the default view, surrender signals, recall questions |
 | `references/results.md` | Theory → Measured → Consistent? → Mechanism, the run table, the Debug path, the two verdicts |
 | `references/results-examples.md` | Example cards and anti-patterns |
+| `references/structured.md` | Structured mode only: quadrant routing (Phase 0) and the eight numbered techniques |
+| `references/cartographer.md` | Cartographer only: the unknowns ledger, regret ordering, clarity display, six-condition gate, spec with verification contract |
+| `references/handoff-full.md` | Structured mode or a Cartographer merge: stakes triage and the nine-section packet |
 | `blindspot-scout` | Reconnaissance for the Brief: Surprises against the person's prior, cited findings, a rewritten request |
 | `mechanism-auditor` | Fresh-context grader at `/fu-debrief` and for measured results |
-| `quiz-master` | Drafts recall questions for `/fu-catch-up`; flags diff hunks no delta explains. No gate |
+| `quiz-master` | Drafts recall questions for `/fu-catch-up` (learn mode) and the optional structured-mode quiz; flags diff hunks no delta explains. Never grades; no gate |
+| `ledger-keeper` | Cartographer only: seeds, scores and audits the ledger; rules on the six-condition gate. Writes only the ledger |
+| `prototype-smith` | Divergent directions for taste the person will recognise. Writes only throwaway files under `.finding-unknowns/prototypes/` |
 | SessionStart hook | Prints each open card's header. Kept in [`extras/`](../extras/session-start-hook/README.md), outside the plugin, until Stage 0 shows it helps |
 
 The commands only invoke the skill and name an operation. Every agent is optional: without
@@ -42,11 +49,14 @@ continues from it.
 | `.finding-unknowns/tasks/{slug}.md` | The card | yes |
 | `.finding-unknowns/tasks/{slug}.deltas.md` | Every delta, append-only | yes |
 | `.finding-unknowns/predictions/{slug}.md` | Research claim cards and run tables | yes |
-| `.finding-unknowns/profile.md` | `mode: ship \| learn`, `commits: yes \| no` | no |
+| `.finding-unknowns/profile.md` | `mode: ship \| learn` (default ship), `commits: yes \| no` | no |
+| `.finding-unknowns/unknowns-ledger.md`, `unknowns-spec-{slug}.md` | Structured mode: ledger and spec | yes, with the card |
+| `.finding-unknowns/prototypes/` | Directions; structured-mode files | no |
 | `.finding-unknowns/predictions-log.md` | One line per graded prediction | no |
 | `.finding-unknowns/logs/` | Command output and other detail | no |
 
-A card has a header (goal, state, next decision that needs you, mode, Last seen, Timing),
+A card has a header (goal, state, next decision that needs you, mode, Structured flag,
+Last seen, Timing),
 the frozen **Brief**, append-only **Amendments**, this session's **Deltas**, at most five
 **Model changes**, **Open** items and the **Debrief**. The live part stays within about 40
 lines. The full template is in
@@ -63,7 +73,7 @@ lines. The full template is in
                                                                               prediction log
 ```
 
-1. **Brief.** Mode once per project. The person's prediction comes first, with a
+1. **Brief.** Ship mode unless the person asks to learn; never asked. The person's prediction comes first, with a
    confidence: it is their prior, recorded before any sweep, so the blind-spot pass can
    report Surprises against it. Then the agent maps the territory (never asking what the
    territory answers) and gives its own prediction. It writes the approach (one line of
@@ -73,11 +83,14 @@ lines. The full template is in
 2. **Build.** Quiet by default. A reversible choice takes the most reversible option and
    becomes a one-line delta (`deviation | surprise | decided-for-you`) with an evidence
    pointer. The card is committed at each stop; at a session's end the deltas roll up to
-   three lines on the card.
-3. **Catch-up.** Recall questions first, then only what changed since Last seen, then the
+   three lines on the card. Every turn ends with a completion report or a stop-point
+   request, never a menu; the person's code is left uncommitted.
+3. **Catch-up.** Recall questions first in learn mode only, then only what changed since Last seen, then the
    next decision.
 4. **Debrief.** Each frozen prediction is quoted by ID and graded; explanation goes on the
-   rows that missed; an evidence block closes it. The card is committed again.
+   rows that missed; an evidence block closes it, then the bottom line and "Needs you",
+   stated, not asked. With `Structured: yes | cartographer` on the card, the full packet
+   (`handoff-full.md`) is used. The card is committed again.
 
 Research claims use a prediction card, a stopping rule and a run table in
 `predictions/{slug}.md`; no verdict before the stopping rule is met.
@@ -122,7 +135,7 @@ One agent writes both the predictions and the work, so the guards are structural
   the card, delta lines, raw evidence, explanation at the point of error. Waste: skill
   text loaded on trivial tasks, score tables, a rule stated three times, any sentence that
   changes neither a decision nor the person's model. Hence per-phase references, a
-  one-screen Debrief, and no announced modes or levels.
+  one-screen Debrief, and no announced modes or levels in the default flow.
 - **Territory before questions.** Never ask what the code, docs or data can answer.
 - **Teaching at the point of error.** Depth follows prediction accuracy, not
   self-description: a correct, confident prediction skips the explanation.
@@ -131,12 +144,19 @@ One agent writes both the predictions and the work, so the guards are structural
   untested. Docs claim nothing beyond the [design](design/5.0.md) and the
   [evals](evals/).
 
+## Structured mode (opt-in)
+
+The 4.x protocol, on top of the card, only on request: `/fu-brief --structured` adds
+quadrant routing and the eight numbered techniques; `/fu-cartographer` runs Cartographer
+(the unknowns ledger, regret ordering, a clarity display, the six-condition gate, a spec
+with a verification contract). The Debrief then uses the full nine-section packet. The
+card, the stop-points and fresh-context grading still apply. It exists because smaller
+models may need explicit steps; that is a hypothesis, not a finding.
+
 ## Removed in 5.0
 
-Cartographer (quadrant routing, the unknowns ledger, regret, clarity scores, the
-six-condition gate), Workflow execution, the must-pass quiz, the separate
-keep-the-reasoning and theory-vs-result skills (merged into the references),
-`ledger-keeper`, `prototype-smith`, and `/blindspot`, `/cartographer`, `/change-quiz`.
-They were protocol for the model, not explanation for the person. A blind-spot pass is
-still available inside `/fu-brief`. The 4.x content is available at tag `v4.3.2`; the
-reasoning is in [design §1 and §9](design/5.0.md).
+Workflow execution, the must-pass quiz, the separate keep-the-reasoning and
+theory-vs-result skills (merged into the references), and `/blindspot`, `/cartographer`
+(now `/fu-cartographer`), `/change-quiz`. A blind-spot pass is still available inside
+`/fu-brief`. The 4.x content is available at tag `v4.3.2`; the reasoning is in
+[design §1, §9 and §10](design/5.0.md).

@@ -50,7 +50,7 @@ always-on version.
 
 ```
 /fu-brief "make the export job resumable"   # you predict, territory checked, agent predicts; frozen on your yes
-/fu-catch-up                                # next session: recall, then what changed
+/fu-catch-up                                # next session: what changed (recall first in learn mode)
 /fu-debrief                                 # predictions graded; what changes in your model
 ```
 
@@ -72,9 +72,9 @@ Update the same way you installed:
 <details>
 <summary><b>Clone, upgrading from 4.x, and version check</b></summary>
 
-`install.sh` overwrites in place and removes 4.x files it recognises as its own
-(Cartographer, Workflow templates, keep-the-reasoning, theory-vs-result, ledger-keeper,
-prototype-smith, the old commands):
+`install.sh` overwrites in place and removes 4.x files it recognises as its own (the
+Workflow reference `workflows.md`, the separate keep-the-reasoning and theory-vs-result
+skills, the old commands):
 
 ```bash
 cd finding-unknowns-skill && git pull origin main && bash install.sh
@@ -161,8 +161,8 @@ moment comes. Structured mode is a separate layer that is never loaded unless yo
 
 <p align="center"><img src="assets/quadrants.svg" alt="The four quadrants of unknowns and the instrument for each" width="100%"></p>
 
-The Brief starts by asking what kind of gap this is, because each kind needs a different
-instrument:
+The Brief starts with your prediction. The agent then works out what kind of gap
+remains, because each kind needs a different instrument:
 
 - **Known knowns** are in your request; the risk is that they stay implicit, so they are
   written down.
@@ -211,7 +211,7 @@ Everything else takes the most reversible option and is logged on the card.
 
 ### Debrief
 
-<p align="center"><img src="assets/debrief.svg" alt="Debrief: inputs, the fresh-context grader's three steps, and what you see on one screen" width="100%"></p>
+<p align="center"><img src="assets/debrief.svg" alt="Debrief: the slide toward cognitive surrender, who grades, and the seven parts in order, evidence first and the bottom line last" width="100%"></p>
 
 - **Predictions quoted, not restated:** each is quoted by ID from the frozen card.
 - **Graded by a fresh context:** `mechanism-auditor` sees the card and the artifacts, not
@@ -235,12 +235,12 @@ Benchmarks, backtests, A/B tests and training runs use **Theory → Measured →
 
 ### Learning
 
-- **You predict first:** one skippable question in `ship` mode, up to three in `learn`
-  mode.
+- **You predict first:** one skippable question in `ship` mode (the default; you are
+  never asked to pick), up to three in `learn` mode, which you turn on by asking for it.
 - **Explanation follows your misses:** it goes where your prediction missed, not into a
   lecture up front.
-- **Recall in `/fu-catch-up`:** before you see the card, one skippable question in `ship`
-  mode, two or three in `learn` mode. There is no pass mark.
+- **Recall in `/fu-catch-up`, in `learn` mode only:** before you see the card, two or three
+  questions. `ship` mode asks none. There is no pass mark.
 - **Prediction log:** your hit rate over time is logged for you, not committed.
 
 ### Structured mode (optional)
@@ -255,8 +255,8 @@ card:
   interview, references, plan, notes, pitch, quiz).
 - **Cartographer:** every unknown becomes a ledger row with a prior, a regret score
   (cost × chance of being wrong), a route and a reversibility lane. A clarity display each
-  round lets you steer. A six-condition gate decides when building may start, and a spec
-  with a verification contract becomes the card's Brief.
+  round lets you steer. A six-condition gate decides when building may start, and the spec's
+  verification contract becomes the card's contract.
 - **The full handoff packet:** stakes triage and nine sections, evidence first.
 
 The card, the four stop-points and fresh-context grading still apply.
@@ -268,7 +268,7 @@ The card, the four stop-points and fresh-context grading still apply.
 | Command | What it does |
 |---|---|
 | `/fu-brief <task>` | Take your prediction, map the territory, then give the agent's; agree the stop-points and the contract; freeze and commit the card |
-| `/fu-catch-up [slug]` | Recall questions, then only what changed since you last looked, and the next decision that needs you |
+| `/fu-catch-up [slug]` | Recall questions in `learn` mode, then only what changed since you last looked, and the next decision that needs you |
 | `/fu-debrief [slug]` | Grade every frozen prediction with a fresh context; evidence, what the checks did not prove, model changes |
 | `/fu-cartographer <task>` | Structured mode for high stakes: the Cartographer ledger, gate and spec on top of the card |
 

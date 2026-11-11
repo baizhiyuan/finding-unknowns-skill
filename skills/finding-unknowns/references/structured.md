@@ -12,7 +12,9 @@ techniques and a ledger. That is a hypothesis under test, not a finding.
 
 **What changes in structured mode.**
 - Phase 0 classifies the gap on the quadrant map and announces the routing, and the
-  numbered techniques below replace the short instrument list in `brief.md`.
+  numbered techniques below replace the short instrument list in `brief.md`. Phase 0 and
+  Techniques 1–5 run inside the Brief, after the person's prediction; Technique 5's
+  Definition of verified becomes the card's contract.
 - High-stakes work can escalate to Cartographer (`cartographer.md`): ledger, regret
   ordering, clarity display, six-condition gate, spec with verification contract.
 - The debrief uses the full nine-section packet (`handoff-full.md`).
@@ -185,10 +187,10 @@ logged — answer them preemptively.
 
 ### Technique 8 — Quiz (UU, post-hoc)
 
-`quiz-master` can draft the questions from the diff, the card and the ledger; a context
-that didn't write the change probes what its author glosses over. The report and the
-grading run inline. In 5.0 this quiz is opt-in; it is a merge gate only if the person
-asks for one.
+The quiz runs inline: the main context writes the report, asks the questions and grades
+the answers. `quiz-master` only drafts questions, from the diff, the card and the ledger
+(a context that didn't write the change probes what its author glosses over); it never
+grades. In 5.0 this quiz is opt-in; it is a merge gate only if the person asks for one.
 
 1. Report first (Markdown, `.finding-unknowns/change-report.md`, by default; HTML on
    request): **Context**, **What changed** (grouped by intent, not file), **How it

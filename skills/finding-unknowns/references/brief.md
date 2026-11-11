@@ -36,7 +36,7 @@ cases.
 1. Gather real material (data samples, constraints, references) so options are concrete.
 2. Produce several genuinely different directions (default 3–4): different structures,
    framings or interaction models. Variations on one idea do not count.
-3. One self-contained artifact (`.finding-unknowns/logs/{slug}-directions.html` for
+3. One self-contained artifact (`.finding-unknowns/prototypes/{slug}.html` for
    visual work, Markdown otherwise), each direction with a one-line thesis and what it
    optimises for and gives up. Fake every backend; never touch the real application.
 4. Three to five questions that help the person say what they like.

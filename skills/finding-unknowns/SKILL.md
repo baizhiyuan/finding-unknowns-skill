@@ -18,12 +18,10 @@ Unknowns"; the handoff from Addy Osmani's "Critical thinking when agents do the 
 Community skill; not affiliated with or endorsed by Anthropic.*
 
 <Purpose>
-Help the person stay the owner of the work: know what is being done and why, predict
-what should happen, see where reality differed and what that changes in their own model.
-One Markdown **task card** per task carries this across sessions. Interrupt the person
-only at four checkable stop-points; everything else goes on the card for them to read
-when they choose. Whether this helps people is untested (see the README); spend words
-only where they change a decision or the person's model.
+Help the person own the work: know what is being done and why, predict what should
+happen, and see where reality differed. One **task card** per task carries this across
+sessions. Interrupt only at four checkable stop-points; everything else goes on the card.
+Spend words only where they change a decision or the person's model.
 </Purpose>
 
 <Use_When>
@@ -71,16 +69,19 @@ dated, append-only Amendments, and every original prediction is still graded.
 
 ## /fu-brief — create and freeze the card
 
-1. **Mode, once per project.** If `.finding-unknowns/profile.md` lacks it, ask `ship` or
-   `learn`. Read 4.x files in place (`unknowns-ledger.md`, `unknowns-spec-*.md`,
-   `implementation-notes.md`, `predictions/`) and offer once to fold them into a card. If
+1. **Mode: `ship` unless the person asks to learn.** Never ask for it; record `learn` in
+   `.finding-unknowns/profile.md` only when the person says so. Read 4.x files in place
+   (`unknowns-ledger.md`, `unknowns-spec-*.md`, `implementation-notes.md`,
+   `predictions/`) and offer once to fold them into a card. If
    `.gitignore` hides `.finding-unknowns/` entirely, offer once to replace that line
    (`references/card.md`); never edit it silently.
-2. **The person predicts first.** Ask what they expect, with a confidence: one skippable
-   question in ship mode, up to three in learn mode. This is their prior; record it before
-   any sweep. Predictions are claims about what you do not control (where the bug is, how
-   many callers break, a number, an outcome), each with a falsifier and a "should not
-   change" half. Things you make true belong in the contract.
+2. **The person predicts first.** In one message, ask what they expect, with a
+   confidence (one skippable question in ship mode, up to three in learn mode), together
+   with any choice the repository explicitly leaves to them; at most three questions in
+   total, none the repository answers. This is their prior; record it before any sweep.
+   Predictions are claims about what you do not control (where the bug is, how many
+   callers break, a number, an outcome), each with a falsifier and a "should not change"
+   half. Things you make true belong in the contract.
 3. **Map the territory.** Use the instruments in `references/brief.md` as the gap
    requires: blind-spot pass (`blindspot-scout` for a real sweep, given the prior so it
    reports Surprises), divergent directions, references, interview, a plan that leads
@@ -108,6 +109,11 @@ Stop for the person only at these points:
    path remains. The Amendment is confirmed by the person.
 4. **Budget:** overrun past the agreed multiple.
 
+**How a turn ends once the build has started:** with a completion report, or with a
+request at one of the four stop-points. Never with an optional question, a menu of
+follow-ups, or a request to commit the person's code (leave code uncommitted and say so);
+optional follow-ups go under Open.
+
 Everything else: take the most reversible option, log a one-line delta
 (`deviation | surprise | decided-for-you`, with an evidence pointer), keep going. A dead
 premise with a reversible path left gets an Amendment tagged `decided-for-you`, shown at
@@ -119,9 +125,9 @@ the next stop. Non-urgent questions wait in Open. Commit the card at each stop
 
 1. Several open cards: list them one line each and ask which; default the most recent.
    4.x files and no card: offer once to fold them into one.
-2. **Recall before showing**, from the deltas and wrong predictions since Last seen: two
-   or three questions in learn mode, one skippable in ship mode; a two-sentence
-   teach-back counts. `quiz-master` may draft them.
+2. **Recall before showing, in learn mode only:** two or three questions from the deltas
+   and wrong predictions since Last seen; a two-sentence teach-back counts. `quiz-master`
+   may draft them. Ship mode: none.
 3. Show only what changed after Last seen: state, deltas, Amendments, model changes,
    the next decision that needs the person. Reconcile with the files and runs first;
    never summarise an old summary.
@@ -135,15 +141,15 @@ Measured and Consistent?; you write only the Mechanism with its tier; the person
 graded first; explanation goes on the rows that missed; evidence block (commands run →
 output, what each check did NOT prove, not checked: never empty); model changes marked
 `shown, not confirmed` until the person confirms; append to the prediction log; commit.
+End with the bottom line and a "Needs you" list stated, not asked; no menus, no further
+work unless asked.
 For measured results, the card's rows use `references/results.md`.
 
 ## Structured mode (optional)
 
-Only when the person asks: "structured mode", `/fu-brief --structured`, or
-`/fu-cartographer` for high stakes. Load `references/structured.md`: quadrant routing, the
-eight numbered techniques, Cartographer (`references/cartographer.md`, with `ledger-keeper`)
-and the full handoff packet (`references/handoff-full.md`). The card, the four
-stop-points and fresh-context grading still apply. Never load it by default.
+Only on request ("structured mode", `/fu-brief --structured`, `/fu-cartographer`): load
+`references/structured.md` first. Its Routing, Depth and Packet-size lines override *No
+protocol narration*; the card, stop-points and grading still apply. Never by default.
 
 </Steps>
 

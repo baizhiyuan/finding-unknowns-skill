@@ -34,6 +34,10 @@ so honesty here is structural, not a promise of self-criticism.
 8. **Evidence block** (below), then Open: what the person needs to decide.
 9. **Append to the prediction log; commit** per `card.md`; update Last seen.
 
+If the card's header says `Structured: yes` or `Structured: cartographer`, use the full
+nine-section packet (`handoff-full.md`) in place of the default view; the steps above
+still apply.
+
 For measured results (benchmarks, backtests, A/B tests, training runs, load tests), the
 rows follow `results.md`: verdict labels, the interval rule, the two verdicts.
 
@@ -88,7 +92,7 @@ up.
 
 - Drawn from the deltas and the wrong predictions since Last seen; `quiz-master` may draft
   them from the card and the diff.
-- Learn mode: two or three. Ship mode: one, skippable.
+- Learn mode: two or three. Ship mode: none.
 - Application, not vocabulary: "Which workload should benefit least, and why?", never
   "what is the function called?".
 - A two-sentence teach-back counts in place of the questions.

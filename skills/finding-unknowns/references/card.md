@@ -9,7 +9,9 @@ One card per task. The person and the agent both read it; the agent keeps it cur
 | `.finding-unknowns/tasks/{slug}.md` | The card | yes |
 | `.finding-unknowns/tasks/{slug}.deltas.md` | Every delta, append-only | yes |
 | `.finding-unknowns/predictions/{slug}.md` | Research claim cards and run tables (`results.md`) | yes |
-| `.finding-unknowns/profile.md` | `mode: ship | learn`, `commits: yes | no` | no |
+| `.finding-unknowns/profile.md` | `mode: ship | learn` (default ship), `commits: yes | no` | no |
+| `.finding-unknowns/unknowns-ledger.md`, `unknowns-spec-{slug}.md` | Structured mode: ledger and spec | yes, with the card |
+| `.finding-unknowns/prototypes/`, `change-report.md`, `implementation-notes.md` | Directions (`brief.md`) and structured-mode files, when used | no |
 | `.finding-unknowns/predictions-log.md` | One line per graded prediction | no |
 | `.finding-unknowns/logs/` | Command output and other detail | no |
 
@@ -34,7 +36,7 @@ frozen Brief and the Debrief are not counted.
 # {task}
 Goal: {one line} · State: {briefing | building | waiting on you | debriefed}
 Next decision that needs you: {one line, or "none"}
-Mode: {ship | learn} · Last seen by you: {date}, after delta D{n}
+Mode: {ship | learn} · Structured: {no | yes | cartographer} · Last seen by you: {date}, after delta D{n}
 Timing: Brief frozen {date}, commit {hash} | self-reported
 
 ## Brief (frozen {date})

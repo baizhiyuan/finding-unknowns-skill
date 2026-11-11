@@ -12,7 +12,8 @@ All notable changes to this project are documented in this file. The format is b
   `/fu-debrief` in 5.0.0): predictions frozen before the work,
   four checkable stop-points, teaching at the point of error, a fresh-context Debrief,
   research claims with stopping rules, and a two-stage human-side evaluation with a
-  pre-registered kill rule. Cartographer and Workflow execution are removed;
+  pre-registered kill rule. Workflow execution is removed (Cartographer later became
+  opt-in structured mode on `v5`);
   keep-the-reasoning and theory-vs-result are merged into one core skill. Nothing ships
   until the Stage 0 evaluation has run. The two advisor reviews are kept verbatim in
   `docs/design/5.0-advisors/`.
@@ -68,7 +69,7 @@ not yet tested.
 - **Learning:**
   - `ship` and `learn` modes;
   - explanation where a prediction missed;
-  - recall questions at `/fu-catch-up`, with no pass mark;
+  - recall questions at `/fu-catch-up` in learn mode, with no pass mark;
   - a personal prediction log.
 - **Research claims:**
   - the person's and the agent's predictions on separate lines;
@@ -98,12 +99,25 @@ not yet tested.
   - `blindspot-scout` is kept.
 - **Install:** `install.sh` keeps a same-named file of yours as `.bak`, and removes 4.x
   files only when they carry this project's markers.
+- **Cartographer** moves from the default high-stakes path into opt-in structured mode;
+  the `/cartographer` command becomes `/fu-cartographer`.
 - **Docs:** the README is rewritten around the card and keeps its explanatory
   sections.
+- **Fewer interruptions (v5.1, after Stage 0):**
+  - no mode question: ship mode by default, learn mode only when the person asks;
+  - no questions about committing the person's code: it is left uncommitted, and the
+    report says so;
+  - once the build starts, every turn ends with a completion report or a request at
+    one of the four stop-points, never an optional question or a menu;
+  - recall questions at `/fu-catch-up` only in learn mode;
+  - the Debrief ends with the bottom line and "Needs you", stated, not asked;
+  - the card records `Structured: no | yes | cartographer`; with structured mode the
+    Debrief uses the full packet.
+
+  Stage 0 (`docs/evals/2026-11-11-stage0` on `main`) selected branch 2, so v5 is not
+  released; v5.1 is to be re-tested on a fresh task pack (Stage 0b).
 
 ### Removed
-- **Cartographer as the default high-stakes path** (it now lives in opt-in structured
-  mode) and the `/cartographer` command (now `/fu-cartographer`).
 - **Workflow execution:** `references/workflows.md` and `tests/workflows/`.
 - **Skills:** `keep-the-reasoning` and `theory-vs-result` as separate skills.
 - **Commands:** `/blindspot` and `/change-quiz`.

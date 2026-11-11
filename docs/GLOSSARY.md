@@ -25,9 +25,10 @@ define each term where it is used; this page is where they meet. Chinese labels 
 - **Timing** — the header line recording when the Brief froze: `commit {hash}` when the
   card was committed, else `self-reported` (no git, an ignored path, other work staged,
   history mid-operation, a failing hook, or commits declined).
-- **Mode** — `ship` or `learn`, asked once per project and stored in `profile.md`. Ship:
-  one skippable prediction question, one-line explanations. Learn: up to three questions,
-  a short why with one concrete example on misses. Never announced during work.
+- **Mode** — `ship` (the default, never asked) or `learn` (only when the person asks;
+  stored in `profile.md`). Ship: one skippable prediction question, one-line explanations,
+  no recall questions. Learn: up to three questions, recall questions at `/fu-catch-up`, a
+  short why with one concrete example on misses. Never announced during work.
 
 ## Predictions and checks
 
@@ -84,5 +85,25 @@ define each term where it is used; this page is where they meet. Chinese labels 
 - **Void** (作废) — a run marked `void: pipeline defect`, only with evidence that the
   defect changes the headline number. The original verdict stays visible.
 
-*Removed in 5.0:* quadrants as announced routing, the ledger, regret, clarity scores, the
-six-condition gate, rigor level and packet size announcements. See tag `v4.3.2`.
+## Structured mode (opt-in)
+
+- **Structured mode** — the 4.x protocol on top of the card, only on request
+  (`/fu-brief --structured`, `/fu-cartographer`): announced quadrant routing (Phase 0),
+  the eight numbered techniques and the full nine-section handoff packet. Recorded on the
+  card as `Structured: yes | cartographer`.
+- **Quadrants** — KK, KU, UK, UU: where a gap lives (known or not, aware or not). Internal
+  vocabulary in the default flow; announced as Routing in structured mode.
+- **Cartographer** — structured mode at high stakes (`/fu-cartographer`): a
+  coverage-gated, regret-ordered clearing loop over the unknowns ledger, ending in a spec
+  whose verification contract becomes the card's contract.
+- **Unknowns ledger** — `.finding-unknowns/unknowns-ledger.md`, one row per unknown with
+  quadrant, route, reversibility and status; rows are never deleted. Kept by
+  `ledger-keeper`.
+- **Regret** — cost-if-wrong × P(wrong); orders which ledger row to clear next.
+- **Clarity display** — per-quadrant clarity scores and a weighted ambiguity figure shown
+  each round; a display, never a gate.
+- **Six-condition gate** — the coverage check before the Cartographer spec: every
+  quadrant probed, no open row with regret ≥ 1.0, every irreversible row confirmed by the
+  person.
+
+*Removed in 5.0:* Workflow execution, the must-pass quiz. See tag `v4.3.2`.

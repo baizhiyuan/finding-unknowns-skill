@@ -26,8 +26,8 @@ Nothing is built until you say yes to the Brief and its contract.
 
 ## Learn vs ship mode
 
-Asked once per project and stored in `.finding-unknowns/profile.md` (personal, not
-committed). Edit that file, or ask:
+`ship` by default and never asked; say you want to learn and it is stored in
+`.finding-unknowns/profile.md` (personal, not committed). Edit that file, or ask:
 
 ```
 Switch this project to learn mode: ask me up to three predictions per brief, and on

@@ -1,6 +1,6 @@
 ---
 name: quiz-master
-description: "Optional recall-question drafter for the finding-unknowns /fu-catch-up step. Given a task card, its deltas since the person last looked, and the diff, it drafts two or three questions (one in ship mode) that a person with a stale or wrong picture of the work would answer wrongly. It did not write the change, so it asks about what the author would gloss over. No pass mark, no gate. Read-only."
+description: "Optional recall-question drafter for the finding-unknowns /fu-catch-up step. Given a task card, its deltas since the person last looked, and the diff, in learn mode it drafts two or three questions that a person with a stale or wrong picture of the work would answer wrongly. It did not write the change, so it asks about what the author would gloss over. No pass mark, no gate. Read-only."
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---
@@ -22,7 +22,7 @@ model: inherit
   <Inputs>
     - The task card path and its `{slug}.deltas.md`
     - The "Last seen" marker (which deltas are new to the person)
-    - The mode: `ship` (one question) or `learn` (two or three)
+    - The mode: `learn` (two or three questions); in `ship` mode the caller asks none
     - The diff or the commit range for the period, when code changed
   </Inputs>
 

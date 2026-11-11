@@ -49,7 +49,7 @@ cd finding-unknowns-skill && bash install.sh
 
 ```
 /fu-brief "让导出任务支持断点续传"   # 你先预测，再查清现状，智能体随后预测；你确认后冻结
-/fu-catch-up                        # 下次会话：先回忆，再看有哪些变化
+/fu-catch-up                        # 下次会话：看有哪些变化（learn 模式下先回忆）
 /fu-debrief                         # 逐条评判预测，指出你的认知需要哪些修正
 ```
 
@@ -70,7 +70,7 @@ cd finding-unknowns-skill && bash install.sh
 <details>
 <summary><b>克隆安装、从 4.x 升级与版本核对</b></summary>
 
-`install.sh` 会直接覆盖已安装的文件，并删除它能确认属于本项目的 4.x 文件（Cartographer、Workflow 模板、keep-the-reasoning、theory-vs-result、ledger-keeper、prototype-smith 以及旧命令）：
+`install.sh` 会直接覆盖已安装的文件，并删除它能确认属于本项目的 4.x 文件（Workflow 参考文件 `workflows.md`、独立的 keep-the-reasoning 和 theory-vs-result 技能以及旧命令）：
 
 ```bash
 cd finding-unknowns-skill && git pull origin main && bash install.sh
@@ -130,7 +130,7 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 
 <p align="center"><img src="assets/zh/quadrants.svg" alt="四类未知及各自对应的方法" width="100%"></p>
 
-简报的第一步是判断缺口属于哪一类，因为每一类都需要不同的方法：
+简报从你的预测开始。随后智能体判断缺口属于哪一类，因为每一类都需要不同的方法：
 
 - **已知的已知**已经包含在你的需求里。风险在于它们始终没有明确写出，所以要先记下来。
 - **已知的未知**是你能明确提出的问题。智能体会逐一提问，影响架构的问题优先；代码里已经有答案的，从不拿来问你。
@@ -167,7 +167,7 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 
 ### 复盘
 
-<p align="center"><img src="assets/zh/debrief.svg" alt="复盘：输入、新上下文评判的三个步骤，以及你在一屏内看到的内容" width="100%"></p>
+<p align="center"><img src="assets/zh/debrief.svg" alt="复盘：滑向放弃判断的过程、由谁评判，以及按顺序呈现的七个部分：证据在前，结论在后" width="100%"></p>
 
 - **原文引用，不转述：** 每条预测都按编号从冻结的任务卡中原文引用。
 - **新上下文评判：** `mechanism-auditor` 只看任务卡和产出文件，不看执行过程的对话记录，并且先评判你的预测。
@@ -185,9 +185,9 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 
 ### 学习
 
-- **你先预测：** `ship` 模式下只问一个可以跳过的问题，`learn` 模式下最多问三个。
+- **你先预测：** `ship` 模式（默认，不会让你选择）下只问一个可以跳过的问题；`learn` 模式只在你提出时开启，最多问三个。
 - **讲解围绕你的失误：** 讲解放在你预测落空的地方，而不是一开始先讲一大段。
-- **在 `/fu-catch-up` 中先回忆：** 在你看到任务卡之前，`ship` 模式提一个可以跳过的回忆性问题，`learn` 模式提两到三个。不设及格线。
+- **在 `/fu-catch-up` 中先回忆（仅限 `learn` 模式）：** 在你看到任务卡之前，提两到三个回忆性问题；`ship` 模式不提问。不设及格线。
 - **预测记录：** 你的命中率会持续记录下来，只供你本人查看，不提交到仓库。
 
 ### 结构化模式（可选）
@@ -197,7 +197,7 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 对于高风险任务，或者当你希望每一步都写明时（这可能对较小的模型有帮助），可以使用 `/fu-brief --structured` 或 `/fu-cartographer`，在任务卡之上叠加 4.x 的完整流程：
 
 - **按象限选择方法**，以及八种编号方法（T1–T8）：盲区排查、方案原型、需求访谈、参考实现、实施计划、实施记录、变更说明、理解测验。
-- **Cartographer 模式：** 每个未知项都成为未知项台账中的一个条目，带有预期、风险值（出错代价 × 出错概率）、处理方式和可逆性分级。每轮显示清晰度，便于你把握方向；六项开工条件决定何时可以开始实施；附有验收标准的定稿规格成为任务卡上的简报。
+- **Cartographer 模式：** 每个未知项都成为未知项台账中的一个条目，带有预期、风险值（出错代价 × 出错概率）、处理方式和可逆性分级。每轮显示清晰度，便于你把握方向；六项开工条件决定何时可以开始实施；定稿规格中的验收标准成为任务卡上的验收标准。
 - **完整交付报告：** 先做影响评估，共九个部分，证据在前。
 
 任务卡、四个打断点和新上下文评判照常适用。
@@ -209,7 +209,7 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 | 命令 | 作用 |
 |---|---|
 | `/fu-brief <任务>` | 先记下你的预测，再查清现状，然后给出智能体的预测；约定打断点和验收标准；冻结任务卡并提交 |
-| `/fu-catch-up [slug]` | 先提回忆性问题，再只显示你上次查看之后的变化，以及需要你做的下一个决定 |
+| `/fu-catch-up [slug]` | `learn` 模式下先提回忆性问题，再只显示你上次查看之后的变化，以及需要你做的下一个决定 |
 | `/fu-debrief [slug]` | 由新上下文评判每条冻结的预测；列出证据、各项检查没有证明什么，以及认知修正 |
 | `/fu-cartographer <任务>` | 高风险任务的结构化模式：在任务卡之上运行 Cartographer 的未知项台账、开工条件和定稿规格 |
 
