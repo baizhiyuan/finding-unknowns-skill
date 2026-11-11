@@ -7,6 +7,12 @@ All notable changes to this project are documented in this file. The format is b
 ## [Unreleased]
 
 ### Added
+- `docs/design/5.0.md`: the proposed 5.0 design. The plugin is rebuilt around one task
+  card per task (`/brief`, `/catch-up`, `/debrief`): predictions frozen before the work,
+  four checkable stop-points, teaching at the point of error, a fresh-context Debrief,
+  research claims with stopping rules, and a two-stage human-side evaluation with a
+  pre-registered kill rule. Cartographer, Workflow execution and keep-the-reasoning are
+  removed or merged. Nothing ships until the Stage 0 evaluation has run.
 - `docs/evals/2026-11-11-v2-cross-model/`: the second comparative eval.
   - **Setup:** gpt-6.1-sol and claude-sonnet-5-5, with and without these skills, on
     five harder pre-registered tasks plus a control. Two runs per cell; cross-family,
