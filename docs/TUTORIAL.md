@@ -19,8 +19,8 @@ In Claude Code:
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-You get one skill, three agents and three commands: `/fu-brief`, `/fu-catch-up`,
-`/fu-debrief`. Other install routes are in the [README](../README.md#quick-start).
+You get one skill, five agents and four commands: `/fu-brief`, `/fu-catch-up`,
+`/fu-debrief`, and `/fu-cartographer` for structured mode. Other install routes are in the [README](../README.md#quick-start).
 
 ## 2. Brief (2 minutes)
 

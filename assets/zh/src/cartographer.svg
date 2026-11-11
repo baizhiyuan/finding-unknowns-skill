@@ -192,7 +192,7 @@
 <text x="816" y="1048" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="500" fill="#C15F3C">检查项</text>
 <text x="874" y="1048" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="500" fill="#C15F3C">能证明什么</text>
 <text x="958" y="1048" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="500" fill="#C15F3C">不能证明什么</text>
-<text x="1040" y="1048" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="500" fill="#C15F3C">类别</text>
+<text x="1040" y="1048" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="500" fill="#C15F3C">可逆性分级</text>
 <rect x="816" y="1086" width="40" height="6" rx="3" fill="#D9D5C8"/>
 <rect x="874" y="1086" width="44" height="6" rx="3" fill="#D9D5C8"/>
 <rect x="958" y="1086" width="72" height="6" rx="3" fill="#D97757"/>
@@ -217,7 +217,7 @@
 <circle cx="820" cy="1276.5" r="2.5" fill="#D97757"/>
 <text x="832" y="1281" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="400" fill="#141413">实现者不得修改检查文件</text>
 <path d="M745 1341 L745 1405" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ac)"/>
-<text x="759" y="1379" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C">写完规格后提供选项：规格与验收标准已获批准</text>
+<text x="759" y="1379" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C">规格写完后提供选项 · 须先批准规格与验收标准</text>
 <clipPath id="cc13"><rect x="40" y="1409" width="744" height="276" rx="12"/></clipPath>
 <rect x="40" y="1409" width="744" height="276" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="40" y="1409" width="744" height="3" fill="#D97757" clip-path="url(#cc13)"/>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="t d">
-<title id="t">When finding-unknowns fires</title><desc id="d">Three moments around one task card: brief before the build, a quiet build, a debrief after; catch-up when you come back.</desc>
+<title id="t">When finding-unknowns fires</title><desc id="d">Three moments around one task card: a Brief before the build, a quiet build, a Debrief after it; a catch-up when you come back.</desc>
 <defs>
 <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
 <marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
@@ -11,16 +11,18 @@
 <rect x="0.5" y="0.5" width="1199" height="619" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <rect x="0.5" y="0.5" width="1199" height="619" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 01 · WHEN IT FIRES</text>
-<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Three moments, one card</text>
-<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">You predict before the work, the agent builds quietly, and the debrief grades what you both expected.</text>
-<rect x="40" y="150" width="340" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Predict before the build, grade after it</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Both predictions go on the card before the work, so the debrief can grade them against what actually happened.</text>
+<rect x="40" y="150" width="548" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <circle cx="57" cy="160" r="4.5" fill="#D97757"/><path d="M49 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="74" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">HUMAN · predict first + approve the Brief</text>
+<text x="74" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">HUMAN · predict first, approve the Brief, OK irreversible steps</text>
 <rect x="612" y="150" width="548" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <circle cx="629" cy="160" r="4.5" fill="#D97757"/><path d="M621 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="646" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">HUMAN · irreversible step + confirm model changes</text>
-<path d="M190 178L190 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-<path d="M886 178L886 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<text x="646" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">HUMAN · answer recall questions + confirm model changes</text>
+<path d="M171 178L171 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<path d="M457 178L457 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<path d="M743 178L743 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<path d="M1029 178L1029 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
 <rect x="40" y="192" width="262" height="320" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <path d="M40 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H40z" fill="#D97757"/>
 <text x="58" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">BRIEF</text>
@@ -96,5 +98,5 @@
 <rect x="40" y="534" width="5" height="56" rx="2.5" fill="#D97757"/>
 <rect x="60" y="548" width="290" height="28" rx="14" fill="#D97757"/>
 <text x="205" y="567" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700" text-anchor="middle">.finding-unknowns/tasks/{slug}.md</text>
-<text x="370" y="567" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">The card persists across sessions; committed, so the predictions' timing is provable.</text>
+<text x="370" y="567" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">The card persists across sessions and is committed, so git shows the predictions came first.</text>
 </svg>

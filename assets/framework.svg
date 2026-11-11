@@ -12,7 +12,7 @@
 <rect x="0.5" y="0.5" width="1199" height="1129" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 02 · ARCHITECTURE</text>
 <text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">One plugin, one skill, one card</text>
-<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Commands enter the skill; the skill loads what each moment needs; everything leaves a file you can audit.</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Commands call the skill; it loads only what each step needs, and every step leaves a file you can audit.</text>
 <text x="40" y="168" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" letter-spacing="1.5">[ 01 ] ENTRY · SLASH COMMANDS</text>
 <rect x="40" y="186" width="117.79999999999998" height="32" rx="16" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <text x="98.89999999999999" y="207" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">$ /fu-brief</text>
@@ -43,7 +43,7 @@
 <text x="84" y="435" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">territory first · absences cited · remote targets</text>
 <circle cx="70" cy="454" r="4" fill="#D97757"/>
 <text x="84" y="459" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">a check must be able to fail</text>
-<text x="64" y="496" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">REFERENCES · LOADED PER MOMENT</text>
+<text x="64" y="496" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">REFERENCES · LOADED PER STEP</text>
 <rect x="64" y="510" width="250" height="64" rx="12" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="64" y="520" width="5" height="44" rx="2.5" fill="#D97757"/>
 <text x="86" y="536" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">card.md</text>

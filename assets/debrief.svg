@@ -12,7 +12,7 @@
 <rect x="0.5" y="0.5" width="1199" height="739" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 06 · DEBRIEF</text>
 <text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Hand off the work, not the judgment</text>
-<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Evidence first, bottom line last: the debrief makes checking cheap and surrender visible.</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Evidence first, bottom line last, so checking stays cheap and surrender shows.</text>
 <text x="40" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">THE SLIDE</text>
 <rect x="40" y="212" width="520" height="22" rx="11" fill="url(#spec)"/>
 <rect x="78.7" y="170" width="96" height="26" rx="13" fill="#D97757"/>
@@ -39,7 +39,7 @@
 <rect x="40" y="478" width="5" height="72" rx="2.5" fill="#D97757"/>
 <text x="64" y="496" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#141413" font-weight="700">The builder writes only the Mechanism</text>
 <text x="64" y="520" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">with its tier: verified · supported · inferred · untested.</text>
-<text x="64" y="542" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Explanation goes where a prediction missed.</text>
+<text x="64" y="542" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Explanation goes only where a prediction missed.</text>
 <text x="40" y="600" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#C15F3C" font-style="italic">Take the handoff where being wrong is cheap;</text>
 <text x="40" y="624" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#C15F3C" font-style="italic">keep the reasoning where others bear the consequences.</text>
 <text x="40" y="650" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">after Addy Osmani, Critical thinking when agents do the work; cognitive surrender: Shaw &amp; Nave</text>

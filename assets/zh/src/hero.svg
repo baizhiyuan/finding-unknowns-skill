@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns v5.0.0</title><desc id="d">横幅：地图上的定位针拨开迷雾。每个任务一张任务卡：你先预测，智能体安静执行，由新上下文评判双方的预期。</desc>
+<title id="t">finding-unknowns v5.0.0</title><desc id="d">横幅：地图上的定位针拨开迷雾。每个任务一张任务卡：你先预测，智能体安静执行，完成后由新上下文评判双方的预测。</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <pattern id="dotsb" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#D97757" opacity="0.75"/></pattern>
@@ -34,20 +34,20 @@
 
 <text x="56" y="70" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#C15F3C" font-weight="700">[ CLAUDE CODE 插件 · v5.0.0 ]</text>
 <text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#141413" font-weight="700">finding-unknowns</text>
-<text x="56" y="198" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#141413">你先预测，智能体安静地执行。</text>
-<text x="56" y="226" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#5E5D59">完成后，由新上下文评判你们双方的预期。</text>
+<text x="56" y="198" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#141413">你先预测，智能体再安静地执行。</text>
+<text x="56" y="226" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#5E5D59">完成后，由新上下文评判你们双方的预测。</text>
 <rect x="56" y="262" width="66" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
 <text x="89.0" y="282.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">任务卡</text>
 <rect x="132.0" y="262" width="97" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
 <text x="180.4" y="282.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">4 个打断点</text>
 <rect x="238.8" y="262" width="108" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="292.8" y="282.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">新上下文复盘</text>
+<text x="292.8" y="282.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">新上下文评判</text>
 <rect x="56" y="300" width="97" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="104.4" y="320.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">3 个子代理</text>
+<text x="104.4" y="320.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">5 个子代理</text>
 <rect x="162.8" y="300" width="111" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
 <text x="218.2" y="320.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">+ 结构化模式</text>
-<rect x="283.6" y="300" width="122" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="344.6" y="320.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">+ 理论 → 实测</text>
+<rect x="283.6" y="300" width="150" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
+<text x="358.6" y="320.0" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">+ 理论预期 → 实测</text>
 <rect x="56" y="352" width="520" height="40" rx="8" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
 <circle cx="76" cy="372" r="4" fill="#B5442E"/><circle cx="92" cy="372" r="4" fill="#D4A27F"/><circle cx="108" cy="372" r="4" fill="#788C5D"/>
 <text x="128" y="377" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#D97757">$</text>

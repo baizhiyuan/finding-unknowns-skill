@@ -22,8 +22,8 @@
 <path d="M544 192L606 192" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <text x="575" y="184" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">STOP</text>
 <rect x="612" y="150" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
-<text x="632" y="186" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Agent prepares the exact command;</text>
-<text x="632" y="210" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">you run it, or say yes to that one command. Post-check before it closes.</text>
+<text x="632" y="186" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">The agent prepares the exact command.</text>
+<text x="632" y="210" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">You run it or say yes to that one command; a post-check runs before it closes.</text>
 <rect x="40" y="248" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="258" width="5" height="64" rx="2.5" fill="#D97757"/>
 <rect x="62" y="264" width="30" height="30" rx="6" fill="#141413"/>
@@ -39,7 +39,7 @@
 <rect x="62" y="362" width="30" height="30" rx="6" fill="#141413"/>
 <text x="77.0" y="382.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">3</text>
 <text x="106" y="384" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Dead premise, no way back</text>
-<text x="106" y="410" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">a premise or a falsifier fired; no reversible path</text>
+<text x="106" y="410" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">a premise died or a falsifier fired; no reversible path left</text>
 <path d="M544 388L606 388" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <text x="575" y="380" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">STOP</text>
 <rect x="612" y="346" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>

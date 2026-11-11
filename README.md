@@ -35,8 +35,8 @@ Install from the plugin marketplace. These are Claude Code slash commands; enter
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-Or clone and run `install.sh`, which installs the skill, its references, the three agents
-and the three commands:
+Or clone and run `install.sh`, which installs the skill, its references, the five agents
+and the four commands:
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -58,8 +58,8 @@ The [5-minute tutorial](docs/TUTORIAL.md) walks through one card from brief to d
 
 ### Updating
 
-Next release: **v5.0.0**, pending the Stage 0 evaluation; the current release is v4.3.2.
-Update the way you installed:
+Next release: **v5.0.0**, pending the Stage 0 evaluation. The current release is v4.3.2.
+Update the same way you installed:
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -80,7 +80,7 @@ prototype-smith, the old commands):
 cd finding-unknowns-skill && git pull origin main && bash install.sh
 ```
 
-4.x is still available from the `v4.3.2` tag. What moved where:
+4.x remains available from the `v4.3.2` tag. For what moved where, see
 [design §11](docs/design/5.0.md#11-migration-for-4x-users).
 
 ```bash
@@ -97,15 +97,15 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 
 When an agent does the work, it is easy to stop knowing what happened. You approve a
 diff you skimmed, a long task drifts from what you meant, and the result becomes yours
-without your judgement in it. Addy Osmani calls the slide **offloading → deferral →
-cognitive surrender**; the term *cognitive surrender* is from Shaw & Nave, _Thinking—Fast,
-Slow, and Artificial_ (SSRN 6097646), and Margaret-Anne Storey writes about the related
+without your judgement in it. Addy Osmani calls this slide **offloading → deferral →
+cognitive surrender**. The term *cognitive surrender* comes from Shaw & Nave, _Thinking—Fast,
+Slow, and Artificial_ (SSRN 6097646); Margaret-Anne Storey writes about the related
 *cognitive debt*.
 
 This plugin keeps one **task card** per task, shared by you and the agent:
 
-- **Before the work,** you write down what you expect, the agent maps the territory, and
-  only then gives its own prediction. Your prediction is recorded before you see the
+- **Before the work,** you write down what you expect. The agent then maps the territory
+  and only after that gives its own prediction. Your prediction is recorded before you see the
   agent's.
 - **During the work,** the agent stops only at four checkable points. Everything else
   goes on the card, for you to read when you choose.
@@ -254,7 +254,7 @@ card:
 - **Quadrant routing** and the eight numbered techniques (blind-spot pass, prototypes,
   interview, references, plan, notes, pitch, quiz).
 - **Cartographer:** every unknown becomes a ledger row with a prior, a regret score
-  (cost × chance of being wrong), a route and a reversibility. A clarity display each
+  (cost × chance of being wrong), a route and a reversibility lane. A clarity display each
   round lets you steer. A six-condition gate decides when building may start, and a spec
   with a verification contract becomes the card's Brief.
 - **The full handoff packet:** stakes triage and nine sections, evidence first.
@@ -298,8 +298,8 @@ use the full names (`/finding-unknowns:fu-brief`).
   models may need explicit steps that frontier models do not (a hypothesis under test).
   Workflow execution and the must-pass quiz are gone. keep-the-reasoning and
   theory-vs-result were merged into the one skill.
-- **What was kept, on design grounds.** The irreversibility floor; "a check must be able
-  to fail" and say what it does not prove; territory before questions; prediction before
+- **What was kept, on design grounds.** The irreversibility floor; checks that can fail and
+  say what they do not prove; territory before questions; prediction before
   data; the two verdicts. None of these has been shown to help people yet.
 - **Field notes** from real use: [docs/field-notes](docs/field-notes/).
 

@@ -11,8 +11,8 @@
 <rect x="0.5" y="0.5" width="1199" height="819" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <rect x="0.5" y="0.5" width="1199" height="819" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 04 · THE TASK CARD</text>
-<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">One file, two readers</text>
-<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">You and the agent read the same card. It survives sessions; the frozen Brief is never edited.</text>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">You and the agent work from one card</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">It survives sessions, and the frozen Brief is never edited, so no prediction can be rewritten after the fact.</text>
 <text x="40" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">.finding-unknowns/tasks/{slug}.md</text>
 <rect x="36" y="168" width="548" height="596" rx="14" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="48" y="176" width="524" height="70" rx="10" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>

@@ -12,7 +12,7 @@
 <rect x="0.5" y="0.5" width="1199" height="739" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700">// 06 · 复盘</text>
 <text x="40" y="96" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="32" fill="#141413" font-weight="700">交出工作，不交出判断</text>
-<text x="40" y="126" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">证据在前，结论在后：复盘让核查变得容易，也让放弃判断无处藏身。</text>
+<text x="40" y="126" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">复盘先列证据、最后给结论，核查成本低，放弃判断也容易被发现。</text>
 <text x="40" y="158" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" font-weight="700">滑坡</text>
 <rect x="40" y="212" width="520" height="22" rx="11" fill="url(#spec)"/>
 <rect x="78.7" y="170" width="96" height="26" rx="13" fill="#D97757"/>
@@ -25,24 +25,24 @@
 <text x="213" y="283" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">产出直接成为</text>
 <text x="213" y="300" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">下一步的输入</text>
 <text x="387" y="262" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" fill="#B5442E" font-weight="700">放弃判断</text>
-<text x="387" y="283" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">产出悄悄变成</text>
-<text x="387" y="300" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">你自己的，不再想去核对</text>
+<text x="387" y="283" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">产出悄悄成了</text>
+<text x="387" y="300" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">你的结论，不再核对</text>
 <path d="M205 246L205 306" stroke="#E3DFD3" stroke-width="1" fill="none"/>
 <path d="M379 246L379 306" stroke="#E3DFD3" stroke-width="1" fill="none"/>
 <text x="40" y="348" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" font-weight="700">由谁评判</text>
 <rect x="40" y="362" width="520" height="92" rx="12" fill="#F0EEE6" stroke="#788C5D" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="372" width="5" height="72" rx="2.5" fill="#788C5D"/>
 <text x="64" y="390" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413" font-weight="700">mechanism-auditor</text>
-<text x="64" y="414" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">只拿到冻结的任务卡和产出，不看执行过程。</text>
+<text x="64" y="414" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">只读取冻结的任务卡和产出文件，不读对话记录。</text>
 <text x="64" y="436" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">填写“实测”和“是否一致”，先评你的预测。</text>
 <rect x="40" y="468" width="520" height="92" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="478" width="5" height="72" rx="2.5" fill="#D97757"/>
 <text x="64" y="496" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" fill="#141413" font-weight="700">执行者只写机理</text>
 <text x="64" y="520" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">并标明层级：已验证 · 有数据支持 · 推断 · 未检验。</text>
-<text x="64" y="542" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">讲解放在预测落空的地方。</text>
+<text x="64" y="542" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">只在预测落空处展开解释。</text>
 <text x="40" y="600" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" fill="#C15F3C">出错代价低的地方，放心交出去；</text>
 <text x="40" y="624" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" fill="#C15F3C">后果由别人承担的地方，判断留在自己手里。</text>
-<text x="40" y="650" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">参考 Addy Osmani《Critical thinking when agents do the work》；“放弃判断”一说出自 Shaw 与 Nave</text>
+<text x="40" y="650" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">参考 Addy Osmani《Critical thinking when agents do the work》；“放弃判断”出自 Shaw 与 Nave</text>
 <text x="620" y="158" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" font-weight="700">/fu-debrief · 按此顺序</text>
 <rect x="620" y="172" width="540" height="64" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="636" y="189" width="30" height="30" rx="6" fill="#D97757"/>
@@ -61,20 +61,20 @@
 <rect x="620" y="316" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="636" y="333" width="30" height="30" rx="6" fill="#141413"/>
 <text x="651.0" y="353.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">3</text>
-<text x="680" y="344" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">原文引用并评判预测</text>
+<text x="680" y="344" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">引用原文，评判预测</text>
 <text x="680" y="365" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">先评你的：一致 · 部分一致 · 不一致 · 无法判断</text>
 <rect x="1076.0" y="336" width="70" height="24" rx="12" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.2"/>
 <text x="1111.0" y="352.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#6A9BCC" font-weight="700" text-anchor="middle">新上下文</text>
 <rect x="620" y="388" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="636" y="405" width="30" height="30" rx="6" fill="#141413"/>
 <text x="651.0" y="425.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">4</text>
-<text x="680" y="416" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">检查没有证明什么</text>
-<text x="680" y="437" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">每项检查一行；同一上下文写的测试要标出</text>
+<text x="680" y="416" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">检查不能证明什么</text>
+<text x="680" y="437" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">每项检查一行；标出同一上下文写的测试</text>
 <rect x="620" y="460" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="636" y="477" width="30" height="30" rx="6" fill="#141413"/>
 <text x="651.0" y="497.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">5</text>
 <text x="680" y="488" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">未检查</text>
-<text x="680" y="509" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">至少一项没人核对过的内容</text>
+<text x="680" y="509" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">至少列出一项无人核对的内容</text>
 <rect x="1076.0" y="480" width="70" height="24" rx="12" fill="#FFFFFF" stroke="#B5442E" stroke-width="1.2"/>
 <text x="1111.0" y="496.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#B5442E" font-weight="700" text-anchor="middle">不可为空</text>
 <rect x="620" y="532" width="540" height="64" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
@@ -91,5 +91,5 @@
 <text x="680" y="653" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">一行；决定权留给你</text>
 <rect x="1100.0" y="624" width="46.0" height="24" rx="12" fill="#D97757" stroke="#D97757" stroke-width="1"/>
 <text x="1123.0" y="640.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#141413" font-weight="700" text-anchor="middle">最后</text>
-<text x="1160" y="686" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" text-anchor="end">结构化模式下使用完整的九段交付包。</text>
+<text x="1160" y="686" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" text-anchor="end">结构化模式下使用完整的九段交付报告。</text>
 </svg>

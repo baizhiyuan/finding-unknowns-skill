@@ -72,6 +72,6 @@
 <rect x="160" y="630" width="1000" height="64" rx="12" fill="#FFFFFF" stroke="#E3DFD3"/><rect x="160" y="640" width="4" height="44" rx="2" fill="#D97757"/>
 <text x="184" y="668" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#C15F3C">计算公式</text>
 <text x="262" y="669" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="500" fill="#141413">模糊度 = 1 − (KK × 0.20 + KU × 0.25 + UK × 0.25 + <tspan fill="#C15F3C" font-weight="700">UU × 0.30</tspan>)</text>
-<text x="1136" y="657" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" text-anchor="end">仅结构化模式：每轮按类别分别评分</text>
+<text x="1136" y="657" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" text-anchor="end">仅结构化模式：每轮对四类未知分别评分</text>
 <text x="1136" y="679" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C" text-anchor="end">仅供参考，不作为开工条件</text>
 </svg>
