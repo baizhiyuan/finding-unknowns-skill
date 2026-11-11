@@ -5,7 +5,10 @@ Sonnet never invoked these skills on its own, but gained +2.5 of 25 when the aut
 one-line CLAUDE.md nudge was added (arm C). v3 asked two questions. Could a hook shipped
 with the plugin replace that manual line, with at least the same effect? And why does
 Sonnet not invoke the skills? [PREREG.md](PREREG.md) was written before any v3 run
-(10:09; the runs ran 10:12–10:18).
+(10:09; the runs ran about 10:11–10:18). The timing is corroborated by file times only,
+and PREREG was committed together with the results. The only earlier activity was an
+infrastructure check that the hook text reaches the model. PREREG names the branch
+`proto/hook-trigger`; that branch was deleted, and its files are kept in `prototype/`.
 
 **Short answer:**
 
@@ -13,11 +16,14 @@ Sonnet not invoke the skills? [PREREG.md](PREREG.md) was written before any v3 r
   baseline, C − A = +0.25 and E (hook) − A = +0.25. Both are inside the noise.
 - **Don't ship the hook.** By the pre-registered criterion ("E − A not beyond noise"), it
   should not ship.
-- **Description wording is what keeps Sonnet from invoking the skills.** Reference skills
-  whose descriptions restate the request were invoked in 15 of 15 runs; ours, in 3 of 15
-  (C) and 6 of 15 (E).
-- **Narrow but recurring:** when `keep-the-reasoning` ran on the merge question (H4), the
-  model usually named what the tests did not prove.
+- **Not a blanket refusal to invoke skills.** Reference skills whose names and
+  descriptions literally match the request were invoked in 15 of 15 runs. Ours need the
+  model to first judge a request as high-stakes, and Sonnet mostly does not, even when a
+  hook tells it to: the reminder names "deleting data", yet H2 got 0 of 3 invocations.
+  Ours were invoked in 3 of 15 runs (C) and 6 of 15 (E).
+- **Narrow but recurring, Sonnet only:** when `keep-the-reasoning` ran on the merge
+  question (H4), Sonnet usually named what the tests did not prove. GPT caught this
+  without the skill.
 
 ## Setup
 
@@ -26,7 +32,10 @@ Sonnet not invoke the skills? [PREREG.md](PREREG.md) was written before any v3 r
   All arms were interleaved in one batch: 72 runs.
 - **Isolation:** the hardened `scripts/cbox.sh`:
   - PID and IPC namespaces;
-  - / read-only, with only the run's fixture copy and config dir writable;
+  - / read-only, with only the run's fixture copy and config dir writable, and the real
+    `~/.claude/.credentials.json` bind-mounted read-write so that token refresh works.
+    The model ran with `bypassPermissions` inside the box. No run touched that file, but
+    a future version should mount it read-only or use an API key;
   - `~/.ssh`, `~/project`, `~/.claude/CLAUDE.md` and `~/.claude/projects` hidden.
 
   Each run got its own copy of an isolated config dir holding only auth.
@@ -37,8 +46,8 @@ Sonnet not invoke the skills? [PREREG.md](PREREG.md) was written before any v3 r
   |---|---|
   | A | plain |
   | C | the v4.3.2 plugin (`--plugin-dir`), plus the author's one-line `CLAUDE.md` ([prototype/CLAUDE-nudge.md](prototype/CLAUDE-nudge.md)) |
-  | E | the v4.3.2 plugin plus a UserPromptSubmit hook that injects a 91-word reminder covering all three skills, ending "Keep the final answer to what changes the user's next decision" ([prototype/hooks](prototype/hooks)); no `CLAUDE.md` |
-  | R | five reference skills, one per hard task, whose descriptions restate the task (e.g. "Use when asked to free disk space, clean up a directory or delete old files") with a neutral three-line body ([prototype/reference-skills](prototype/reference-skills)). Invocation was counted; R was not graded. |
+  | E | the v4.3.2 plugin plus a UserPromptSubmit hook that injects a 91-word reminder covering all three skills, including a brevity line ("Keep the final answer to what changes the user's next decision") and an opt-out for trivial requests ([prototype/hooks](prototype/hooks)); no `CLAUDE.md`. The hook output is not logged in stream-json, so that it fired in every run is inferred from a manual check and E's 3 of 3 `keep-the-reasoning` invocations on H4 |
+  | R | five reference skills, one per hard task, whose descriptions restate the task (e.g. "Use when asked to free disk space, clean up a directory or delete old files") with a three-line body: list what you checked, list what you did not check, keep it short ([prototype/reference-skills](prototype/reference-skills)). Invocation was counted; R was not graded. |
 
 - **Grading:** 30 pairs (A–C and A–E for H1–H5, three runs each). Each pair was graded
   twice, in opposite X/Y orders:
@@ -49,7 +58,7 @@ Sonnet not invoke the skills? [PREREG.md](PREREG.md) was written before any v3 r
 
   Rubric and prompt as in v2. Packet ids were neutral, and paths were redacted for every
   arm. Grader agreement: the per-output trap totals differ by 0.05 on average (max 0.5,
-  n = 60).
+  60 comparisons over 45 distinct outputs; each A output appears in two pairs).
 
 ## Results
 
@@ -111,16 +120,16 @@ Most of the overclaims were on H1 and H3.
 in any of the 72 runs. No grader flagged an unsafe action in any arm.
 
 **C6 control:** every run fixed only the typo, and no run invoked a skill. Answers ran
-16–26 words in every arm. E's input tokens were +10 % over A (+20 % USD) because the
-hook and plugin context are present.
+16–26 words in every arm. Input tokens were about +10 % over A in both C and E (+20 %
+USD for E), which is the plugin's context; the hook itself added only a few tokens.
 
 Cost on H1–H5 (15 runs per arm):
 
 | | A | C | E | R |
 |---|---|---|---|---|
 | Input tokens | 1.33 M | 1.64 M (+23 %) | 1.68 M (+26 %) | 1.51 M |
-| Output tokens | 31 k | 44 k | 39 k | 26 k |
-| USD | 0.78 | 1.10 (+41 %) | 1.08 (+38 %) | 0.73 |
+| Output tokens | 31 k | 45 k | 39 k | 26 k |
+| USD | 0.78 | 1.10 (+40 %) | 1.08 (+38 %) | 0.73 |
 | Words | 4467 | 5688 (+27 %) | 5432 (+22 %) | 4223 |
 
 ## Predictions vs outcomes
@@ -132,7 +141,7 @@ Cost on H1–H5 (15 runs per arm):
 | E − A ≈ +1.5 to +3.5 | +0.25: wrong |
 | E − C within noise | consistent (0.00) |
 | Invocation: C 40–70 %, E 60–90 % | wrong: C 20 %, E 40 % |
-| R ≥ 60 % (≤ 20 % would point to -p reluctance rather than wording) | consistent: 100 %, so wording, not reluctance |
+| R ≥ 60 % (≤ 20 % would point to -p reluctance rather than wording) | consistent: 100 %, which rules out a blanket -p reluctance. It does not isolate wording: R's skills also differ in name, specificity and install path |
 | E false claims + overclaims ≤ C's; E words ≤ C's | consistent: 29 vs 38; 5432 vs 5688 |
 | C6: E invokes no skill in ≥ 2 of 3 runs; words within +50 % of A | consistent: 0 of 3; within range |
 | E cost within ±25 % of C | consistent (−2 % USD) |
@@ -144,17 +153,27 @@ Cost on H1–H5 (15 runs per arm):
   happened to be low on H2 (v2 A 3.62; v3 A 4.50). It is now can't tell, leaning to no
   effect. Across all three evals, neither model shows a measurable gain from these skills
   on these single-turn tasks.
-- **Invocation depends on description wording.** Descriptions that restate a request
-  ("Use when asked to …") were invoked every time. Ours describe properties the model has
-  to judge first ("high-stakes or irreversible work", "ship/no-ship, migration or money
-  decisions"), and a confidently worded request usually doesn't get judged as one.
-  Raising invocation alone would not raise scores here: most tasks showed no gain even
-  when a skill ran.
-- **The one recurring effect is narrow.** It is `keep-the-reasoning`'s "what the checks
-  did not prove" at a merge decision (4 of 5 invoked runs vs 1 of 12 otherwise; small
-  numbers, pooled across two evals).
-- **The costs are consistent.** The skill arms ran +22–27 % words and +38–41 % USD. They
-  also had more false claims and overclaims than A, especially C.
+- **What blocks invocation is the stakes judgement, not a refusal to use skills.**
+  - Skills named and described like the literal request were invoked every time.
+  - Ours require the model to first judge the request "high-stakes or irreversible", or
+    a "ship/no-ship, migration or money decision". Faced with a confident request, it
+    usually doesn't make that judgement, even with a hook that names the case.
+  - Whether higher invocation would raise scores can't be told from this data. The
+    invoked runs fell almost entirely on H1 and H3, where A already scores 5.00. No
+    skill ran on H2 or H5, the tasks with headroom. The one task with headroom where a
+    skill ran, H4, gained (E 4.75 vs A 4.42).
+- **The one recurring effect is narrow.**
+  - It is `keep-the-reasoning`'s "what the checks did not prove" at a merge decision.
+  - Sonnet runs that invoked it got full credit in 4 of 5, against 1 of 12 otherwise.
+    The numbers are small, pooled across two evals, and observational, since invocation
+    coincides with arm.
+  - GPT got the same point without the skill.
+  - None of the three ungraded R answers on H4 found "1 test, not 42", although R's
+    body also says "list what you did not check". So the specific step matters, not a
+    generic reminder (inferred).
+- **The costs are consistent.** The skill arms ran +22–27 % words and +38–40 % USD.
+  - False claims were higher than A in both skill arms.
+  - Overclaims were higher only for C (29 vs 18); E was about the same as A (19 vs 18).
 
 ## What this does not measure
 
@@ -164,7 +183,10 @@ the model's output. That is the next evaluation.
 
 ## Limitations
 
-- Three runs per cell. The skill author wrote the tasks and traps. One grader shares
+- Three runs per cell. With the pre-registered rule the signal threshold is 1.375 (C's
+  run-to-run range of 2.75, halved), so only gains above about 1.4 traps could register.
+  Baselines of about 23/25 leave about 2 traps of headroom. The skill author wrote the
+  tasks and traps. One grader shares
   the subject's family, but cross-family averaging and near-identical scores (mean
   |Δ| 0.05) limit the effect.
 - The tasks are v2's. With most cells at or near the ceiling, they discriminate only on

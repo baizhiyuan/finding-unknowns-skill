@@ -152,15 +152,18 @@ Three blinded, pre-registered evaluations ([docs/evals](docs/evals/)) asked whet
 these skills make current models catch more planted traps on single-turn coding and
 analysis tasks:
 
-- **No measurable gain.** With or without the skills, gpt-6.1-sol and claude-sonnet-5-5
-  caught about 22–23 of 25 traps. An apparent +2.5 for Sonnet in v2 did not replicate in
-  v3 (three runs per arm).
-- **A measurable cost.** About 40 % more cost, longer answers and more overclaims.
-- **One narrow effect recurred.** When `keep-the-reasoning` ran on a merge decision, the
-  model usually named what the tests did not prove: 4 of 5 runs, against 1 of 12
-  without it.
-- **Sonnet rarely invokes these skills unprompted.** A description that restates the
-  user's request is invoked every time.
+- **No gain that survived replication.** Installing the skills on these tasks gave no
+  replicated gain. Baselines were already 22–23 of 25, leaving about 2–3 traps of
+  headroom. An apparent +2.5 for Sonnet in v2 did not replicate in v3 (three runs per
+  arm). How much using a skill helps, as opposed to installing it, is barely measured.
+- **A measurable cost.** +15 % to +70 % cost or tokens (about 40 % in v3), longer
+  answers, and more false claims or overclaims in most skill arms.
+- **One narrow effect recurred, for Sonnet only.** When `keep-the-reasoning` ran on a
+  merge decision, Sonnet usually named what the tests did not prove: 4 of 5 runs,
+  against 1 of 12 without it. GPT caught the same point without the skill.
+- **Sonnet rarely invokes these skills unprompted.** Skills named and described like
+  the literal request were invoked every time. Ours need the model to first judge the
+  request as high-stakes, and it mostly doesn't.
 
 None of the evals tested the side these skills exist for: your own understanding.
 That means:
