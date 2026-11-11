@@ -49,16 +49,17 @@ always-on version.
 **First use:**
 
 ```
-/brief-me "make the export job resumable"   # you predict, territory checked, the card is frozen
-/catch-up                                # next session: recall, then what changed
-/debrief                                 # predictions graded; what changes in your model
+/fu-brief "make the export job resumable"   # you predict, territory checked, agent predicts; frozen on your yes
+/fu-catch-up                                # next session: recall, then what changed
+/fu-debrief                                 # predictions graded; what changes in your model
 ```
 
 The [5-minute tutorial](docs/TUTORIAL.md) walks through one card from brief to debrief.
 
 ### Updating
 
-Latest release: **v5.0.0**. Update the way you installed:
+Next release: **v5.0.0**, pending the Stage 0 evaluation; the current release is v4.3.2.
+Update the way you installed:
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -83,7 +84,7 @@ cd finding-unknowns-skill && git pull origin main && bash install.sh
 [design §11](docs/design/5.0.md#11-migration-for-4x-users).
 
 ```bash
-grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
+grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unknowns/*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/card.md
 # expect: 5.0.0 (plugin) — or the card reference listed
 ```
@@ -97,7 +98,9 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 When an agent does the work, it is easy to stop knowing what happened. You approve a
 diff you skimmed, a long task drifts from what you meant, and the result becomes yours
 without your judgement in it. Addy Osmani calls the slide **offloading → deferral →
-cognitive surrender**.
+cognitive surrender**; the term *cognitive surrender* is from Shaw & Nave, _Thinking—Fast,
+Slow, and Artificial_ (SSRN 6097646), and Margaret-Anne Storey writes about the related
+*cognitive debt*.
 
 This plugin keeps one **task card** per task, shared by you and the agent:
 
@@ -125,23 +128,24 @@ Three blinded, pre-registered evaluations ([docs/evals](docs/evals/)) asked whet
 
 - **No gain survived replication.** Baselines already caught 22–23 of 25 traps.
 - **A measurable cost:** roughly +10 % to +70 % in input tokens or USD, longer answers,
-  and more small false claims.
-- **One narrow effect, Sonnet only:** "say what the checks did not prove" caught a
-  self-updated snapshot test in 4 of 5 runs, against 1 of 12 without it. This was found
-  after the fact, so it is a lead, not a result.
+  and, for Sonnet, more small false claims.
+- **One narrow effect, Sonnet only:** when keep-the-reasoning ran on the merge question,
+  Sonnet named that "the tests pass" rested on one self-updated snapshot test in 4 of 5
+  runs, against 1 of 12 without it. This was found after the fact, so it is a lead, not a
+  result.
 
 5.0 was rebuilt around the side those evals never measured: **your** understanding and
 decisions ([design](docs/design/5.0.md)). Whether it helps people is **not yet tested**.
-A simulated-user evaluation with a pre-registered kill rule comes first; a study with
-real participants follows. Until then, treat this as a way of working, not a measured
+A simulated-user evaluation with a pre-registered kill rule decides whether 5.0 is
+released at all; a study with real participants follows. Until then, treat this as a way of working, not a measured
 improvement.
 
 ---
 
 ## How it works
 
-The diagram at the top shows the loop: `/brief-me` freezes the card, the build stops only at
-the four stop-points, and `/debrief` grades the frozen predictions.
+The diagram at the top shows the loop: `/fu-brief` freezes the card, the build stops only at
+the four stop-points, and `/fu-debrief` grades the frozen predictions.
 
 ### The task card
 
@@ -209,8 +213,8 @@ Benchmarks, backtests, A/B tests and training runs use **Theory → Measured →
   mode.
 - **Explanation follows your misses:** it goes where your prediction missed, not into a
   lecture up front.
-- **Recall in `/catch-up`:** a short recall question or two is asked before you see the
-  card. There is no pass mark.
+- **Recall in `/fu-catch-up`:** before you see the card, one skippable question in `ship`
+  mode, two or three in `learn` mode. There is no pass mark.
 - **Prediction log:** your hit rate over time is logged for you, not committed.
 
 ---
@@ -219,9 +223,9 @@ Benchmarks, backtests, A/B tests and training runs use **Theory → Measured →
 
 | Command | What it does |
 |---|---|
-| `/brief-me <task>` | Take your prediction, map the territory, then give the agent's; agree the stop-points and the contract; freeze and commit the card |
-| `/catch-up [slug]` | Recall questions, then only what changed since you last looked, and the next decision that needs you |
-| `/debrief [slug]` | Grade every frozen prediction with a fresh context; evidence, what the checks did not prove, model changes |
+| `/fu-brief <task>` | Take your prediction, map the territory, then give the agent's; agree the stop-points and the contract; freeze and commit the card |
+| `/fu-catch-up [slug]` | Recall questions, then only what changed since you last looked, and the next decision that needs you |
+| `/fu-debrief [slug]` | Grade every frozen prediction with a fresh context; evidence, what the checks did not prove, model changes |
 
 Saying "brief me", "catch me up", "where were we" or "did it match what we expected" works
 too. Typos and one-liners get no card and no questions.
@@ -230,7 +234,7 @@ too. Typos and one-liners get no card and no questions.
 |---|---|
 | `blindspot-scout` | Read-only reconnaissance for the Brief: landmines, hidden context, a rewritten request |
 | `mechanism-auditor` | Fresh-context grader for the Debrief and for measured results |
-| `quiz-master` | Optional: drafts the recall questions for `/catch-up`, and flags changes no delta explains |
+| `quiz-master` | Optional: drafts the recall questions for `/fu-catch-up`, and flags changes no delta explains |
 
 ---
 
@@ -290,7 +294,7 @@ too. Typos and one-liners get no card and no questions.
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          Plugin and marketplace manifests
-├── commands/                /brief-me · /catch-up · /debrief (thin dispatchers)
+├── commands/                /fu-brief · /fu-catch-up · /fu-debrief (thin dispatchers)
 ├── skills/finding-unknowns/
 │   ├── SKILL.md             The card, the three operations, stop-points, always-on rules
 │   └── references/          card · brief · debrief · results · results-examples
@@ -311,6 +315,7 @@ finding-unknowns-skill/
 Released under the [MIT License](LICENSE).
 
 - Discovery techniques: Thariq Shihipar, _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
+- *Cognitive surrender*: Shaw & Nave, _Thinking—Fast, Slow, and Artificial_ (SSRN 6097646); cognitive debt: Margaret-Anne Storey.
 - The handoff and the verification contract: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
 - Theory → Measured → Consistent? → Mechanism: the author's own empirical research practice.
 - The 5.0 design follows an advisor review by Fable 5.2, with a second by GPT 6 Astra ([reviews](docs/design/5.0-advisors/fable.md)).

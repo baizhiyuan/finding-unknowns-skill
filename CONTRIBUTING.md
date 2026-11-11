@@ -23,7 +23,7 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
   and judge work an agent does. Execution and delivery concerns belong to other tools.
 - **Evidence.** Whether the plugin helps people is untested. Do not add claims beyond the
   design and the evals in `docs/evals/`.
-- **Commands.** `commands/` holds only `/brief-me`, `/catch-up` and `/debrief`. Do not add
+- **Commands.** `commands/` holds only `/fu-brief`, `/fu-catch-up` and `/fu-debrief`. Do not add
   a command with the same name as a skill or a Claude Code built-in: Claude Code already
   exposes each skill as a slash command, and a same-named command shadows it.
 - **Prose quality.** Techniques should be actionable and concise. Prefer concrete, copy-paste

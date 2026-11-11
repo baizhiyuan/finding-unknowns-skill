@@ -7,7 +7,7 @@ the reasons. Whether any of this helps people is untested.
 ## Components
 
 ```
-commands/        /brief-me · /catch-up · /debrief   thin dispatchers, no procedure
+commands/        /fu-brief · /fu-catch-up · /fu-debrief   thin dispatchers, no procedure
 skills/finding-unknowns/
   SKILL.md       the card, the three operations, the stop-points, always-on rules
   references/    loaded only by the phase that needs it
@@ -24,8 +24,8 @@ extras/session-start-hook/   not shipped; pending the Stage 0 evaluation
 | `references/results.md` | Theory → Measured → Consistent? → Mechanism, the run table, the Debug path, the two verdicts |
 | `references/results-examples.md` | Example cards and anti-patterns |
 | `blindspot-scout` | Reconnaissance for the Brief: Surprises against the person's prior, cited findings, a rewritten request |
-| `mechanism-auditor` | Fresh-context grader at `/debrief` and for measured results |
-| `quiz-master` | Drafts recall questions for `/catch-up`; flags diff hunks no delta explains. No gate |
+| `mechanism-auditor` | Fresh-context grader at `/fu-debrief` and for measured results |
+| `quiz-master` | Drafts recall questions for `/fu-catch-up`; flags diff hunks no delta explains. No gate |
 | SessionStart hook | Prints each open card's header. Kept in [`extras/`](../extras/session-start-hook/README.md), outside the plugin, until Stage 0 shows it helps |
 
 The commands only invoke the skill and name an operation. Every agent is optional: without
@@ -55,7 +55,7 @@ lines. The full template is in
 ## Data flow
 
 ```
-/brief-me ──► Brief frozen on your yes ──► build (quiet) ──► /catch-up ──► /debrief
+/fu-brief ──► Brief frozen on your yes ──► build (quiet) ──► /fu-catch-up ──► /fu-debrief
   │                                          │    ▲             │             │
   your prediction, territory,                │    └ stop-point ─┘             │
   agent's prediction, contract               deltas → {slug}.deltas.md        graded table,
@@ -138,5 +138,5 @@ six-condition gate), Workflow execution, the must-pass quiz, the separate
 keep-the-reasoning and theory-vs-result skills (merged into the references),
 `ledger-keeper`, `prototype-smith`, and `/blindspot`, `/cartographer`, `/change-quiz`.
 They were protocol for the model, not explanation for the person. A blind-spot pass is
-still available inside `/brief-me`. The 4.x content is available at tag `v4.3.2`; the
+still available inside `/fu-brief`. The 4.x content is available at tag `v4.3.2`; the
 reasoning is in [design §1 and §9](design/5.0.md).

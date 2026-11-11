@@ -57,7 +57,7 @@ not yet tested.
   - append-only Amendments and deltas;
   - model changes and a Debrief table.
   - The card is committed by default, so the commit shows the predictions came first.
-- **Commands:** `/brief-me`, `/catch-up` and `/debrief`.
+- **Commands:** `/fu-brief`, `/fu-catch-up` and `/fu-debrief`.
 - **Four stop-points** are the only interruptions: an irreversible action, a scope
   change, a dead premise, a budget overrun.
 - **Fresh-context grading:** `mechanism-auditor` grades every frozen prediction from the
@@ -67,7 +67,7 @@ not yet tested.
 - **Learning:**
   - `ship` and `learn` modes;
   - explanation where a prediction missed;
-  - recall questions at `/catch-up`, with no pass mark;
+  - recall questions at `/fu-catch-up`, with no pass mark;
   - a personal prediction log.
 - **Research claims:**
   - the person's and the agent's predictions on separate lines;

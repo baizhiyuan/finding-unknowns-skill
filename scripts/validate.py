@@ -136,8 +136,12 @@ def check_versions_and_counts() -> None:
         fail(f"CHANGELOG.md: no entry for {version}")
     if f"[{version}]: " not in changelog:
         fail(f"CHANGELOG.md: no link reference for [{version}]")
-    for rel, pattern in (("README.md", r"Latest release: \*\*v([0-9.]+)\*\*"), ("README.md", r"# expect: ([0-9.]+) \(plugin\)"),
-                         ("README.zh.md", r"最新版本为 \*\*v([0-9.]+)\*\*"), ("README.zh.md", r"# 预期：([0-9.]+)（插件方式）")):
+    # An unreleased version (CHANGELOG "## [x] - unreleased") must be announced as the next
+    # release, never as the latest one, and the other way round.
+    unreleased = re.search(rf"^## \[{re.escape(version)}\] - unreleased", changelog, re.M) is not None
+    en_word, zh_word = ("Next release", "下一个版本为") if unreleased else ("Latest release", "最新版本为")
+    for rel, pattern in (("README.md", en_word + r": \*\*v([0-9.]+)\*\*"), ("README.md", r"# expect: ([0-9.]+) \(plugin\)"),
+                         ("README.zh.md", zh_word + r" \*\*v([0-9.]+)\*\*"), ("README.zh.md", r"# 预期：([0-9.]+)（插件方式）")):
         m = re.search(pattern, read(rel))
         if not m or m.group(1) != version:
             fail(f"{rel}: '{pattern}' shows {m.group(1) if m else 'nothing'}, plugin.json is {version}")

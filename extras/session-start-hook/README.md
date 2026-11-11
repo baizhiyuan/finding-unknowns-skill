@@ -2,7 +2,7 @@
 
 At session start this hook prints the header of each open task card: its goal, state
 and the next decision that needs you. In learn mode it prints only the goal line, so
-that `/catch-up` can still ask its recall questions before you see the rest. It prints
+that `/fu-catch-up` can still ask its recall questions before you see the rest. It prints
 nothing when no card is open.
 
 It is **not** part of the plugin. The 5.0 design ([§8](../../docs/design/5.0.md)) ships
@@ -11,5 +11,6 @@ least 5 of 6 runs with the hook and in at most 3 of 6 without it. Until then it 
 here, outside the plugin's `hooks/` directory, so Claude Code does not load it.
 
 To try it yourself, add a SessionStart hook to your own `~/.claude/settings.json` that
-runs this script by its absolute path (`sh /path/to/open-cards.sh`). Copying it into the
+runs `hooks/open-cards.sh` from this directory by its absolute path
+(`sh /path/to/extras/session-start-hook/hooks/open-cards.sh`). Copying it into the
 installed plugin does not last: a plugin update replaces the directory.

@@ -19,8 +19,8 @@ In Claude Code:
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-You get one skill, three agents and three commands: `/brief-me`, `/catch-up`,
-`/debrief`. Other install routes are in the [README](../README.md#quick-start).
+You get one skill, three agents and three commands: `/fu-brief`, `/fu-catch-up`,
+`/fu-debrief`. Other install routes are in the [README](../README.md#quick-start).
 
 ## 2. Brief (2 minutes)
 
@@ -28,7 +28,7 @@ The task: a nightly job exports the `orders` table to CSV in 10,000-row batches.
 crashes, it starts over. You want it to resume.
 
 ```
-/brief-me make the nightly order export resumable after a crash
+/fu-brief make the nightly order export resumable after a crash
 ```
 
 On first use in a project the agent asks once: `ship` or `learn`. Choose `learn`. Then,
@@ -87,12 +87,15 @@ to this exact command:
 Post-check: EXPLAIN on the batch query shows an Index Scan.
 ```
 
-You leave. Nothing ran on production; the card reads `waiting on you`.
+Two stop-points fired at once: the change is outside the Brief, and it touches
+production, which is irreversible. The agent only prepared the exact command; you run it
+or say yes to that one command. You leave. Nothing ran on production; the card reads
+`waiting on you`.
 
-## 4. Next session: `/catch-up` (1 minute)
+## 4. Next session: `/fu-catch-up` (1 minute)
 
 ```
-/catch-up
+/fu-catch-up
 ```
 
 Recall comes before the card (learn mode: two or three questions; ship mode: one,
@@ -109,10 +112,10 @@ changed since you last looked: deltas D1 to D4 and the next decision, the index.
 reply "Not now; I'll run it in Thursday's maintenance window." It goes to Open,
 unexecuted, and Last seen moves to D4.
 
-## 5. `/debrief` (1 minute)
+## 5. `/fu-debrief` (1 minute)
 
 ```
-/debrief
+/fu-debrief
 ```
 
 A fresh context (`mechanism-auditor`) receives the frozen card and the artifact paths,
@@ -143,7 +146,9 @@ Bottom line: resume is correct (no duplicates or gaps in 3 kill tests) and slow 
 Needs you: the production index (Open)
 ```
 
-The explanation sits on the row that missed, not in a lecture up front. Each graded
+Read the table as Theory → Measured → Consistent? → Mechanism: P1 is inconsistent and A1
+consistent; their mechanisms are tagged verified and supported. The explanation sits on
+the row that missed, not in a lecture up front. Each graded
 prediction adds one line to your personal prediction log, and the card is committed
 again. Say the model change back in your own words and it becomes `confirmed`.
 

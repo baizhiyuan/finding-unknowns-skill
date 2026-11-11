@@ -64,6 +64,6 @@ for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasonin
 done
 
 echo
-echo "Done. Skill: finding-unknowns. Commands: /brief-me, /catch-up, /debrief."
+echo "Done. Skill: finding-unknowns. Commands: /fu-brief, /fu-catch-up, /fu-debrief."
 echo "Agents (blindspot-scout, mechanism-auditor, quiz-master) are delegated to by the skill."
 echo "Cards live in .finding-unknowns/tasks/ in each project; see the skill's references/card.md."

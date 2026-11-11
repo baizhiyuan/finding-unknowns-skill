@@ -2,7 +2,7 @@
 
 用一张任务卡走完全程：简报、一次打断、下一次会话中的回顾，以及复盘。[English](TUTORIAL.md)
 
-> **这是示意，不是真实会话的记录。** 任务、数字和输出都是为说明结构而编写的。你得到的措辞会不同，需要核对的是结构。这套流程是否对人有帮助，目前尚未检验（见 [README](../README.zh.md)）。
+> **这是示意，不是真实会话的记录。** 任务、数字和输出都是为说明结构而编写的。你得到的措辞会不同，需要核对的是结构。这套流程是否对人有帮助，目前尚未检验（见 [README](../README.zh.md#评测结果)）。
 
 代码块中的命令和输出保留英文原文，与英文版教程和任务卡模板一致；你也可以直接用中文提问。
 
@@ -18,14 +18,14 @@
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-安装后有一个技能、三个子代理和三个命令：`/brief-me`、`/catch-up`、`/debrief`。其他安装方式见 [README](../README.zh.md)。
+安装后有一个技能、三个子代理和三个命令：`/fu-brief`、`/fu-catch-up`、`/fu-debrief`。其他安装方式见 [README](../README.zh.md#快速开始)。
 
 ## 2. 简报（2 分钟）
 
 任务：一个每晚运行的作业把 `orders` 表按每批 10,000 行导出为 CSV。作业崩溃后会从头重跑，你希望它能从中断处续跑。
 
 ```
-/brief-me make the nightly order export resumable after a crash
+/fu-brief make the nightly order export resumable after a crash
 ```
 
 在一个项目中第一次使用时，智能体只问一次：`ship` 还是 `learn`。这里选 `learn`。随后，在阅读任何代码之前，它先请你做预测：
@@ -61,7 +61,7 @@ Contract:
   a batch and writing its checkpoint | reversible |
 ```
 
-P1 预测的是智能体无法控制的事情：数据库的实际表现。“测试会通过”是智能体自己能让它成立的事，所以它写在验收标准（Contract）里，并注明它**不能**证明什么。每条预测都带有证伪条件（falsifier）和“不应改变”的一半。
+P1 预测的是智能体无法控制的事情：数据库的实际表现。“测试会通过”是智能体自己能让它成立的事，所以它写在验收标准（Contract）里，并注明它**不能**证明什么。每条预测都带有反证条件（falsifier）和“不应改变”的一半。
 
 ## 3. 一次打断（30 秒）
 
@@ -80,10 +80,10 @@ Post-check: EXPLAIN on the batch query shows an Index Scan.
 
 这里同时触发了两个打断点：改动超出简报范围，并且涉及生产环境，属于不可逆一类。智能体只准备好确切的命令，由你亲自执行，或者对这条具体命令说“可以”。你暂时离开了。生产环境上什么都没有执行，任务卡的状态是 `waiting on you`。
 
-## 4. 下一次会话：`/catch-up`（1 分钟）
+## 4. 下一次会话：`/fu-catch-up`（1 分钟）
 
 ```
-/catch-up
+/fu-catch-up
 ```
 
 在展示任务卡之前，先提回忆问题（learn 模式两到三个；ship 模式一个，可以跳过）：
@@ -96,13 +96,13 @@ Post-check: EXPLAIN on the batch query shows an Index Scan.
 
 也可以用两句话复述来代替回答。这里没有及格线。之后你只会看到上次查看以来的变化：增量记录 D1 到 D4，以及需要你做的下一个决定，也就是那个索引。你回复：“现在不做，我会在周四的维护窗口执行。”这一项进入 Open，没有执行，“Last seen” 更新到 D4。
 
-## 5. `/debrief`（1 分钟）
+## 5. `/fu-debrief`（1 分钟）
 
 ```
-/debrief
+/fu-debrief
 ```
 
-这一步是新上下文评判：`mechanism-auditor` 拿到冻结的任务卡和产物路径，而不是构建过程的对话记录。它先评判你的预测：
+这一步是新上下文评判：`mechanism-auditor` 拿到冻结的任务卡和产出文件的路径，而不是构建过程的对话记录。它先评判你的预测：
 
 ```
 Evidence: `pytest tests/test_export_resume.py -q` → 3 passed · `bench/resume.sh` →
@@ -131,11 +131,11 @@ Needs you: the production index (Open)
 
 表格按“理论预期 → 实测 → 是否一致 → 机理”的顺序读。P1 的结论是不一致，A1 是一致；机理分别标为已验证和有数据支持。P1 为什么没猜中：原来的作业用一个游标把整张表读一遍；可续跑的作业每一批都要单独查询“这个键之后的行”，而没有与排序匹配的索引时，剩下的 250 次查询每次都要扫描并排序全部 500 万行。续跑省掉了一半批次，但每一批都变贵了很多。
 
-解释写在没猜中的那一行上，而不是事先讲一大段。每条被评判的预测都会在你个人的预测日志里追加一行，任务卡再次提交。用你自己的话复述这条模型变化（Model changes），它的状态就从 `shown, not confirmed` 变为 `confirmed`。
+解释写在没猜中的那一行上，而不是事先讲一大段。每条被评判的预测都会在你个人的预测记录里追加一行，任务卡再次提交。用你自己的话复述这条认知修正（Model changes），它的状态就从 `shown, not confirmed` 变为 `confirmed`。
 
 ## 什么时候不用
 
-改错字、一行改动，以及你本来就会直接做的事：不建任务卡，也不提问。没有任何可如实预测内容的任务，任务卡会写明 “No real prediction here; contract only”。
+改错字、一行改动：不建任务卡，也不提问。没有任何可如实预测内容的任务，任务卡会写明 “No real prediction here; contract only”。
 
 ## 下一步
 

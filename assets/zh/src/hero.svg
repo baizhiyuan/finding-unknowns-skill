@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="t d">
 <title id="t">finding-unknowns v5.0.0</title>
-<desc id="d">每个任务一张任务卡。/brief-me：你先预测，再查清现场，智能体随后预测，你确认后冻结任务卡。安静执行：只在不可逆操作、范围变化、前提失效或预算超支时打断你，其余情况记在任务卡上。/catch-up：先回忆，再看变化。/debrief：由新上下文评判每条冻结的预测，先评你的；写明检查没有证明什么，以及你的认知需要哪些修正。</desc>
+<desc id="d">每个任务一张任务卡。/fu-brief：你先预测，再查清现场，智能体随后预测，你确认后冻结任务卡。安静执行：只在不可逆操作、范围变化、前提失效或预算超支时打断你，其余情况记在任务卡上。/fu-catch-up：先回忆，再看变化。/fu-debrief：由新上下文评判每条冻结的预测，先评你的；写明检查没有证明什么，以及你的认知需要哪些修正。</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
@@ -16,7 +16,7 @@
 <g font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
 <!-- brief -->
 <rect x="60" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
-<text x="84" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/brief-me</text>
+<text x="84" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/fu-brief</text>
 <text x="84" y="258" font-size="16" fill="#141413" font-family="Noto Sans SC">你先预测</text>
 <text x="84" y="284" font-size="16" fill="#141413" font-family="Noto Sans SC">查清现场，智能体再预测</text>
 <text x="84" y="310" font-size="16" fill="#141413" font-family="Noto Sans SC">约定打断点与验收标准</text>
@@ -30,7 +30,7 @@
 <text x="474" y="336" font-size="16" fill="#141413" font-family="Noto Sans SC">其余情况：在任务卡上记一行</text>
 <!-- debrief -->
 <rect x="840" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
-<text x="864" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/debrief</text>
+<text x="864" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/fu-debrief</text>
 <text x="864" y="258" font-size="16" fill="#141413" font-family="Noto Sans SC">新上下文评判每条预测，</text>
 <text x="864" y="284" font-size="16" fill="#141413" font-family="Noto Sans SC">先评你的预测</text>
 <text x="864" y="310" font-size="16" fill="#141413" font-family="Noto Sans SC">写明检查没有证明什么</text>
@@ -41,7 +41,7 @@
 <rect x="380" y="388" width="440" height="46" rx="10" fill="#F0EEE6" stroke="#B1ADA1"/>
 <text x="600" y="417" font-size="16" text-anchor="middle" fill="#3D3929" font-family="'JetBrains Mono', Menlo, monospace">.finding-unknowns/tasks/{slug}.md</text>
 <path d="M600 362V386" stroke="#B1ADA1" stroke-width="2" stroke-dasharray="4 4"/>
-<text x="535" y="472" font-size="16" text-anchor="end" font-family="'JetBrains Mono', Menlo, monospace" font-weight="700" fill="#C15F3C">/catch-up</text>
+<text x="535" y="472" font-size="16" text-anchor="end" font-family="'JetBrains Mono', Menlo, monospace" font-weight="700" fill="#C15F3C">/fu-catch-up</text>
 <text x="545" y="472" font-size="16" font-family="Noto Sans SC" fill="#3D3929">下次会话：先回忆，再看变化</text>
 </g>
 </svg>

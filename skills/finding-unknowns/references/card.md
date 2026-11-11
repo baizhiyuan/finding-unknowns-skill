@@ -81,7 +81,7 @@ Evidence: {commands run → output, trimmed} · Did NOT prove: … · Not checke
 - **Deltas** are one line each with an evidence pointer, appended to `{slug}.deltas.md`.
   The card shows the current session's; at a session's end they are replaced on the
   card by a three-line rollup.
-- **Last seen** is updated by the agent, only after `/catch-up` or `/debrief` has shown
+- **Last seen** is updated by the agent, only after `/fu-catch-up` or `/fu-debrief` has shown
   the card to the person.
 - **Several open cards:** commands accept a slug; without one, list the open cards and
   suggest the most recently changed.

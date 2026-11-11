@@ -1,6 +1,6 @@
 ---
 name: finding-unknowns
-description: "Use when the user says 'brief me', 'catch me up', 'where were we', 'what am I missing', 'did it match what we expected' or 'is this result consistent'; runs /brief-me, /catch-up or /debrief; or an open card exists under .finding-unknowns/tasks/. Keeps one task card: predictions frozen before the work, a quiet build with four stop-points, a debrief graded by a fresh context. Not for typos, one-liners or tasks the user says to just do."
+description: "Use when the user says 'brief me', 'catch me up', 'where were we', 'what am I missing', 'did it match what we expected' or 'is this result consistent'; runs /fu-brief, /fu-catch-up or /fu-debrief; or an open card exists under .finding-unknowns/tasks/. Keeps one task card: predictions frozen before the work, a quiet build with four stop-points, a debrief graded by a fresh context. Not for typos, one-liners or tasks the user says to just do."
 aliases: []
 metadata:
   credits:
@@ -27,7 +27,7 @@ only where they change a decision or the person's model.
 </Purpose>
 
 <Use_When>
-- `/brief-me`, `/catch-up`, `/debrief`, or the phrases in the description
+- `/fu-brief`, `/fu-catch-up`, `/fu-debrief`, or the phrases in the description
 - The person is starting work they will have to stand behind, in territory they or you
   do not know well
 - A session starts and `.finding-unknowns/tasks/` holds an open card
@@ -69,7 +69,7 @@ Path `.finding-unknowns/tasks/{slug}.md`. Template, file layout, gitignore lines
 commit procedure: `references/card.md`. The frozen Brief is never edited; changes go to
 dated, append-only Amendments, and every original prediction is still graded.
 
-## /brief-me — create and freeze the card
+## /fu-brief — create and freeze the card
 
 1. **Mode, once per project.** If `.finding-unknowns/profile.md` lacks it, ask `ship` or
    `learn`. Read 4.x files in place (`unknowns-ledger.md`, `unknowns-spec-*.md`,
@@ -115,7 +115,7 @@ the next stop. Non-urgent questions wait in Open. Commit the card at each stop
 (`references/card.md`). At a session's end, roll the deltas up to three lines on the card
 (full lines stay in `{slug}.deltas.md`).
 
-## /catch-up — re-orient without restarting
+## /fu-catch-up — re-orient without restarting
 
 1. Several open cards: list them one line each and ask which; default the most recent.
    4.x files and no card: offer once to fold them into one.
@@ -127,7 +127,7 @@ the next stop. Non-urgent questions wait in Open. Commit the card at each stop
    never summarise an old summary.
 4. Update Last seen.
 
-## /debrief — grade against the frozen card
+## /fu-debrief — grade against the frozen card
 
 Read `references/debrief.md`. In short: quote each prediction by ID, never restate it;
 a fresh context (`mechanism-auditor`) given the frozen card and artifact paths fills
@@ -144,7 +144,7 @@ For measured results, the card's rows use `references/results.md`.
 |---|---|
 | `references/card.md` | creating, committing or migrating a card |
 | `references/brief.md` | running a discovery instrument or writing the contract |
-| `references/debrief.md` | `/debrief`, a handoff, recall questions |
+| `references/debrief.md` | `/fu-debrief`, a handoff, recall questions |
 | `references/results.md` | a benchmark, backtest, A/B test, training run or reproducible failure; any measured prediction |
 | `references/results-examples.md` | an example card is needed |
 </References>

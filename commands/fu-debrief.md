@@ -3,7 +3,7 @@ description: "Debrief a task card: each frozen prediction quoted and graded by a
 argument-hint: "[slug]"
 ---
 
-# debrief
+# fu-debrief
 
 ## Dispatch
 

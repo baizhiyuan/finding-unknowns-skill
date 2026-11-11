@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="556" viewBox="0 0 1200 556" role="img" aria-labelledby="t d">
 <title id="t">Debrief</title>
-<desc id="d">At /debrief a fresh context that did not do the work checks integrity and grades each frozen prediction, yours first; you see evidence first, then the table, what the checks did not prove and what changes in your model.</desc>
+<desc id="d">At /fu-debrief a fresh context that did not do the work checks integrity and grades each frozen prediction, yours first; you see evidence first, then the table, what the checks did not prove and what changes in your model.</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>

@@ -9,7 +9,7 @@ define each term where it is used; this page is where they meet. Chinese labels 
 - **Task card** — one Markdown file per task, `.finding-unknowns/tasks/{slug}.md`, read by
   the person and kept current by the agent. Header, frozen Brief, Amendments, Deltas, Model
   changes, Open, Debrief. Committed by default.
-- **Brief** — the top of the card, written by `/brief-me` and frozen on the person's yes:
+- **Brief** — the top of the card, written by `/fu-brief` and frozen on the person's yes:
   approach with one line of why per decision, both sides' predictions, the stop-points with
   a budget multiple, and the contract. Never edited after it freezes.
 - **Amendment** — a dated, append-only change to the approach or a premise, tagged
@@ -20,8 +20,8 @@ define each term where it is used; this page is where they meet. Chinese labels 
   card shows the current session's and a three-line rollup of earlier ones.
 - **Model change** — "You expected X → it is Y, because Z". At most five live lines, each
   `shown, not confirmed` until the person confirms it.
-- **Last seen** — the delta the person last saw, updated only after `/catch-up` or
-  `/debrief` has shown the card. `/catch-up` shows only what came after it.
+- **Last seen** — the delta the person last saw, updated only after `/fu-catch-up` or
+  `/fu-debrief` has shown the card. `/fu-catch-up` shows only what came after it.
 - **Timing** — the header line recording when the Brief froze: `commit {hash}` when the
   card was committed, else `self-reported` (no git, an ignored path, other work staged,
   history mid-operation, a failing hook, or commits declined).

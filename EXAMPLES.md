@@ -8,7 +8,7 @@ for the terms, the [Glossary](docs/GLOSSARY.md).
 ## Start a brief
 
 ```
-/brief-me add a position-sizing rule to the backtest engine; I have never touched the
+/fu-brief add a position-sizing rule to the backtest engine; I have never touched the
 order-execution path
 ```
 
@@ -17,7 +17,7 @@ territory and reports what contradicts it, then gives its own prediction. Ask fo
 blind-spot pass explicitly if you want one:
 
 ```
-/brief-me migrate the session store from Redis to Postgres. What am I missing? Do a
+/fu-brief migrate the session store from Redis to Postgres. What am I missing? Do a
 blind-spot pass against my prior before writing the Brief: I expect the hard part to be
 the TTL cleanup job.
 ```
@@ -42,7 +42,7 @@ explanations.
 ## A research claim with a stopping rule
 
 ```
-/brief-me test whether the new tokenizer cuts p95 latency on the bench suite.
+/fu-brief test whether the new tokenizer cuts p95 latency on the bench suite.
 Write the prediction card before anything runs: my prediction first, then yours, each
 with direction, rough size, where it should show up and where it should not. Measure
 the noise floor from at least three reruns of the current tokenizer first. Stopping
@@ -60,20 +60,20 @@ cumulative trials, data spent. One-line note only; no verdict yet.
 ## Resume where you left off
 
 ```
-/catch-up
+/fu-catch-up
 ```
 
 ```
 Catch me up on export-resumable. Ask me the recall questions first.
 ```
 
-With several open cards, `/catch-up` lists them one line each and suggests the most
+With several open cards, `/fu-catch-up` lists them one line each and suggests the most
 recently changed.
 
 ## Debrief
 
 ```
-/debrief export-resumable
+/fu-debrief export-resumable
 ```
 
 ```
@@ -119,7 +119,7 @@ prediction, and write both under .finding-unknowns/tasks/.
 Unlike the prompts above, this one was actually run: recorded 2026-11-10 with
 finding-unknowns v4.2.0, by sending a brief directly to the `blindspot-scout` agent, on
 [pallets/itsdangerous](https://github.com/pallets/itsdangerous) at commit `672971d`. In
-5.0 the same agent serves the blind-spot pass inside `/brief-me`, and its compact report
+5.0 the same agent serves the blind-spot pass inside `/fu-brief`, and its compact report
 has the same shape: Surprises against the person's prior, at most three cited findings, a
 rewritten request.
 

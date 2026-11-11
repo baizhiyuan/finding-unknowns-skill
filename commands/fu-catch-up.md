@@ -3,11 +3,11 @@ description: "Catch up on a task card: recall questions first, then only what ch
 argument-hint: "[slug]"
 ---
 
-# catch-up
+# fu-catch-up
 
 ## Dispatch
 
-1. Invoke the `finding-unknowns` skill with the Skill tool and run its **/catch-up**
+1. Invoke the `finding-unknowns` skill with the Skill tool and run its **/fu-catch-up**
    steps on the card named by the argument, or list the open cards under
    `.finding-unknowns/tasks/` and suggest the most recently changed.
 2. Recall questions before showing the card (`references/debrief.md`; `quiz-master` may

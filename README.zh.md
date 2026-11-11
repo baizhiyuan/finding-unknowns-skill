@@ -13,7 +13,7 @@
 <p align="center"><strong>让智能体替你干活时，你仍是这项工作的主人：知道在做什么，预先判断会发生什么，看清现实在哪里偏离了预期。</strong></p>
 
 <p align="center">
-  <a href="#快速开始">快速上手</a> ·
+  <a href="#快速开始">快速开始</a> ·
   <a href="#工作原理">工作原理</a> ·
   <a href="#命令">命令</a> ·
   <a href="#文档">文档</a> ·
@@ -48,16 +48,16 @@ cd finding-unknowns-skill && bash install.sh
 **初次使用：**
 
 ```
-/brief-me "让导出任务支持断点续传"   # 你先预测，再查现场，随后冻结任务卡
-/catch-up                        # 下次会话：先回忆，再看有哪些变化
-/debrief                         # 逐条评判预测，指出你的认知需要哪些修正
+/fu-brief "让导出任务支持断点续传"   # 你先预测，再查现场，智能体随后预测；你确认后冻结
+/fu-catch-up                        # 下次会话：先回忆，再看有哪些变化
+/fu-debrief                         # 逐条评判预测，指出你的认知需要哪些修正
 ```
 
 [5 分钟教程](docs/TUTORIAL.zh.md)用一张任务卡，从简报一直走到复盘。
 
 ### 更新
 
-最新版本为 **v5.0.0**。用安装时的方式更新：
+下一个版本为 **v5.0.0**，正式发布取决于第 0 阶段评测的结果；当前发布版本为 v4.3.2。用安装时的方式更新：
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -79,7 +79,7 @@ cd finding-unknowns-skill && git pull origin main && bash install.sh
 4.x 仍可从 `v4.3.2` 标签获取。各部分在 5.0 中的去向见[设计文档第 11 节](docs/design/5.0.md#11-migration-for-4x-users)。
 
 ```bash
-grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
+grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unknowns/*/.claude-plugin/plugin.json 2>/dev/null \
   || ls ~/.claude/skills/finding-unknowns/references/card.md
 # 预期：5.0.0（插件方式），或列出 card 参考文件
 ```
@@ -90,7 +90,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 ## 为什么选择 finding-unknowns？
 
-工作交给智能体之后，人很容易不再清楚到底发生了什么：一份只扫了一眼的改动被批准，长任务慢慢偏离本意，结果成了你的，里面却没有你的判断。Addy Osmani 把这个过程称为**委托 → 依赖 → 放弃判断**。
+工作交给智能体之后，人很容易不再清楚到底发生了什么：一份只扫了一眼的改动被批准，长任务慢慢偏离本意，结果成了你的，里面却没有你的判断。Addy Osmani 把这个过程称为**委托 → 依赖 → 放弃判断**。“放弃判断”（cognitive surrender）一说出自 Shaw 与 Nave 的 _Thinking—Fast, Slow, and Artificial_（SSRN 6097646）；另见 Margaret-Anne Storey 关于认知债务的论述。
 
 本插件为每个任务维护一张由你和智能体共用的**任务卡**：
 
@@ -107,16 +107,16 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 三次预注册、盲评的评测（[docs/evals](docs/evals/)）检验了 4.x 技能能否让当前模型在单轮任务中发现更多预埋的陷阱：
 
 - **没有经得起复现的提升。** 基线本来就能发现 25 个陷阱中的 22 到 23 个。
-- **成本可测：** 输入 token 或费用约增加 10 % 到 70 %，回答更长，细小的错误陈述也更多。
-- **只有一个窄效应，且只见于 Sonnet：** "说明检查没有证明什么"这一步，在 5 次运行中有 4 次识别出一个会自我更新的快照测试，未使用时 12 次中只有 1 次。这是事后才发现的，只能算线索，不能算结论。
+- **成本可测：** 输入 token 或费用约增加 10 % 到 70 %，回答更长；对 Sonnet 而言，细小的错误陈述也更多。
+- **只有一个窄效应，且只见于 Sonnet：** 在合并问题上运行 keep-the-reasoning 技能时，Sonnet 在 5 次中有 4 次指出“测试通过”只依赖一个会自我更新的快照测试，未运行该技能时 12 次中只有 1 次。这是事后才发现的，只能算线索，不能算结论。
 
-5.0 围绕这些评测从未测量过的一面重建：**你**的理解与决策（[设计文档](docs/design/5.0.md)）。它能否真正帮到人，**目前尚未验证**。下一步先做模拟用户评测，并预先注册淘汰线；之后再请真人参与研究。在此之前，请把它当作一种工作方式，而不是已被证实的改进。
+5.0 围绕这些评测从未测量过的一面重建：**你**的理解与决策（[设计文档](docs/design/5.0.md)）。它能否真正帮到人，**目前尚未验证**。下一步先做模拟用户评测，并预注册淘汰规则，由它决定 5.0 是否发布；之后再请真人参与研究。在此之前，请把它当作一种工作方式，而不是已被证实的改进。
 
 ---
 
 ## 工作原理
 
-页首的图展示了整个流程：`/brief-me` 冻结任务卡，执行期间只在四个打断点停下，`/debrief` 评判冻结的预测。
+页首的图展示了整个流程：`/fu-brief` 冻结任务卡，执行期间只在四个打断点停下，`/fu-debrief` 评判冻结的预测。
 
 ### 任务卡
 
@@ -125,13 +125,13 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 任务卡位于 `.finding-unknowns/tasks/{slug}.md`，默认提交到 git，用提交记录证明预测写在结果之前。卡上包括：
 
 - 页头：目标、当前状态、需要你做的下一个决定；
-- **冻结的简报：** 做法及理由；你和智能体各自的预测，每条都带反证条件和"不应改变的部分"；打断点；验收标准（每项检查，以及它**不能**证明什么）；
+- **冻结的简报：** 做法及理由；你和智能体各自的预测，每条都带反证条件和“不应改变的部分”；打断点；验收标准（每项检查，以及它**不能**证明什么）；
 - **修订：** 写明日期、只追加。简报本身从不修改，每条原始预测都照样评判；
 - **增量记录：** 每条偏离、意外或代你做的决定各记一行；
-- **认知修正：** "你原以为 X，实际是 Y，因为 Z"；
+- **认知修正：** “你原以为 X，实际是 Y，因为 Z”；
 - **待办事项**，最后是**复盘**。
 
-预测针对的是智能体控制不了的事：问题出在哪里、会影响多少调用方、基准测试的数字。"测试会通过"属于验收检查，不是预测。很多任务确实没有可预测的内容，任务卡会如实写明。
+预测针对的是智能体控制不了的事：问题出在哪里、会影响多少调用方、基准测试的数字。“测试会通过”属于验收检查，不是预测。很多任务确实没有可预测的内容，任务卡会如实写明。
 
 ### 四个打断点
 
@@ -162,13 +162,13 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 - **预测：** 在看数据之前写好，附停止规则，噪声底至少用三次重复运行测出。
 - **运行记录表：** 几天内陆续出来的结果记入运行记录表，满足停止规则之前不下结论。
-- **两种结论：** 规则结论机械地得出；这个思路是否还值得继续，由你来判断。
+- **两种结论：** 规则结论按预先约定的规则机械判定；这个思路是否还值得继续，由你来判断。
 
 ### 学习
 
 - **你先预测：** `ship` 模式下只问一个可以跳过的问题，`learn` 模式下最多三个。
 - **讲解跟着你的失误走：** 讲解放在你预测落空的地方，而不是开头先上一堂课。
-- **`/catch-up` 里先回忆：** 在你看到任务卡之前，先问一两个回忆性问题，不设及格线。
+- **`/fu-catch-up` 里先回忆：** 在你看到任务卡之前，`ship` 模式问一个可以跳过的回忆性问题，`learn` 模式问两到三个，不设及格线。
 - **预测记录：** 你的命中率会持续记录下来，只供你本人查看，不提交到仓库。
 
 ---
@@ -177,31 +177,31 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 | 命令 | 作用 |
 |---|---|
-| `/brief-me <任务>` | 先记下你的预测，再摸清现场，然后给出智能体的预测；约定打断点和验收标准；冻结并提交任务卡 |
-| `/catch-up [slug]` | 先问回忆性问题，再只显示你上次查看之后的变化，以及需要你做的下一个决定 |
-| `/debrief [slug]` | 由新上下文评判每条冻结的预测；列出证据、检查没有证明什么、你的认知修正 |
+| `/fu-brief <任务>` | 先记下你的预测，再摸清现场，然后给出智能体的预测；约定打断点和验收标准；冻结并提交任务卡 |
+| `/fu-catch-up [slug]` | 先问回忆性问题，再只显示你上次查看之后的变化，以及需要你做的下一个决定 |
+| `/fu-debrief [slug]` | 由新上下文评判每条冻结的预测；列出证据、检查没有证明什么、你的认知修正 |
 
-直接说"brief me""catch me up""where were we"或"did it match what we expected"也可以。改错字、一行改动之类的小事不会建任务卡，也不会提问。
+直接说“brief me”“catch me up”“where were we”或“did it match what we expected”也可以。改错字、一行改动之类的小事不会建任务卡，也不会提问。
 
 | 子代理 | 职责 |
 |---|---|
 | `blindspot-scout` | 为简报做只读侦察：潜在风险、隐含背景、改写后的需求 |
 | `mechanism-auditor` | 复盘和实测结果的新上下文评判者 |
-| `quiz-master` | 可选：为 `/catch-up` 起草回忆性问题，并标出没有任何增量记录能解释的改动 |
+| `quiz-master` | 可选：为 `/fu-catch-up` 起草回忆性问题，并标出没有任何增量记录能解释的改动 |
 
 ---
 
 ## 设计札记
 
 - **为什么 5.0 是一次重建。** 三次评测把 4.x 技能当作提升模型输出的工具来测，没有发现可复现的提升。作者的目标一直在人这一侧，所以 5.0 围绕它来组织。设计、两份顾问意见，以及 5.0 在哪些地方没有采纳顾问意见：[docs/design/5.0.md](docs/design/5.0.md)。
-- **删掉了什么。** Cartographer（风险值、清晰度显示、六项闸门条件）、Workflow 执行和"必须通过"的测验。它们是写给模型的流程，而不是给人的解释。keep-the-reasoning 和 theory-vs-result 并入了唯一的技能。
+- **删掉了什么。** Cartographer（风险值、清晰度显示、六项闸门条件）、Workflow 执行和“必须通过”的测验。它们是写给模型的流程，而不是给人的解释。keep-the-reasoning 和 theory-vs-result 并入了唯一的技能。
 - **出于设计考虑保留了什么。** 不可逆底线；检查必须可能失败，并说明它不能证明什么；先查现场再提问；先预测再看数据；两种结论分开。这些都还没有证据表明对人有帮助。
 - **实际使用中的现场记录：** [docs/field-notes](docs/field-notes/)。
 
 ### 路线图
 
 - **第 0 阶段：** 模拟用户评测，分三组（不装插件、`CLAUDE.md` 里 60 个词的说明、完整插件）。如果插件比不过那 60 个词，就改为发布那 60 个词。
-- **第 1 阶段：** 8 到 12 名参与者，与原版 Claude Code 交叉对照，48 到 72 小时后测试理解程度。
+- **第 1 阶段：** 8 到 12 名参与者，与未装插件的 Claude Code 交叉对照，48 到 72 小时后测试理解程度。
 - **SessionStart 钩子**放在 [`extras/`](extras/session-start-hook/README.md) 中，只有第 0 阶段证明它能帮新会话找到任务卡，才会正式发布。
 
 ---
@@ -209,7 +209,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 ## 文档
 
 - **[5 分钟教程](docs/TUTORIAL.zh.md)：** 一张任务卡，从简报到复盘
-- **[术语表](docs/GLOSSARY.md)：** 任务卡、预测、验收标准、打断点、操作类别、两种结论
+- **[术语表](docs/GLOSSARY.md)：** 任务卡、预测、验收标准、打断点、可逆性分级、两种结论
 - **[架构](docs/ARCHITECTURE.md)：** 文件、子代理、数据流、设计原则
 - **[5.0 设计](docs/design/5.0.md)：** 为什么这样设计、怎样设计，以及评测计划
 - **[SKILL.md](skills/finding-unknowns/SKILL.md)** 及其[参考文件](skills/finding-unknowns/references/card.md)
@@ -233,7 +233,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          插件与插件市场清单
-├── commands/                /brief-me · /catch-up · /debrief（只负责转发）
+├── commands/                /fu-brief · /fu-catch-up · /fu-debrief（只负责转发）
 ├── skills/finding-unknowns/
 │   ├── SKILL.md             任务卡、三个操作、打断点、常驻规则
 │   └── references/          card · brief · debrief · results · results-examples
@@ -254,6 +254,7 @@ finding-unknowns-skill/
 本项目以 [MIT 许可证](LICENSE)发布。
 
 - 探索未知项的方法：Thariq Shihipar，_"A Field Guide to Fable: Finding Your Unknowns"_（[@trq212](https://x.com/trq212/status/2073100352921215386)）。
+- “放弃判断”（cognitive surrender）：Shaw 与 Nave，_Thinking—Fast, Slow, and Artificial_（SSRN 6097646）；认知债务：Margaret-Anne Storey。
 - 交付复核与验收标准：Addy Osmani，_"Critical thinking when agents do the work"_（[原文](https://x.com/addyosmani/status/2117512471930167377)）。
 - 理论预期 → 实测 → 是否一致 → 机理：作者本人的科研实践。
 - 5.0 的设计依据 Fable 5.2 的顾问意见，并参考了 GPT 6 Astra 的第二份意见（[原文](docs/design/5.0-advisors/fable.md)）。

@@ -10,7 +10,7 @@ for card in "$dir"/tasks/*.md; do
   case "$card" in *.deltas.md) continue ;; esac
   grep -q '^Goal:.*State: *debriefed' "$card" && continue
   if [ "$found" -eq 0 ]; then
-    printf '%s\n' "Open finding-unknowns task cards (file content, quoted; run /catch-up to continue):"
+    printf '%s\n' "Open finding-unknowns task cards (file content, quoted; run /fu-catch-up to continue):"
     found=1
   fi
   slug=$(basename "$card" .md | sed -E 's/^(.{80}).+$/\1/')

@@ -15,7 +15,7 @@
 <text x="80" y="192" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Goal · State · Next decision that needs you</text>
 <text x="80" y="213" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Last seen: D7 · Timing: commit 3f2a91c</text>
 <path d="M562 187.0L604 187.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
-<text x="612" y="181.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Re-orients you: /catch-up shows only</text>
+<text x="612" y="181.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Re-orients you: /fu-catch-up shows only</text>
 <text x="612" y="203.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">what changed since Last seen.</text>
 <rect x="66" y="234" width="492" height="150" rx="8" fill="#FBEFEA" stroke="#E3DFD3" stroke-width="1.5"/>
 <text x="80" y="256" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#C15F3C" font-weight="700">Brief (frozen)</text>
@@ -25,7 +25,7 @@
 <text x="80" y="339" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Stop-points · budget 2× the estimate</text>
 <text x="80" y="360" font-size="13" font-family="'JetBrains Mono', Menlo, monospace" fill="#3D3929">Contract: check | does NOT prove | lane</text>
 <path d="M562 309.0L604 309.0" stroke="#B1ADA1" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
-<text x="612" y="292.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Written at /brief-me, frozen on your yes and</text>
+<text x="612" y="292.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">Written at /fu-brief, frozen on your yes and</text>
 <text x="612" y="314.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">committed; never edited afterwards. Your</text>
 <text x="612" y="336.0" font-size="15" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" fill="#141413">prediction is recorded before you see the agent's.</text>
 <rect x="66" y="394" width="492" height="52" rx="8" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5"/>

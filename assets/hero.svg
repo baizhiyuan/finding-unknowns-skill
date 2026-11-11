@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="t d">
 <title id="t">finding-unknowns v5.0.0</title>
-<desc id="d">One task card per task. /brief-me: you predict first; the territory is checked; then the agent predicts; the card is frozen on your yes. Quiet build: stops only for an irreversible action, a scope change, a dead premise or a budget overrun; everything else is logged on the card. /catch-up: recall first, then what changed. /debrief: a fresh context grades every frozen prediction, yours first; what the checks did not prove; what changes in your model.</desc>
+<desc id="d">One task card per task. /fu-brief: you predict first; the territory is checked; then the agent predicts; the card is frozen on your yes. Quiet build: stops only for an irreversible action, a scope change, a dead premise or a budget overrun; everything else is logged on the card. /fu-catch-up: recall first, then what changed. /fu-debrief: a fresh context grades every frozen prediction, yours first; what the checks did not prove; what changes in your model.</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8C877A"/></marker>
@@ -16,7 +16,7 @@
 <g font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
 <!-- brief -->
 <rect x="60" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
-<text x="84" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/brief-me</text>
+<text x="84" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/fu-brief</text>
 <text x="84" y="258" font-size="16" fill="#141413">You predict first</text>
 <text x="84" y="284" font-size="16" fill="#141413">Territory, then the agent predicts</text>
 <text x="84" y="310" font-size="16" fill="#141413">Stop-points and contract</text>
@@ -30,7 +30,7 @@
 <text x="474" y="336" font-size="16" fill="#141413">Everything else: a line on the card</text>
 <!-- debrief -->
 <rect x="840" y="190" width="300" height="170" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
-<text x="864" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/debrief</text>
+<text x="864" y="226" font-size="22" font-weight="700" fill="#C15F3C" font-family="'JetBrains Mono', Menlo, monospace">/fu-debrief</text>
 <text x="864" y="258" font-size="16" fill="#141413">Fresh context grades</text>
 <text x="864" y="284" font-size="16" fill="#141413">every prediction, yours first</text>
 <text x="864" y="310" font-size="16" fill="#141413">What the checks did not prove</text>
@@ -41,6 +41,6 @@
 <rect x="380" y="388" width="440" height="46" rx="10" fill="#F0EEE6" stroke="#B1ADA1"/>
 <text x="600" y="417" font-size="16" text-anchor="middle" fill="#3D3929" font-family="'JetBrains Mono', Menlo, monospace">.finding-unknowns/tasks/{slug}.md</text>
 <path d="M600 362V386" stroke="#B1ADA1" stroke-width="2" stroke-dasharray="4 4"/>
-<text x="600" y="472" font-size="16" text-anchor="middle" fill="#3D3929"><tspan font-family="'JetBrains Mono', Menlo, monospace" font-weight="700" fill="#C15F3C">/catch-up</tspan> next session: recall, then what changed</text>
+<text x="600" y="472" font-size="16" text-anchor="middle" fill="#3D3929"><tspan font-family="'JetBrains Mono', Menlo, monospace" font-weight="700" fill="#C15F3C">/fu-catch-up</tspan> next session: recall, then what changed</text>
 </g>
 </svg>

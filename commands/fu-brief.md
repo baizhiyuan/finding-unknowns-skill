@@ -3,15 +3,15 @@ description: "Start a task with a task card: you predict first, the territory is
 argument-hint: "<task>"
 ---
 
-# brief-me
+# fu-brief
 
 ## Dispatch
 
-1. Invoke the `finding-unknowns` skill with the Skill tool and run its **/brief** steps:
+1. Invoke the `finding-unknowns` skill with the Skill tool and run its **/fu-brief** steps:
    mode once per project; the person's prediction first (their prior); the territory,
    using the instruments in `references/brief.md` as the gap needs; then the agent's
    prediction; the Brief (approach with one-line whys, both sides' predictions, the four
    stop-points with a budget multiple, the contract); freeze on the person's yes and
    commit per `references/card.md`.
-2. If an open card already covers this task, offer to continue it instead (`/catch-up`).
+2. If an open card already covers this task, offer to continue it instead (`/fu-catch-up`).
 3. Then build quietly: stop only at the four stop-points; log everything else on the card.

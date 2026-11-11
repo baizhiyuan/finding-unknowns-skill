@@ -81,7 +81,7 @@ Name the signal once, plainly, with the evidence; then the person decides. No le
 - "just tell me what to do" on a decision whose consequences fall on other people;
 - reasoning from another agent's summary instead of the source.
 
-## Recall questions (`/catch-up`)
+## Recall questions (`/fu-catch-up`)
 
 Asked before the card is shown, so the person practises recall and a stale Brief shows
 up.
