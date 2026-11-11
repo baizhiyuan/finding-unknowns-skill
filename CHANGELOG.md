@@ -29,8 +29,10 @@ All notable changes to this project are documented in this file. The format is b
   - **Hook prototype:** a plugin UserPromptSubmit hook gave +0.25, so by the
     pre-registered criterion it is not shipped. The hook files are kept in the eval
     folder.
-  - **Activation:** reference skills whose descriptions restate the request were invoked
-    in 15 of 15 runs, so Sonnet's low invocation is a description-wording issue.
+  - **Activation:** reference skills named and described like the literal request were
+    invoked in 15 of 15 runs. That rules out a blanket refusal by Sonnet to invoke
+    skills. Ours need it to first judge the request as high-stakes, which it mostly
+    didn't, even with the hook.
 - README: a "What the evals show" section (en/zh) stating that the three model-only
   evals found no measurable gain, the costs, the one narrow recurring effect, and that
   the human side is untested. The roadmap adds a human-side eval.
