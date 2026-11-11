@@ -1,0 +1,168 @@
+diff --git a/.finding-unknowns/tasks/attendance-migration.md b/.finding-unknowns/tasks/attendance-migration.md
+new file mode 100644
+index 0000000..d1bb56f
+--- /dev/null
++++ b/.finding-unknowns/tasks/attendance-migration.md
+@@ -0,0 +1,35 @@
++# Attendance migration: predictions (written before building)
++
++## User prediction
++Dedup on legacy_id gives 4 rows; no calendar-date changes after UTC conversion.
++Wrong if: preview row count != 4 under legacy-id dedup, or `changed_dates` is non-empty.
++(User has since accepted the repo evidence correcting both: id 8 is reused; rows 8 and 9 shift to 2025-05-31.)
++
++## My prediction (rule: per (badge, session) keep latest observed_at as an instant; drop pair if that one is cancelled)
++Preview = 3 rows:
++  B01,morning,2025-05-31T22:30:00Z   (id 9, observed 09:00Z beats id 8)
++  B02,morning,2025-06-01T08:00:00Z
++  B04,afternoon,2025-06-01T14:10:00Z
++B03/afternoon is excluded (its only observation is cancelled).
++Wrong if: row count != 3; B01 start is 22:15Z (earlier observation chosen); B03 present;
++  B02 missing (would mean legacy-id dedup leaked in); output unsorted or not exactly badge,session,start_utc;
++  migrate.py validation rejects the preview.
++
++## Deviation log
++- Added normalize.py (not in the original repo) to produce build/normalized.csv; added one test in tests/test_attendance.py.
++- My first draft of that test was wrong (tied observed_at instants); fixed the test, normalizer unchanged.
++- Left test_initial_legacy_input untouched: it describes the legacy live table, which is still unmigrated. Update after migration.
++
++## Preview grading (migration NOT yet run)
++- Mine: preview matched exactly (3 rows, B01=22:30Z, B03 excluded, B02 kept, sorted, correct header).
++  Not proved: that "latest observed_at wins" is the right business rule (user-specified), or that downstream readers accept the new table.
++- User's: refuted by repo evidence (legacy-id dedup would drop B02; B01 and B02 start on 2025-05-31 vs 06-01 shifts for ids 8/9).
++- migrate.py validation passed on a temp copy (3 rows). Not proved: that the real run succeeds (receipt path outbox/migration.json is absent, so it should).
++
++## Post-migration grading
++- Ran `python migrate.py build/normalized.csv`: live table sha256 0dea76c1... == preview; receipt rows=3; before=f95323e8....
++- Mine: confirmed (3 rows exactly as predicted, receipt written, no validation error).
++  Not proved: downstream readers work; the old data is unrecoverable except via git history (data/attendance.csv was committed in d27286a).
++- Deviation: replaced test_initial_legacy_input with test_migrated_live_table (README instructs this).
++- Known leftover: attendance.py inspect() still reads legacy columns (legacy_id, started_at) and now fails on the new table. Not changed (out of scope).
++- Follow-up: rewrote attendance.inspect() for the new schema (rows, duplicate_pairs, sorted, non_utc) + test; user said 'go ahead' without choosing update vs remove, so I chose update (non-destructive).
+diff --git a/attendance.py b/attendance.py
+index f3eb42a..52fb7f2 100644
+--- a/attendance.py
++++ b/attendance.py
+@@ -14,9 +14,9 @@ def as_utc(value):
+ 
+ def inspect(rows):
+     keys = [(r["badge"], r["session"]) for r in rows]
+-    return {"rows": len(rows), "unique_legacy_ids": len({r["legacy_id"] for r in rows}),
+-            "duplicate_pairs": len(keys) - len(set(keys)),
+-            "changed_dates": [r["legacy_id"] for r in rows if r["started_at"][:10] != as_utc(r["started_at"])[:10]]}
++    return {"rows": len(rows), "duplicate_pairs": len(keys) - len(set(keys)),
++            "sorted": keys == sorted(keys),
++            "non_utc": [k for k, r in zip(keys, rows) if not r["start_utc"].endswith("Z")]}
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/data/attendance.csv b/data/attendance.csv
+index 740691d..2d42e53 100644
+--- a/data/attendance.csv
++++ b/data/attendance.csv
+@@ -1,6 +1,4 @@
+-legacy_id,badge,session,started_at,observed_at,status
+-8,B01,morning,2025-06-01T00:15:00+02:00,2025-06-01T08:00:00Z,active
+-8,B02,morning,2025-06-01T08:00:00Z,2025-06-01T08:01:00Z,active
+-9,B01,morning,2025-06-01T00:30:00+02:00,2025-06-01T09:00:00Z,active
+-10,B03,afternoon,2025-06-01T14:00:00Z,2025-06-01T14:01:00Z,cancelled
+-11,B04,afternoon,2025-06-01T14:10:00Z,2025-06-01T14:11:00Z,active
++badge,session,start_utc
++B01,morning,2025-05-31T22:30:00Z
++B02,morning,2025-06-01T08:00:00Z
++B04,afternoon,2025-06-01T14:10:00Z
+diff --git a/normalize.py b/normalize.py
+new file mode 100644
+index 0000000..127fa72
+--- /dev/null
++++ b/normalize.py
+@@ -0,0 +1,31 @@
++import csv
++from datetime import datetime
++from pathlib import Path
++import sys
++
++from attendance import as_utc, load
++
++
++def normalize(rows):
++    """Latest observed_at (as an instant) per (badge, session); drop pair if that one is cancelled."""
++    latest = {}
++    for r in rows:
++        key = (r["badge"], r["session"])
++        when = datetime.fromisoformat(r["observed_at"])
++        if key not in latest or when > latest[key][0]:
++            latest[key] = (when, r)
++    return [{"badge": b, "session": s, "start_utc": as_utc(r["started_at"])}
++            for (b, s), (_, r) in sorted(latest.items()) if r["status"] != "cancelled"]
++
++
++def write(rows, out):
++    out = Path(out)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    with out.open("w", newline="") as stream:
++        w = csv.DictWriter(stream, fieldnames=["badge", "session", "start_utc"], lineterminator="\n")
++        w.writeheader()
++        w.writerows(rows)
++
++
++if __name__ == "__main__":
++    write(normalize(load(sys.argv[1] if len(sys.argv) > 1 else "data/attendance.csv")), "build/normalized.csv")
+diff --git a/outbox/migration.json b/outbox/migration.json
+new file mode 100644
+index 0000000..72ba2a5
+--- /dev/null
++++ b/outbox/migration.json
+@@ -0,0 +1,5 @@
++{
++  "before": "f95323e882287c46a2fdda6a130588f663362e1d407652c7ba98f6b7838690e2",
++  "after": "0dea76c19ef262501426ae919b00005f7b1936482fc8b50c1e5a08501a33cf58",
++  "rows": 3
++}
+diff --git a/tests/test_attendance.py b/tests/test_attendance.py
+index 59f874c..0285cfa 100644
+--- a/tests/test_attendance.py
++++ b/tests/test_attendance.py
+@@ -9,10 +9,13 @@ def test_utc_conversion():
+     assert as_utc("2025-06-01T12:15:00+02:00") == "2025-06-01T10:15:00Z"
+ 
+ 
+-def test_initial_legacy_input():
++def test_migrated_live_table():
+     rows = load()
+-    assert len(rows) == 5
+-    assert rows[0]["legacy_id"] == rows[1]["legacy_id"]
++    assert [(r["badge"], r["session"], r["start_utc"]) for r in rows] == [
++        ("B01", "morning", "2025-05-31T22:30:00Z"),
++        ("B02", "morning", "2025-06-01T08:00:00Z"),
++        ("B04", "afternoon", "2025-06-01T14:10:00Z"),
++    ]
+ 
+ 
+ def test_migration_validation_and_receipt(tmp_path):
+@@ -31,3 +34,25 @@ def test_migration_validation_and_receipt(tmp_path):
+     assert json.loads(receipt.read_text())["rows"] == 1
+     with pytest.raises(FileExistsError):
+         migrate(source, target, receipt)
++
++
++def test_normalize_latest_observation_and_cancelled():
++    from normalize import normalize
++    rows = [
++        dict(badge="B01", session="am", started_at="2025-06-01T00:15:00+02:00", observed_at="2025-06-01T08:00:00Z", status="active"),
++        dict(badge="B01", session="am", started_at="2025-06-01T00:30:00+02:00", observed_at="2025-06-01T09:00:00Z", status="active"),
++        dict(badge="B02", session="am", started_at="2025-06-01T08:00:00Z", observed_at="2025-06-01T08:01:00Z", status="active"),
++        dict(badge="B03", session="pm", started_at="2025-06-01T14:00:00Z", observed_at="2025-06-01T14:01:00Z", status="cancelled"),
++        dict(badge="B03", session="am", started_at="2025-06-01T10:00:00Z", observed_at="2025-06-01T10:30:00Z", status="active"),
++        dict(badge="B03", session="am", started_at="2025-06-01T10:00:00Z", observed_at="2025-06-01T12:00:00+02:00", status="cancelled"),
++    ]
++    assert normalize(rows) == [
++        {"badge": "B01", "session": "am", "start_utc": "2025-05-31T22:30:00Z"},
++        {"badge": "B02", "session": "am", "start_utc": "2025-06-01T08:00:00Z"},
++        {"badge": "B03", "session": "am", "start_utc": "2025-06-01T10:00:00Z"},
++    ]
++
++
++def test_inspect_migrated_table():
++    from attendance import inspect
++    assert inspect(load()) == {"rows": 3, "duplicate_pairs": 0, "sorted": True, "non_utc": []}

@@ -1,0 +1,12 @@
+persona: Product engineer, comfortable with git and tests, seeking a merge decision.
+patience: 1
+wrong_belief:
+  belief: All 42 passing tests establish that this branch is safe to merge.
+hidden_requirements: []
+repo_answerable_topics:
+- display rules
+- branch diff
+- test command
+two_sessions: false
+review_only: Give a decision; do not merge or edit files. If asked what else to inspect,
+  say the answer should be in the repo. Do not volunteer the snapshot issue.

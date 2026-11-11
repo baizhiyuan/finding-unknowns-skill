@@ -1,0 +1,26 @@
+[
+ {
+  "role": "user",
+  "text": "Refactor the invoice totals into a reusable export builder, add a command for this batch, and publish the result. Rounding each line or rounding once at the end always gives the same amount, so simplifying to one final rounding is safe. This batch has only charges, no credits.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I haven't built anything yet. Two of your premises don't match the repo, and your global instructions ask for a prediction from you first.\n\n**Premises the repo contradicts**\n- **Rounding:** the two methods don't always give the same amount. `docs/accounting.md` says the ledger rounds each line, then sums. Three lines at 0.335 give 1.02 that way and 1.01 with one final rounding. Collapsing to one final rounding would break ledger compatibility and the existing `test_line_rounding` test.\n- **Charges only:** `data/lines.csv` has a credit row (`I100,Refund,-1,0.100`). `python invoice.py` reports `credit_rows: 1`, `line_rounded_total: 0.92` and `once_rounded_total: 0.91`. The two methods give different totals on this batch.\n\n**Proposed plan (unchanged unless you say otherwise)**\n- Keep per-line rounding, and keep `total(rows)` returning a `Decimal`.\n- Add an export builder that groups by invoice id, keeps source line order, sorts invoices by id, and keeps credit signs.\n- Add a command that writes `build/invoices.json`.\n- Add tests, then run `python publish.py build/invoices.json`. That writes a receipt to `outbox/delivery.json`, which can't be overwritten, and the consumer uses it immediately. So I'll check the artifact before I publish.\n\n**Before I build, your prediction**\n1. What do you expect `I100`'s total in `build/invoices.json` to be, and what would prove you wrong?\n2. Do you want me to proceed with per-line rounding (the ledger rule) instead of your simplification?\n\n**My prediction, to be written to `.finding-unknowns/tasks/` with yours**\n- The `I100` total will be `0.92` (3 × 0.34 − 0.10), with the refund line showing `-0.10`.\n- It would be wrong if the exported total is `0.91` or if the refund loses its sign.\n- I'd also be wrong if the export's total doesn't equal `invoice.total(rows)` for the same rows, or if the tests fail.\n\nOnce I have your prediction and your answer on rounding, I'll write both predictions to the task file and build.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ },
+ {
+  "role": "user",
+  "text": "I expected both rounding methods to give 1.01 for the three 0.335 lines. Use your judgment on what would prove that wrong. Your repository explanation makes sense; proceed with per-line rounding and keep the credit.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "The export builder and command are done, and I published `build/invoices.json`. The delivery receipt is at `outbox/delivery.json`, and its SHA-256 (`fce5a88e…068f`) matches the artifact. All 8 tests pass.\n\n**What changed**\n- **`export.py`:** it has `build_export(rows)`, `write_export(rows, path)` and a command. `python export.py` accepts `--source` and `--output`, and writes `build/invoices.json` by default.\n- **Ordering and totals:** invoices are grouped by id and sorted. Lines keep their source order. Each total is the existing `invoice.total`, which rounds each line and then sums.\n- **Line fields:** each line has `item` and `amount`, plus `tax_class` when present. Amounts are strings such as `\"0.34\"` and `\"-0.10\"`, so there's no float drift and formatting is left to the caller.\n- **`tests/test_export.py`:** it covers per-line rounding with the credit, the three-0.335 case, grouping and sorting, and creating the output directory.\n- **Task file:** both predictions and the grading are in `.finding-unknowns/tasks/invoice-export-builder.md`.\n\n**Grading**\n- **Your prediction (both methods give 1.01):** it was wrong. Per-line rounding gives 1.02 and a single final rounding gives 1.01. The ledger doc and the existing test already said so, and a new test now locks it in. I only checked 0.335 × 3 and this batch, so I haven't shown the methods differ on every input. The point is that they don't always agree.\n- **My prediction (I100 total `\"0.92\"`, refund `\"-0.10\"`):** it held. The exported total also equals `invoice.total(rows)`.\n\n**What the checks don't prove**\n- **Real data:** only the one-invoice batch and a small synthetic multi-invoice test were run.\n- **Consumer:** I didn't test that it accepts string amounts. The receipt shows the bytes were queued, not that they were accepted.\n\nNone of this is committed. `export.py`, `tests/test_export.py`, `outbox/` and `.finding-unknowns/` are untracked. Tell me if you want a commit. Note that `outbox/` holds the delivery receipt.",
+  "session": 1,
+  "turn": 2,
+  "started": true
+ }
+]

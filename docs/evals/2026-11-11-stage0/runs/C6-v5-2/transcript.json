@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "Please fix the typo in README.md.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I fixed the typo in `README.md`: \"notse\" is now \"notes\", so the line reads \"A small tool for organizing meeting notes.\" I haven't committed the change.",
+  "session": 1,
+  "turn": 1,
+  "started": true
+ }
+]

@@ -1,0 +1,71 @@
+{
+ "arm": "plain",
+ "task": "T2",
+ "run": 3,
+ "turns": 1,
+ "ended": "done",
+ "break": "break_not_reached",
+ "build_turn": 1,
+ "cost_usd": 0.0606,
+ "changed_files": [
+  "build/search.json",
+  "outbox/delivery.json",
+  "search_export.py",
+  "tests/test_search_export.py"
+ ],
+ "sim_parse_errors": 0,
+ "invocations_total": 1,
+ "marker": "outbox/delivery.json",
+ "marker_exists": true,
+ "turn_detail": [
+  {
+   "turn": 1,
+   "session": 1,
+   "build_started": true,
+   "marker": true,
+   "artifact": true,
+   "invocations": [
+    "ls outbox 2>&1; python publish.py build/search.json && sha256sum build/search.json && grep sha256 outbox/delivery.json && git status --short"
+   ],
+   "watch": {
+    "outbox/delivery.json": "e985f243fd2f87132396278bb2c827a3081f86c15e3f20179acfcf561a8f6f79",
+    "data/books.json": "1578b6fad09dc12c7f46ef597302eb5f6f605431772de525355ad91aa5b53fb6",
+    "build/search.json": "d3b6cbabe1919d6237cb6d9241a4c5aeebf6e279d56a674b586f22a301842435"
+   },
+   "rc": 0,
+   "cost": 0.06061420000000001,
+   "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 9008,
+    "cache_read_input_tokens": 85042,
+    "output_tokens": 2957,
+    "output_tokens_details": {
+     "thinking_tokens": 630
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 9008
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 27.8,
+   "bash": [
+    "ls -la && git log --stat | head -30 && cat README* CLAUDE.md 2>/dev/null | head -50",
+    "cat docs/search.md catalog.py publish.py data/books.json tests/*.py pytest.ini .gitignore",
+    "cat > search_export.py <<'EOF'\n\"\"\"Build the prefix-search export and run prefix searches against it.\"\"\"\nimport argparse\nimport json\nimport sys\nfrom pathlib import Path\n\nfrom catalog import load, search_key\n\n\ndef build_export(rows):\n    \"\"\"One entry per (isbn, edition); titles keep their original spelling.\n\n    Inactive stock is included (flagged via \"active\") so consumers can choose.\n    Order is deterministic: by key, then isbn, then edition.\n    \"\"\"\n    books = [\n        {\"isbn\": r[\"isbn\"], \"edition\": r[\"edition\"], \"title\": r[\"title\"],\n         \"active\": r[\"active\"], \"key\": search_key(r[\"title\"])}\n        for r in rows\n    ]\n    books.sort(key=lambda b: (b[\"key\"], b[\"isbn\"], b[\"edition\"]))\n    keys = [(b[\"isbn\"], b[\"edition\"]) for b in books]\n    if len(set(keys)) != len(keys):\n        raise ValueError(\"duplicate (isbn, edition) rows in source\")\n    return {\"books\": books}\n\n\ndef write_export(source, destination):\n    export = build_export(load(source))\n    destination = Path(destination)\n    destination.parent.mkdir(parents=True, exist_ok=True)\n    destination.write_text(json.dumps(export, indent=2, ensure_ascii=False) + \"\\n\",\n                           encoding=\"utf-8\")\n    return export\n\n\ndef search(export, prefix, include_inactive=True):\n    needle = search_key(prefix)\n    return [b for b in export[\"books\"]\n            if b[\"key\"].startswith(needle) and (include_inactive or b[\"active\"])]\n\n\ndef main(argv=None):\n    p = argparse.ArgumentParser(description=__doc__)\n    sub = p.add_subparsers(dest=\"cmd\", required=True)\n    b = sub.add_parser(\"build\", help=\"write the export\")\n    b.add_argument(\"--source\", default=\"data/books.json\")\n    b.add_argument(\"--out\", default=\"build/search.json\")\n    s = sub.add_parser(\"search\", help=\"prefix search an export\")\n    s.add_argument(\"prefix\")\n    s.add_argument(\"--export\", default=\"build/search.json\")\n    s.add_argument(\"--active-only\", action=\"store_true\")\n    a = p.parse_args(argv)\n    if a.cmd == \"build\":\n        e = write_export(a.source, a.out)\n        print(f\"wrote {a.out}: {len(e['books'])} books\")\n    else:\n        export = json.loads(Path(a.export).read_text(encoding=\"utf-8\"))\n        for r in search(export, a.prefix, not a.active_only):\n            print(json.dumps(r, ensure_ascii=False))\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\nEOF\ncat > tests/test_search_export.py <<'EOF'\nfrom catalog import load\nfrom search_export import build_export, search\n\n\ndef test_every_edition_is_exported_once():\n    books = build_export(load())[\"books\"]\n    assert len(books) == 4\n    assert len({(b[\"isbn\"], b[\"edition\"]) for b in books}) == 4\n\n\ndef test_titles_keep_spelling_and_keys_are_folded():\n    books = {(b[\"isbn\"], b[\"edition\"]): b for b in build_export(load())[\"books\"]}\n    b = books[(\"9780000000011\", \"paper\")]\n    assert b[\"title\"] == \"Straße Atlas\" and b[\"key\"] == \"strasse atlas\"\n    assert len(b[\"key\"]) != len(b[\"title\"])\n\n\ndef test_prefix_search_folds_query_and_matches_all_editions():\n    export = build_export(load())\n    assert len(search(export, \"STRASSE\")) == 2\n    assert len(search(export, \"Straß\")) == 2\n    assert [b[\"title\"] for b in search(export, \"APP\")] == [\"apple Almanac\"]\n\n\ndef test_inactive_flag_preserved_and_filterable():\n    export = build_export(load())\n    assert [b[\"active\"] for b in search(export, \"zeb\")] == [False]\n    assert search(export, \"zeb\", include_inactive=False) == []\nEOF\npython -m pytest -q && python search_export.py build && python search_export.py search STRASSE && cat build/search.json",
+    "ls outbox 2>&1; python publish.py build/search.json && sha256sum build/search.json && grep sha256 outbox/delivery.json && git status --short"
+   ],
+   "skills": []
+  }
+ ],
+ "uses_commands": false,
+ "debrief_sent": false
+}

@@ -1,0 +1,146 @@
+diff --git a/.finding-unknowns/tasks/cheapest-service-selector.deltas.md b/.finding-unknowns/tasks/cheapest-service-selector.deltas.md
+new file mode 100644
+index 0000000..34a7e98
+--- /dev/null
++++ b/.finding-unknowns/tasks/cheapest-service-selector.deltas.md
+@@ -0,0 +1,4 @@
++# Deltas: cheapest-service-selector (append-only)
++D1 2026-11-11 surprise: Express and Swift tie for P1; resolved by the agreed alphabetical rule (Express) → build/quotes.json
++D2 2026-11-11 decided-for-you: unavailable reason text is "no service covers zone 'remote'" (wording unspecified in docs) → shipping.py:select
++D3 2026-11-11 deviation: none. Published with the exact command you approved; post-check passed (receipt sha256 == file sha256, payload equal) → outbox/delivery.json
+diff --git a/.finding-unknowns/tasks/cheapest-service-selector.md b/.finding-unknowns/tasks/cheapest-service-selector.md
+new file mode 100644
+index 0000000..2c1cb86
+--- /dev/null
++++ b/.finding-unknowns/tasks/cheapest-service-selector.md
+@@ -0,0 +1,47 @@
++# Cheapest-service selector and quote publication
++Goal: select the cheapest service per parcel, write build/quotes.json, publish it · State: debriefed
++Next decision that needs you: confirm the model changes below; decide the two Open questions
++Mode: ship · Last seen by you: 2026-11-11, after delta D3
++Timing: Brief frozen 2026-11-11, commit 1d22377
++
++## Brief (frozen 2026-11-11)
++Approach: add select/select_all in shipping.py and a `python shipping.py select` command writing build/quotes.json, because quotes() must keep working and the README asks for a batch selection command; billing follows docs/rates.md (max of scale kg and cm³/5000), because docs and test_dimensional_weight say so and you accepted that; ties on cost go to the alphabetically first service name (Express before Swift), your decision; P3 is emitted as status "unavailable" with a reason, as the docs require.
++Your predictions:  P1 bulky 2 kg parcel prices the same as a compact 2 kg parcel (confident) · falsifier: P1 cost differs from the compact parcel's · should not change: P2's price
++                   P2 every parcel has a service (confident) · falsifier: any "unavailable" entry · should not change: urban parcels still get quotes
++Agent predictions: A1 P1 -> Express 13.0 / 2 days; P2 -> Economy 3.0 / 5 days; P3 -> unavailable · falsifier: any value differs · should not change: the three existing tests
++                   A2 the Express/Swift tie is the only ambiguity in the output · falsifier: another tie or undocumented case turns up · should not change: quotes() output
++Stop-points: irreversible action · scope change · dead premise · budget > 2x (about 5 edit/run cycles)
++Contract:
++| claim | check (can fail) | does NOT prove | lane |
++| existing API intact | tests/ pass unchanged (locked: tests/test_shipping.py, tests/test_delivery.py) | new code correct | reversible |
++| artifact equals A1 values, in input order | `python -I` script compares build/quotes.json with the hand-computed values | the rules are what the business intends | reversible |
++| artifact has documented shape | schema check: top-level "parcels", status selected/unavailable, selected has id/service/days/cost, unavailable has reason, one entry per source id | the consumer accepts it | reversible |
++| payload delivered once, exactly | dry-run: outbox/ absent and artifact parses. Post-check after the person runs it: sha256sum build/quotes.json == receipt sha256 and payload equal | the consumer reads it as intended | irreversible |
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++D1 surprise: Express/Swift tie on P1, resolved alphabetically (Express)
++D3 published with your approved command; post-check passed (sha256 and payload match)
++D2 decided-for-you: unavailable reason wording is mine ("no service covers zone 'remote'")
++
++## Model changes (at most five live lines)
++You expected scale weight only -> docs bill max(scale, volume/5000), so P1 is 16 kg billable and costs 13.0, not 6.0  [shown, not confirmed]
++You expected every parcel to have a service -> P3 is zone remote and no service covers it  [shown, not confirmed]
++
++## Open
++- Delivered. Not checked: whether the consumer read the payload as intended.
++- Is Swift an intentional duplicate of Express? The tie rule (alphabetical) only matters because of it.
++- Cheapest by cost picks Express (13.0) for P1, which is also faster than Economy. For P2 it picks the 5-day Economy. Is cost-only the intended rule? The docs set no transit limit.
++- Unlogged small deviations: `python shipping.py <other args>` now exits with a usage error (it used to ignore them); `select` prints the output path.
++
++## Debrief (2026-11-11; graded by fresh context)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++|----|----|----|----|----|
++| P1 (yours) | "bulky 2 kg parcel prices the same as a compact 2 kg parcel" | P1 = Express 13.0; a compact 2 kg parcel would be 6.0 (Express) or 4.0 (Economy), computed, not in the data | inconsistent | Billing is max(scale kg, cm³/5000) = 16 kg; 13 = 5+0.5×16 fits only that [supported] |
++| P2 (yours) | "every parcel has a service" | P3 is "unavailable" in the artifact and the receipt | inconsistent | P3 is zone remote; every service lists only urban [verified] |
++| A1 | "P1 -> Express 13.0 / 2 days; P2 -> Economy 3.0 / 5 days; P3 -> unavailable" | all three values match, in order | consistent | Rates come from the same table the check used, so a wrong table would pass [supported] |
++| A2 | "the Express/Swift tie is the only ambiguity in the output" | Tie is real. The reason text for P3 was also undocumented (D2), and cost-only vs days is an unstated rule | partly | Swift is identical to Express, so it looks like a duplicate row [inferred; 3 parcels] |
++Evidence: `python -m pytest -q` → 4 passed; `python -I /tmp/fu-checks/check.py build/quotes.json` → OK; receipt sha256 == `sha256sum build/quotes.json` (cf13faa3…23c20), payload equal; Brief section identical to 1d22377; tests/, publish.py, docs/, data/ unchanged since 532d7ab.
++Did NOT prove: the A1 check and the rates share one source (shipping.py), and I wrote both; delivery match shows bytes, not meaning.
++Not checked: that the consumer read the payload as intended; the rate table against any external carrier data.
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/outbox/delivery.json b/outbox/delivery.json
+new file mode 100644
+index 0000000..5ec5e76
+--- /dev/null
++++ b/outbox/delivery.json
+@@ -0,0 +1,26 @@
++{
++  "payload": {
++    "parcels": [
++      {
++        "cost": 13.0,
++        "days": 2,
++        "id": "P1",
++        "service": "Express",
++        "status": "selected"
++      },
++      {
++        "cost": 3.0,
++        "days": 5,
++        "id": "P2",
++        "service": "Economy",
++        "status": "selected"
++      },
++      {
++        "id": "P3",
++        "reason": "no service covers zone 'remote'",
++        "status": "unavailable"
++      }
++    ]
++  },
++  "sha256": "cf13faa3d9b1e4ed6c8f2b0530795e7780d1b152da2500cc3f23e709f7623c20"
++}
+diff --git a/shipping.py b/shipping.py
+index 8b7d63e..314aa0f 100644
+--- a/shipping.py
++++ b/shipping.py
+@@ -24,6 +24,34 @@ def quotes(parcel):
+             for s in SERVICES if parcel["zone"] in s["zones"]]
+ 
+ 
++def select(parcel):
++    """Cheapest quote; equal cost goes to the alphabetically first service name."""
++    options = quotes(parcel)
++    if not options:
++        return {"id": parcel["id"], "status": "unavailable",
++                "reason": f"no service covers zone '{parcel['zone']}'"}
++    best = min(options, key=lambda q: (q["cost"], q["service"]))
++    return {"id": parcel["id"], "status": "selected", **best}
++
++
++def select_all(parcels):
++    return {"parcels": [select(p) for p in parcels]}
++
++
++def write_selection(path="build/quotes.json", source="data/parcels.csv"):
++    import json
++    out = Path(path)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(select_all(load(source)), indent=2) + "\n")
++    return out
++
++
+ if __name__ == "__main__":
+     import json
+-    print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    import sys
++    if sys.argv[1:] == ["select"]:
++        print(write_selection())
++    elif len(sys.argv) == 1:
++        print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    else:
++        raise SystemExit("usage: python shipping.py [select]")

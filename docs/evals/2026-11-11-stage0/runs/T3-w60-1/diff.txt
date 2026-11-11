@@ -1,0 +1,75 @@
+diff --git a/run.py b/run.py
+index eb5ee70..4b9dafd 100644
+--- a/run.py
++++ b/run.py
+@@ -40,8 +40,46 @@ def experiment(seed):
+                 for size in (1, 16)} for w in ("sparse", "burst")}
+ 
+ 
++SEEDS = range(10)
++
++
++def report(seeds=SEEDS):
++    runs = []
++    for seed in seeds:
++        for workload, sizes in experiment(seed).items():
++            one, sixteen = sizes["1"], sizes["16"]
++            runs.append({
++                "seed": seed, "workload": workload, "samples": one["count"],
++                "size_1": one, "size_16": sixteen,
++                "mean_delta_ms": sixteen["mean_ms"] - one["mean_ms"],
++                "p95_delta_ms": sixteen["p95_ms"] - one["p95_ms"],
++                "batch16_reduces_mean": sixteen["mean_ms"] < one["mean_ms"],
++            })
++    by = {w: [r for r in runs if r["workload"] == w] for w in ("sparse", "burst")}
++    counts = {w: sorted({r["samples"] for r in rs}) for w, rs in by.items()}
++    wins = {w: sum(r["batch16_reduces_mean"] for r in rs) for w, rs in by.items()}
++    n = len(by["sparse"])
++    conclusion = (
++        f"Hypothesis not supported. Batch 16 reduced mean latency in {wins['burst']}/{n} burst seeds "
++        f"(burst: {counts['burst']} requests per run) but in {wins['sparse']}/{n} sparse seeds "
++        f"(sparse: {counts['sparse']} requests per run, not 32: request 17 is a modeled missing sample). "
++        "In sparse, 40 ms spacing means every size-16 batch waits the 20 ms timeout, adding about 20 ms "
++        "to each request. Modeled milliseconds, seeds 0-9; not wall-clock."
++    )
++    return {"runs": runs, "conclusion": conclusion}
++
++
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser()
+-    parser.add_argument("--seed", type=int, required=True)
++    parser.add_argument("--seed", type=int)
++    parser.add_argument("--report", help="write the seeds 0-9 comparison report to this path")
+     args = parser.parse_args()
+-    print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    if args.report:
++        import pathlib
++        path = pathlib.Path(args.report)
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(report(), indent=2, sort_keys=True) + "\n")
++    elif args.seed is not None:
++        print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    else:
++        parser.error("--seed or --report required")
+diff --git a/tests/test_run.py b/tests/test_run.py
+index f6b1112..667f713 100644
+--- a/tests/test_run.py
++++ b/tests/test_run.py
+@@ -1,4 +1,4 @@
+-from run import arrivals, experiment, latencies, summarize
++from run import arrivals, experiment, latencies, report, summarize
+ 
+ 
+ def test_single_request():
+@@ -16,3 +16,11 @@ def test_summary():
+ 
+ def test_workloads():
+     assert set(experiment(7)) == {"sparse", "burst"}
++
++
++def test_report_counts_and_direction():
++    runs = report()["runs"]
++    assert len(runs) == 20
++    for r in runs:
++        assert r["samples"] == (31 if r["workload"] == "sparse" else 32)
++        assert r["batch16_reduces_mean"] == (r["workload"] == "burst")

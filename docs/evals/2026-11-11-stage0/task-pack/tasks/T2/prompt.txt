@@ -1,0 +1,1 @@
+Build a prefix-search export for our library catalogue and publish it. Case folding only changes letter case, so the matching keys will always have the same length as the displayed titles. There is one record per ISBN in this feed.

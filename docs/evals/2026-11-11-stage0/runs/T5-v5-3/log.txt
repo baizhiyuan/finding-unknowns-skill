@@ -1,0 +1,5 @@
+33bfed7 chore(card): debrief attendance-migration
+af3021c chore(card): scope amendment M1, attendance.py schema-aware
+3179794 chore(card): stop attendance-migration (live table replaced)
+8ccb796 chore(card): stop attendance-migration
+1bd6b44 chore(card): brief attendance-migration

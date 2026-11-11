@@ -1,0 +1,86 @@
+diff --git a/catalog.py b/catalog.py
+index 97301a9..aaf2a31 100644
+--- a/catalog.py
++++ b/catalog.py
+@@ -1,4 +1,5 @@
+ import json
++import sys
+ from pathlib import Path
+ 
+ 
+@@ -7,10 +8,40 @@ def search_key(title):
+ 
+ 
+ def load(path="data/books.json"):
+-    return json.loads(Path(path).read_text())
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def build_export(rows):
++    """Search export: every (isbn, edition) row, inactive included, ordered by key."""
++    books = [{"isbn": r["isbn"], "edition": r["edition"], "title": r["title"],
++              "active": r["active"], "key": search_key(r["title"])} for r in rows]
++    books.sort(key=lambda b: (b["key"], b["isbn"], b["edition"]))
++    return {"books": books}
++
++
++def write_export(path="build/search.json", source="data/books.json"):
++    out = Path(path)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(build_export(load(source)), ensure_ascii=False, indent=2) + "\n",
++                   encoding="utf-8")
++    return out
++
++
++def prefix_search(export, prefix):
++    p = search_key(prefix)
++    return [b for b in export["books"] if b["key"].startswith(p)]
+ 
+ 
+ if __name__ == "__main__":
+-    rows = load()
+-    print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
+-                      "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    args = sys.argv[1:]
++    if args and args[0] == "export":
++        print(write_export(*args[1:2]))
++    elif args and args[0] == "search" and len(args) in (2, 3):
++        export = build_export(load())
++        print(json.dumps(prefix_search(export, args[1]), ensure_ascii=False, indent=2))
++    elif not args:
++        rows = load()
++        print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
++                          "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    else:
++        raise SystemExit("usage: python catalog.py [export [PATH] | search PREFIX]")
+diff --git a/tests/test_catalog.py b/tests/test_catalog.py
+index 02881ee..66a4ae2 100644
+--- a/tests/test_catalog.py
++++ b/tests/test_catalog.py
+@@ -11,3 +11,26 @@ def test_ascii_prefix():
+ 
+ def test_editions_remain_separate():
+     assert len({(r["isbn"], r["edition"]) for r in load()}) == 4
++
++
++def test_export_shape_and_rows():
++    from catalog import build_export
++    books = build_export(load())["books"]
++    assert len(books) == 4
++    assert {(b["isbn"], b["edition"]) for b in books} == {(r["isbn"], r["edition"]) for r in load()}
++    assert any(not b["active"] for b in books)
++    assert all(set(b) == {"isbn", "edition", "title", "active", "key"} for b in books)
++
++
++def test_export_keeps_title_and_expands_key():
++    from catalog import build_export
++    b = [x for x in build_export(load())["books"] if x["title"] == "Straße Atlas"]
++    assert len(b) == 2 and all(x["key"] == "strasse atlas" for x in b)
++
++
++def test_prefix_search_folds_query():
++    from catalog import build_export, prefix_search
++    ex = build_export(load())
++    assert len(prefix_search(ex, "STRASSE")) == 2
++    assert len(prefix_search(ex, "Straß")) == 2
++    assert [b["title"] for b in prefix_search(ex, "app")] == ["apple Almanac"]

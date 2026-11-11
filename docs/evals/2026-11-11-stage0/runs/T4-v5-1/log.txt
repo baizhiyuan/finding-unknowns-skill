@@ -1,0 +1,6 @@
+baafa5d chore(card): result mean5-flat-ablation
+d6a3ead chore(card): brief mean5-flat-ablation
+13c0ebd chore(card): debrief mean5-vs-last-backtest
+be552f0 chore(card): delivered mean5-vs-last-backtest, post-check passed
+7d2f4b1 chore(card): stop mean5-vs-last-backtest (awaiting delivery yes)
+ebeef10 chore(card): brief mean5-vs-last-backtest

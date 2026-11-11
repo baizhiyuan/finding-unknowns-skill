@@ -1,0 +1,97 @@
+diff --git a/run.py b/run.py
+index a30dc61..046350b 100644
+--- a/run.py
++++ b/run.py
+@@ -24,6 +24,48 @@ def errors(rows):
+             for i in range(5, len(rows))]
+ 
+ 
++def eligible_errors(rows, window=20):
++    """Errors for the final `window` targets whose 5 predecessors and the target
++    are six consecutive calendar days. Missing days are never filled."""
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    values = [r["value"] for r in rows]
++    out = []
++    for i in range(5, len(rows)):
++        if (days[i] - days[i-5]).days != 5:  # dates strictly increase, so 5 days apart means 6 consecutive
++            continue
++        out.append({"date": rows[i]["date"], "last": abs(values[i] - values[i-1]),
++                    "mean5": abs(values[i] - sum(values[i-5:i]) / 5)})
++    return out[-window:]
++
++
++def window_report(seed, window=20):
++    rows = series(seed)
++    scored = eligible_errors(rows, window)
++    all_days = {date.fromisoformat(r["date"]) for r in rows}
++    span = (max(all_days) - min(all_days)).days + 1
++    mae = {n: sum(e[n] for e in scored) / len(scored) for n in ("last", "mean5")}
++    return {"seed": seed, "rows": len(rows), "calendar_days": span,
++            "missing_days": span - len(rows),
++            "scored": len(scored), "first_scored": scored[0]["date"],
++            "last_scored": scored[-1]["date"], "mae": mae,
++            "ratio_mean5_to_last": mae["mean5"] / mae["last"]}
++
++
++def build_report(seeds=range(10), threshold=0.8):
++    runs = [window_report(s) for s in seeds]
++    mean = {n: sum(r["mae"][n] for r in runs) / len(runs) for n in ("last", "mean5")}
++    ratio = mean["mean5"] / mean["last"]
++    wins = sum(r["ratio_mean5_to_last"] <= threshold for r in runs)
++    return {"units": "units per day", "metric": "MAE",
++            "rules": "final 20 eligible targets; eligible = target + 5 predecessors on 6 consecutive calendar days; no gap filling",
++            "runs": runs, "mean_mae": mean, "ratio_mean5_to_last": ratio,
++            "seeds_meeting_threshold": wins,
++            "conclusion": (f"Hypothesis (mean5 MAE <= {threshold} x last MAE) "
++                           + ("supported" if wins == len(runs) and ratio <= threshold else "NOT supported")
++                           + f": mean5/last = {ratio:.2f} on average; {wins}/{len(runs)} seeds meet the threshold. "
++                           "The input history has missing calendar days (5 per seed), so scoring excludes ineligible targets.")}
++
++
+ def experiment(seed):
+     rows = series(seed)
+     scored = errors(rows)
+@@ -36,6 +78,14 @@ def experiment(seed):
+ 
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser()
+-    parser.add_argument("--seed", type=int, required=True)
++    parser.add_argument("--seed", type=int)
++    parser.add_argument("--report", help="write the full seeds 0-9 report to this path")
+     args = parser.parse_args()
+-    print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    if args.report:
++        from pathlib import Path
++        Path(args.report).parent.mkdir(parents=True, exist_ok=True)
++        Path(args.report).write_text(json.dumps(build_report(), indent=2, sort_keys=True) + "\n")
++    elif args.seed is not None:
++        print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    else:
++        parser.error("--seed or --report required")
+diff --git a/tests/test_run.py b/tests/test_run.py
+index 1af5fe4..c54ef66 100644
+--- a/tests/test_run.py
++++ b/tests/test_run.py
+@@ -16,3 +16,22 @@ def test_only_past_values():
+     first = errors(rows)[0]
+     rows[-1]["value"] = 99999
+     assert errors(rows)[0] == first
++
++
++def test_eligibility_skips_gaps_and_takes_last_window():
++    from datetime import date, timedelta
++    from run import eligible_errors
++    days = [d for d in range(30) if d != 10]
++    rows = [{"date": (date(2025, 1, 1) + timedelta(days=d)).isoformat(), "value": float(d)} for d in days]
++    got = eligible_errors(rows, window=20)
++    # targets day 5..9 ok(5), day 10 missing, 11-15 ineligible (window includes gap), 16..29 ok
++    assert [e["date"] for e in got][-1] == "2025-01-30"
++    assert all(date.fromisoformat(e["date"]) not in {date(2025, 1, k) for k in range(12, 17)} for e in got)
++    assert len(got) == 19
++
++
++def test_report_shape():
++    from run import build_report
++    r = build_report()
++    assert len(r["runs"]) == 10 and all(x["scored"] == 20 for x in r["runs"])
++    assert all(x["missing_days"] == 5 for x in r["runs"])

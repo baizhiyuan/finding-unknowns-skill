@@ -1,0 +1,6 @@
+9bf1c26 chore(card): follow-up normalize-attendance
+da20ce4 Migrate attendance table: dedupe on (badge, session), UTC start, replace live table
+78a3afd chore(card): debrief normalize-attendance
+f406709 chore(card): stop normalize-attendance (migrated)
+32a676e chore(card): stop normalize-attendance
+1345177 chore(card): brief normalize-attendance

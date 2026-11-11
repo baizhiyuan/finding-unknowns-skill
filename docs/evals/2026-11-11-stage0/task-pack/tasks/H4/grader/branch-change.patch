@@ -1,0 +1,21 @@
+diff --git a/render.py b/render.py
+index 902191c..f660789 100644
+--- a/render.py
++++ b/render.py
+@@ -3,7 +3,7 @@ from pathlib import Path
+ 
+ 
+ def format_amount(cents):
+-    sign = "-" if cents < 0 else ""
++    sign = ""
+     return f"{sign}${abs(cents) // 100}.{abs(cents) % 100:02d}"
+ 
+ 
+diff --git a/tests/snapshots/activity.txt b/tests/snapshots/activity.txt
+index bf5c3ab..fc7042f 100644
+--- a/tests/snapshots/activity.txt
++++ b/tests/snapshots/activity.txt
+@@ -1,2 +1,2 @@
+ Monthly fee: $12.50
+-Refund: -$1.25
++Refund: $1.25

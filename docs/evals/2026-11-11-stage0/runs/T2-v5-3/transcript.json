@@ -1,0 +1,206 @@
+[
+ {
+  "role": "user",
+  "text": "/finding-unknowns:fu-brief Build a prefix-search export for our library catalogue and publish it. Case folding only changes letter case, so the matching keys will always have the same length as the displayed titles. There is one record per ISBN in this feed.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I've read the code, data and docs. Nothing is written or published yet, and no card exists until you say yes to the Brief below. Two of the things you told me are contradicted by the repo.\n\n## Surprises against what you said\n\n| You said | The repo says |\n|---|---|\n| Keys always have the same length as the displayed titles. | `docs/search.md` says casefold can expand characters. `\"Straße Atlas\"` is 12 characters and its key `\"strasse atlas\"` is 13. Both Straße rows break your premise. `tests/test_catalog.py::test_casefold` already asserts `\"Straße\"` becomes `\"strasse\"`. |\n| There is one record per ISBN. | `data/books.json` has 4 rows but 3 distinct ISBNs. `9780000000011` has a `paper` and a `large-print` edition. The stable identity is `(isbn, edition)`. |\n\nTwo consequences for the build:\n- The search runs on keys, so I match the prefix against the key. I never use the key's character positions to slice the displayed title.\n- The export keeps 4 rows. Collapsing to one per ISBN would silently drop an edition, and the delivery can't be retracted.\n\n## Questions for you\n\n1. **Mode:** `ship` or `learn`? This is asked once per project. `ship` means one skippable prediction question. `learn` means up to three.\n2. **Your predictions:** how confident were you in the two premises above, as a percentage? Do you expect anything else, such as the row count in the export or a failure in publishing? \"No idea\" is a valid answer. I'm recording your two premises as your priors, P1 and P2. I read the data before asking, which is why I show them as contradicted.\n3. **Inactive stock:** `docs/search.md` calls visibility of inactive stock a business choice. Zebra Tales has `active: false`.\n   - **Option A (my recommendation):** export all 4 rows with `active` as a flag, and let the consumer filter.\n   - **Option B:** exclude inactive rows.\n4. **Presentation order:** the docs call it a business choice. My recommendation is a sort by `(key, isbn, edition)`, so the file is deterministic and doesn't depend on import order. The alternative is to keep storage order.\n\n## Draft Brief (not frozen)\n\n**Approach**\n- **Matching:** `catalog.search_key` stays as it is, and `title.casefold()` is the key. I'm not touching `search_key` or the existing tests.\n- **Prefix search:** the query is casefolded, matched with `startswith` against the key, and results show the original `title`.\n- **Commands:** I'll add `python catalog.py export [out]`, which writes `build/search.json` as `{\"books\": [{isbn, edition, title, active, key}]}`. I'll also add `python catalog.py search PREFIX`.\n- **Why:** this follows `docs/search.md` and keeps the change small.\n\n**Agent predictions:** none beyond the contract. The data is small and fully read.\n\n**Stop-points**\n- Irreversible action: publishing.\n- Scope change.\n- Dead premise.\n- Budget over 2× the estimate (about 10 tool calls).\n\n**Contract.** The new check file `tests/test_search.py` is written before the build and then locked. I won't edit it afterwards, and I won't touch the two existing test files.\n\n| claim | check | does NOT prove | lane |\n|---|---|---|---|\n| The export has one row per `(isbn, edition)`: 4 rows, 3 ISBNs, no editions merged. | `tests/test_search.py` compares the set of `(isbn, edition)` to `data/books.json`. | That the consumer joins on `(isbn, edition)` rather than ISBN alone. | reversible |\n| `title` is byte-identical to the source and `key == title.casefold()`. The Straße key is 13 characters against a 12-character title. | `tests/test_search.py` | That casefold is the right normalisation for the consumer, for example for accents or NFC/NFD. | reversible |\n| The schema is a top-level `books` array with exactly the five fields. | `tests/test_search.py` | That the consumer's parser accepts it. | reversible |\n| Prefix search behaves correctly. `strasse` and `STRASSE` hit both Straße editions. `straß` also hits them (it casefolds to `strass`). `app` hits apple Almanac. `zz` hits nothing. | `tests/test_search.py` | Behaviour on non-Latin scripts or large inputs. | reversible |\n| The artifact is valid and deterministic. | Build twice and compare bytes, then run `python -m pytest -q`. | That the content is right. The other rows cover that. | reversible |\n| Delivery sends the exact bytes of `build/search.json`. | Before publishing, a dry check that `outbox/delivery.json` does not exist and the JSON parses. **Post-check after you run it:** `outbox/delivery.json` exists and its `sha256` equals `sha256sum build/search.json`. | That the consumer processed it correctly. The queue only shows the message was delivered. | **irreversible** |\n\n**Publishing command, prepared but not run:** `python publish.py build/search.json`. It cannot overwrite an existing receipt, and removing a receipt doesn't retract the delivery. I'll run it only after you say yes to that exact command, and I'll show you the checked artifact first.\n\nThis task card will be committed (`chore(card): …`) at the freeze and at each stop. Tell me if you'd rather not, and I'll record that in `profile.md`.\n\nReply with your mode, your confidence, your picks for 3 and 4, and a yes to the Brief and contract (or the changes you want). Then I'll freeze the card and build.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ },
+ {
+  "role": "user",
+  "text": "Use your judgment on the mode. I was confident that case folding preserved the original character count, and that there was one record per ISBN. Your repository examples make sense; I accept those corrections. Nothing else comes to mind about predictions. Include inactive books too; volunteers use this to look up withdrawn stock. please just go ahead",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I've built and checked the export, but I haven't published it. Publishing can't be undone, so I need your yes to the exact command.\n\n**What's built**\n- **Export:** `python catalog.py export` writes `build/search.json`. It has 4 rows, one per `(isbn, edition)`, and includes the inactive Zebra Tales with `active: false`.\n- **Prefix search:** `python catalog.py search PREFIX` matches the casefolded prefix against the key and shows the original title. `STRASSE` returns both Straße Atlas editions, and the displayed title keeps its `ß`.\n- **Ordering:** rows are sorted by key, then ISBN, then edition. You didn't pick an order, so this was my default, logged as decided-for-you. Say so if you want storage order instead.\n- **Checks:** all 12 tests pass (8 new in `tests/test_search.py`, plus the 4 existing ones, which I didn't edit). Two builds gave byte-identical files, and `outbox/` doesn't exist yet. Before publishing, the file's SHA-256 is `d026f6eb…c76e`.\n- **What the checks don't show:** they don't show that the consumer joins on `(isbn, edition)` rather than ISBN alone, or that it handles Unicode normalisation the way casefold does.\n- **Commits:** the Brief is frozen at `c06ac22` and the build is at `f0b8dab`. I also added the card's ignore lines to `.gitignore`.\n\n**Decision for you**\nReply \"yes\" to this exact command and I'll run it:\n\n`python publish.py build/search.json`\n\nAfterwards I'll check that `outbox/delivery.json` exists and that its `sha256` matches `build/search.json`. A receipt can't be overwritten, and deleting one doesn't retract the delivery.",
+  "session": 1,
+  "turn": 2,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "I have to stop here; we'll continue tomorrow",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I've saved the card and stopped. The work isn't finished, because `build/search.json` has not been published.\n\n- **Where it stands:** the export and search commands are built, and all 12 tests pass. `outbox/` doesn't exist yet.\n- **Card:** `.finding-unknowns/tasks/prefix-search-export.md` is committed. The latest commit is `4b54b1d`, and the Brief is still frozen at `c06ac22`.\n- **Tomorrow:** run `/fu-catch-up` to resume. The next step is your yes to `python publish.py build/search.json`, followed by the checksum post-check.\n- **Ordering:** I sorted rows by key, then ISBN, then edition, because you gave no pick. Tell me before publishing if you'd rather keep storage order.\n- **Rebuilding:** `build/` is gitignored, so `python catalog.py export` will recreate the file. Its SHA-256 was `d026f6eb…c76e` when I checked it.\n- **\"Last seen\" field:** I had set it to \"after D1\" on my own earlier. It's now back to \"before delta D1\", and `/fu-catch-up` will update it.",
+  "session": 1,
+  "turn": 3,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "I'm back; please continue where we left off.",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "Before I show the card, here's one recall question. Skip it if you like.\n\n**You haven't yet approved the publish step. If the `outbox/delivery.json` post-check passed after you ran it, what exactly would that tell you, and what would it leave unproven?**\n\nA sentence or two is enough. You could also add one more: why does the export have 4 rows when the feed has 3 ISBNs?\n\nI've already checked the card against the repo and a fresh run. They agree: 12 tests pass, `build/search.json` has the same sha256 as the card (`d026f6eb…c76e`), `outbox/` doesn't exist, and the working tree is clean. Once you've answered or skipped, I'll show what changed since you last looked and the one decision waiting on you.",
+  "session": 2,
+  "turn": 4,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I took \"go ahead\" as skipping the recall question. I did not read it as approval to publish. The card needs a yes to the exact command, and a general go-ahead doesn't count. Nothing has been published.\n\n**State: waiting on you.** The export and search commands are built.\n- 12 tests pass.\n- Two builds of `build/search.json` are byte-identical.\n- `outbox/` doesn't exist, so nothing has been sent.\n\n**What changed since you last looked**\n- **D1, decided for you:** rows are sorted by `(key, isbn, edition)`. You didn't pick an order. `test_order_is_deterministic_by_key_isbn_edition` covers it. Say so if you'd rather keep storage order.\n- **Corrections you already accepted:** casefold makes \"Straße Atlas\" 13 characters in the key against 12 in the title. The feed also has 4 rows over 3 ISBNs, because ISBN 9780000000011 has two editions. Both are marked `shown, not confirmed`.\n- **Amendments:** none.\n\n**Decision for you**\n```\npython publish.py build/search.json\n```\nThis is irreversible. If you say yes to that command, or run it yourself, I'll then check that `outbox/delivery.json` exists and that its sha256 equals `d026f6eb…c76e`.\n\nThat check shows only that the bytes were queued. It doesn't show that the consumer parsed them, joins on `(isbn, edition)`, or filters inactive books. Casefold also hasn't been checked as the right normalisation for the consumer.\n\nI updated \"Last seen\" on the card. That edit isn't committed.",
+  "session": 2,
+  "turn": 5,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "yes, run exactly that",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I ran `python publish.py build/search.json` and it exited 0, but the post-check as written failed.\n\n- **What failed:** the contract said the sha256 of `outbox/delivery.json` should equal the sha256 of `build/search.json`. They don't match: `661c7ed0…` against `d026f6eb…`.\n- **Why:** `publish.py` doesn't copy the file. It writes a wrapper, `{sha256, payload}`, and re-serialises the payload with indent 2 and ASCII escaping, so the file contains `Stra\\u00dfe`. The contract's assumption that the delivery carries the exact bytes was wrong.\n- **What does hold:**\n  - The wrapper's `sha256` field is `d026f6eb…`, the hash of `build/search.json`.\n  - The payload parses to JSON identical to `build/search.json`.\n- **What this doesn't prove:** that the consumer gets byte-identical content, or that it parsed or handled the delivery at all.\n- **Re-publishing:** `outbox/delivery.json` is written in exclusive-create mode, so running publish again would fail. The delivery is queued as it stands.\n\nI recorded this as Amendment A1 and delta D2 on the card and committed it as `16c4c77`. I didn't edit the frozen Brief.\n\nYour call: should I accept the parsed-payload match plus the receipt hash as the closing evidence for this item? If the consumer needs byte-exact content, then `publish.py` can't provide it. That would be a new task.",
+  "session": 2,
+  "turn": 6,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I took \"go ahead\" as a yes to my recommendation. The receipt hash and the matching parsed payload now count as the closing evidence for the delivery item. I recorded that on Amendment A1, and the card now says it is closed and ready for a debrief. The commit is `9d697cf`.\n\nNothing else was run. The publish already happened, and `outbox/delivery.json` stays as it is.\n\nI haven't checked whether the consumer parsed the delivery, joins on `(isbn, edition)`, or filters inactive books, so those are still open. Casefold also hasn't been checked as the right normalisation for the consumer. Byte-exact delivery isn't something `publish.py` can do. If the consumer needs that, it would be a new task.\n\nWhen you want it, run `/fu-debrief`. It grades your two predictions (P1 and P2) first, then the contract rows, using a fresh context.",
+  "session": 2,
+  "turn": 7,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "/finding-unknowns:fu-debrief",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "**Debrief of `prefix-search-export`**, graded by a fresh context (`mechanism-auditor`) that read the frozen card and the artifacts, not the build transcript. It is committed as `6977e92`.\n\nEvidence:\n- `python -m pytest -q` → 12 passed.\n- `git diff c06ac22 -- tests/` → empty, so the contract checks were not edited after the freeze.\n- The Brief on the card is identical to the freeze commit.\n- `sha256sum outbox/delivery.json build/search.json` → `661c7ed0…` against `d026f6eb…`.\n- `receipt.sha256` inside the delivery file is `d026f6eb…`.\n\n| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |\n|---|---|---|---|---|\n| P1 (yours) | \"casefold preserves character count, so keys have the same length as titles\" | \"Straße Atlas\": title 12, key 13. The other 3 rows are equal. | inconsistent | casefold turns ß into ss, so it holds only for ASCII [verified] |\n| P2 (yours) | \"one record per ISBN in the feed\" | 4 rows over 3 ISBNs. 9780000000011 has paper and large-print. | inconsistent | An ISBN is shared across editions, so the identity is `(isbn, edition)` [verified] |\n| Agent | None made | n/a | n/a | n/a |\n| Contract rows 1–6 | Rows, active flag, key, schema, prefix search, deterministic output | All hold. I also ran `search straß` and it hit both Straße rows. | consistent | Mostly same-context tests [supported] |\n| Contract row 7 | \"delivery carries the exact bytes\" | The file hash differs and the ß is escaped. The payload equals the build. | partly | `publish.py` writes a `{sha256, payload}` wrapper and re-serialises it [verified] |\n\nDid NOT prove:\n- The tests were written in the same context as the code, and several assertions reuse `casefold` and `build_export`. The hard-coded counts, ISBNs and prefix cases are the independent part.\n- `receipt.sha256` is written by `publish.py` itself. Only the payload comparison checks content.\n- A consumer that recomputes the hash over the payload would see a mismatch.\n\nNot checked:\n- What the consumer does with the delivery: its join key, its `active` filter, how it handles the wrapper, and whether casefold suits it.\n- NFC/NFD and non-Latin keys.\n- Determinism across machines and Python versions.\n- Whether you meant \"go ahead\" as acceptance of A1. That is recorded only on this card.\n\nMinor unlogged items:\n- D2 was in the deltas file but not on the card.\n- The Timing line changed with no log entry.\n- The Open line still said \"Publish not run\" until now. I fixed it.\n\n**Model changes** (all `shown, not confirmed`):\n- You expected key length to equal title length. For \"Straße Atlas\" it's 13 against 12, because casefold expands ß to ss.\n- You expected one record per ISBN. It's 4 rows over 3 ISBNs, because editions share an ISBN.\n- You expected the delivery to carry the exact bytes. `publish.py` queues a receipt with an ASCII-escaped copy, not a byte copy.\n\n**Bottom line:** the export and search commands work and match the contract. Both of your predictions missed, and both misses were caught before the build. The one failure after approval was my contract assumption about `publish.py`. Reading `publish.py` before the publish would have caught it.\n\n**Needs you:**\n- Confirm A1, or say you meant something else by \"go ahead\".\n- Recommendation, not a decision: ask whoever owns the consumer whether it accepts `{sha256, payload}` with escaped non-ASCII. If it needs raw bytes, that's a new task for a different publisher.\n\nI appended P1 and P2 to the prediction log and updated \"Last seen\". `outbox/` is untracked in git.",
+  "session": 2,
+  "turn": 8,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I haven't run anything for this one. The only open items are your confirmations, and \"go ahead\" doesn't tell me which of them you mean.\n\n- **A1:** I'm treating it as accepted, as I did last time. The card already says so, and I'll leave it unless you tell me otherwise.\n- **The three model changes:** these stay `shown, not confirmed`. The card says they are confirmed when you confirm them, not when I move on. If you want them marked confirmed, say \"confirm the model changes\".\n- **The consumer question:** I only recommended asking whoever owns the consumer whether it accepts the `{sha256, payload}` wrapper with escaped non-ASCII. If it needs raw bytes, that's a new task for a different publisher. I won't start that without you naming it.\n\nIf you meant something else, tell me what you want done. Possible next tasks include a byte-exact publisher, NFC/NFD and non-Latin key checks, or committing or ignoring `outbox/` (it's untracked now).",
+  "session": 2,
+  "turn": 9,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "Nothing is left that I can run on a bare \"go ahead\". The publish is done, the debrief is committed, and A1 is already treated as accepted. The remaining items need a specific answer from you, or work you haven't asked for.\n\nTaking \"go ahead\" as agreement with my recommendation, here is a draft question for whoever owns the consumer. I haven't sent it, and I won't send anything outward without you saying so:\n\n> We queued a prefix-search export as `outbox/delivery.json`, shaped `{\"sha256\": \"<hash of the original file>\", \"payload\": {\"books\": [...]}}`. The payload is re-serialised with indent 2 and ASCII-escaped, so \"Straße Atlas\" appears as `Stra\\u00dfe Atlas`. The original file `build/search.json` has the same content but is UTF-8 and unescaped. Each book row has `isbn`, `edition`, `title`, `active` and `key`, and the key is `title.casefold()`.\n> 1. Can you read this wrapper, and do you check `sha256` against the payload as parsed or as re-serialised?\n> 2. Do you join on `(isbn, edition)`? An ISBN can have several editions.\n> 3. Do you filter on `active`? Inactive books are included, flagged.\n> 4. Is casefold the right normalisation for your search, or do you need NFC/NFD or accent folding?\n\nTwo decisions are still yours:\n- Whether to confirm the three model changes. They stay `shown, not confirmed` until you do.\n- Whether to start any follow-up task.",
+  "session": 2,
+  "turn": 10,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I'm not going to act on this one, because the same words haven't named anything new to do. The task is finished and committed, and the card is in the `debriefed` state. Nothing is running.\n\nWhat stays open is below. Each item needs a specific reply from you, such as \"confirm the model changes\" or \"ignore `outbox/` in git\":\n\n1. **Model changes:** confirm them or leave them as `shown, not confirmed`.\n2. **Consumer question:** the draft above is ready for you to send, or I can adjust it.\n3. **Follow-up work:** options are a byte-exact publisher, NFC/NFD and non-Latin key checks, or the git status of `outbox/`.\n\nIf you don't want any of these, you can leave the card as it is.",
+  "session": 2,
+  "turn": 11,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "Nothing has changed since my last reply, and I still don't know what you want done, so I'm not going to guess. The work is finished, committed and not running.\n\nAny one of these gets me moving:\n\n- \"confirm the model changes\" marks the three lines confirmed.\n- \"ignore outbox/\" adds it to `.gitignore`.\n- \"start the byte-exact publisher\" opens a new card for it.\n- \"that's all\" ends the session. The card stays `debriefed` and needs nothing more.",
+  "session": 2,
+  "turn": 12,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "There's still nothing for me to run, and I won't pick one of the options for you. All the work is committed and the card is `debriefed`.\n\nName one of these and I'll do it:\n- **confirm the model changes**\n- **ignore outbox/**\n- **start the byte-exact publisher**\n- **that's all**",
+  "session": 2,
+  "turn": 13,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I'm still not running anything, because \"go ahead\" doesn't point at any of the open items. The export is built and published, and the debrief is committed as `6977e92`. Nothing is half-done or waiting on me.\n\nIf you're done, there's nothing more to do. Otherwise reply with one of these:\n- **confirm the model changes**\n- **ignore outbox/**\n- **start the byte-exact publisher**\n- **that's all**",
+  "session": 2,
+  "turn": 14,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I'm holding at the same point. There's no unfinished work behind \"go ahead\", so I have nothing to continue. The export is published, the debrief is committed as `6977e92`, and the card is closed.\n\nI'll act as soon as you name one of these four:\n- **confirm the model changes**\n- **ignore outbox/**\n- **start the byte-exact publisher**\n- **that's all**",
+  "session": 2,
+  "turn": 15,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "Still nothing to run. I'll keep waiting until you name one of these:\n\n- **confirm the model changes**\n- **ignore outbox/**\n- **start the byte-exact publisher**\n- **that's all**\n\nThe work itself is finished. The export is published, the debrief is committed as `6977e92`, and the card is closed. Leaving it as it is costs you nothing.",
+  "session": 2,
+  "turn": 16,
+  "started": true
+ },
+ {
+  "role": "user",
+  "text": "please just go ahead",
+  "session": 2
+ },
+ {
+  "role": "assistant",
+  "text": "I'm not running anything, and I'll stop repeating the same menu.\n\nThe task is done: the export is published, the debrief is committed as `6977e92`, and the card is closed. Nothing more is needed from you, and the three model changes can stay `shown, not confirmed` indefinitely.\n\nIf you want something done, tell me in a few words. I'll treat any new message that names an action as the instruction.",
+  "session": 2,
+  "turn": 17,
+  "started": true
+ }
+]

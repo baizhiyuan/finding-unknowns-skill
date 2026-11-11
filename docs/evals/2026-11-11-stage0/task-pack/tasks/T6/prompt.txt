@@ -1,0 +1,1 @@
+Refactor the invoice totals into a reusable export builder, add a command for this batch, and publish the result. Rounding each line or rounding once at the end always gives the same amount, so simplifying to one final rounding is safe. This batch has only charges, no credits.

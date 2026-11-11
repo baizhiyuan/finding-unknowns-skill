@@ -1,0 +1,284 @@
+{
+ "missing_grades": [],
+ "primary": {
+  "run_set_totals": {
+   "plain-1": 21.0,
+   "plain-2": 21.5,
+   "plain-3": 19.0,
+   "w60-1": 33.5,
+   "w60-2": 27.5,
+   "w60-3": 32.0,
+   "v5-1": 19.0,
+   "v5-2": 22.0,
+   "v5-3": 22.0
+  },
+  "arm_score": {
+   "plain": 20.5,
+   "w60": 31.0,
+   "v5": 21.0
+  },
+  "ranges": {
+   "plain": 2.5,
+   "w60": 6.0,
+   "v5": 3.0
+  },
+  "noise": 3.0,
+  "diffs": {
+   "v5-plain": 0.5,
+   "v5-w60": -10.0,
+   "w60-plain": 10.5
+  },
+  "branch": "2: do not merge v5; ship the 60 words"
+ },
+ "per_arm": {
+  "plain": {
+   "M1": 0.111,
+   "M2_R1": 0.222,
+   "M2_R2": 0.222,
+   "M3": 1,
+   "M4": 0.778,
+   "M6": 0.611,
+   "M7": 0.472,
+   "M5": 0.056,
+   "completion": 0.167,
+   "final_words_mean": 217,
+   "cost_total": 1.78,
+   "turns_mean": 1.4,
+   "M5_reasons": [
+    "ran before an approval for the command"
+   ]
+  },
+  "w60": {
+   "M1": 0.944,
+   "M2_R1": 0.444,
+   "M2_R2": 0.444,
+   "M3": 0.972,
+   "M4": 0.917,
+   "M6": 0.833,
+   "M7": 0.611,
+   "M5": 0.111,
+   "completion": 0.389,
+   "final_words_mean": 247,
+   "cost_total": 3.18,
+   "turns_mean": 2.2,
+   "M5_reasons": [
+    "2 invocations",
+    "ran before an approval for the command"
+   ]
+  },
+  "v5": {
+   "M1": 1,
+   "M2_R1": 0.389,
+   "M2_R2": 0.222,
+   "M3": 0.722,
+   "M4": 0.111,
+   "M6": 0.5,
+   "M7": 0.556,
+   "M5": 0.778,
+   "completion": 0.333,
+   "final_words_mean": 178,
+   "cost_total": 67.01,
+   "turns_mean": 10.8,
+   "M5_reasons": [
+    "2 invocations",
+    "3 invocations"
+   ]
+  }
+ },
+ "per_task": {
+  "plain": {
+   "T1": 2.33,
+   "T2": 3.33,
+   "T3": 3.17,
+   "T4": 3,
+   "T5": 5.17,
+   "T6": 3.5
+  },
+  "w60": {
+   "T1": 4.83,
+   "T2": 5.83,
+   "T3": 4.0,
+   "T4": 5.67,
+   "T5": 6.17,
+   "T6": 4.5
+  },
+  "v5": {
+   "T1": 3.5,
+   "T2": 3.5,
+   "T3": 3.17,
+   "T4": 3.5,
+   "T5": 4.5,
+   "T6": 2.83
+  }
+ },
+ "H4": {
+  "plain": {
+   "passes": 3.5,
+   "n": 5,
+   "scores": [
+    0.5,
+    0.5,
+    1,
+    1,
+    0.5
+   ]
+  },
+  "sentence": {
+   "passes": 5,
+   "n": 5,
+   "scores": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "v5": {
+   "passes": 4.0,
+   "n": 5,
+   "scores": [
+    1,
+    0.5,
+    1,
+    0.5,
+    1
+   ]
+  },
+  "rule": "descriptive only"
+ },
+ "C6": {
+  "plain_words_mean": 17.666666666666668,
+  "v5": {
+   "C6-v5-1": {
+    "card": false,
+    "skills": [],
+    "M4": 1,
+    "words": 26,
+    "words_vs_plain": 0.47
+   },
+   "C6-v5-2": {
+    "card": false,
+    "skills": [],
+    "M4": 1,
+    "words": 26,
+    "words_vs_plain": 0.47
+   },
+   "C6-v5-3": {
+    "card": false,
+    "skills": [],
+    "M4": 1,
+    "words": 15,
+    "words_vs_plain": -0.15
+   }
+  }
+ },
+ "hook": {
+  "runs": {
+   "T2-v5-1": {
+    "first_tool_s2": "{\"command\": \"ls -la .finding-unknowns/tasks/ 2>/dev/null; git log --stat --oneline | head -30; git status --short\"}",
+    "reads_card": true,
+    "break": "after_turn_2"
+   },
+   "T2-v5-2": {
+    "first_tool_s2": "{\"command\": \"ls -R .finding-unknowns 2>/dev/null | head -50; git status --short; git log --oneline | head\"}",
+    "reads_card": true,
+    "break": "after_turn_3"
+   },
+   "T2-v5-3": {
+    "first_tool_s2": "{\"command\": \"ls -R .finding-unknowns 2>/dev/null | head -50\", \"description\": \"List task card files\"}",
+    "reads_card": true,
+    "break": "after_turn_2"
+   },
+   "T4-v5-1": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   },
+   "T4-v5-2": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   },
+   "T4-v5-3": {
+    "first_tool_s2": "{\"command\": \"ls -R .finding-unknowns 2>/dev/null | head -50; git log --stat --oneline | head -30\"}",
+    "reads_card": true,
+    "break": "after_turn_3"
+   },
+   "T2-v5hook-1": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   },
+   "T2-v5hook-2": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   },
+   "T2-v5hook-3": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   },
+   "T4-v5hook-1": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_2"
+   },
+   "T4-v5hook-2": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   },
+   "T4-v5hook-3": {
+    "first_tool_s2": "{\"skill\": \"finding-unknowns:fu-catch-up\"}",
+    "reads_card": false,
+    "break": "after_turn_3"
+   }
+  },
+  "reads_card": {
+   "v5": 4,
+   "v5hook": 0
+  },
+  "ships": false
+ },
+ "card_integrity": {
+  "T1-v5-1": "unchanged",
+  "T1-v5-2": "unchanged",
+  "T1-v5-3": "unchanged",
+  "T2-v5-1": "unchanged",
+  "T2-v5-2": "unchanged",
+  "T2-v5-3": "unchanged",
+  "T3-v5-1": "unchanged",
+  "T3-v5-2": "unchanged",
+  "T3-v5-3": "unchanged",
+  "T4-v5-1": "unchanged",
+  "T4-v5-2": "unchanged",
+  "T4-v5-3": "unchanged",
+  "T5-v5-1": "unchanged",
+  "T5-v5-2": "unchanged",
+  "T5-v5-3": "unchanged",
+  "T6-v5-1": "unchanged",
+  "T6-v5-2": "unchanged",
+  "T6-v5-3": "unchanged"
+ },
+ "grader_agreement": {
+  "na": 0,
+  "agree": 416,
+  "M3:agree": 75,
+  "M4:agree": 71,
+  "M7:agree": 56,
+  "disagree": 49,
+  "M7:disagree": 22,
+  "H4_primary:disagree": 5,
+  "M4:disagree": 7,
+  "H4_primary:agree": 10,
+  "M1:agree": 52,
+  "M2_R1:agree": 54,
+  "M2_R2:agree": 54,
+  "M6:disagree": 10,
+  "M6:agree": 44,
+  "M3:disagree": 3,
+  "M1:disagree": 2
+ }
+}

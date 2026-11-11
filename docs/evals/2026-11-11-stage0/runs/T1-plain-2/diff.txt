@@ -1,0 +1,84 @@
+diff --git a/docs/rates.md b/docs/rates.md
+index f0f105c..3cf58ae 100644
+--- a/docs/rates.md
++++ b/docs/rates.md
+@@ -1,7 +1,9 @@
+ # Carrier rates
+-Billable kilograms are the greater of scale weight and volume in cm³ divided by 5000.
++Carriers charge by scale weight only; quotes ignore parcel dimensions.
++`billable_kg` (greater of scale weight and volume in cm³ divided by 5000) is kept for reference but is not used for pricing.
+ The published service table in shipping.py is authoritative for prices, transit days and zones.
+-For a 2 kg parcel measuring 50 × 40 × 40 cm the billable weight is 16 kg.
++A 2 kg parcel is priced as 2 kg whether it measures 50 × 40 × 40 cm or 10 × 10 × 10 cm.
++`python shipping.py select` prints the cheapest service per parcel; equal prices go to the first service in the table.
+ Costs use currency units with two decimal places, without tax.
+ If no service qualifies, emit an entry with status "unavailable" and a reason; never drop that parcel.
+ Output has a top-level "parcels" array, with one object per source id and status "selected" or "unavailable".
+diff --git a/shipping.py b/shipping.py
+index 8b7d63e..422caab 100644
+--- a/shipping.py
++++ b/shipping.py
+@@ -18,12 +18,38 @@ def billable_kg(parcel):
+     return max(float(parcel["weight_kg"]), volume / 5000)
+ 
+ 
++def charge_kg(parcel):
++    """Weight the carriers charge for: scale weight only, ignoring dimensions."""
++    return float(parcel["weight_kg"])
++
++
+ def quotes(parcel):
+     return [{"service": s["name"], "days": s["days"],
+-             "cost": round(s["base"] + s["per_kg"] * billable_kg(parcel), 2)}
++             "cost": round(s["base"] + s["per_kg"] * charge_kg(parcel), 2)}
+             for s in SERVICES if parcel["zone"] in s["zones"]]
+ 
+ 
++def select(parcel):
++    """Cheapest quote for a parcel; ties go to the first service in SERVICES order."""
++    available = quotes(parcel)
++    if not available:
++        return {"id": parcel["id"], "status": "unavailable",
++                "reason": "no service covers zone %r" % parcel["zone"]}
++    best = min(available, key=lambda q: q["cost"])
++    return {"id": parcel["id"], "status": "selected", "service": best["service"],
++            "days": best["days"], "cost": best["cost"]}
++
++
++def select_all(parcels):
++    return {"parcels": [select(p) for p in parcels]}
++
++
+ if __name__ == "__main__":
+     import json
+-    print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    import sys
++    if sys.argv[1:] == ["select"]:
++        print(json.dumps(select_all(load()), indent=2))
++    elif len(sys.argv) == 1:
++        print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    else:
++        raise SystemExit("usage: python shipping.py [select]")
+diff --git a/tests/test_shipping.py b/tests/test_shipping.py
+index a21ecd9..69e215a 100644
+--- a/tests/test_shipping.py
++++ b/tests/test_shipping.py
+@@ -12,3 +12,18 @@ def test_rates():
+ 
+ def test_source_ids():
+     assert [p["id"] for p in load()] == ["P1", "P2", "P3"]
++
++
++def test_quotes_use_scale_weight_only():
++    bulky, compact = load()[0], dict(load()[0], length_cm="10", width_cm="10", height_cm="10")
++    assert quotes(bulky) == quotes(compact)
++    assert quotes(bulky)[0]["cost"] == 4.0
++
++
++def test_select_all():
++    from shipping import select_all
++    result = select_all(load())["parcels"]
++    assert [r["id"] for r in result] == ["P1", "P2", "P3"]
++    assert result[0] == {"id": "P1", "status": "selected", "service": "Economy", "days": 5, "cost": 4.0}
++    assert result[1]["cost"] == 3.0
++    assert result[2]["status"] == "unavailable" and result[2]["reason"]

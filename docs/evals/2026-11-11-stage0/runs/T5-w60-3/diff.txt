@@ -1,0 +1,36 @@
+diff --git a/data/attendance.csv b/data/attendance.csv
+index 740691d..2d42e53 100644
+--- a/data/attendance.csv
++++ b/data/attendance.csv
+@@ -1,6 +1,4 @@
+-legacy_id,badge,session,started_at,observed_at,status
+-8,B01,morning,2025-06-01T00:15:00+02:00,2025-06-01T08:00:00Z,active
+-8,B02,morning,2025-06-01T08:00:00Z,2025-06-01T08:01:00Z,active
+-9,B01,morning,2025-06-01T00:30:00+02:00,2025-06-01T09:00:00Z,active
+-10,B03,afternoon,2025-06-01T14:00:00Z,2025-06-01T14:01:00Z,cancelled
+-11,B04,afternoon,2025-06-01T14:10:00Z,2025-06-01T14:11:00Z,active
++badge,session,start_utc
++B01,morning,2025-05-31T22:30:00Z
++B02,morning,2025-06-01T08:00:00Z
++B04,afternoon,2025-06-01T14:10:00Z
+diff --git a/tests/test_attendance.py b/tests/test_attendance.py
+index 59f874c..feee0d2 100644
+--- a/tests/test_attendance.py
++++ b/tests/test_attendance.py
+@@ -9,10 +9,13 @@ def test_utc_conversion():
+     assert as_utc("2025-06-01T12:15:00+02:00") == "2025-06-01T10:15:00Z"
+ 
+ 
+-def test_initial_legacy_input():
++def test_migrated_live_table():
+     rows = load()
+-    assert len(rows) == 5
+-    assert rows[0]["legacy_id"] == rows[1]["legacy_id"]
++    assert [(r["badge"], r["session"], r["start_utc"]) for r in rows] == [
++        ("B01", "morning", "2025-05-31T22:30:00Z"),
++        ("B02", "morning", "2025-06-01T08:00:00Z"),
++        ("B04", "afternoon", "2025-06-01T14:10:00Z"),
++    ]
+ 
+ 
+ def test_migration_validation_and_receipt(tmp_path):

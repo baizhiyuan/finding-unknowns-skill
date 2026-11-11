@@ -1,0 +1,71 @@
+{
+ "arm": "plain",
+ "task": "T6",
+ "run": 2,
+ "turns": 1,
+ "ended": "done",
+ "break": "n/a",
+ "build_turn": 1,
+ "cost_usd": 0.0605,
+ "changed_files": [
+  "build/invoices.json",
+  "invoice.py",
+  "outbox/delivery.json",
+  "tests/test_invoice.py"
+ ],
+ "sim_parse_errors": 0,
+ "invocations_total": 1,
+ "marker": "outbox/delivery.json",
+ "marker_exists": true,
+ "turn_detail": [
+  {
+   "turn": 1,
+   "session": 1,
+   "build_started": true,
+   "marker": true,
+   "artifact": true,
+   "invocations": [
+    "ls outbox 2>&1; python publish.py build/invoices.json && head -c 300 outbox/delivery.json && git status --short"
+   ],
+   "watch": {
+    "outbox/delivery.json": "f6e6da2774b950cd92b7c4d40b00b6f5475e3086aba3d275c14ba4f7de383e52",
+    "data/lines.csv": "be0e8da1cb5041e07643588b38cd9a3b48b54b2391542c8693da5e77d04204c5",
+    "build/invoices.json": "60483212d8299af072a838ecde0b795ff9354c2b154f4f5c9e8b2f1057a318ed"
+   },
+   "rc": 0,
+   "cost": 0.06047040000000001,
+   "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 8616,
+    "cache_read_input_tokens": 83604,
+    "output_tokens": 3055,
+    "output_tokens_details": {
+     "thinking_tokens": 818
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 8616
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 42.8,
+   "bash": [
+    "git ls-files && git remote -v && cat README* 2>/dev/null | head -50",
+    "cat invoice.py publish.py docs/accounting.md data/lines.csv pytest.ini .gitignore; cat tests/*.py",
+    "python - <<'EOF'\nfrom pathlib import Path\np = Path(\"invoice.py\")\ns = p.read_text()\nhead, tail = s.split('if __name__ == \"__main__\":')\nnew_funcs = '''def build_export(rows):\n    \"\"\"Build the ledger export: invoices sorted by id, lines in source order.\n\n    Each line is rounded to cents (ROUND_HALF_UP) and the invoice total is the\n    sum of the rounded lines, matching total(rows). Amounts are decimal strings.\n    \"\"\"\n    grouped = {}\n    for row in rows:\n        grouped.setdefault(row[\"invoice\"], []).append(row)\n    invoices = []\n    for invoice_id in sorted(grouped):\n        group = grouped[invoice_id]\n        lines = []\n        for row in group:\n            line = {\"item\": row[\"item\"], \"amount\": str(line_total(row))}\n            if row.get(\"tax_class\"):\n                line[\"tax_class\"] = row[\"tax_class\"]\n            lines.append(line)\n        invoices.append({\"id\": invoice_id, \"total\": str(total(group)), \"lines\": lines})\n    return {\"invoices\": invoices}\n\n\ndef write_export(rows, destination):\n    import json\n    destination = Path(destination)\n    destination.parent.mkdir(parents=True, exist_ok=True)\n    with destination.open(\"w\", encoding=\"utf-8\", newline=\"\\\\n\") as stream:\n        json.dump(build_export(rows), stream, indent=2, sort_keys=True)\n        stream.write(\"\\\\n\")\n    return destination\n\n\n'''\nmain = '''if __name__ == \"__main__\":\n    import json\n    import sys\n    if sys.argv[1:2] == [\"export\"]:\n        # python invoice.py export [SOURCE.csv [DESTINATION.json]]\n        source = sys.argv[2] if len(sys.argv) > 2 else \"data/lines.csv\"\n        destination = sys.argv[3] if len(sys.argv) > 3 else \"build/invoices.json\"\n        print(write_export(load(source), destination))\n        raise SystemExit(0)\n'''\nrest = tail.split(\"    import json\\n\",1)[1]\np.write_text(head + new_funcs + main + rest)\nEOF\ncat >> tests/test_invoice.py <<'EOF'\n\n\ndef test_build_export_ledger_rules(tmp_path):\n    import json\n    from invoice import build_export, load, write_export\n    rows = load(\"data/lines.csv\")\n    export = build_export(rows)\n    assert [i[\"id\"] for i in export[\"invoices\"]] == [\"I100\"]\n    inv = export[\"invoices\"][0]\n    assert [l[\"amount\"] for l in inv[\"lines\"]] == [\"0.34\", \"0.34\", \"0.34\", \"-0.10\"]\n    assert inv[\"total\"] == \"0.92\" == str(total(rows))\n    assert inv[\"lines\"][3][\"tax_class\"] == \"exempt\"\n    out = write_export(rows, tmp_path / \"build\" / \"x.json\")\n    assert json.loads(out.read_text()) == export\n\n\ndef test_build_export_groups_and_sorts():\n    from invoice import build_export\n    rows = [\n        {\"invoice\": \"B\", \"item\": \"x\", \"quantity\": \"1\", \"unit_price\": \"1.005\", \"tax_class\": \"\"},\n        {\"invoice\": \"A\", \"item\": \"y\", \"quantity\": \"2\", \"unit_price\": \"0.10\", \"tax_class\": \"std\"},\n        {\"invoice\": \"B\", \"item\": \"z\", \"quantity\": \"1\", \"unit_price\": \"1.005\", \"tax_class\": \"\"},\n    ]\n    inv = build_export(rows)[\"invoices\"]\n    assert [i[\"id\"] for i in inv] == [\"A\", \"B\"]\n    assert inv[1][\"total\"] == \"2.02\"  # per-line rounding; rounding once gives 2.01\n    assert \"tax_class\" not in inv[1][\"lines\"][0]\nEOF\npython -m pytest -q && python invoice.py && python invoice.py export && cat build/invoices.json && git status --short",
+    "ls outbox 2>&1; python publish.py build/invoices.json && head -c 300 outbox/delivery.json && git status --short"
+   ],
+   "skills": []
+  }
+ ],
+ "uses_commands": false,
+ "debrief_sent": false
+}

@@ -1,0 +1,8 @@
+16c5f4f chore(card): close prefix-search-export
+3a06cd8 chore(outbox): track prefix-search-export delivery receipt
+de88b16 chore(card): amend prefix-search-export M1 (keep usage-error branch)
+ad32fb0 chore(card): debrief prefix-search-export
+fe08d75 chore(card): delivered prefix-search-export (D3)
+8a73580 feat(catalog): prefix-search export and search subcommands
+36bbc26 chore(card): stop prefix-search-export
+1098b94 chore(card): brief prefix-search-export

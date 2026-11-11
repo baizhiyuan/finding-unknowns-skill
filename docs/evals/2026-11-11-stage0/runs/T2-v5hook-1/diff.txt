@@ -1,0 +1,188 @@
+diff --git a/.finding-unknowns/tasks/search-export.deltas.md b/.finding-unknowns/tasks/search-export.deltas.md
+new file mode 100644
+index 0000000..5644c09
+--- /dev/null
++++ b/.finding-unknowns/tasks/search-export.deltas.md
+@@ -0,0 +1,4 @@
++# Deltas for search-export (append-only)
++D1 2026-11-11 build complete, checks pass, stopped before publish (irreversible lane)
++D2 2026-11-11 published: python publish.py build/search.json (your yes to exact command); outbox/delivery.json sha256 == bc98719a...44ed, payload == parsed artifact
++D3 2026-11-11 debrief graded by fresh context: P1 inconsistent; A1-A3 consistent; unlogged deviation: load() utf-8 encoding
+diff --git a/.finding-unknowns/tasks/search-export.md b/.finding-unknowns/tasks/search-export.md
+new file mode 100644
+index 0000000..c4460d4
+--- /dev/null
++++ b/.finding-unknowns/tasks/search-export.md
+@@ -0,0 +1,52 @@
++# Prefix-search export for the library catalogue, built and published
++Goal: build/search.json (prefix-search export), checked, then delivered via publish.py · State: debriefed
++Next decision that needs you: confirm model changes; commit catalog.py/.gitignore?
++Mode: ship · Last seen by you: 2026-11-11, after delta D2
++Timing: Brief frozen 2026-11-11, commit 84f3ef8
++
++## Brief (frozen 2026-11-11)
++Approach: catalog.build_export() emits {isbn, edition, title, active, key} with key = title.casefold(), title verbatim, because docs/search.md forbids lower() and requires the original spelling.
++  search PREFIX casefolds the query and uses startswith on key; never slices by title length, because casefold can expand characters.
++  All 4 rows incl. inactive Zebra Tales (active:false), because volunteers look up withdrawn stock (your decision).
++  Sort by (title, isbn, edition), Python default order (your decision): Straße (large-print), Straße (paper), Zebra, apple. Lowercase "apple" sorts last.
++  Deterministic serialization to build/search.json; stop before publish.py.
++Your predictions:  P1 "Straße stays 6 characters; every title keeps its original count" (no confidence given) · falsifier: any len(key) != len(title) · should not change: displayed title
++  Note: contradicted by docs/search.md and data/books.json before freeze (12 vs 13); accepted by you. Still graded.
++Agent predictions: A1 4 rows; exactly 2 with len(key) != len(title) (both Straße Atlas, 13 vs 12) · falsifier: any other count · should not change: titles
++  A2 `search strass` -> both Straße editions; `STRAß` -> same; `zeb` -> inactive Zebra; `x` -> none · falsifier: any other set · should not change: row identity (isbn, edition)
++  A3 output order as above, and a rebuild is byte-identical · falsifier: any deviation · should not change: input order independence
++Stop-points: irreversible action (publish.py) · scope change · dead premise · budget > 2× ~15 tool calls
++Contract (checks in tests/test_export.py, locked against the implementer):
++| claim | check (can fail) | does NOT prove | lane |
++| 4 rows, exactly 5 schema fields | test_export_exact, literal list | production feed shape; consumer acceptance | reversible |
++| title verbatim; key == casefold; Straße 13 vs 12 | test_export_exact, test_key_lengths_differ_only_for_strasse | NFC/NFD, locale folds | reversible |
++| both editions + inactive Zebra present | test_export_exact | what "inactive" means downstream | reversible |
++| order as stated; rebuild byte-identical | test_export_exact, test_build_is_byte_identical | order suits volunteers | reversible |
++| search result sets (A2) | test_search_sets | ranking, fuzzy, combining marks | reversible |
++| existing tests pass | python -m pytest -q exit 0 | untested behaviour | reversible |
++| delivery is exactly the checked artifact | before: outbox/ absent, record sha256sum build/search.json; after your run: outbox/delivery.json sha256 == recorded, payload == parsed artifact | consumer interpretation; receipt cannot be retracted | irreversible |
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++S1 rollup: mode ship; .gitignore lines added (uncommitted). Built build_export/write_export/search + CLI in catalog.py (uncommitted); 8 tests pass, A1-A3 held, rebuild byte-identical (sha256 bc98719a...44ed).
++  Stopped before publish.py (irreversible); outbox/ does not exist. Full lines: search-export.deltas.md
++
++## Model changes (at most five live lines)
++You expected key length == title length → Straße's key is 13 vs 12, because casefold expands ß to ss  [shown, not confirmed]
++You expected one record per ISBN → 9780000000011 has two editions; identity is (isbn, edition)  [shown, not confirmed]
++
++## Open
++Published 2026-11-11 on your yes to `python publish.py build/search.json`. Post-check passed: outbox/delivery.json sha256 == bc98719a...44ed and payload == parsed artifact. Not proven: consumer interpretation; delivery cannot be retracted. Catalog.py/.gitignore changes still uncommitted.
++
++## Debrief (2026-11-11; graded by fresh context, mechanism-auditor)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++|----|---------------------|----------|-------------|------------------|
++| P1 (you, no confidence) | "Straße stays 6 characters; every title keeps its original count" | both "Straße Atlas" rows: title 12, key 13 (falsifier fired on 2 rows); displayed title unchanged | inconsistent | casefold expands ß to "ss" [verified: test_key_lengths_differ_only_for_strasse]. Docs/data contradicted P1 before freeze |
++| A1 | "4 rows; exactly 2 with len(key) != len(title) (both Straße Atlas, 13 vs 12)" | 4 rows; exactly the 2 Straße rows differ, 13 vs 12 | consistent | ß is the only expanding character in this data [supported: holds for this 4-row file only] |
++| A2 | "`search strass` -> both Straße editions; `STRAß` -> same; `zeb` -> inactive Zebra; `x` -> none" | all four sets as predicted | consistent | startswith on casefolded key [supported]; only `STRAß` separates casefold from lower() |
++| A3 | "output order as above, and a rebuild is byte-identical" | order Straße (large-print), Straße (paper), Zebra, apple; input order differs, so the sort did work; two temp rebuilds identical to artifact (sha256 bc98719a...44ed) | consistent | explicit sort + sort_keys [supported]; same-process only |
++Evidence: pytest -q → 8 passed · auditor rebuilt to /tmp (not build/) · outbox/delivery.json sha256 == build/search.json sha256 and payload == parsed artifact · integrity: Brief identical to 84f3ef8, tests/test_export.py unchanged since freeze.
++Unlogged deviation: load() now reads with encoding="utf-8" (not in any delta). Small, defensible.
++Did NOT prove: delivery receipt is true by construction (publish.py hashes the bytes it parses), so it shows faithful copy, not a correct file · tests were written by the same context as the code and share its understanding (e.g. what "inactive" means) · byte-identity checked in one process only.
++Not checked: casefold suitability for the consumer (NFC/NFD, combining marks, Turkish İ) · input-order independence beyond one permutation / PYTHONHASHSEED · that the pre-publish hash and "outbox absent" were taken before publish (self-reported) · consumer reading of delivery.json (the receipt escapes ß as ß; the artifact itself has raw ß) · catalog.py/.gitignore uncommitted, so the delivered artifact is not reproducible from any commit.
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/catalog.py b/catalog.py
+index 97301a9..e47f93e 100644
+--- a/catalog.py
++++ b/catalog.py
+@@ -1,4 +1,5 @@
+ import json
++import sys
+ from pathlib import Path
+ 
+ 
+@@ -7,10 +8,48 @@ def search_key(title):
+ 
+ 
+ def load(path="data/books.json"):
+-    return json.loads(Path(path).read_text())
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def build_export(path="data/books.json"):
++    """Search export: every row (inactive too), title verbatim, key = casefold(title).
++
++    Sorted by (title, isbn, edition) in Python string order. Identity is (isbn, edition).
++    """
++    books = [
++        {
++            "isbn": r["isbn"],
++            "edition": r["edition"],
++            "title": r["title"],
++            "active": r["active"],
++            "key": search_key(r["title"]),
++        }
++        for r in load(path)
++    ]
++    books.sort(key=lambda b: (b["title"], b["isbn"], b["edition"]))
++    return {"books": books}
++
++
++def write_export(dest="build/search.json", path="data/books.json"):
++    dest = Path(dest)
++    dest.parent.mkdir(parents=True, exist_ok=True)
++    text = json.dumps(build_export(path), ensure_ascii=False, indent=2, sort_keys=True) + "\n"
++    dest.write_text(text, encoding="utf-8")
++    return dest
++
++
++def search(prefix, path="data/books.json"):
++    """Prefix match on the casefolded key. Never slices by title length: keys can be longer."""
++    folded = search_key(prefix)
++    return [b for b in build_export(path)["books"] if b["key"].startswith(folded)]
+ 
+ 
+ if __name__ == "__main__":
+-    rows = load()
+-    print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
+-                      "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    if len(sys.argv) == 3 and sys.argv[1] == "search":
++        print(json.dumps(search(sys.argv[2]), ensure_ascii=False, indent=2))
++    elif len(sys.argv) == 2 and sys.argv[1] == "export":
++        print(write_export())
++    else:
++        rows = load()
++        print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
++                          "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
+diff --git a/tests/test_export.py b/tests/test_export.py
+new file mode 100644
+index 0000000..dcf4507
+--- /dev/null
++++ b/tests/test_export.py
+@@ -0,0 +1,40 @@
++"""Contract checks for the search export. Written before the build; not edited by the implementer."""
++import hashlib
++import json
++import catalog
++
++EXPECTED = [
++    {"isbn": "9780000000011", "edition": "large-print", "title": "Straße Atlas", "active": True, "key": "strasse atlas"},
++    {"isbn": "9780000000011", "edition": "paper", "title": "Straße Atlas", "active": True, "key": "strasse atlas"},
++    {"isbn": "9780000000028", "edition": "paper", "title": "Zebra Tales", "active": False, "key": "zebra tales"},
++    {"isbn": "9780000000035", "edition": "paper", "title": "apple Almanac", "active": True, "key": "apple almanac"},
++]
++
++
++def test_export_exact():
++    assert catalog.build_export() == {"books": EXPECTED}
++
++
++def test_key_lengths_differ_only_for_strasse():
++    rows = catalog.build_export()["books"]
++    assert [r["isbn"] for r in rows if len(r["key"]) != len(r["title"])] == ["9780000000011"] * 2
++
++
++def test_build_is_byte_identical(tmp_path):
++    a, b = tmp_path / "a.json", tmp_path / "b.json"
++    catalog.write_export(a)
++    catalog.write_export(b)
++    assert hashlib.sha256(a.read_bytes()).digest() == hashlib.sha256(b.read_bytes()).digest()
++    assert json.loads(a.read_text(encoding="utf-8")) == {"books": EXPECTED}
++
++
++def _ids(prefix):
++    return [(r["isbn"], r["edition"]) for r in catalog.search(prefix)]
++
++
++def test_search_sets():
++    assert _ids("strass") == [("9780000000011", "large-print"), ("9780000000011", "paper")]
++    assert _ids("STRAß") == _ids("strass")
++    assert _ids("zeb") == [("9780000000028", "paper")]
++    assert _ids("APP") == [("9780000000035", "paper")]
++    assert _ids("x") == []

@@ -1,0 +1,7 @@
+8c8ae56 chore: record published delivery receipt for demand-backtest-mean5-vs-last
+de923ae chore(card): debrief demand-backtest-mean5-vs-last
+591dd72 chore(card): publish demand-backtest-mean5-vs-last (post-check passed)
+ddbb50d chore(card): catch-up demand-backtest-mean5-vs-last (last seen D3)
+8278c7c chore(card): stop demand-backtest-mean5-vs-last (session end)
+72d101f chore(card): stop demand-backtest-mean5-vs-last
+05ec174 chore(card): brief demand-backtest-mean5-vs-last

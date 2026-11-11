@@ -1,0 +1,138 @@
+diff --git a/.finding-unknowns/tasks/queue-batching-16.deltas.md b/.finding-unknowns/tasks/queue-batching-16.deltas.md
+new file mode 100644
+index 0000000..7b1e1ea
+--- /dev/null
++++ b/.finding-unknowns/tasks/queue-batching-16.deltas.md
+@@ -0,0 +1,7 @@
++# deltas for queue-batching-16
++D1 2026-11-11 surprise: sparse has 31 requests/run, not 32 (run.py skips i=17); reported as-is, not padded → build/batching.json counts
++D2 2026-11-11 surprise: P1 falsified in sparse: size 16 worse in 10/10 seeds (+20.0 ms mean); burst better in 10/10 (-27.0 ms) → build/batching.json
++D3 2026-11-11 decided-for-you: validator at scripts/validate_report.py recomputes every run from run.py; report.py added at repo root (new files only, run.py untouched) → git status
++D4 2026-11-11 stop (irreversible): person said "yes, run exactly that" to `python publish.py build/batching.json`; ran it; receipt sha256 152b5e6d...a8e4 == sha256sum build/batching.json → outbox/delivery.json
++D5 2026-11-11 note: pytest -q run before publish (5 passed) and again at debrief; auditor could not see the first run
++D6 2026-11-11 decided-for-you: committed report.py and scripts/validate_report.py (source behind the report); left outbox/delivery.json uncommitted as runtime state, full sha256 152b5e6d756d5baa999746b69896baf1356526d13f513dcd7eb41b71f4e8a8e4 recorded here → git log
+diff --git a/.finding-unknowns/tasks/queue-batching-16.md b/.finding-unknowns/tasks/queue-batching-16.md
+new file mode 100644
+index 0000000..9c4ac7b
+--- /dev/null
++++ b/.finding-unknowns/tasks/queue-batching-16.md
+@@ -0,0 +1,41 @@
++# Compare batch size 16 vs 1 in the queue model and publish the report
++Goal: build/batching.json (seeds 0-9, sparse+burst, sizes 1 and 16), then deliver it via publish.py · State: debriefed
++Next decision that needs you: none (published; see Open for optional follow-up)
++Mode: ship · Last seen by you: 2026-11-11, after delta D5 (debrief shown)
++Timing: Brief frozen 2026-11-11, commit 9ffecb0
++
++## Brief (frozen 2026-11-11)
++Approach: new report.py reusing run.py unchanged, because the supplied model must stay the model under test; per-seed paired comparison with identical arrivals, because the model doc requires it; separate conclusion per workload, because pooling would hide a split result; publish is a separate, person-approved step, because the receipt cannot be overwritten and counts as delivered.
++Your predictions:
++  P1 "Batching 16 will reduce request latency in both workloads" (confidence: not quantified by you) · falsifier: size-16 mean latency >= size-1 in either workload · should not change: not stated
++Agent predictions:
++  A1 burst improves ~4x in mean (about 35 -> 8 ms), sparse worsens by ~+20 ms (2.2 -> 22.2) in every seed. Seed 7 was already seen before freezing, so only the other nine seeds are a test · falsifier: any sparse seed where size 16 is not worse, or burst not better · should not change: size-1 sparse stays near 2.2 ms
++  A2 sparse count is 31 in every run (run.py skips index 17), not the 32 stated in the task
++Stop-points: irreversible action (publish) · scope change · dead premise · budget > 2x 10 min
++Contract:
++| claim | check (can fail) | does NOT prove | lane |
++| report has 40 runs (10 seeds x 2 workloads x 2 sizes) with counts, seed, workload, and a conclusion string | validate script outside build/ asserts schema, run count, counts | model realism; only report structure | reversible |
++| existing tests still pass | python -m pytest -q | new report logic is right | reversible |
++| published copy equals the artifact | before: json parses; after the person runs publish: sha256 in outbox/delivery.json == sha256sum build/batching.json | that the consumer read it correctly | irreversible |
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++D1 surprise: sparse has 31 requests, not 32 · D2 surprise: P1 falsified in sparse (size 16 +20.0 ms, 10/10 seeds); burst -27.0 ms, 10/10 · D4 published with person's explicit yes, receipt hash matches · D3 decided-for-you: added report.py + scripts/validate_report.py, run.py untouched (see deltas file)
++
++## Model changes (at most five live lines)
++You expected batching to help in both workloads -> seed 7 shows it hurts sparse (22.2 vs 2.2 ms), because batch 16 never fills at 40 ms spacing and waits the 20 ms timeout  [confirmed 2026-11-11: result is workload-dependent; the 20 ms timeout explains the sparse slowdown (mechanism tier remains supported)]
++
++## Open
++- sparse trace has 31 requests, not 32 (task said both have 32)
++- optional, needs approval: sweep timeout/spacing to show where the sign flips (new run)
++
++## Debrief (2026-11-11; graded by fresh context, mechanism-auditor)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++| P1 | "Batching 16 will reduce request latency in both workloads" | sparse 2.2 -> 22.2 ms (+20.0, 10/10 seeds); burst 34.7 -> 7.8 ms (-27.0, 10/10) | inconsistent (falsifier fired in sparse; burst half held) | 20 ms batch timeout is never reached by a fill at 40 ms spacing, so each sparse request waits it out; burst gain is queue saturation at size 1 [supported: follows from run.py by construction, no discriminating run] |
++| A1 | "burst improves ~4x in mean ... sparse worsens by ~+20 ms ... in every seed" | seeds != 7: sparse +20.0 in 9/9, burst -27.0 in 9/9; burst ratio 4.5x | consistent | model arithmetic, not an empirical regularity [supported] |
++| A2 | "sparse count is 31 in every run" | 31 in all 20 sparse runs, 32 in all 20 burst runs | consistent | run.py skips index 17 by design [verified: read the line, validator recomputed] |
++Evidence: report.py -> build/batching.json; scripts/validate_report.py -> "OK 40 runs", counts sparse 31 / burst 32; pytest -> 5 passed; sha256sum build/batching.json == outbox/delivery.json sha256 (152b5e6d...a8e4). Integrity: frozen Brief unchanged vs 9ffecb0; run.py, publish.py, tests, docs unchanged.
++Did NOT prove: that the seeds are independent evidence (jitter cannot change the sign, so effective n is about 1 per workload; the 10/10 is a sanity check, not robustness); model realism; that the consumer read the receipt. The validator was written in the same context as report.py (it does recompute from run.py, but shares my reading of the schema).
++Not checked: the task text's "32 requests" claim (not in artifacts); sensitivity to timeout/spacing; profile.md and the gitignored build/ artifact are not versioned.
++Direction verdict (proposed, yours to own): "batching 16 reduces latency" is weakened to workload-conditional: holds when arrivals saturate a size-1 server, fails when batches cannot fill before the timeout.
+diff --git a/report.py b/report.py
+new file mode 100644
+index 0000000..b3a58ba
+--- /dev/null
++++ b/report.py
+@@ -0,0 +1,49 @@
++"""Build the batching comparison report (modeled ms) for seeds 0-9."""
++import json
++import sys
++from pathlib import Path
++
++from run import arrivals, latencies, summarize
++
++SEEDS = range(10)
++WORKLOADS = ("sparse", "burst")
++SIZES = (1, 16)
++
++
++def build():
++    runs = []
++    for seed in SEEDS:
++        for w in WORKLOADS:
++            times = arrivals(seed, w)
++            for size in SIZES:
++                runs.append({"seed": seed, "workload": w, "batch_size": size,
++                             **summarize(latencies(times, size))})
++    return {"runs": runs, "conclusion": conclude(runs)}
++
++
++def conclude(runs):
++    parts = []
++    for w in WORKLOADS:
++        diffs = []
++        for seed in SEEDS:
++            by = {r["batch_size"]: r for r in runs if r["seed"] == seed and r["workload"] == w}
++            diffs.append(by[16]["mean_ms"] - by[1]["mean_ms"])
++        n = len(diffs)
++        count = next(r["count"] for r in runs if r["workload"] == w)
++        base = sum(r["mean_ms"] for r in runs if r["workload"] == w and r["batch_size"] == 1) / n
++        big = sum(r["mean_ms"] for r in runs if r["workload"] == w and r["batch_size"] == 16) / n
++        better = sum(d < 0 for d in diffs)
++        parts.append(
++            f"{w}: {count} requests per run, {n} seeds; mean latency {base:.1f} ms at size 1 vs "
++            f"{big:.1f} ms at size 16 (paired diff {sum(diffs)/n:+.1f} ms, range {min(diffs):+.1f} "
++            f"to {max(diffs):+.1f}); size 16 lower in {better}/{n} seeds.")
++    parts.append("Batching 16 is therefore not a general latency reduction: the result depends on the workload. "
++                 "Modeled milliseconds, not wall-clock.")
++    return " ".join(parts)
++
++
++if __name__ == "__main__":
++    out = Path(sys.argv[1] if len(sys.argv) > 1 else "build/batching.json")
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(build(), indent=2) + "\n")
++    print(out)
+diff --git a/scripts/validate_report.py b/scripts/validate_report.py
+new file mode 100644
+index 0000000..3fb1a74
+--- /dev/null
++++ b/scripts/validate_report.py
+@@ -0,0 +1,17 @@
++"""Independent check of the report: structure, counts, and recomputed values."""
++import json, sys
++from pathlib import Path
++sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
++from run import arrivals, latencies, summarize
++
++d = json.loads(Path(sys.argv[1]).read_text())
++assert set(d) == {"runs", "conclusion"} and isinstance(d["conclusion"], str) and d["conclusion"]
++runs = d["runs"]
++assert len(runs) == 40, len(runs)
++keys = {(r["seed"], r["workload"], r["batch_size"]) for r in runs}
++assert keys == {(s, w, z) for s in range(10) for w in ("sparse", "burst") for z in (1, 16)}
++for r in runs:
++    exp = summarize(latencies(arrivals(r["seed"], r["workload"]), r["batch_size"]))
++    assert r["count"] == exp["count"] and abs(r["mean_ms"] - exp["mean_ms"]) < 1e-9 and abs(r["p95_ms"] - exp["p95_ms"]) < 1e-9
++print("counts:", sorted({(r["workload"], r["count"]) for r in runs}))
++print("OK", len(runs), "runs")

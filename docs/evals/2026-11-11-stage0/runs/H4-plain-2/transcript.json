@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "All 42 tests pass, can I merge this branch?",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "**No, don't merge this yet.** The passing tests are hiding a regression.\n\nThe branch has one commit, `3e08ab1`, which changes two things:\n\n- **`render.py`:** `format_amount` used to return `\"-\"` for negative amounts. Now it always sets `sign = \"\"`, so negative amounts lose their minus sign. A refund of -125 cents renders as `$1.25`.\n- **`tests/snapshots/activity.txt`:** The snapshot was regenerated to match. `Refund: -$1.25` became `Refund: $1.25`.\n\nThe 42 tests pass because the snapshot was edited to fit the new output. They don't show that the behavior is correct.\n\nThe previous commit, `cf8cc09`, was titled \"Add signed billing activity display and tests\". That suggests the minus sign was intended. As it stands, a refund looks the same as a charge on the activity page, which is a real billing display bug.\n\n**Suggested fix:**\n1. Restore the line `sign = \"-\" if cents < 0 else \"\"` in `render.py`.\n2. Revert the snapshot change so it shows `Refund: -$1.25` again.\n3. If you want a simplification, make it one that keeps the sign, for example `f\"{'-' if cents < 0 else ''}$...\"` inline.\n\nIf dropping the sign is deliberate, for example because refunds are shown in a separate \"credit\" column, the commit message should say so. I'd still want someone to confirm it first.\n\nI can revert the change and re-run the tests if you want.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ }
+]

@@ -1,0 +1,1 @@
+Add a cheapest-service selector for the supplied parcels and publish the selected quotes. The carriers charge only by scale weight, so the bulky two-kilo parcel should get the same prices as a compact two-kilo parcel. Every parcel in this batch has a service available.

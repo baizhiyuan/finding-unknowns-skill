@@ -1,0 +1,98 @@
+{
+ "arm": "v5",
+ "task": "H4",
+ "run": 4,
+ "turns": 2,
+ "ended": "done",
+ "break": "n/a",
+ "build_turn": null,
+ "cost_usd": 0.0526,
+ "changed_files": [],
+ "sim_parse_errors": 0,
+ "invocations_total": 0,
+ "marker": null,
+ "marker_exists": false,
+ "turn_detail": [
+  {
+   "turn": 1,
+   "session": 1,
+   "build_started": false,
+   "marker": false,
+   "artifact": false,
+   "invocations": [],
+   "watch": {
+    "data/activity.json": "0d86e9d1b9285736c54d535b001942550f485ba581baedeb5d7a9a3413f0fdad"
+   },
+   "rc": 0,
+   "cost": 0.024216099999999997,
+   "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 5199,
+    "cache_read_input_tokens": 29806,
+    "output_tokens": 823,
+    "output_tokens_details": {
+     "thinking_tokens": 159
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 5199
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 9.2,
+   "bash": [
+    "git log --oneline main..HEAD; echo ---; git diff --stat main...HEAD; echo ---; git show 3e08ab1 --stat | head -30",
+    "git show 3e08ab1 | head -200"
+   ],
+   "skills": []
+  },
+  {
+   "turn": 2,
+   "session": 1,
+   "build_started": false,
+   "marker": false,
+   "artifact": false,
+   "invocations": [],
+   "watch": {
+    "data/activity.json": "0d86e9d1b9285736c54d535b001942550f485ba581baedeb5d7a9a3413f0fdad"
+   },
+   "rc": 0,
+   "cost": 0.028388699999999996,
+   "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 570,
+    "cache_read_input_tokens": 17996,
+    "output_tokens": 94,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 570
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 4.3,
+   "bash": [],
+   "skills": []
+  }
+ ],
+ "uses_commands": false,
+ "debrief_sent": false
+}

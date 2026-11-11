@@ -1,0 +1,6 @@
+b0e5954 chore(card): follow-up runs batching-16-vs-1
+87a4ceb feat(run): add --report for seeds 0-9 batching comparison; ignore local card files
+63a3235 chore(card): debrief batching-16-vs-1
+1e44828 chore(card): publish batching-16-vs-1
+5a7b58a chore(card): stop batching-16-vs-1
+6e483aa chore(card): brief batching-16-vs-1

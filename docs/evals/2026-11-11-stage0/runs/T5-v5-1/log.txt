@@ -1,0 +1,7 @@
+0192153 chore(card): debrief re-shown attendance-normalize-dedup
+a3e5c07 chore(card): log saved evidence attendance-normalize-dedup
+7fa458a refactor: retire legacy inspector, make normalize.py take an explicit source
+d05ab49 chore(card): debrief attendance-normalize-dedup
+b5145bf feat(data): migrate live attendance table to normalized (badge,session,start_utc)
+4d40942 chore(card): stop attendance-normalize-dedup
+b492ed1 chore(card): brief attendance-normalize-dedup
