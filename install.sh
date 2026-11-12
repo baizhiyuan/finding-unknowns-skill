@@ -81,11 +81,17 @@ for pair in 'workflows:^# .*Workflow' 'structured:^# Structured mode' 'cartograp
   f="$dest/references/${pair%%:*}.md"
   if [ -f "$f" ] && [ ! -L "$f" ] && head -n 3 "$f" | grep -qE "${pair#*:}"; then set_aside "$f"; fi
 done
+# Legacy files without the marker stay in place; each is listed so you can remove it by hand.
+note_legacy() {  # <file>
+  if [ -e "$1" ] || [ -L "$1" ]; then echo "Legacy file left in place (unmarked 4.x/5.0?): $1 -- remove it manually if it is the old copy"; fi
+}
 for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasoning theory-vs-result fu-cartographer; do
   retire_if_ours "$CMD_DEST/$old.md"
+  note_legacy "$CMD_DEST/$old.md"
 done
 for old in blindspot-scout ledger-keeper prototype-smith quiz-master; do
   retire_if_ours "$AGENT_DEST/$old.md"
+  note_legacy "$AGENT_DEST/$old.md"
 done
 
 echo

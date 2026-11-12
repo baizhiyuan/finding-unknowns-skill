@@ -56,9 +56,13 @@ Tier 0 tests: `python3 -m unittest discover -s tests` (run in CI).
     is printed.
 - Never edits `.gitignore`, never runs `git push`, never stages anything outside the paths
   it commits. Git runs with `GIT_TERMINAL_PROMPT=0`, stdin closed, a 120 s timeout (a
-  signing prompt fails instead of hanging), and `-c core.fsmonitor=false`, so no fsmonitor
+  signing prompt fails instead of hanging; `git commit` gets 15 min because it runs the person's
+  hooks; git runs in its own process group and the whole group is killed on timeout), and `-c core.fsmonitor=false`, so no fsmonitor
   command runs; `git diff` adds `--no-ext-diff --no-textconv`. The person's commit hooks
-  still run (never `--no-verify`); a failing hook makes freeze exit 3 and self-report.
+  still run (never `--no-verify`); a failing hook makes freeze exit 3 and self-report. A commit killed on timeout may leave
+  `.git/index.lock` and staged card files; the self-report says `.git/index.lock may remain;
+  remove it if no git process is running`. Formatters in commit hooks (lint-staged/prettier
+  on `*.md`) may rewrite the card's indentation; `fu lint` after the freeze reports it.
   (Other repo-local config, e.g. `gpg.program` or clean filters on `git add`, still
   applies; hooks and config are not transferred by `git clone`.)
 - **Writes** go through one helper: the target must lie inside `.finding-unknowns/`; no
@@ -86,7 +90,8 @@ Tier 0 tests: `python3 -m unittest discover -s tests` (run in CI).
 `strict: no|yes` (default `no`), `view: yes|no` (absent until offered), `commits: yes|no`
 (default `yes`), `guard: off|log|ask` (default `ask` when `hooks/hooks.json` sits beside
 the script's directory, i.e. the plugin install; `off` for an `install.sh` copy, which has
-no hook). Unknown keys are ignored.
+no hook; the hooks file must contain `fu.py" guard pre`, so another tool's `hooks.json` does
+not count). Unknown keys are ignored.
 
 ## Subcommands
 
@@ -285,7 +290,8 @@ decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
   `doas`, `time`, `command`, `exec`, `nice`, `stdbuf`, `xargs`) are dropped; the program
   becomes its base name; `python3`/`python3.N` becomes `python` and an interpreter path
   (`/usr/bin/python3`) its name anywhere in the segment; a leading `./` is removed from every
-  token; `npm|pnpm|yarn run-script` becomes `run`; `uv|poetry|pipenv run` before an
+  token; interpreter options between the interpreter and its script (`-u`, `-X val`, `-W val`,
+  `--`) are dropped; `npm|pnpm|yarn run-script` becomes `run`; `uv|poetry|pipenv run` before an
   interpreter is dropped.
   - **Exact**: a segment equals the `Irreversible:` command.
   - **Variant**: the command's tokens, or for a known runner (`python -m X`,
@@ -298,6 +304,8 @@ decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
     `check:` or `post-check:` code span (a dry run) neither asks nor is recorded.
   - A compound `Irreversible:` line (several segments) matches when its segments appear
     in order.
+  - **Known gap**: a command passed to another host, e.g. `ssh host 'python publish.py …'`, is
+    not read; the guard sees only `ssh`.
 - **pre**, on a match with `guard: ask`, prints
 
   ```json

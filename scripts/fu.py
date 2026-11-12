@@ -29,6 +29,7 @@ import json
 import os
 import re
 import shlex
+import signal
 import stat
 import subprocess
 import sys
@@ -61,6 +62,8 @@ MAX_LINE = 2000        # card lines longer than this are not pattern-matched
 STAT_MIN_N = 5          # stat line once a side has this many graded predictions
 CURVE_MIN_N = 10        # calibration curve only from this many graded with a confidence
 GIT_TIMEOUT = 120
+GIT_COMMIT_TIMEOUT = 15 * 60   # a commit runs the person's hooks; a slow one is not an error
+MAX_READ_BYTES = 1024 * 1024    # cards, profile and logs are read to this size at most
 MAX_UNTRACKED_BYTES = 5 * 1024 * 1024
 
 HEADER_SLUG = re.compile(r"^# (\S+)$")
@@ -82,7 +85,6 @@ STOP_TAG = re.compile(r" \[stop: ([a-z-]+)\]$")
 AMEND_RE = re.compile(r"^M(\d+) (" + TIME + r") · (?:after D(\d+) · )?(decided-for-you|confirmed): (.+) · why: (.+)$")
 MODEL_CHANGE_LIKE = re.compile(r"^\s*(?:- )?You expected .+ → ")
 MECH_RE = re.compile(r"^(.*?)\s*\[(verified|supported|inferred|untested)\]\s*$")
-ID_RE = re.compile(r"(?<![\w-])([PA])(\d+)(?!\w)")
 CITE_RE = re.compile(r"(?<![\w-])([PA])(\d)(?![\w])")   # P10, P99 and longer are not read as IDs
 PLACEHOLDER_RE = re.compile(r"\{([^{}\n]*)\}")
 PLACEHOLDER_WORDS = re.compile(r"^[a-z][a-z '’,-]*$")
@@ -124,7 +126,12 @@ def sha(text: str) -> str:
 
 
 def read_text(path: Path) -> str:
-    return path.read_text(encoding="utf-8", errors="replace")
+    """Regular files only (a device or FIFO behind a card name raises OSError), at most
+    MAX_READ_BYTES of it."""
+    if not stat.S_ISREG(os.stat(path).st_mode):
+        raise OSError("not a regular file: %s" % path)
+    with open(path, "rb") as fh:
+        return fh.read(MAX_READ_BYTES).decode("utf-8", errors="replace")
 
 
 class UnsafePath(UsageError):
@@ -213,8 +220,19 @@ def git(root: Path, *args: str, timeout: int = GIT_TIMEOUT) -> subprocess.Comple
     (never --no-verify): a failing hook makes freeze self-report instead of committing."""
     env = dict(os.environ, GIT_TERMINAL_PROMPT="0")
     safe = ["-c", "core.fsmonitor=false"]
-    return subprocess.run(["git", *safe, *args], cwd=str(root), capture_output=True, text=True,
-                          stdin=subprocess.DEVNULL, env=env, timeout=timeout)
+    # Own process group: on timeout the whole group (git and its hooks) is killed, not just git.
+    proc = subprocess.Popen(["git", *safe, *args], cwd=str(root), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            text=True, stdin=subprocess.DEVNULL, env=env, start_new_session=True)
+    try:
+        out, err = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except OSError:
+            proc.kill()
+        proc.communicate()
+        raise
+    return subprocess.CompletedProcess(proc.args, proc.returncode, out, err)
 
 
 def find_fu_root(start: Path):
@@ -423,7 +441,16 @@ def _strip_wrappers(toks: list) -> list:
 def normalise(tokens: list) -> list:
     toks = _strip_wrappers(list(tokens))
     out = []
+    skip, opts = 0, True   # opts: still between the interpreter and its script
     for i, t in enumerate(toks):
+        if skip:
+            skip -= 1
+            continue
+        if opts and i > 0 and INTERPRETER_PATH.match(toks[0]):
+            if t == "--" or (t.startswith("-") and len(t) > 1 and t != "-m" and not re.match(r"^-[a-zA-Z]*c[a-zA-Z]*$", t)):
+                skip = 1 if t in ("-X", "-W") else 0   # interpreter options are dropped
+                continue
+            opts = False
         while t.startswith("./"):
             t = t[2:]
         im = INTERPRETER_PATH.match(t)
@@ -1238,7 +1265,7 @@ def _check_bottom(d: dict, f: str, lint: Lint) -> None:
     where = {}
     for key in ("holds", "did not hold", "stops at"):
         ln = d["bottom_lines"].get(key, d["line"])
-        for letter, num in ID_RE.findall(strip_code(d["bottom"].get(key, ""))):
+        for letter, num in CITE_RE.findall(strip_code(d["bottom"].get(key, ""))):
             where.setdefault(letter + num, []).append((key, ln))
     want = {"consistent": "holds", "partly": "did not hold", "inconsistent": "did not hold",
             "can't tell": "stops at", "post-hoc fit": "stops at"}
@@ -1300,7 +1327,11 @@ def lint_paths(root: Path, card, claim, slug: str, strict_flag: bool):
 
 def guard_installed() -> bool:
     """The plugin's hook ships beside this script; an install.sh copy has none."""
-    return (Path(__file__).resolve().parent.parent / "hooks" / "hooks.json").is_file()
+    hooks = Path(__file__).resolve().parent.parent / "hooks" / "hooks.json"
+    try:
+        return 'fu.py" guard pre' in read_text(hooks).replace('\\"', '"')
+    except OSError:
+        return False
 
 
 def init_fu(root: Path, flags: dict) -> list:
@@ -1482,9 +1513,11 @@ def cmd_freeze(a) -> int:
     msg = "chore(card): %s %s" % (stage, slug)
     try:
         add = git(root, "add", "--", *rels)
-        com = git(root, "commit", "--only", "-m", msg, "--", *rels) if add.returncode == 0 else add
+        com = git(root, "commit", "--only", "-m", msg, "--", *rels, timeout=GIT_COMMIT_TIMEOUT) if add.returncode == 0 else add
     except (OSError, subprocess.SubprocessError) as exc:
-        com = subprocess.CompletedProcess([], 1, "", str(exc))
+        what = "git timed out (.git/index.lock may remain; remove it if no git process is running)" \
+            if isinstance(exc, subprocess.TimeoutExpired) else str(exc)
+        com = subprocess.CompletedProcess([], 1, "", what)
     if com.returncode != 0:
         try:
             git(root, "reset", "-q", "--", *rels)
@@ -1619,7 +1652,7 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
         if p:
             unlogged.append((p, 1, _line_count(root / p)))
     hunks = ["%s:%d-%d" % h for h in unlogged
-             if h[0] not in logged and os.path.basename(h[0]) not in logged]
+             if h[0] not in logged]
     if hunks:
         findings += 1
         print("Unlogged hunks: %s" % ", ".join(hunks))
@@ -1690,7 +1723,7 @@ def cmd_log(a) -> int:
     if card is None:
         raise UsageError("log reads a card's Debrief; %s has only a claim file" % slug)
     lint, model = lint_paths(root, card, None, slug, False)
-    bad = [i for i in lint.fails() if i[3] in DEBRIEF_RULES or (i[3] == "id-reserved" and model["debriefs"])]
+    bad = [i for i in lint.fails() if i[3] in DEBRIEF_RULES]
     if not model["debriefs"] or bad:
         for line in lint.lines():
             print(line)
@@ -2307,7 +2340,7 @@ def _open_irreversible(fu: Path) -> list:
     for p in card_files(fu):
         try:
             text = read_text(p)
-        except OSError:
+        except Exception:  # one odd card (device, huge, unreadable) never disables the guard
             continue
         if not is_open(text):
             continue

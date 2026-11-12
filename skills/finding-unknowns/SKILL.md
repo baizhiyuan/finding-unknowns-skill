@@ -47,8 +47,8 @@ Stop only at:
 1. **Irreversible step**: data rewritten or dropped, deletion, production, money,
    publication, commitments to people; classify upward when unsure. Its exact command is
    on a Brief `Irreversible:` line; its checks are dry runs; it runs once. With the
-   guard (`{base}/../../hooks/hooks.json` exists, `guard: ask`): announce it in one line,
-   run it that turn; the permission prompt is the stop. Else: a stop; only a chat yes to
+   guard (`{base}/../../hooks/hooks.json` has `fu.py" guard pre`, `guard: ask`): announce in one line,
+   run it that turn; the prompt is the stop. Else: stop; only a chat yes to
    that exact command ("go ahead" is not one) runs it.
 2. **Scope change** outside the Brief.
 3. **Dead premise**: a Brief premise or a falsifier fired and no reversible path remains.

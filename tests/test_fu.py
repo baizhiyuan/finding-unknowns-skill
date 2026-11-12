@@ -550,6 +550,22 @@ class GuardForms(GuardBase):
         self.assertIsNone(self.pre("ls"))
         self.assertEqual(run(["list", "--all"], self.tmp).returncode, 0)
 
+    def test_device_symlink_card_does_not_disable_the_guard(self):
+        import time
+        os.symlink("/dev/zero", str(self.fu / "tasks" / "zz.md"))
+        start = time.time()
+        out = self.pre(IRR)
+        self.assertEqual(out["hookSpecificOutput"]["permissionDecision"], "ask")
+        self.assertLess(time.time() - start, 5)
+
+    def test_interpreter_options_before_the_script_still_ask(self):
+        for cmd in ("python -u publish.py build/quotes.json", "python3 -X utf8 publish.py build/quotes.json",
+                    "python -- publish.py build/quotes.json", "python3 -W ignore -u ./publish.py build/quotes.json"):
+            out = self.pre(cmd)
+            self.assertIsNotNone(out, cmd)
+            self.assertEqual(out["hookSpecificOutput"]["permissionDecision"], "ask", cmd)
+        self.assertIsNone(self.pre("python -u other.py build/quotes.json"))
+
     def test_redos_inputs_finish_fast(self):
         import time
         for cmd in ("git push " + "a " * 32000, "git" + " push" * 16000 + " -f", "rm " + "-r " * 20000,
@@ -722,6 +738,21 @@ class IdsAndCaps(Workspace):
         self.assertNotIn("id-reserved", r.stdout)
         self.assertEqual(run(["log", "quote-export"], self.tmp).returncode, 0)
         self.assertEqual(run(["render", "quote-export"], self.tmp).returncode, 0)
+
+    def test_bottom_line_ignores_long_percentile_names(self):
+        self.edit("did not hold: coverage needed an invented service (P2)",
+                  "did not hold: coverage needed an invented service (P2); P99 under 200 ms was never in question")
+        r = self.lint()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertNotIn("bottom-line", r.stdout)
+
+    def test_frozen_brief_id_fail_does_not_block_log(self):
+        self.edit("  - add one remote-zone service because parcel 3 has no service in the table",
+                  "  - add one remote-zone service for P3")
+        r = self.lint()
+        self.assertIn("id-reserved", rules(r.stdout, "FAIL"))
+        r = run(["log", "quote-export"], self.tmp)
+        self.assertEqual(r.returncode, 0, r.stdout)
 
     def test_undefined_id_outside_the_brief_warns_inside_fails(self):
         self.edit("  - measured: Economy 4.00 (build/quotes.json)", "  - measured: Economy 4.00 for parcel P3 (build/quotes.json)")
@@ -988,6 +1019,41 @@ class FreezeAndIntegrity(FreezeBase):
         self.assertEqual(git(self.tmp, "diff", "--cached", "--name-only").stdout, "")
         self.assertIn("Timing: self-reported", self.card.read_text(encoding="utf-8"))
 
+    def test_commit_timeout_kills_the_hook_group_and_names_the_lock(self):
+        import importlib.util
+        hooks = self.tmp / "person-hooks"
+        hooks.mkdir()
+        (hooks / "pre-commit").write_text("#!/bin/sh\nsleep 31 &\nsleep 31\n", encoding="utf-8")
+        (hooks / "pre-commit").chmod(0o755)
+        git(self.tmp, "config", "core.hooksPath", str(hooks))
+        spec = importlib.util.spec_from_file_location("fu_under_test", str(FU))
+        fu = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(fu)
+        fu.GIT_COMMIT_TIMEOUT = 2
+        import contextlib
+        import io
+        buf, cwd = io.StringIO(), os.getcwd()
+        os.chdir(str(self.tmp))
+        try:
+            with contextlib.redirect_stdout(buf):
+                code = fu.main(["freeze", "search-export", "--stage", "brief"])
+        finally:
+            os.chdir(cwd)
+        self.assertEqual(code, 3)
+        self.assertIn(".git/index.lock may remain; remove it if no git process is running", buf.getvalue())
+        self.assertTrue((self.tmp / ".git" / "index.lock").exists())  # the killed git left it; the note says so
+        self.assertEqual(subprocess.run(["pgrep", "-f", "^sleep 31"], capture_output=True).stdout, b"")  # hook group is gone
+
+    def test_unlogged_hunks_need_the_full_relative_path(self):
+        self.assertEqual(self.freeze().returncode, 0)
+        (self.tmp / "docs").mkdir()
+        (self.tmp / "docs" / "README.md").write_text("new\n", encoding="utf-8")
+        deltas = self.card.with_name("search-export.deltas.md")
+        deltas.write_text(deltas.read_text(encoding="utf-8")
+                          + "D1 2026-11-12 11:30 deviation: touched README.md → README.md\n", encoding="utf-8")
+        line = run(["integrity", "search-export"], self.tmp).stdout.splitlines()[2]
+        self.assertIn("docs/README.md:1-1", line)
+
     def test_integrity_reports_check_files_created_after_the_freeze(self):
         text = self.card.read_text(encoding="utf-8").replace("Check files: none", "Check files: tests/test_new.py, tests/extra")
         self.card.write_text(text, encoding="utf-8")
@@ -1192,6 +1258,40 @@ class Packaging(unittest.TestCase):
                                            capture_output=True, text=True, timeout=60)
             self.assertEqual(run_installed.returncode, 0)
             self.assertIn("guard: off", (proj / ".finding-unknowns" / "profile.md").read_text(encoding="utf-8"))
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_guard_installed_needs_our_hook_in_the_file(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("fu_installed", str(FU))
+        fu = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(fu)
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            (tmp / "scripts").mkdir()
+            (tmp / "hooks").mkdir()
+            fu.__file__ = str(tmp / "scripts" / "fu.py")
+            self.assertFalse(fu.guard_installed())
+            (tmp / "hooks" / "hooks.json").write_text('{"hooks": {"Stop": []}}', encoding="utf-8")
+            self.assertFalse(fu.guard_installed())
+            shutil.copy(str(REPO / "hooks" / "hooks.json"), str(tmp / "hooks" / "hooks.json"))
+            self.assertTrue(fu.guard_installed())
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_install_lists_unmarked_legacy_files_and_keeps_them(self):
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            (tmp / "agents").mkdir()
+            legacy = tmp / "agents" / "blindspot-scout.md"
+            legacy.write_text("---\nname: blindspot-scout\n---\n", encoding="utf-8")
+            r = subprocess.run(["bash", str(REPO / "install.sh")], env=dict(os.environ, CLAUDE_CONFIG_DIR=str(tmp)),
+                               capture_output=True, text=True, timeout=60)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertTrue(legacy.is_file())
+            lines = [l for l in r.stdout.splitlines() if "Legacy file left in place" in l]
+            self.assertEqual(len(lines), 1, r.stdout)
+            self.assertIn(str(legacy), lines[0])
         finally:
             shutil.rmtree(tmp)
 
