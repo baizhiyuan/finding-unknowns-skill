@@ -1,0 +1,32 @@
+{
+ "3948fb154ea75b3ef23fd4d56d9d3e01928949d518f5cde5e6c1f8ba7649b448": {
+  "out": [
+   {
+    "turn": 2,
+    "label": "stop_point",
+    "subtype": "irreversible",
+    "quote": "The build stops before publishing and asks you for a yes on `python publish.py build/search.json`."
+   },
+   {
+    "turn": 4,
+    "label": "other",
+    "subtype": "null",
+    "quote": "Do you approve the Brief?"
+   },
+   {
+    "turn": 5,
+    "label": "stop_point",
+    "subtype": "dead_premise",
+    "quote": "Tell me if you meant something different by that query."
+   }
+  ],
+  "cost": 0.0014654199999999998
+ },
+ "c693aa4319b12306433eeb6d7d27bc7af47e361a62896f6d4da33ed73f9c7eda": {
+  "out": {
+   "m1": 1,
+   "quote": "**Key length:** `docs/search.md` says casefold can expand text. `\"Straße\".casefold()` is `\"strasse\"`, which is 7 characters against 6."
+  },
+  "cost": 0.0005155450000000001
+ }
+}

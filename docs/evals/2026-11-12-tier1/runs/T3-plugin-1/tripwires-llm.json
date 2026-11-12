@@ -1,0 +1,9 @@
+{
+ "bb0a7fff1e1258a71093ae4d2b815d4fa93526ebc156fa34cce0b5286bcaf907": {
+  "out": {
+   "m1": 1,
+   "quote": "Sparse latency goes up with size 16 in every seed, to a mean near 22 ms against 2.2 ms. That would falsify your prediction for sparse."
+  },
+  "cost": 0.000872545
+ }
+}

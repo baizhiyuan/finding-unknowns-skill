@@ -1,0 +1,19 @@
+{
+ "ff0f7f62a5fd2e0d6d2e904d1df9182dd8db787cd1f5cbeac90bd3c8f6e5feaa": {
+  "out": [
+   {
+    "turn": 1,
+    "label": "stop_point",
+    "subtype": "irreversible",
+    "quote": "Once you confirm, publishing is a single command."
+   },
+   {
+    "turn": 2,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Say if you want a commit."
+   }
+  ],
+  "cost": 0.0006560450000000001
+ }
+}

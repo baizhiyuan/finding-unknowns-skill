@@ -1,0 +1,19 @@
+{
+ "8f918af4b1f1ff0a63325d1cdc1573910689d0f88aa91c3fa81c196ccda63771": {
+  "out": [
+   {
+    "turn": 1,
+    "label": "stop_point",
+    "subtype": "scope",
+    "quote": "**Decision for you:** which weight rule should apply?"
+   },
+   {
+    "turn": 2,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "I can commit them if you want."
+   }
+  ],
+  "cost": 0.000691295
+ }
+}

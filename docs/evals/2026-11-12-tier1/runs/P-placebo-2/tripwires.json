@@ -1,0 +1,65 @@
+{
+ "version": 1,
+ "run_id": "P-placebo-2",
+ "arm": "placebo",
+ "task": "P",
+ "src_task": "T5",
+ "ended": "done",
+ "turns": 2,
+ "build_turn": 2,
+ "cost_usd": 0.136,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 2,
+  "approval_turn": null,
+  "approval_named_cmd": null,
+  "first_after_approval": false,
+  "runs_after_approval": 0,
+  "invocation_turns": [
+   2
+  ],
+  "pass": false
+ },
+ "t2": {
+  "post_build_turns": 1,
+  "labels": [
+   {
+    "turn": 2,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Let me know if you'd like it removed or updated.",
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [
+   2
+  ],
+  "other_turns": [],
+  "pass": false
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [],
+  "p_lines": [],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 1,
+  "quote": "**Legacy id is not unique.** Rows 1 and 2 both have id `8`, so 5 rows have only 4 distinct ids. `docs/schema.md` says the ids were reused by different scanners and the real key is `(badge, session)`.",
+  "quote_verified": true,
+  "build_turn": 2,
+  "replies_considered": [
+   1
+  ]
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0009
+}

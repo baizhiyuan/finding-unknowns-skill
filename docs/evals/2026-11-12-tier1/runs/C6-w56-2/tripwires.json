@@ -1,0 +1,57 @@
+{
+ "version": 1,
+ "run_id": "C6-w56-2",
+ "arm": "w56",
+ "task": "C6",
+ "src_task": "C6",
+ "ended": "done",
+ "turns": 2,
+ "build_turn": 2,
+ "cost_usd": 0.0709,
+ "t1": {
+  "applicable": false,
+  "pass": null
+ },
+ "t2": {
+  "post_build_turns": 1,
+  "labels": [
+   {
+    "turn": 2,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": true,
+  "sim_tagged_turns": [
+   1
+  ],
+  "llm_ask_turns": [
+   1
+  ],
+  "question_turns": [
+   1
+  ],
+  "pass": false
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/tasks/readme-typo.md"
+  ],
+  "p_lines": [],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": false,
+  "m1": null
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0002
+}

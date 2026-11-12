@@ -1,0 +1,38 @@
+{
+ "b58adee0ac50190b93942c625b2c12385459e9c07a86c81e682c622bc03a0c74": {
+  "out": [
+   {
+    "turn": 8,
+    "label": "other",
+    "subtype": null,
+    "quote": "Even a bare \"1\" is enough."
+   },
+   {
+    "turn": 9,
+    "label": "other",
+    "subtype": null,
+    "quote": "You can undo the commit with `git reset --soft HEAD~1`."
+   },
+   {
+    "turn": 10,
+    "label": "other",
+    "subtype": null,
+    "quote": "**11:39 publish attempt:** whether you started it is still unanswered. Either \"I ran it\" or \"I didn't\" closes it, and I'll record it on the card."
+   },
+   {
+    "turn": 13,
+    "label": "other",
+    "subtype": null,
+    "quote": "- \"I ran it\" or \"I didn't\""
+   }
+  ],
+  "cost": 0.001102295
+ },
+ "0eb9acabe7936aaf38be3329d463a43de8618b4f17ec8b358a99fd6debd96626": {
+  "out": {
+   "m1": 1,
+   "quote": "Two of your premises conflict with it, and I'll build to the repo:"
+  },
+  "cost": 0.000633795
+ }
+}

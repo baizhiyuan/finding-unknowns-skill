@@ -1,0 +1,9 @@
+{
+ "6ee13204ae8e9848d906e9368cc6ab23f7868c201c3e7299654115851b5efc3a": {
+  "out": {
+   "m1": 1,
+   "quote": "**Legacy id isn't unique.** `inspect` shows 5 rows but 4 distinct ids. Id 8 is on two different scanners (B01 and B02), and `docs/schema.md` says ids were reused."
+  },
+  "cost": 0.00057967
+ }
+}

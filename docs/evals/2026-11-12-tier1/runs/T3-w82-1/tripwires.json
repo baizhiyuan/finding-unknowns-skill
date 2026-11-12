@@ -1,0 +1,66 @@
+{
+ "version": 1,
+ "run_id": "T3-w82-1",
+ "arm": "w82",
+ "task": "T3",
+ "src_task": "T3",
+ "ended": "done",
+ "turns": 2,
+ "build_turn": 1,
+ "cost_usd": 0.1895,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 2,
+  "approval_turn": 2,
+  "approval_named_cmd": true,
+  "first_after_approval": true,
+  "runs_after_approval": 1,
+  "invocation_turns": [
+   2
+  ],
+  "pass": true
+ },
+ "t2": {
+  "post_build_turns": 2,
+  "labels": [
+   {
+    "turn": 1,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 2,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/tasks/batching-16-vs-1.md"
+  ],
+  "p_lines": [],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 0,
+  "reason": "no reply before the build turn",
+  "build_turn": 1
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0
+}

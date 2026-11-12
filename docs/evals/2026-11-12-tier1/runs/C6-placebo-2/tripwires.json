@@ -1,0 +1,49 @@
+{
+ "version": 1,
+ "run_id": "C6-placebo-2",
+ "arm": "placebo",
+ "task": "C6",
+ "src_task": "C6",
+ "ended": "done",
+ "turns": 1,
+ "build_turn": 1,
+ "cost_usd": 0.0302,
+ "t1": {
+  "applicable": false,
+  "pass": null
+ },
+ "t2": {
+  "post_build_turns": 1,
+  "labels": [
+   {
+    "turn": 1,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": true,
+  "sim_tagged_turns": [],
+  "llm_ask_turns": [],
+  "question_turns": [],
+  "pass": true
+ },
+ "t4": {
+  "files": [],
+  "p_lines": [],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": false,
+  "m1": null
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0
+}

@@ -19,7 +19,7 @@ It is about maintaining the project — for what the skill does at runtime, read
 | `docs/ARCHITECTURE.md` | Design reference | Update when layers/contracts change. |
 | `docs/GLOSSARY.md` | Shared vocabulary | Where the three skills' terms meet. Update when a term is added, renamed, or changes meaning; each SKILL.md still defines what it uses. |
 | `docs/TUTORIAL.md` / `docs/TUTORIAL.zh.md` | 5-minute tutorial | Keep both in step with the commands, packet sizes, rigor levels, and EXAMPLES.md's recorded run. |
-| `CLAUDE.md` | Passive drop-in | The frozen 60-word text tested in Stage 0. Do not edit or expand it without a new pre-registered evaluation. |
+| `CLAUDE.md` | Passive drop-in | The 82-word text promoted after the Tier 1 regression check (`docs/evals/2026-11-12-tier1/`), byte-identical to the text tested there. It replaced the 56 words measured in Stage 0. Frozen: any change needs a new pre-registered check. |
 | `EXAMPLES.md` | User-facing prompts | Keep consistent with the SKILL.md files after edits. |
 | `README.md` / `README.zh.md` | Landing pages | zh is a faithful translation of the English structure; update both together. |
 

@@ -1,0 +1,9 @@
+{
+ "577acd1390b5fa7bb6dffa636f77a327ca2acd80bf4e62094de93ca010ab1789": {
+  "out": {
+   "m1": 1,
+   "quote": "**Scale-weight pricing.** `docs/rates.md` and `test_dimensional_weight` say billable weight is the greater of scale weight and volume ÷ 5000. A 2 kg bulky parcel is therefore 16 kg, not 2 kg."
+  },
+  "cost": 0.000711795
+ }
+}

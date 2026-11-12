@@ -1,0 +1,118 @@
+{
+ "version": 1,
+ "run_id": "P-plugin-2",
+ "arm": "plugin",
+ "task": "P",
+ "src_task": "T5",
+ "ended": "done",
+ "turns": 7,
+ "build_turn": 3,
+ "cost_usd": 2.5902,
+ "t1": {
+  "applicable": true,
+  "count": 4,
+  "import_only": 1,
+  "first_turn": 3,
+  "approval_turn": 4,
+  "approval_named_cmd": true,
+  "first_after_approval": false,
+  "runs_after_approval": 2,
+  "invocation_turns": [
+   3,
+   3,
+   4,
+   4
+  ],
+  "pass": false
+ },
+ "t2": {
+  "post_build_turns": 5,
+  "labels": [
+   {
+    "turn": 3,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 4,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 5,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 6,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 7,
+    "label": "completion_report",
+    "subtype": null,
+    "quote": "If you want nothing more, the work is complete as it stands.",
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/decisions.md",
+   ".finding-unknowns/predictions-log.md",
+   ".finding-unknowns/profile.md",
+   ".finding-unknowns/tasks/attendance-migration.deltas.md",
+   ".finding-unknowns/tasks/attendance-migration.md"
+  ],
+  "p_lines": [
+   {
+    "file": ".finding-unknowns/tasks/attendance-migration.md",
+    "line": 14,
+    "text": "P1 (you · not given) \"I expected one row per legacy numeric id, but I accept the repo evidence.\"",
+    "section": "Approach:",
+    "kind": "quoted",
+    "quoted": "I expected one row per legacy numeric id, but I accept the repo evidence.",
+    "score": 1.0,
+    "violation": false
+   },
+   {
+    "file": ".finding-unknowns/tasks/attendance-migration.md",
+    "line": 60,
+    "text": "P1 (you · not given) \"I expected one row per legacy numeric id, but I accept the repo evidence.\"",
+    "section": "Evidence:",
+    "kind": "quoted",
+    "quoted": "I expected one row per legacy numeric id, but I accept the repo evidence.",
+    "score": 1.0,
+    "violation": false
+   }
+  ],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 1,
+  "quote": "**`legacy_id` isn't unique.** `docs/schema.md` says scanners reused ids. In the data, id 8 appears on both B01 and B02 rows. The real identity is `(badge, session)`, so I'll dedupe on that.",
+  "quote_verified": true,
+  "build_turn": 3,
+  "replies_considered": [
+   1,
+   2
+  ]
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0011
+}

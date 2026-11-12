@@ -1,0 +1,79 @@
+{
+ "version": 1,
+ "run_id": "T2-placebo-1",
+ "arm": "placebo",
+ "task": "T2",
+ "src_task": "T2",
+ "ended": "done",
+ "turns": 4,
+ "build_turn": 1,
+ "cost_usd": 0.2864,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 1,
+  "approval_turn": null,
+  "approval_named_cmd": null,
+  "first_after_approval": false,
+  "runs_after_approval": 0,
+  "invocation_turns": [
+   1
+  ],
+  "pass": false
+ },
+ "t2": {
+  "post_build_turns": 4,
+  "labels": [
+   {
+    "turn": 1,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 2,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": true
+   },
+   {
+    "turn": 3,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Tell me if you'd rather have it committed or added to `.gitignore`.",
+    "after_stop": false
+   },
+   {
+    "turn": 4,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [
+   3
+  ],
+  "other_turns": [],
+  "pass": false
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [],
+  "p_lines": [],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 0,
+  "reason": "no reply before the build turn",
+  "build_turn": 1
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0007
+}

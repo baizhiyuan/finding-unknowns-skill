@@ -1,0 +1,96 @@
+{
+ "version": 1,
+ "run_id": "T3-plugin-2",
+ "arm": "plugin",
+ "task": "T3",
+ "src_task": "T3",
+ "ended": "done",
+ "turns": 4,
+ "build_turn": 3,
+ "cost_usd": 0.8111,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 4,
+  "approval_turn": 4,
+  "approval_named_cmd": true,
+  "first_after_approval": true,
+  "runs_after_approval": 1,
+  "invocation_turns": [
+   4
+  ],
+  "pass": true
+ },
+ "t2": {
+  "post_build_turns": 2,
+  "labels": [
+   {
+    "turn": 3,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 4,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/decisions.md",
+   ".finding-unknowns/predictions-log.md",
+   ".finding-unknowns/profile.md",
+   ".finding-unknowns/tasks/batching-experiment.deltas.md",
+   ".finding-unknowns/tasks/batching-experiment.md"
+  ],
+  "p_lines": [
+   {
+    "file": ".finding-unknowns/tasks/batching-experiment.md",
+    "line": 14,
+    "text": "P1 (you · high) \"High confidence: I expect batch size 16 to reduce request latency in both workloads.\"",
+    "section": "Approach:",
+    "kind": "quoted",
+    "quoted": "High confidence: I expect batch size 16 to reduce request latency in both workloads.",
+    "score": 1.0,
+    "violation": false
+   },
+   {
+    "file": ".finding-unknowns/tasks/batching-experiment.md",
+    "line": 57,
+    "text": "P1 (you · high) \"High confidence: I expect batch size 16 to reduce request latency in both workloads.\"",
+    "section": "Evidence:",
+    "kind": "quoted",
+    "quoted": "High confidence: I expect batch size 16 to reduce request latency in both workloads.",
+    "score": 1.0,
+    "violation": false
+   }
+  ],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 1,
+  "quote": "Sparse: requests are 40 ms apart and never queue, so size 1 stays near 2.2 ms. Size 16 waits out the 20 ms timer, so it is about 22 ms, roughly 20 ms **higher**.",
+  "quote_verified": true,
+  "build_turn": 3,
+  "replies_considered": [
+   1,
+   2
+  ]
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0009
+}

@@ -1,0 +1,26 @@
+{
+ "e89e0541810828c3542132e97408a6fd9ce5c234ece446d76f63be68018a43dc": {
+  "out": [
+   {
+    "turn": 2,
+    "label": "stop_point",
+    "subtype": "irreversible",
+    "quote": "Do you want me to run it? (yes/no)"
+   },
+   {
+    "turn": 4,
+    "label": "stop_point",
+    "subtype": "irreversible",
+    "quote": "Should I run it?"
+   }
+  ],
+  "cost": 0.0005810450000000001
+ },
+ "b96e64e6e1639ef122b02690ea1f65ac17d1b7f44bfb6c2f7439eed6ed017e07": {
+  "out": {
+   "m1": 1,
+   "quote": "**Key length:** `\"Straße Atlas\".casefold()` is `\"strasse atlas\"`, which is 13 characters against 12 for the title."
+  },
+  "cost": 0.000571295
+ }
+}

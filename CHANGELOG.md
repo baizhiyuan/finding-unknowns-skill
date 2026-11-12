@@ -7,19 +7,42 @@ All notable changes to this project are documented in this file. The format is b
 ## [Unreleased]
 
 ### Changed
+- `CLAUDE.md` is now the 82-word text, promoted after the Tier 1 regression check. It met
+  the pre-registered promotion criteria (a weak check: simulated users, 40 runs, 2 per
+  cell). It replaces the 56-word Stage 0 text introduced by the next entry, which the
+  Stage 0 report calls "the 60 words". The README (en/zh) shows the 82 words and says
+  what the check does not show; `AGENTS.md` and `CONTRIBUTING.md` describe the new
+  frozen text.
 - `CLAUDE.md` (the passive drop-in) is now the 60-word setup tested in Stage 0. The
   pre-registered kill rule selected it after it beat both no setup and the rebuilt 5.0
   plugin. The README (en/zh) recommends it; the rebuilt plugin (branch `v5`) is not
   released.
 
 ### Added
+- `docs/evals/2026-11-12-tier1/`: the Tier 1 regression check (pre-registration, report,
+  harness, per-run metadata, transcripts and tripwire results).
+  - **Arms:** the 56 words, the 82-word candidate, a length-matched placebo and the 5.2
+    plugin (`beb3617`). Four Stage 0 scenarios plus the typo control, 2 runs each.
+  - **82 words:** passed every tripwire; M1 7 of 8, equal to the 56 words. Promotion
+    criteria met. Tripwire 1 passes as the detector counts runs (commands that run the
+    real step). Counted strictly, including the task pack's own tests calling the step's
+    function on a temporary copy before the approval, the 82 words would fail it in 7 of
+    8 runs; the report treats those tests as dry runs and says so.
+  - **5.2 plugin:** fix before release. Tripwire 1 failed mechanically; a post-hoc audit
+    found that all five flags fired on command text, not on executions of the real step,
+    and that two P runs ran the migration on a temporary copy before the approval
+    through a test they wrote. Tripwire 5 (cost) still fails on the corrected cost:
+    about 4.6 times the 56 words per build scenario, against a limit of 3.
+- `docs/evals/2026-11-11-stage0/harness/recompute_costs.py`: recomputes per-run cost from
+  archived `meta.json` files.
 - `docs/evals/2026-11-11-stage0/`: the simulated-user evaluation of the 5.0 design.
   - **Scores** (of 42; noise 3.0): no setup 20.5, 60 words 31.0, rebuilt plugin 21.0.
     These select branch 2 of the pre-registered kill rule.
   - **Where the 60 words fell short:** they rarely made the assistant wait for approval
     before the irreversible step (0.11 of runs; the rebuilt plugin 0.78).
   - **Scope:** one model, one simulated user.
-  - **Cost per build task:** no setup $0.10, 60 words $0.18, rebuilt plugin $3.72.
+  - **Cost per build task:** no setup ~~$0.10~~ $0.07, 60 words ~~$0.18~~ $0.10, rebuilt
+    plugin ~~$3.72~~ $0.58 (corrected; see Fixed).
   - **Included:** the pre-registration, the harness, the task pack, transcripts, both
     graders' outputs and a verified report with its limitations.
 - `docs/design/5.0.md`: the proposed 5.0 design. The plugin is rebuilt around one task
@@ -59,6 +82,17 @@ All notable changes to this project are documented in this file. The format is b
 - README: a "What the evals show" section (en/zh) stating that the three model-only
   evals found no replicated gain from installing the skills, the costs, the one narrow recurring effect, and that
   the human side is untested. The roadmap adds a human-side eval.
+
+### Fixed
+- **Stage 0 cost erratum.** The runners summed each turn's `total_cost_usd` from
+  `claude -p --resume`, which is cumulative within a session, so the cost of every multi-turn
+  run was overstated. The true cost is the last turn's value per session. Corrected cost per build
+  task: no setup $0.07 (was $0.10), 56 words $0.10 (was $0.18), rebuilt plugin $0.58
+  (was $3.72). The plugin cost about 8 times no setup (was 38) and about 6 times the 56
+  words (was 21). The v5 token figures were also low, because per-turn `usage` misses
+  subagent calls: 1257k / 28.8k, not 1067k / 19.8k. The kill-rule verdict is unaffected.
+  The Stage 0 report has a dated erratum with inline corrections; the READMEs quote the
+  corrected figures.
 
 ## [4.3.2]
 

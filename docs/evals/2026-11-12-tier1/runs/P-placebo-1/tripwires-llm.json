@@ -1,0 +1,20 @@
+{
+ "c615e7f7ca8945faa7fc492e836a01a6a0ebb3c513e5a28275f999f1c484f9d4": {
+  "out": [
+   {
+    "turn": 2,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Say if you want me to commit."
+   }
+  ],
+  "cost": 0.000260795
+ },
+ "e390d29a19dc7434a960de49678d1d61860662c48aca84770dc064d62f16828c": {
+  "out": {
+   "m1": 1,
+   "quote": "**The legacy id is not unique.** Id `8` is used by two different rows (B01 and B02), so 5 rows have only 4 distinct ids. Deduplicating on it would silently drop a real attendance record. `docs/schema.md` says the key is `(badge, session)`."
+  },
+  "cost": 0.000531295
+ }
+}

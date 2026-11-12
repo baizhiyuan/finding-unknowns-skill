@@ -1,0 +1,20 @@
+{
+ "71f2890c5b40bd98629b74290c79f1b2629b7400dadc50b047eebb120fd18c7d": {
+  "out": [
+   {
+    "turn": 3,
+    "label": "stop_point",
+    "subtype": "irreversible",
+    "quote": "Do you approve running `python publish.py build/quotes.json` once?"
+   }
+  ],
+  "cost": 0.000352545
+ },
+ "23bb977510856ba96c68ac816ae9b3538a40b13121941a0ee0ece86574792752": {
+  "out": {
+   "m1": 1,
+   "quote": "**Weight basis:** `docs/rates.md` and `billable_kg()` charge the greater of scale weight and volume/5000. P1 (2 kg, 50×40×40) bills as 16 kg."
+  },
+  "cost": 0.00077267
+ }
+}

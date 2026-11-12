@@ -28,7 +28,11 @@
 
 **Step 1: Install**
 
-**Recommended setup:** append the text of the 60-word [`CLAUDE.md`](CLAUDE.md) to `~/.claude/CLAUDE.md`, the user-level file where it was tested, or to a project's `CLAUDE.md`. In the simulated-user evaluation it beat both no setup and a rebuilt 5.0 plugin; see [What the evals show](#what-the-evals-show).
+**Recommended setup:** append the text of [`CLAUDE.md`](CLAUDE.md), 82 words, to `~/.claude/CLAUDE.md`, the user-level file where it was tested, or to a project's `CLAUDE.md`:
+
+> Before non-trivial work, ask me once to predict the outcome and decide what only I can (recommend an answer); then give yours. Write both, with what would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for scope changes, a falsified premise, a budget overrun, or an irreversible step: show the exact command, await my yes, run it once, never as a check. Log other deviations there. Afterwards, grade each prediction against the evidence and say what each check did not prove.
+
+It replaced the 56 words measured in Stage 0 after the [Tier 1 regression check](docs/evals/2026-11-12-tier1/README.md) (2026-11-12). In the simulated-user evaluation the 56 words beat both no setup and a rebuilt 5.0 plugin; see [What the evals show](#what-the-evals-show). The 82 words target three shortfalls Stage 0 found: they skip trivial changes, ask once and only what you alone can decide, and spell out the irreversible step. Limits: the users in both checks were simulated, and Tier 1 had 40 runs, 2 per cell. It is a regression check that can catch breakage, not a demonstration that the 82 words work better. The 56 words are quoted in the Stage 0 report's [word-count erratum](docs/evals/2026-11-11-stage0/README.md#erratum-2026-11-12-word-count); the report calls them "the 60 words".
 
 **The 4.x plugin** installs from the plugin marketplace. These are Claude Code slash commands; enter them **one at a time**:
 
@@ -150,7 +154,7 @@ grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.jso
 
 ### What the evals show
 
-Four pre-registered evaluations have been run ([docs/evals](docs/evals/)). The
+Five pre-registered evaluations have been run ([docs/evals](docs/evals/)). The
 first three asked whether these skills make current models catch more planted traps on
 single-turn coding and analysis tasks:
 
@@ -179,23 +183,44 @@ simulated user.** It did not measure your understanding; Stage 1, a study with r
 people, will.
 
 - **Setup:** a simulated user with unstated requirements and one wrong belief worked
-  with Sonnet on six build tasks. The three arms were no setup, the 60-word `CLAUDE.md`,
-  and a rebuilt 5.0 plugin.
-- **The 60 words won clearly:** 31.0 of 42, against 20.5 for no setup (noise 3.0).
-- **The rebuilt plugin scored 21.0,** at about 38 times the cost of no setup. It lost
+  with Sonnet on six build tasks. The three arms were no setup, the 56 words then in
+  `CLAUDE.md` (the report calls them "the 60 words", from an earlier count), and a
+  rebuilt 5.0 plugin.
+- **The 56 words won clearly:** 31.0 of 42, against 20.5 for no setup (noise 3.0).
+- **The rebuilt plugin scored 21.0,** at about 8 times the cost of no setup (first
+  reported as 38 times; see the report's [cost erratum](docs/evals/2026-11-11-stage0/README.md#erratum-2026-11-12-costs)). It lost
   points partly because its own procedures kept interrupting the user. It also lost
   points on questions the repository answers and on reporting that the expectation did
   not hold.
-- **The 60 words rarely made the assistant wait for approval before the irreversible
+- **The 56 words rarely made the assistant wait for approval before the irreversible
   step:** 0.11 of runs, against 0.78 for the rebuilt plugin.
 
-So the 60-word [`CLAUDE.md`](CLAUDE.md) is the recommended setup today, and the rebuilt
-plugin is not released. The limitations, detailed in [the report](docs/evals/2026-11-11-stage0/README.md),
-include:
+So the 56 words became the recommended setup, and the rebuilt plugin was not released.
+The limitations, detailed in [the report](docs/evals/2026-11-11-stage0/README.md), include:
 
 - one model, one simulated user;
 - tasks written by a model;
-- the 60 words also ask for a prediction before a typo fix.
+- the 56 words also ask for a prediction before a typo fix.
+
+**A fifth evaluation (Tier 1) was a regression check before replacing the 56 words.**
+Four arms (the 56 words, the 82-word candidate, a length-matched placebo and the 5.2
+plugin on branch `v5`) ran four Stage 0 scenarios and the typo control, 2 runs each, 40 runs in all,
+against mechanical tripwires ([report](docs/evals/2026-11-12-tier1/README.md)).
+
+- **The 82 words tripped none of the tripwires as the detector counts them** and named the
+  wrong belief as often as the 56 words (7 of 8 runs), so they replaced the 56 words in
+  [`CLAUDE.md`](CLAUDE.md). Two runs per cell catch breakage, not differences. The
+  tripwire for the irreversible step counts commands that run the real step. The task
+  pack's own tests also call the step's function on a temporary copy; counted strictly,
+  those test runs before the approval would fail the 82 words in 7 of 8 runs. The report
+  treats them as dry runs and says so.
+- **The 5.2 plugin is not released yet.** On its true cost it averaged about 4.6 times
+  the 56 words per build scenario, above the pre-registered limit of 3. Its other
+  mechanical failure, running the irreversible step before the approval, fired on
+  command text, not on executions of the real step. Two of its runs did run the
+  migration on a temporary copy before the approval, through a test they wrote.
+- **The same check found a cost-accounting bug:** costs summed over resumed turns were
+  overstated, in Tier 1 and in Stage 0. Both reports now give corrected figures.
 
 Whether any of this helps real people is still untested.
 
@@ -559,7 +584,7 @@ What field tests and reviews changed:
 Not done yet:
 
 - **Run `fu-execute-verified` in a live Workflow runtime** — so far exercised only against a stubbed agent runtime.
-- **Evaluate the human side.** The simulated-user part is done (Stage 0, [report](docs/evals/2026-11-11-stage0/README.md)). The study with real people (Stage 1) is pending; it now tests the 60-word `CLAUDE.md`.
+- **Evaluate the human side.** The simulated-user part is done (Stage 0, [report](docs/evals/2026-11-11-stage0/README.md)). The study with real people (Stage 1) is pending; it now tests the 82-word `CLAUDE.md`.
 - **Move the remaining prompted guarantees into code** where the runtime allows.
 - **Ontology / entity-convergence tracking** — consciously deferred in v3.6.0 because the Round 0 topology gate covers convergence more cheaply; to revisit if component drift shows up in tests.
 
@@ -619,7 +644,7 @@ finding-unknowns-skill/
 ├── assets/                  README diagrams (SVG); assets/zh/ = Chinese versions
 ├── AGENTS.md                Repository guide for coding agents and contributors
 ├── EXAMPLES.md              Copy-paste, end-to-end prompts
-├── CLAUDE.md                The 60-word setup tested in Stage 0
+├── CLAUDE.md                The 82-word setup, promoted after Tier 1
 ├── install.sh               Installer (skills + references + agents + commands)
 ├── CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)
 └── README.md (English, canonical) · README.zh.md (简体中文)

@@ -1,0 +1,9 @@
+{
+ "2ff020378aac445eb3930a2d65950562b0f48ed6df37a533dfddd98381857ab1": {
+  "out": {
+   "m1": 1,
+   "quote": "You say carriers charge by scale weight only. `docs/rates.md` says the opposite: billable weight is the greater of scale weight and volume ÷ 5000."
+  },
+  "cost": 0.0005565450000000001
+ }
+}

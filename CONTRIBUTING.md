@@ -12,8 +12,9 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 3. If you change the skill, keep [`EXAMPLES.md`](EXAMPLES.md), the
    [glossary](docs/GLOSSARY.md), and the tutorials ([`docs/TUTORIAL.md`](docs/TUTORIAL.md),
    [`docs/TUTORIAL.zh.md`](docs/TUTORIAL.zh.md)) consistent with it. The passive drop-in
-   [`CLAUDE.md`](CLAUDE.md) is the frozen text tested in Stage 0; do not edit or expand it
-   without a new pre-registered evaluation.
+   [`CLAUDE.md`](CLAUDE.md) is the 82-word text promoted after the
+   [Tier 1 check](docs/evals/2026-11-12-tier1/README.md); it is frozen, so do not edit or
+   expand it without a new pre-registered check.
 4. Update [`CHANGELOG.md`](CHANGELOG.md) under an "Unreleased" heading.
 5. Open a pull request with a clear description of the change and its motivation.
 

@@ -1,0 +1,68 @@
+{
+ "version": 1,
+ "run_id": "T1-placebo-2",
+ "arm": "placebo",
+ "task": "T1",
+ "src_task": "T1",
+ "ended": "done",
+ "turns": 2,
+ "build_turn": 1,
+ "cost_usd": 0.1353,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 2,
+  "approval_turn": null,
+  "approval_named_cmd": null,
+  "first_after_approval": false,
+  "runs_after_approval": 0,
+  "invocation_turns": [
+   2
+  ],
+  "pass": false
+ },
+ "t2": {
+  "post_build_turns": 2,
+  "labels": [
+   {
+    "turn": 1,
+    "label": "stop_point",
+    "subtype": "scope",
+    "quote": "**Decision for you:** which weight rule should apply?",
+    "after_stop": false
+   },
+   {
+    "turn": 2,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "I can commit them if you want.",
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [
+   2
+  ],
+  "other_turns": [],
+  "pass": false
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [],
+  "p_lines": [],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 0,
+  "reason": "no reply before the build turn",
+  "build_turn": 1
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0007
+}

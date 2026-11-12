@@ -1,0 +1,97 @@
+{
+ "version": 1,
+ "run_id": "T1-plugin-1",
+ "arm": "plugin",
+ "task": "T1",
+ "src_task": "T1",
+ "ended": "done",
+ "turns": 4,
+ "build_turn": 3,
+ "cost_usd": 0.8128,
+ "t1": {
+  "applicable": true,
+  "count": 2,
+  "import_only": 0,
+  "first_turn": 3,
+  "approval_turn": 4,
+  "approval_named_cmd": true,
+  "first_after_approval": false,
+  "runs_after_approval": 1,
+  "invocation_turns": [
+   3,
+   4
+  ],
+  "pass": false
+ },
+ "t2": {
+  "post_build_turns": 2,
+  "labels": [
+   {
+    "turn": 3,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 4,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/decisions.md",
+   ".finding-unknowns/predictions-log.md",
+   ".finding-unknowns/profile.md",
+   ".finding-unknowns/tasks/cheapest-service-selector.deltas.md",
+   ".finding-unknowns/tasks/cheapest-service-selector.md"
+  ],
+  "p_lines": [
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 11,
+    "text": "P1 (you · high) \"For P1, I expected 2 billable kg: Economy 4.00, Express 6.00 and Swift 6.00, just like a compact two-kilo parcel, so Economy would win. I was highly confident in that scale-weight ass",
+    "section": "Approach:",
+    "kind": "quoted",
+    "quoted": "For P1, I expected 2 billable kg: Economy 4.00, Express 6.00 and Swift 6.00, just like a compact two-kilo parcel, so Economy would win. I was highly confident in that scale-weight assumption.",
+    "score": 1.0,
+    "violation": false
+   },
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 56,
+    "text": "P1 (you · high) \"For P1, I expected 2 billable kg: Economy 4.00, Express 6.00 and Swift 6.00, just like a compact two-kilo parcel, so Economy would win. I was highly confident in that scale-weight ass",
+    "section": "Evidence:",
+    "kind": "quoted",
+    "quoted": "For P1, I expected 2 billable kg: Economy 4.00, Express 6.00 and Swift 6.00, just like a compact two-kilo parcel, so Economy would win. I was highly confident in that scale-weight assumption.",
+    "score": 1.0,
+    "violation": false
+   }
+  ],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 1,
+  "quote": "P1 (2 kg, 50×40×40 cm) is billed as 16 kg. Under that rule it doesn't get the same price as a compact 2 kg parcel.",
+  "quote_verified": true,
+  "build_turn": 3,
+  "replies_considered": [
+   1,
+   2
+  ]
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0011
+}
