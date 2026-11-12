@@ -1,100 +1,378 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v4.3.2 — map the territory before you build; keep the reasoning when agents hand the work back" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v6.0.0: keep your own map of what you know, and update it only on evidence" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-4.3.2-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 4.3.2">
-  <img src="https://img.shields.io/badge/skills-3-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="3 skills">
-  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
+  <img src="https://img.shields.io/badge/version-6.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 6.0.0">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
 </p>
 
-<p align="center"><strong>Surface your unknowns before they get expensive — and keep your judgment when agents hand the work back.</strong></p>
-
-<p align="center"><em>The map is not the territory. The quality of long-horizon work is bounded by how well you clarify your unknowns.</em></p>
+<p align="center"><strong>Keep your own map of what you know and do not know, and update it only on evidence.</strong></p>
 
 <p align="center">
-  <a href="#quick-start">Get started</a> ·
-  <a href="#features">How it works</a> ·
-  <a href="#commands">Commands</a> ·
-  <a href="#documentation">Docs</a> ·
+  <a href="#the-four-quadrants">The map</a> ·
+  <a href="#what-it-does">What it does</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#what-the-evals-show">Evidence</a> ·
   <a href="README.zh.md">中文</a>
 </p>
 
 ---
 
-## Quick Start
+## The four quadrants
 
-**Step 1: Install**
+<p align="center">
+  <img src="assets/quadrants.svg" alt="The four quadrants: known knowns (what you rely on), known unknowns (a question you can name), unknown knowns (what you know but did not say), unknown unknowns (what you did not know to ask); fu:before shows the map, fu:after shows what moved" width="88%">
+</p>
 
-**Recommended setup:** append the text of [`CLAUDE.md`](CLAUDE.md), 82 words, to `~/.claude/CLAUDE.md`, the user-level file where it was tested, or to a project's `CLAUDE.md`:
+You hand work and decisions to an assistant every day. Each exchange can leave you knowing
+more, or it can quietly replace your judgment with the assistant's output. finding-unknowns
+keeps one thing in view: **your own map of what you know and do not know.** The assistant
+shows that map before non-trivial changes, waits once for your reply, and shows what moved on
+the map afterwards.
 
-> Before non-trivial work, ask me once to predict the outcome and decide what only I can (recommend an answer); then give yours. Write both, with what would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for scope changes, a falsified premise, a budget overrun, or an irreversible step: show the exact command, await my yes, run it once, never as a check. Log other deviations there. Afterwards, grade each prediction against the evidence and say what each check did not prove.
+An unknown lives in one of four places, and each needs a different move:
 
-It replaced the 56 words measured in Stage 0 after the [Tier 1 regression check](docs/evals/2026-11-12-tier1/README.md) (2026-11-12). In the simulated-user evaluation the 56 words beat both no setup and a rebuilt 5.0 plugin; see [What the evals show](#what-the-evals-show). The 82 words target three shortfalls Stage 0 found: they skip trivial changes, ask once and only what you alone can decide, and spell out the irreversible step. Limits: the users in both checks were simulated, and Tier 1 had 40 runs, 2 per cell. It is a regression check that can catch breakage, not a demonstration that the 82 words work better. The 56 words are quoted in the Stage 0 report's [word-count erratum](docs/evals/2026-11-11-stage0/README.md#erratum-2026-11-12-word-count); the report calls them "the 60 words".
+| Quadrant | What it is for you | What the assistant does before the work |
+|---|---|---|
+| **KK** known knowns | What you rely on. The danger is a false known | Lists the few facts and beliefs the work rests on, each with its source; checks what can be checked; marks a contradicted one `✗` |
+| **KU** known unknowns | A question you can name | Finds it out itself, or, if only you can answer, asks with a recommended answer |
+| **UK** unknown knowns | What you know but did not say: taste, constraints, context | Guesses it out loud ("I assume you want X because Y"). Reacting costs you less than specifying |
+| **UU** unknown unknowns | What you did not know to ask | Names up to three things that matter, each with why. "None found" is a valid answer |
 
-**The 4.x plugin** installs from the plugin marketplace. These are Claude Code slash commands; enter them **one at a time**:
+After the work, the same map is updated: expectations against evidence, what is now known,
+what each check did not prove, what is still unknown, and the choices and changes you did not
+ask for.
+
+## What it does
+
+### Before and after: the map shown twice
+
+For non-trivial work in the Claude Code terminal (coding, research, writing, a decision at
+work), the assistant may read first, then prints a `fu:before` block and ends its turn. Your
+reply starts the work, which finishes with a `fu:after` block. Trivial requests, lookups and
+casual talk get nothing.
+
+**One pause before changes.** After `fu:before` the assistant waits for you before it changes
+anything.
+
+- **Why:** without the pause the map was mostly not shown. In the wording tests (see
+  [What the evals show](#what-the-evals-show)) the assistant often announced the map and then
+  went straight to work without showing it; on the two non-coding tasks it appeared before
+  the first change in 0 of 6 runs, in each of two tests. With the pause it appeared in 5 of 6
+  (11 of 12 runs on the four core tasks; 1 of 3 under "just do it").
+- **Cost:** one extra round per non-trivial task. You read the map and reply, even if only
+  "go", which accepts the recommended answers.
+- **How to skip:** say "just do it" or "直接做" in the request, and the assistant does not
+  wait. The skill still asks for the map. In the tests a "just do it" request showed it before
+  the first change in 1 of 3 runs, and that one was empty; 1 of the 3 runs still stopped (see
+  [What the evals show](#what-the-evals-show)). Only the English phrase was tested. The skill
+  says an irreversible step still waits for your yes; the always-on text does not say this
+  explicitly, and no test covered it.
+
+<p align="center">
+  <img src="assets/lifecycle.svg" alt="How it runs: before any change, fu:before shows the four quadrants and both expectations, then the assistant waits for your reply; after it, the work stops only for a scope change, a falsified premise that changes the task or an irreversible step; after the result, fu:after shows expected against found, now known, not proved, still unknown and what you did not ask for; the look-back runs only when you ask. The conversation is the record." width="100%">
+</p>
+
+Everyday runs see only the 127-word always-on text. The exact layout, the labels and the rules
+below live in the skill, which loads only when you ask for it, so everyday blocks follow them
+only as far as the model reconstructs them. This is unmeasured; the own-use week counts layout
+drift. The templates, as the skill holds them:
+
+```
+fu:before · {task}
+- You expect: "{your words}" | not stated
+- KK · relying on
+  - {fact or belief} — {you said | file:line | source | assumed}
+  - ✗ {belief the check contradicted} — {evidence}
+- KU · open
+  - {question} — I will find out by {how}
+  - {question} — needs you; I would pick {X} because {reason}
+- UK · I assume you want
+  - {unstated preference or constraint} — {why I guess this}
+- UU · you did not ask, but it matters
+  - {blind spot} — {why it matters}
+- I expect: {outcome}; wrong if {what would show it}
+```
+
+```
+fu:after · {task}
+- Expected → found
+  - You: "{quote}" → {evidence} · held | partly | did not hold | can't tell
+    - why: {mechanism} [verified | supported | inferred | untested]
+  - Me: {expectation} → {evidence} · {verdict}
+- Now known
+  - {fact} — {evidence}
+- Not proved
+  - {check or source} → leaves open {what}
+- Still unknown
+  - {item} — cheapest way to find out: {how} · {you | me}
+- Decided for you
+  - {choice or change you did not ask for} — instead of {alternative} · if wrong: {cost}
+```
+
+Labels follow your language; the header tokens `fu:before` and `fu:after` stay literal so the
+look-back can find them. The [Chinese README](README.zh.md#它做什么) shows the Chinese labels.
+
+**A coding task.** You write: *"I think the 500s on /export come from the new CSV encoder; fix it."*
+
+```
+fu:before · fix the 500s on /export
+- You expect: "the 500s on /export come from the new CSV encoder"
+- KK · relying on
+  - the encoder changed on 5 Nov — git log src/export/csv.py
+  - ✗ the 500s started with that change — the logs show them from 3 Nov
+- KU · open
+  - which requests fail — I will find out by replaying yesterday's failures
+  - may empty fields change from "" to nothing? — needs you; I would pick "no" because a client parses them
+- UU · you did not ask, but it matters
+  - export runs inside the request; a large account times out, and a timeout is also a 500
+- I expect: mostly timeouts on large accounts; wrong if small exports fail too
+```
+
+You reply *"go"*, which accepts "no" on the empty fields. The work runs and ends with:
+
+```
+fu:after · fix the 500s on /export
+- Expected → found
+  - You: "the 500s on /export come from the new CSV encoder" → 2 of 14 failures are encoder errors · partly
+    - why: the encoder fails only on NUL bytes; the other 12 are exports over 30 s [verified]
+  - Me: mostly timeouts on large accounts → 12 of 14 · held
+- Now known
+  - the gateway cuts requests at 30 s — gateway.yaml:41
+- Not proved
+  - the new test covers NUL bytes → leaves open other control characters
+- Still unknown
+  - whether export should move to a background job — cheapest way to find out: count exports over 10 s last month · you
+- Decided for you
+  - NUL bytes are escaped — instead of dropping the row · if wrong: one client sees "\0" in a cell
+  - left the 12 timeout 500s unfixed — instead of moving export to a background job · if wrong: /export still fails for large accounts
+```
+
+The `✗` refutes your premise but not the request (the 500s still need fixing), so the work
+continues and the miss is reported afterwards. A `✗` that changes what you asked for is a stop.
+
+**A work decision.** You write: *"We log about 40 million events a day and run Postgres today. Postgres or ClickHouse for our event analytics? One page for the team."*
+
+```
+fu:before · recommend a store for event analytics
+- You expect: not stated
+- KK · relying on
+  - about 40 million events a day; the team runs Postgres today — you said
+- KU · open
+  - what the current dashboards query — I will find out by reading the dashboard SQL
+  - is a second database acceptable to operate? — needs you; I would pick "only if Postgres fails a measured test"
+- UK · I assume you want
+  - numbers before opinions, written for engineers — you said "for the team"
+- UU · you did not ask, but it matters
+  - retention: a year at this rate is about 15 billion rows, which decides more than query speed
+- I expect: Postgres with monthly partitions is enough for 90 days; wrong if the slowest dashboard query takes over 2 s on a 90-day copy
+```
+
+You reply *"go"*, which accepts "only if Postgres fails a measured test". The work runs and ends with:
+
+```
+fu:after · recommend a store for event analytics
+- Expected → found
+  - Me: Postgres is enough for 90 days → slowest query 1.4 s on a 90-day sample · held
+- Now known
+  - 3 of 11 dashboards scan the full history — dashboards/*.sql
+- Not proved
+  - the timing ran one query at a time → leaves open concurrent load
+- Still unknown
+  - how long raw events must be kept — cheapest way to find out: ask legal · you
+- Decided for you
+  - timed a 10 % sample of the 90 days — instead of a full 90-day copy · if wrong: the 1.4 s does not hold at full volume
+```
+
+**The tradeoff: one pause, then few stops.** Everything the assistant would ask is gathered
+into `fu:before`, each question with a recommended answer, and you answer it once. After your
+reply it proceeds and reports afterwards. The price is reading the map before you say go and
+reading `fu:after` at the end: above all, what each check did not prove. If you would rather be
+asked before each assumption as it comes up, this is the wrong default for you.
+
+The rules behind the blocks (as above, everyday runs follow them only as far as the model
+reconstructs them from the always-on text; that text names the fields, the pause, `not
+stated`, "asking nothing" after `fu:after` and "omit empty fields"):
+
+- **Your expectation is quoted, never written for you.** If you stated one, it is quoted
+  verbatim. If not, the slot says `not stated`, and the assistant does not ask for one. The
+  empty slot is the nudge: put your guess in the request ("I think X; do Y"), or add it in
+  your reply at the pause.
+- **Only what only you can answer comes to you,** with a recommended answer worded so that
+  "yes" accepts it. Facts are the assistant's job.
+- **After your reply, few stops.** The assistant stops only for a scope change, a falsified
+  premise that changes the task, or an irreversible step. A `✗` that only refutes your
+  expectation is reported, not a stop. For an irreversible step it shows the exact command or
+  message, waits for your yes, runs it once, and never runs it as a check. Outside code the
+  same holds for sending, paying, publishing and deleting.
+- **Explanation only at the point of error.** A `why` line appears only where an expectation
+  did not hold or held only partly. Nothing else is explained unless you ask.
+- **`Not proved` and `Still unknown` are never both empty.** No menu and no question after
+  `fu:after`; the turn ends.
+- **A measured result** (benchmark, backtest, experiment) uses the same rows: an expectation
+  written after the data was seen is `post-hoc`, and a difference inside the noise is
+  `can't tell`.
+- **Nothing is written to disk** unless you say "save". The conversation is the record.
+
+### Two commands you choose
+
+**`/fu-interview <topic>`** interviews you before work you are unsure about.
+
+1. You speak first: what you want, what you expect, what you are least sure of.
+2. The assistant finds out what it can, prints the map, then asks rounds of up to three
+   independent questions, most costly-if-wrong first. The question type follows the
+   quadrant: for KK, "what would you expect to see if this were false?"; for KU, a decision
+   with a recommendation; for UK, two contrasting options to react to; for UU, what an expert
+   would ask.
+3. After each round, one line of counts:
+   `Map: known 4 · open 3 (1 needing you) · assumed 2 · blind spots 1`. There is no clarity score.
+4. It stops when the rest is cheaper to learn by doing, when the assistant can predict your
+   next three answers, or when you say stop. It prints a `fu:interview` map (decisions, your
+   expectations, assumptions, what is still unknown, the request rewritten) and does not
+   start the work.
+
+When you want a gated specification that feeds an execution pipeline, OMC's `deep-interview`
+is the better tool.
+
+**`/fu-lookback [7d | session id]`** looks back over the record. With no argument it covers
+this session. With `7d` it filters the last seven days of Claude Code transcripts in the
+current project for `fu:` blocks and `fu-note:` lines, using a filter of about ten lines kept
+inside the skill. It quotes what it finds and does not reconstruct. It never reads a
+transcript whole.
+
+```
+fu:lookback · 7 days · 9 sessions · 14 blocks
+- Expected → turned out
+  - {date} {task}: you "{quote}" → {found} · {verdict}
+- Became known
+  - {fact} — {date} · {evidence}
+- Still unknown (oldest first)
+  - {item} — open {n} days · {cheapest way to find out}
+- Your pattern (5 or more graded expectations)
+  - stated {k} of {m}; held {h} of {k}; misses cluster in {area}
+  - accepted with no question about "Not proved": {a} of {b}
+- Worth learning next: {one item} — {first step}
+```
+
+Type a line starting `fu-note:` whenever a block taught you something, annoyed you or missed
+something (`fu-note: noise`, `fu-note: missed that the API is rate-limited`). The always-on
+text tells the assistant to ignore such lines: no reply and no change of course. The look-back
+finds them.
+
+Limits: Claude Code deletes old transcripts after a retention period (`cleanupPeriodDays`),
+so a look-back reaches only as far back as they are kept. A long session may be compacted;
+the after-block then re-reads the before-block from the transcript or marks the quote
+`from memory`.
+
+## Principles
+
+**The map is yours.** The four quadrants come from Thariq Shihipar's field guide. The point of
+showing them is not a score; it is that you can see where your unknowns are before the work
+starts, and decide which to chase.
+
+**Critical thinking is the rule for updating the map.** Addy Osmani describes a slide that
+happens across many handoffs: **offloading** (you delegate and keep ownership), then
+**deferral** (the output becomes the next input), then **cognitive surrender** (the output
+quietly becomes your own belief). In surrender, the assistant's answer enters your map as
+"known" without any update step. Three habits interrupt that:
+
+- **Predict before you look.** A prediction recorded before the answer exists shows when a
+  "known" was wrong.
+- **Say what a check did not prove.** A claim enters "known" no further than its evidence
+  reaches.
+- **Say what is still unknown.** The open part of the map stays visible after the work looks
+  finished.
+
+**Theory before result.** The owner's research practice reports every measured result as
+theory → measured → consistent? → mechanism. In 6.0 this is one row of `fu:after`: expected →
+found → verdict → why, with an evidence tier on the why.
+
+**Each field trains one habit:**
+
+| Habit | The field that trains it |
+|---|---|
+| Say your guess when you ask | `You expect`, including its empty state |
+| Know what your plan rests on | `KK · relying on`, with sources and `✗` |
+| Ask "what would change my mind?" | `wrong if …` on every expectation |
+| Answer what only you can answer, and notice what you had not said | `needs you` and `UK` |
+| Read what a check leaves open before accepting the result | `Not proved` |
+| Choose on purpose which unknown to chase | `Still unknown`, with the cheapest way to find out |
+
+No quiz, no recall questions, no lecture. When you ask to be taught, the assistant stops when
+you can predict the behaviour.
+
+**Relation to the Karpathy-style `CLAUDE.md`.** The widely shared `CLAUDE.md` in
+[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) was written by Jiayuan Zhang from Andrej Karpathy's
+[post of 2026-01-26](https://x.com/karpathy/status/2015883857489522876); Karpathy described how coding agents fail, not these rules.
+finding-unknowns took one idea from it into the skill's `Decided for you` field: report the
+choices and changes you did not ask for, as disclosure after the work rather than a
+prohibition. The same clause in the always-on text was tested and removed (see
+[What the evals show](#what-the-evals-show), item 1). The two differ on asking: that
+file says to ask when uncertain; this one gathers its questions into `fu:before`, each with a
+recommended answer, asks once, and then proceeds. Installed together they give the assistant opposite defaults, so use
+one, or say in your `CLAUDE.md` which one wins. Its evidence is thin: the one
+placebo-controlled audit we found (skill-receipts Audit #4) measured only its simplicity rules,
+which produced 4.8 % fewer lines than no instructions, within noise; accuracy was unchanged.
+
+## Install
+
+### The always-on text
+
+This is the part that runs on every non-trivial request. Append the text of
+[`CLAUDE.md`](CLAUDE.md) (127 words) to your user-level `~/.claude/CLAUDE.md`, or to a
+project's `CLAUDE.md`:
+
+> Before non-trivial changes (reading is fine), show `fu:before` in your reply, then end your turn: what you rely on, sourced; open questions; what you assume I want; what only I can answer (recommend answers); what I should have asked. Quote my expectation or "not stated"; never invent one. Give yours and what would disprove it. After my reply, stop only for a scope change, a falsified premise that changes the task (refuted expectation: report only), or an irreversible step (exact command or message, await my yes, run once, never as a check). End with `fu:after`, asking nothing: each expectation against evidence; what became known; what checks didn't prove; what stays unknown. Omit empty fields. "Just do it"/"直接做" or similar: don't wait. Skip trivial requests; ignore `fu-note:` lines.
+
+If your `CLAUDE.md` still holds an older finding-unknowns text, remove it, so that only one
+text applies: the 56 words beginning "Before building, ask me to predict", the 82 words
+beginning "Before non-trivial work, ask me once to predict" (both mention
+`.finding-unknowns/tasks/`), a pre-release 6.0 draft beginning "Before non-trivial work, show
+`fu:before`", or the 4.x drop-in headed `# finding-unknowns (passive drop-in)`.
+
+### The skill and the two commands
+
+The skill holds the templates, the interview and the look-back; it loads only when you ask
+for one of them. Install it from the plugin marketplace. These are Claude Code slash commands;
+enter them **one at a time**:
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
 ```
 
-Then:
-
 ```
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-Prefer a clone? `install.sh` installs all three skills, `references/`, the five agents, and the slash commands:
+The plugin cannot edit your `CLAUDE.md`; append the always-on text yourself.
+
+Or clone and run `install.sh`, which installs the skill, the two commands and the always-on
+text in one step:
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
-cd finding-unknowns-skill && bash install.sh
+cd finding-unknowns-skill && bash install.sh            # add --no-claude-md to skip CLAUDE.md
 ```
 
-<details>
-<summary><b>Manual copy (skills only)</b></summary>
+What `install.sh` does:
 
-```bash
-mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning ~/.claude/skills/theory-vs-result
-cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
-cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
-cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
-cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
-```
-
-</details>
-
-**Step 2: First use**
-
-```
-/finding-unknowns "add a usage dashboard to the admin app"   # locate the unknown, announce the route, run the technique
-/blindspot "src/auth"                                        # read-only recon: landmines, hidden context, expert questions
-/change-quiz main..HEAD                                      # change report + must-pass comprehension quiz before merge
-```
-
-With `CLAUDE.md` alone there are no commands to run. Start a task as usual, and the assistant will first ask for your prediction.
-
-**New to the plugin?** The [5-minute tutorial](docs/TUTORIAL.md) walks through three copy-paste exercises: a blind-spot pass on a real open-source repo, a handoff packet, and a theory-vs-result card. Every term the skills share (prior, lane, rigor level, packet size, mode, fresh-context refutation) is defined once in the [Glossary](docs/GLOSSARY.md).
-
-### Not Sure Where to Start?
-
-If the task is vague, or you're new to the domain or codebase:
-
-```
-/finding-unknowns "I want to …"
-```
-
-Phase 0 places the gap on the quadrant map, captures your prior, and routes to the cheapest technique that clears it — or says plainly that there are no significant unknowns.
-
-- **High stakes** (hard to reverse, wide blast radius, unfamiliar territory + long horizon) → `/cartographer --deep "…"`
-- **Work is done, the risk is accepting it** → `/keep-the-reasoning "…"`
-- **A result is in (or about to be measured), the risk is misreading it** → `/theory-vs-result "…"` (a failing test or crash that reproduces every time takes its lighter Debug path)
+- copies `SKILL.md`, `fu-interview.md` and `fu-lookback.md` into `~/.claude` (or
+  `$CLAUDE_CONFIG_DIR`); a same-name file that is not ours is first saved as
+  `<file>.<timestamp>.bak`;
+- appends the always-on text to `~/.claude/CLAUDE.md` between
+  `<!-- finding-unknowns:always-on -->` markers (after saving `CLAUDE.md.<timestamp>.bak`), or
+  replaces the text between those markers on a later run; it never edits text outside them,
+  stops without changes if it finds a stray or duplicate marker, and never overwrites an
+  earlier backup;
+- moves the 4.x pieces that 6.0 removed (Cartographer references, `keep-the-reasoning`, four
+  agents, three commands) into `~/.claude/finding-unknowns-backup-<timestamp>/`, but only files
+  that carry this project's marker; anything else is left where it is;
+- leaves `theory-vs-result` and `mechanism-auditor` in place: 6.0 does not use them, and they
+  still work on their own.
 
 ### Updating
-
-Update the same way you installed. Latest release: **v4.3.2**.
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -104,550 +382,174 @@ Update the same way you installed. Latest release: **v4.3.2**.
 /plugin update finding-unknowns@finding-unknowns-skill
 ```
 
-<details>
-<summary><b>Clone-and-install, manual copy, and version check</b></summary>
-
-**Clone** — `install.sh` overwrites in place, so it doubles as the updater:
+With a clone: `git pull origin main && bash install.sh`. Running it twice changes nothing.
+To check what is installed:
 
 ```bash
-cd finding-unknowns-skill && git pull origin main && bash install.sh
+C="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+ls "$C/plugins/cache/finding-unknowns-skill/finding-unknowns/" 2>/dev/null \
+  || grep -l 'fu:before' "$C/skills/finding-unknowns/SKILL.md"
+# expect: 6.0.0 (plugin), or the path of the 6.0 SKILL.md
+# (the plugin line lists the installed version directories, not the marketplace clone)
 ```
 
-**Manual copy** — overwrite the same files. `references/` carries the Cartographer protocol and the Workflow templates and must be updated too; v4 added the `keep-the-reasoning` skill and v4.1 adds `theory-vs-result`.
+## What the evals show
 
-```bash
-cd finding-unknowns-skill && git pull origin main
-mkdir -p ~/.claude/skills/finding-unknowns/references ~/.claude/skills/keep-the-reasoning ~/.claude/skills/theory-vs-result
-cp skills/finding-unknowns/SKILL.md ~/.claude/skills/finding-unknowns/
-cp skills/finding-unknowns/references/*.md ~/.claude/skills/finding-unknowns/references/
-cp skills/keep-the-reasoning/SKILL.md ~/.claude/skills/keep-the-reasoning/
-cp skills/theory-vs-result/SKILL.md ~/.claude/skills/theory-vs-result/
-cp agents/*.md   ~/.claude/agents/
-cp commands/*.md ~/.claude/commands/
-rm -f ~/.claude/commands/finding-unknowns.md ~/.claude/commands/keep-the-reasoning.md ~/.claude/commands/theory-vs-result.md  # removed in 4.3.0; the skills answer these slashes
-```
+**The 6.0 always-on text was chosen in five wording tests, all with a simulated user.** On
+2026-11-12 each candidate wording was run by `claude-sonnet-5-5` on coding tasks from the
+Stage 0 pack and, from the second test on, on new non-coding work tasks (a vendor decision
+record, later also a reply to a customer ticket), 3 runs per task, each test with its decision rule written before the first
+run. The archive, with each test's pre-registration, per-run records and report:
+[docs/evals/2026-11-12-6.0-wording](docs/evals/2026-11-12-6.0-wording/README.md).
 
-**Verify:**
+1. **C1, "choices and changes I did not ask for" at the end of `fu:after`: not useful,
+   removed.** With the clause (and a different opening), disclosure of unrequested choices
+   and changes was 91 % (20 of 22 items, from the 4 of 9 runs that changed anything) against
+   59 % (29 of 49) without it, but the clause padded the field in 3 of 9 runs, above the
+   limit of 2. The skill's `Decided for you` field remains, omitted when there is nothing to
+   report.
+2. **Design draft against the revised text: ship the revised text.** It covered more of the
+   four quadrants (1.33 against 0.50 of 4; graded; the pre-registration notes this measure
+   favours F by construction, since only F names the "what you assume I want" quadrant, and a
+   run with no map scores 0), but the map appeared before the first change in only 2 of 12
+   non-trivial runs for the draft and 4 of 12 for the revision.
+3. **"Show `fu:before` without stopping": adopted.** The map came first in 8 of 12 runs
+   against 3 of 12 (4 of the 8 passing runs changed nothing; 2 of those stopped for a reason
+   the rule does not allow), but in none of the 6 non-coding runs under either text.
+4. **"As reply text, not thinking": rejected.** Non-coding stayed at 0 of 6 for both texts.
+   The records show the map announced and then not shown, with edits following; thinking
+   content is redacted, so the likely explanation, that the map stayed in hidden reasoning, is
+   inferred, not observed. The owner then chose to allow one pause before work.
+5. **A pause after `fu:before`, two versions.** The first, which also said "as visible reply
+   text, not thinking", was inconclusive: the API's safeguards stopped 8 of its 18 runs, 5 of
+   them fatally. The second, without that phrase, is the shipped text. It was confirmed by
+   its pre-written rule: the map came before the first change in 11 of 12 runs on the four
+   core tasks (5 of 6 non-coding; 1 of 3 under "just do it"), the work was completed in 11 of
+   12, no guard failure in the 11 graded core runs (wrong belief named before the first
+   change, expectation quoted, no question after `fu:after`; the 12th was stopped by the
+   safeguards and not graded; the rule counts it as 1 failure each, within the limit of 2),
+   it never paused on a typo fix (0 of 3), paused once in 3 runs told "just do it", and 1 of
+   18 runs was stopped by the safeguards.
 
-```bash
-grep '"version"' ~/.claude/plugins/*/finding-unknowns*/.claude-plugin/plugin.json 2>/dev/null \
-  || ls ~/.claude/skills/finding-unknowns/references/cartographer.md ~/.claude/skills/keep-the-reasoning/SKILL.md ~/.claude/skills/theory-vs-result/SKILL.md
-# expect: 4.3.2 (plugin) — or all three files listed (theory-vs-result exists only from v4.1.0 on)
-```
+**What these tests do not show:**
+
+- **The reply after the pause was simulated:** always "Go ahead.", with no answers or
+  corrections. Completion means only that the assistant continues after an uninformative go.
+- **One model, 3 runs per task.** The rules are screening rules, not significance tests; one
+  run either way could have changed several verdicts, including the safety condition of the
+  last test, which had no slack. The shipped text was confirmed in a single-arm test; its
+  comparison with the earlier texts is across sessions and not randomised.
+- **Grading was weaker than pre-registered:** some graders could see which text a run used,
+  and in the later tests the graders lacked the task key and inferred beliefs from the prompt.
+  The visibility, pause, completion and safety counts are mechanical and not affected.
+- **Under "just do it" the text is weaker:** the map appeared before the first change in 1
+  of 3 such runs, and that one was a heading with no items; in all 3 the person's own
+  sentences were not quoted, and one run stopped for a reason the rules do not allow and
+  delivered nothing. Only the English phrase "Just do it, I'm in a hurry." was tested.
+
+Before the wording tests, two earlier and shorter texts were measured, also with simulated
+users:
+
+- **Stage 0** ([report](docs/evals/2026-11-11-stage0/README.md), 2026-11-11): a simulated user
+  with unstated requirements and one wrong belief worked with Sonnet on six build tasks.
+  - **The 56-word text scored 31.0 of 42,** against 20.5 for no setup (noise 3.0) and 21.0 for
+    a rebuilt 5.0 plugin, which cost about 8 times no setup.
+  - **It named the person's wrong belief before the first edit in 0.94 of runs,** against
+    0.11 with no setup.
+  - **It rarely waited for a yes before the irreversible step** (0.11 of runs, against 0.78
+    for the plugin).
+- **Tier 1** ([report](docs/evals/2026-11-12-tier1/README.md), 2026-11-12): a regression
+  check of the 82-word text, 40 runs, 2 per cell.
+  - **The 82 words tripped none of the tripwires as the detector counts them,** and named the
+    wrong belief in 7 of 8 runs, as often as the 56 words.
+  - **Counted strictly,** the task pack's own tests calling the irreversible step on a
+    temporary copy before the yes would fail them in 7 of 8 runs.
+  - **The 5.2 plugin** cost about 4.6 times the 56 words across the build scenarios (4.1 to 5.7
+    per scenario) and was held back.
+- **Three earlier single-turn evaluations** ([docs/evals](docs/evals/)) found no replicated
+  gain in catching planted traps, a cost of roughly 10 % to 70 % more tokens, and one narrow
+  effect that recurred: when `keep-the-reasoning` ran on a merge decision, Sonnet named what
+  the tests did not prove in 4 of 5 runs, against 1 of 12 without it. That step is now the
+  `Not proved` field.
+
+The wording tests compared 6.0 drafts with each other, not with the 82 words. Relative to the
+82 words (the new text is 45 words longer overall), these changes remain unmeasured:
+
+- **It drops the instruction to write predictions to a file.** Both measured texts had it,
+  so it may have been part of what worked.
+- **It drops "ask me once to predict"** in favour of quoting an expectation only if you
+  stated one. This is the clause least trusted; the fallback is below.
+- **It drops the budget-overrun stop,** because without a task card nobody agrees a budget.
+- **It adds the four fields, the two headers and the pause,** including "what you assume I
+  want" (UK) and a `not stated` slot when you gave no expectation.
+- **It adds short rules:** "asking nothing" after `fu:after`, "omit empty fields", "just do
+  it" skips the wait, and "ignore `fu-note:` lines". It narrows the falsified-premise stop to
+  one that changes the task, and the irreversible-step rule now covers a message as well as a
+  command.
+
+**Nobody has measured whether any of this helps a person learn or understand more.** Every
+number above comes from simulated users.
+
+The next check is one week of the owner's own use, with decision rules written in advance:
+[docs/evals/2026-11-12-6.0-own-use/PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md). If
+`You expect` is `not stated` in more than half of the `fu:before` blocks, "ask me once to
+predict" comes back. The week also watches the pause: how often it is skipped or felt as
+friction, and how the text behaves under "just do it".
+
+**It is working if,** in that week, a block changes a decision or corrects a belief in at
+least three sessions, fewer than a third of the `fu-note:` lines say `noise`, and `You expect`
+is filled in at least half of the `fu:before` blocks. If not, the plan's decision rules say
+what changes.
+
+<details>
+<summary><b>The 82 words that Tier 1 checked</b></summary>
+
+> Before non-trivial work, ask me once to predict the outcome and decide what only I can (recommend an answer); then give yours. Write both, with what would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for scope changes, a falsified premise, a budget overrun, or an irreversible step: show the exact command, await my yes, run it once, never as a check. Log other deviations there. Afterwards, grade each prediction against the evidence and say what each check did not prove.
 
 </details>
 
----
+## History
 
-## Why finding-unknowns?
-
-- **The map is not the territory** — the map is what you give Claude (prompt, context, skills); the territory is the codebase and the real world. Every gap between them forces the model to guess your intent. Capability is no longer the bottleneck on long-horizon work; clarity is.
-- **Route by quadrant, not by habit** — blind spots need reconnaissance, tacit taste needs prototypes, nameable gaps need targeted questions, comprehension needs examination. One uniform interview under-serves all four.
-- **Coverage-gated Cartographer mode** — for high stakes: a regret-ordered unknowns ledger, clarity scores shown every round as a display, and a six-condition gate on checkable ledger facts that won't let implementation start while the territory is unmapped. By default it ends at a spec with a verification contract.
-- **Irreversibility floor** — gate on blast radius, not confidence. An unknown guarding an irreversible step always reaches you, however confident the evidence looks.
-- **Keep the reasoning at the handoff** — an evidence-first packet that says what each check did NOT prove and what went unchecked, so accepting agent work never slides into cognitive surrender.
-- **Theory before data** — every measured result arrives as Theory → Measured → Consistent? → Mechanism: the prediction written first, the noise floor stated, the mechanism tagged with how well it is evidenced, and the rule verdict kept apart from the verdict on the idea.
-- **Independent judgment** — the author never self-approves. Discovery, scoring, and examination run in contexts that did not do the implementing, and all three skills share one check: a **fresh-context refutation**, where a context that did not produce a claim names the strongest alternative explanation and the cheapest check that would tell them apart.
-- **Zero dependencies** — plain Markdown. Agents and Workflow scripts add depth; every technique also runs fully inline.
-
-> **Attribution.** The techniques and their names come from Thariq Shihipar's essay _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)); credit for the underlying ideas belongs to the original author, and this repository packages them as an installable Claude Code plugin. `keep-the-reasoning` is distilled from Addy Osmani's _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)): across many handoffs the human slides from **offloading** (delegate, keep ownership) → **deferral** (the output becomes the next input) → **cognitive surrender** (the output quietly becomes your own). `theory-vs-result` is distilled from the author's own empirical research practice and generalized for any measured claim: a number is not a finding until you know what was expected, whether the gap beats noise, and why it came out that way.
-
-### What the evals show
-
-Five pre-registered evaluations have been run ([docs/evals](docs/evals/)). The
-first three asked whether these skills make current models catch more planted traps on
-single-turn coding and analysis tasks:
-
-- **No gain that survived replication.** Installing the skills on these tasks gave no
-  replicated gain. Baselines were already 22–23 of 25, leaving about 2–3 traps of
-  headroom. An apparent +2.5 for Sonnet in v2 did not replicate in v3 (three runs per
-  arm). How much using a skill helps, as opposed to installing it, is barely measured.
-- **A measurable cost.** Roughly +10 % to +70 % in input tokens or cost (about 40 % in USD in v3), longer
-  answers, and more false claims or overclaims in most skill arms.
-- **One narrow effect recurred, for Sonnet only.** When `keep-the-reasoning` ran on a
-  merge decision, Sonnet usually named what the tests did not prove: 4 of 5 runs,
-  against 1 of 12 without it. GPT caught the same point without the skill.
-- **Sonnet rarely invokes these skills unprompted.** Skills named and described like
-  the literal request were invoked every time. Ours need the model to first judge the
-  request as high-stakes, and it mostly doesn't.
-
-None of those three tested the side these skills exist for: your own understanding.
-That means:
-
-- the principles and expected results laid out before the work;
-- a build that does not keep interrupting you;
-- a debrief that says whether the result matched and, if not, which link broke and why.
-
-**A fourth evaluation (Stage 0) tested whether the assistant works this way with a
-simulated user.** It did not measure your understanding; Stage 1, a study with real
-people, will.
-
-- **Setup:** a simulated user with unstated requirements and one wrong belief worked
-  with Sonnet on six build tasks. The three arms were no setup, the 56 words then in
-  `CLAUDE.md` (the report calls them "the 60 words", from an earlier count), and a
-  rebuilt 5.0 plugin.
-- **The 56 words won clearly:** 31.0 of 42, against 20.5 for no setup (noise 3.0).
-- **The rebuilt plugin scored 21.0,** at about 8 times the cost of no setup (first
-  reported as 38 times; see the report's [cost erratum](docs/evals/2026-11-11-stage0/README.md#erratum-2026-11-12-costs)). It lost
-  points partly because its own procedures kept interrupting the user. It also lost
-  points on questions the repository answers and on reporting that the expectation did
-  not hold.
-- **The 56 words rarely made the assistant wait for approval before the irreversible
-  step:** 0.11 of runs, against 0.78 for the rebuilt plugin.
-
-So the 56 words became the recommended setup, and the rebuilt plugin was not released.
-The limitations, detailed in [the report](docs/evals/2026-11-11-stage0/README.md), include:
-
-- one model, one simulated user;
-- tasks written by a model;
-- the 56 words also ask for a prediction before a typo fix.
-
-**A fifth evaluation (Tier 1) was a regression check before replacing the 56 words.**
-Four arms (the 56 words, the 82-word candidate, a length-matched placebo and the 5.2
-plugin on branch `v5`) ran four Stage 0 scenarios and the typo control, 2 runs each, 40 runs in all,
-against mechanical tripwires ([report](docs/evals/2026-11-12-tier1/README.md)).
-
-- **The 82 words tripped none of the tripwires as the detector counts them** and named the
-  wrong belief as often as the 56 words (7 of 8 runs), so they replaced the 56 words in
-  [`CLAUDE.md`](CLAUDE.md). Two runs per cell catch breakage, not differences. The
-  tripwire for the irreversible step counts commands that run the real step. The task
-  pack's own tests also call the step's function on a temporary copy; counted strictly,
-  those test runs before the approval would fail the 82 words in 7 of 8 runs. The report
-  treats them as dry runs and says so.
-- **The 5.2 plugin is not released yet.** On its true cost it averaged about 4.6 times
-  the 56 words per build scenario, above the pre-registered limit of 3. Its other
-  mechanical failure, running the irreversible step before the approval, fired on
-  command text, not on executions of the real step. Two of its runs did run the
-  migration on a temporary copy before the approval, through a test they wrote.
-- **The same check found a cost-accounting bug:** costs summed over resumed turns were
-  overstated, in Tier 1 and in Stage 0. Both reports now give corrected figures.
-
-Whether any of this helps real people is still untested.
-
----
-
-## Features
-
-### The three skills
-
-| Skill | What it is | Use for |
-|-------|------------|---------|
-| **`finding-unknowns`** | Phase 0 quadrant routing → eight techniques → optional Cartographer mode | Before and during work: surfacing the unknowns that would otherwise become guesses |
-| **`keep-the-reasoning`** | Stakes triage, "verified" defined up front, a fixed-order handoff packet | The handoff: accepting agent work without surrendering judgment |
-| **`theory-vs-result`** | Prediction card first, then Theory → Measured → Consistent? → Mechanism cards, with two separate verdicts | Measured results: backtests, benchmarks, A/B tests, ablations, training runs — never a number without its prediction and its reason. Reproducible failures take a lighter Debug path |
-
-`finding-unknowns` hands over to `keep-the-reasoning` at the end of Phase 3 and at Cartographer's merge (and at the end of the experimental execution bridge, when it runs). Returning `experiment`-route results are reported through `theory-vs-result`, whose summary table also serves as the handoff packet's "prior vs result" section.
-
-### The eight techniques
-
-<p align="center">
-  <img src="assets/lifecycle.svg" alt="Lifecycle: three windows to catch unknowns — pre, during, post — with the techniques that run in each and the handoff at the end" width="92%">
-</p>
-
-Phase 0 is blocking: classify the gap, capture your prior in one line, announce the route — then run a technique.
-
-<p align="center">
-  <img src="assets/quadrants.svg" alt="The four quadrants: known knowns, known unknowns, unknown knowns, unknown unknowns — each mapped to its techniques" width="78%">
-</p>
-
-| Technique | Phase | Quadrant | Use for |
-|-----------|-------|----------|---------|
-| **1 · Blind-spot pass** | Pre | UU | Unknown unknowns in a new domain or codebase |
-| **2 · Brainstorm & prototype** | Pre | UK | "I'll know it when I see it" |
-| **3 · Interview** | Pre | KU | Nameable gaps — up to 3 independent questions per round; dependent questions wait for the next round |
-| **4 · References** | Pre | UK | When you can't describe it — point at code |
-| **5 · Implementation plan** | Pre | KU | Expensive-to-change decisions first, plus a definition of "verified" |
-| **6 · Implementation notes** | During | — | Deviations and edge cases, logged as they happen |
-| **7 · Pitch & explainer** | Post | — | Buy-in and approvals |
-| **8 · Quiz** | Post | UU (post-hoc) | Comprehension check before merge |
-
-Known knowns just get written down before they drift. Full procedures: [`SKILL.md`](skills/finding-unknowns/SKILL.md).
-
-**Lightweight mode by default.** Analysis outputs (the routing analysis, the blind-spot pass, reference extraction) end in a short report: the 3 most consequential findings, each with its evidence, and 1 recommended next action. Surprises against your prior are never capped. The blind-spot pass's compact report (top 3 findings + rewritten request) *is* that short report, not compressed again; ask for the "full report" (given by default at high stakes) to get the complete technique output. Prototypes, interview questions, plans (with their definition of "verified"), implementation notes, pitches, and quizzes are always delivered in full. Text comes first: reports, plans, and quiz reports are Markdown, with HTML on request; prototypes stay HTML because they are visual.
-
-### Cartographer mode
-
-The rigorous escalation for high-stakes work. Full protocol: [`references/cartographer.md`](skills/finding-unknowns/references/cartographer.md), read on demand.
-
-<p align="center">
-  <img src="assets/cartographer.svg" alt="Cartographer mode: Round 0 topology, seeded unknowns ledger, regret-ordered clearing loop by route, per-round quadrant clarity display, six-condition gate with irreversibility floor, spec as the default end, experimental execution bridge" width="96%">
-</p>
-
-| Part | What it is | Use for |
-|------|------------|---------|
-| **Unknowns ledger** | `.finding-unknowns/unknowns-ledger.md`, first line `schema: 2`. Rows with quadrant, prior, `regret = cost-if-wrong × P(wrong)`, route (interview · territory · experiment · audit), reversibility (reversible · wide · irreversible) | Ordering the work; it *is* the resume state |
-| **Clearing loop** | A router, not an interview: clear the highest-regret open row by its route; adversarially verify cost ≥ 4 resolutions (a fresh-context refutation) | Never asking the user what the territory can answer |
-| **Clarity display** | `ambiguity = 1 − (KK×0.20 + KU×0.25 + UK×0.25 + UU×0.30)`, re-scored every round; shown to steer, never a gate condition | Letting you see and steer how clear the map is |
-| **Six-condition gate** | KK written down; KU resolved or deferred-with-default; UK extracted, or marked not applicable with your confirmation; UU probed; no open row with regret ≥ 1.0; every irreversible row user-confirmed (the irreversibility floor). Completeness critic before any PASS; soft check at round 10 and every 10 rounds after (round 5 and every 5 after under `--quick`), no hard round cap | Refusing to build on an unmapped territory |
-| **Spec + verification contract** | `.finding-unknowns/unknowns-spec-{slug}.md`, the default end: close-out report and a pending-approval spec, then stop. Any build from the spec leaves irreversible steps to you: prepared, never executed, until you run each one or say yes to that command | Building from a crystallized, pending-approval spec |
-| **Next-step offer (E1)** | The default after the spec: a planner + reviewer consensus plan (recommended; execution is a separate yes), or keep refining. The full `keep-the-reasoning` packet at merge | Choosing how to proceed without anything running on its own |
-| **Workflow execution (E2)** | Experimental, optional; not yet run in a live Workflow runtime. Only on your explicit request | Running an approved task graph under Phase E rules |
-
-**Flow:** depth announced → Round 0 topology (1–6 components) → **C0** seed from all four quadrants + a domain checklist → **C1** clear by route → **C2** six-condition gate → **C2.5** close-out report + spec (default stop) → **E** next-step offer (consensus plan; Workflow execution experimental, on explicit request) → **C3** the ledger stays open through the build and feeds the quiz.
-
-**New in v4.0.0**
-
-- **Irreversibility floor** — regret contains P(wrong), a confidence estimate. For `irreversible` rows confidence never substitutes for the user: never silently defaulted under the regret bar, resolved only with recorded user confirmation. A gate condition since 4.0.0 (the sixth since 4.2.0); no exit waives it.
-- **Priors and surprises** — each row records the expectation held before evidence-based scoring; contradictions surface as surprises.
-- **Verification contract** — per criterion: a failable check, its artifact, what it proves, what it does NOT prove, and its lane. Locked against the implementer.
-- **Phase E execution rules** (experimental since v4.2.0; run only on request) — the loop lives inside a task, the graph between tasks; edges name what crosses; failures return `UNIT · VERDICT · REASON · EVIDENCE · SCOPE`; an attempt cap turns a task into a plan-suspect row; a learning edge feeds derived constraints forward; tasks close by reversibility lane on results from a separate check-runner. The human sits at both ends — spec, contract, and task graph at the front; irreversible lane and merge at the back.
-
-### Execution & orchestration
-
-When the host exposes Claude Code's **Workflow tool** and you opt in, the fan-out-heavy operations run as deterministic scripts from [`references/workflows.md`](skills/finding-unknowns/references/workflows.md).
-
-<p align="center">
-  <img src="assets/workflows.svg" alt="Workflow orchestration: multi-lens sweep with pipelined verification, three-lens refutation panel, UU loop-until-dry, cross-validated execution, and the three-rung fallback ladder" width="96%">
-</p>
-
-| Template | What it is | Use for |
-|----------|------------|---------|
-| **`fu-multi-lens-sweep`** | Parallel lens scouts; each finding adversarially verified as its lens completes (no barrier); schema-validated ledger rows | Seeding UU rows at high stakes |
-| **`fu-verify-panel`** | Three refuters: alternative explanation / evidence independence / reproduction | Cost ≥ 4 resolutions |
-| **`fu-uu-until-dry`** | UU probe loop that stops after two consecutive dry rounds | Probing the shallowest quadrant — bounded by information, not a count |
-| **`fu-execute-verified`** | Experimental, optional; not yet run in a live Workflow runtime. Approved execution under Phase E rules; every implementer paired with an independent refute-framed verifier | Running the approved task graph, only on your explicit request |
-
-**Fallback ladder:** Workflow → parallel Agent calls → fully inline. The logic is normative; the mechanism is not. With no subagents at all, implementer and verifier would share a context, so no lane closes automatically — every task comes to you as `awaiting-human`.
-
-**Enforced in code vs by prompt — stated honestly.**
-
-| In `fu-execute-verified` | Enforcement |
-|--------------------------|-------------|
-| Fail-closed argument validation; no silent edge drops; per-task scheduling; path locks (paths normalized, globs rejected); lane-based closing; check results matched to contract checks by exact string | code |
-| Out-of-scope writes stop the run; check-file hashes compared against a pre-run baseline; tampered check files stop the task | code compares — the check-runner's report is prompted |
-| Concurrent tasks' edits attributed to the right task; implementer never executes irreversible actions; runner refuses irreversible checks | prompted |
-| Verifier independence | structural |
-
-### Keep the reasoning
-
-<p align="center">
-  <img src="assets/handoff.svg" alt="keep-the-reasoning: the offloading → deferral → cognitive-surrender spectrum, and the fixed-order handoff packet from evidence to summary" width="96%">
-</p>
-
-| Step | What it is | Use for |
-|------|------------|---------|
-| **Stakes triage → packet size** | `offload` (cheap, reversible, lands only on you; one line) · `compact` (medium stakes: lands on others, but reversible and contained) · `full` (high stakes: hard to reverse) | Scaling the packet to consequence, not effort |
-| **Before the work** | Capture your prior (reused if another skill already recorded it this session); define "verified" — a check must be able to fail | Making any outcome un-rationalizable after the fact |
-| **Handoff packet** | Compact (four sections): evidence → what the checks did NOT prove → never-empty "not checked" → summary. Full (nine sections): evidence first → what checks proved / did NOT prove → decisions & assumptions → prior vs result → strongest counterargument and "did I miss anything?" from a fresh-context refutation (labelled `same-context — weaker` when no separate context exists) → never-empty "not checked" → summary last | Accepting work with your judgment intact |
-| **After the handoff** | A rejection becomes a rule (test, hook, lint rule); surrender signals named once, without moralizing | Making taste compound |
-
-When `finding-unknowns` already ran, `keep-the-reasoning` reuses its priors, verification contract, and the quiz-master's Decisions & assumptions instead of repeating them. A packet written to disk goes to `.finding-unknowns/handoff-{slug}.md`.
-
-### Theory vs result
-
-| Step | What it is | Use for |
-|------|------------|---------|
-| **Triage → rigor level** | `note` (one number, nothing rides on it) · `report` (someone will act on it, or it misses) · `decision` (adopt/ship, a pre-agreed rule, money) | Scaling the card to what rides on the number |
-| **Debug path** | For a reproducible, deterministic failure (a failing test, a crash, the same wrong output every run): repro + observed output → prior → at least two competing explanations → one discriminating check each, cheapest first → fix → the same repro re-run plus one neighbouring case that should not change. No noise floor, no frozen rule; escalates to a rigor level when the failure is flaky or a ship/no-ship rides on the fix | Explaining a bug without dressing it up as an experiment |
-| **Prediction card** | Claim, mechanism chain, direction + magnitude + *where* it should show, noise floor, falsifier, decision rule, and when it was written; saved before the data (`.finding-unknowns/predictions/{slug}.md`). A card written after the result is a `post-hoc fit`, not a test | Giving a result something to disagree with |
-| **Fair measurement** | Matched baseline, one variable changed, same seeds, the metric you are actually paid for, data budget respected | Not crediting a change with what the sample did |
-| **Result card** | Theory → Measured → Consistent? → Mechanism (理论预期 → 实测 → 是否一致 → 机理); consistency is `consistent` · `partly` · `inconsistent` · `can't tell`, read from the interval (one that holds both 0 and the prediction is `can't tell`); mechanism tier is `verified` · `supported` · `inferred` · `untested` | Keeping facts, inferences, and untested stories visibly apart |
-| **Mismatch walk** | Pipeline → comparison → metric → theory → environment; name the broken link and the smallest check that separates the explanations | Neither dismissing a direction on one run nor rescuing it with a story |
-| **Two verdicts** | Rule verdict (in the rule's own labels, e.g. `PASS` · `FAIL` · `UNCERTAIN`, or `descriptive only` / `void`) vs direction verdict (`alive` · `alive-but-constrained` · `weakened` · `dead`) | A mechanism can keep a direction alive; neither a mechanism nor a rerun on spent data turns a `FAIL` into a `PASS`. A defect found afterwards voids the run instead |
-
-A new or tightened threshold is first explained in plain language — what it protects against, why this number, what failing it means — and frozen only after you approve; it applies from then on, never retroactively. At the report and decision rigor levels, the cards go to the read-only `mechanism-auditor` agent, the fresh-context refutation applied to result cards: it downgrades tiers the evidence does not earn and proposes an alternative mechanism that fits the same numbers.
-
-### Agents & model routing
-
-**Commands dispatch, skills decide, agents execute, documents persist.** Procedure lives in one place per skill; commands and agents are enhancements, not dependencies.
-
-<p align="center">
-  <img src="assets/framework.svg" alt="Framework layers: six slash entry points (three skills invoked directly, three commands) lead into three skills, which delegate to five specialist agents that write persistent artifacts" width="96%">
-</p>
-
-| Agent | Model | Tools | Backs | Why isolated |
-|-------|-------|-------|-------|--------------|
-| **`blindspot-scout`** | sonnet | no Write/Edit; Bash for inspection | Blind-spot pass, References | Wide recon in its own context window; it has no file-editing tools, and Bash is limited to inspection by instruction |
-| **`prototype-smith`** | inherit | Write + Bash; throwaway files only | Prototype, Plan | N genuinely divergent directions in one pass; instructed to write only under `.finding-unknowns/prototypes/` and never touch the real app |
-| **`ledger-keeper`** | inherit | ledger file only | Cartographer | Regret, clarity scores, and the gate verdict — without grading its own interview |
-| **`quiz-master`** | inherit | no Write/Edit; Bash for inspection and its report | Pitch, Quiz | Fresh-eyes examiner that did not author the change; flags unlogged deviations |
-| **`mechanism-auditor`** | inherit | no Write/Edit; Bash for inspection | `theory-vs-result` | Referee that did not write the theory or run the measurement; downgrades unearned verdicts and tiers |
-
-Tool lists remove file-editing tools where noted, which the runtime enforces. The remaining limits (what Bash may do, which files may be written) are instructions to the agent, not a sandbox.
-
-**Model routing** — judgment and creative agents use `model: inherit`, so they run at the session's own strength and are never downgraded. `blindspot-scout` is the one deliberate cost tier (`sonnet`) because recon fans out in parallel; set it to `inherit` for single-lens passes. Follows OMC's role tiers and Deep Research's "strongest model at the synthesis centre, cheaper fan-out" — with the top tier inherited rather than pinned.
-
----
-
-## Commands
-
-These run **inside a Claude Code session**. The three skills are invoked directly as `/finding-unknowns`, `/keep-the-reasoning` and `/theory-vs-result`, because Claude Code exposes skills as slash commands. The three plugin commands (`/blindspot`, `/cartographer`, `/change-quiz`) are thin dispatchers: each invokes the `finding-unknowns` skill through the Skill tool and jumps to a named section.
-
-| Form | Kind | Effect | Example |
-|------|------|--------|---------|
-| `/finding-unknowns` | Skill → Phase 0 | Locate the unknown, announce the route, run the matching technique | `/finding-unknowns "add a usage dashboard"` |
-| `/blindspot` | Slash command → Technique 1 | Read-only blind-spot pass | `/blindspot "src/auth"` |
-| `/cartographer` | Slash command → Phase C | Ledger, regret-ordered clearing loop, six-condition gate, spec + verification contract (default stop) | `/cartographer --deep "migrate billing"` |
-| `/change-quiz` | Slash command → Technique 8 | Change report (Markdown; HTML on request) + must-pass comprehension quiz | `/change-quiz main..HEAD` |
-| `/keep-the-reasoning` | Skill → Step 0 (Step 3 if the work is done) | Stakes triage (packet size), then the handoff packet | `/keep-the-reasoning "ship the migration?"` |
-| `/theory-vs-result` | Skill → Step 0 (stops after the prediction card if nothing is measured yet; a result already in hand is marked `post-hoc`) | Triage (Debug path or rigor level), then the Theory → Measured → Consistent? → Mechanism cards, or the six Debug path items | `/theory-vs-result "did the new loss beat baseline?"` |
-| `finding-unknowns` / `keep-the-reasoning` / `theory-vs-result` | Skill tool | The same skills, invoked by the model instead of by you | invoke via the Skill tool |
-| plain language | Prompt | Request one technique directly | _"do a blind-spot pass"_, _"interview me"_, _"brainstorm four directions"_ |
-
-**Notes:**
-
-- `/blindspot`, `/cartographer` and `/change-quiz` need the plugin or a manual copy of `commands/`; the three skill slashes need only the skills installed. Up to 4.2 the plugin also shipped `/finding-unknowns`, `/keep-the-reasoning` and `/theory-vs-result` as command files with the same names as the skills; 4.3.0 removed them (the same invocations now reach the skills), and `install.sh` deletes old copies it recognizes.
-- Depth flags set Cartographer's exploration depth: `--quick` single-lens blind-spot pass, soft check every 5 rounds · `--standard` (default) one blind-spot pass, escalating to a multi-lens sweep when the task spans more than one risk domain (e.g. money + data + infra) · `--deep` always a multi-lens sweep at seeding plus a UU loop-until-dry before the gate. Precedence: flag > your request > default.
-- Copy-paste, end-to-end prompts: [`EXAMPLES.md`](EXAMPLES.md).
-
-**Artifacts.** Everything the skills write lives under `.finding-unknowns/` at the project root: `unknowns-ledger.md`, `unknowns-spec-{slug}.md`, `implementation-notes.md`, `prototypes/`, `change-report.md`, `predictions/`, and `handoff-{slug}.md`. It is working state, so by default add `.finding-unknowns/` to your `.gitignore`. If your team reviews ledgers and specs in pull requests, use these lines instead (git cannot re-include a file inside an ignored directory, so the one-line form would hide them too):
-
-```
-.finding-unknowns/*
-!.finding-unknowns/unknowns-ledger.md
-!.finding-unknowns/unknowns-spec-*.md
-```
-
-Upgrading from 4.2 or earlier: a root-level `unknowns-ledger.md` is still read, and the skill offers in one line to move it (nothing moves silently); a ledger without a `schema: 2` first line is upgraded on resume, with every added header field reported.
+- **4.x, the classic line:** eight discovery techniques, Cartographer mode with its unknowns
+  ledger, `keep-the-reasoning`, `theory-vs-result` and five agents. It lives on branch
+  [`v4`](https://github.com/baizhiyuan/finding-unknowns-skill/tree/v4) (last release v4.3.2)
+  and gets bug fixes only.
+- **5.0 to 5.2: designed and evaluated, never released.** They organised the work around a
+  task card on disk, with a script, a guard hook and an HTML view. Stage 0 tested a rebuilt
+  5.0 (tag `eval/stage0-v5`); Tier 1 tested 5.2 (the archived branch `v5`). Interruptions and
+  cost held them back.
+- **6.0: a redesign from first principles.** The owner's starting idea was the four
+  quadrants, shown to the person; the 5.x line had turned them into internal bookkeeping about
+  a file. 6.0 carries over the stop rules and "say what each check did not prove" from the
+  measured short texts into a new 127-word text, chosen in five wording tests with a simulated
+  user, puts the map back in front of the person with one pause before changes, and keeps the
+  record in the conversation. Design and decisions:
+  [docs/design/6.0.md](docs/design/6.0.md).
 
 <details>
-<summary><b>Configuration (optional — zero config by default)</b></summary>
-
-Nothing to configure. Cartographer depth comes from the flag or your request (flag > your request > default `--standard`), and the first line on entry announces it with its source: `Depth: {quick | standard | deep} (source: {flag | user request | default})`. The `findingUnknowns.ambiguityThreshold` settings key is ignored since 4.2.0: the ambiguity figure is display-only, so a leftover key has no effect.
-
-Other defaults — report size (short for analysis outputs: 3 findings + 1 next action, surprises uncapped), report format (Markdown; HTML on request), prototype directions (4), regret question bar (1.0, never applied to irreversible rows), quiz size and rounds, Cartographer soft check (round 10 and every 10 after, or every 5 under `--quick`; no hard cap), execution attempt cap (3, experimental Phase E) — live in the **Defaults** table in [`SKILL.md`](skills/finding-unknowns/SKILL.md) and can be overridden in plain language.
-
-</details>
-
----
-
-## Demo
-
-> _Illustrative transcripts, written to the output templates in the three `SKILL.md` files and `references/cartographer.md` — not recordings of real sessions. One real, recorded run now exists: a blind-spot pass on the public `pallets/itsdangerous` repo, with the brief as sent to `blindspot-scout` and the verbatim output, in [EXAMPLES.md](EXAMPLES.md#a-real-blind-spot-pass-recorded)._
-
-**Phase 0 routing** — announced before any technique runs, so you can veto it.
-
-```
-> /finding-unknowns add a usage dashboard to the admin app
-
-Prior: "a few charts over the existing usage table"
-Routing: UU + UK → blind-spot pass, then 4-direction prototype — you're new to this
-subsystem (UU) and the dashboard layout is know-it-when-you-see-it (UK).
-```
-
-<details>
-<summary><b>A Cartographer round report — clarity display + the six-condition gate, every round</b></summary>
-
-```
-Round 3 complete.
-
-Ledger: 4 open | 1 probing | 6 resolved | 2 deferred
-Top regret: U2 (2.0) — which auth path to extend [route: interview]
-
-| Quadrant                | Score   | Weight | Gap                                        |
-|-------------------------|---------|--------|--------------------------------------------|
-| KK                      | 0.90    | 0.20   | clear                                      |
-| KU                      | 0.50    | 0.25   | auth path (U2) undecided                   |
-| UK                      | 0.70    | 0.25   | session-UX criteria not yet confirmed      |
-| UU                      | 0.70    | 0.30   | two scout lenses run; not yet dry          |
-| **Ambiguity** (display) | **31%** | —      | KU × auth middleware — U2 sets the design  |
-
-Gate:
-[x] KK written down    [ ] KU resolved/deferred-with-default
-[x] UK extracted or n/a (user-confirmed)
-[x] UU probed
-[ ] no open row with regret ≥ 1.0
-[x] every irreversible row user-confirmed
-
-Next target: U2 — highest-regret open row; a wrong guess forces a rewrite of the
-middleware layer.
-```
-
-</details>
-
-<details>
-<summary><b>A keep-the-reasoning handoff packet — evidence first, summary last</b></summary>
-
-```
-Packet size: full — schema migration on a shared production table.
-1. Evidence: `pytest tests/migrations -q` → 14 passed; `alembic upgrade head --sql` →
-   plan at artifacts/upgrade.sql (ALTER + backfill, 2 statements)
-2. Proved: upgrade SQL applies cleanly to an empty schema. NOT proved: runtime on the
-   41M-row table; lock behaviour under write load. Tests written in this session.
-3. Decisions: backfill default = 'unknown' (spec silent); downgrade drops the column
-   (data loss) — see migrations/0042.py:31
-4. Your prior: "a quick additive change". Mismatch: the backfill rewrites every row.
-5. Counterargument (fresh subagent): if writes continue during backfill, the table lock
-   stalls checkout. Not checked.
-6. Missed: the replica lag alert threshold.
-7. Not checked: lock duration at production size; replica lag.
-8. Would you bet on this in front of the on-call? If not: run it on the staging snapshot.
-9. Summary: migration is correct on small data; production behaviour unverified.
-```
-
-The anti-pattern it replaces: _"Done! The migration is ready and all tests pass ✅."_
-
-</details>
-
-<details>
-<summary><b>A theory-vs-result card — the prediction, the miss, and the broken link</b></summary>
-
-```
-[R1] Does the read-through cache cut API p95?
-Theory      : 80% of reads repeat within 60s → hit rate ~0.8 → p95 roughly halves.
-              Writes should not change.
-Measured    : read p95 −41 ms (412 → 371, −10%), 5 reruns, spread ±15 ms; hit rate 0.31;
-              write p95 +2 ms ±8 (a regression ≥20 ms would matter).
-Consistent? : partly — direction yes, magnitude no; writes flat as predicted.
-Mechanism   : broken link = "a repeat is a cache hit". Reads do repeat, but the cache
-              key includes the session ID, so repeats from different sessions miss
-              [supported: the key format explains a 0.31 hit rate].
-              Next check: replay one hour of logs with a session-free key; the predicted
-              hit rate is ≥0.7.
-```
-
-The anti-pattern it replaces: _"p95 only dropped 10%, the cache doesn't work."_
-
-</details>
-
----
-
-## How it Compares
-
-`finding-unknowns` is a lightweight orienting layer, not an execution engine. Use it to locate an unknown, then escalate to the right specialist.
-
-| Property | finding-unknowns | Deep Interview ([OMC](https://github.com/Yeachan-Heo/oh-my-claudecode)) | OMC execution (autopilot / ralph / team) | [Superpowers](https://github.com/obra/superpowers) |
-|----------|------------------|-------------------------|-------------------------|-----------------------|
-| Altitude | Meta / orienting | One phase: requirements | Execution & delivery | Discipline primitives |
-| Lifecycle | Pre · During · Post | Pre only | During · Post | Mostly single-phase |
-| Rigor | Flexible | Ambiguity gating | Verification-gated | Checklist-driven |
-| State | Stateless (Cartographer: ledger file in `.finding-unknowns/`) | Persisted, resumable | Persisted, multi-agent | Varies |
-| Best when | You don't yet know your unknowns | You need a validated spec | The spec is clear | You need one disciplined move |
-
-Deep Interview (as of OMC 5.8.1) is approval-gated; its `--frontier` mode is the closest analogue of batched independent questions plus territory routing. Cartographer keeps two pieces of its transparency machinery: the Round 0 topology gate and per-quadrant clarity scores, shown every round as a display. Since v4.2.0 it does not adopt a clarity threshold or challenge modes; its gate rules only on ledger facts a reviewer can check, and it keeps the axes a clarity-scoring interview alone does not cover.
-
-**Defer, don't duplicate.** When a sibling is installed, `finding-unknowns` uses it for the mechanism it owns and keeps the unknowns lens — quadrant routing, regret-priced rows, route-typed clearing, the reversibility floor, lifecycle persistence.
-
-| Need | Sibling (when installed) |
-|------|--------------------------|
-| Accepting agent output without surrendering judgment | `keep-the-reasoning` (this repository) |
-| Divergent options when the goal is already clear | `superpowers:brainstorming` (`finding-unknowns` takes precedence when the risk is what you don't know) |
-| Reporting a measured result against its prediction | `theory-vs-result` (this repository) |
-| Ontology tracking, OMC state, ralplan/autopilot handoff | `oh-my-claudecode:deep-interview` |
-| Fog test and decision tickets on a tracker | `oh-my-claudecode:ask-navigator` |
-| Adversarial review of a diff or design | `oh-my-claudecode:interrogate` |
-| Throwaway prototype to settle a design | `oh-my-claudecode:loft` |
-| Decision trail for autonomous work | `oh-my-claudecode:show-me-your-work` |
-| Prove a change's blast radius | `oh-my-claudecode:blast-radius` |
-| Restate the brief before starting | `oh-my-claudecode:in-your-own-words` / `sharpen` |
-| Learner-paced explanation | `oh-my-claudecode:teach` |
-
-<details>
-<summary><b>Cartographer vs Deep Interview, axis by axis — and the decision tree</b></summary>
-
-| Axis | Deep Interview | Cartographer mode |
-|------|----------------|-------------------|
-| Gate criterion | Ambiguity ≤ threshold (goal/constraint/criteria) | Six ledger-checkable conditions (all four quadrants probed, blind-spot pass required; UK may be marked not applicable with your confirmation; no open row with regret ≥ 1.0) plus the irreversibility floor; per-quadrant clarity is display-only |
-| Blind spots (UU) | Not modelled | First-class; heaviest weight (0.30) |
-| Lifecycle | Ends at the specification | One ledger, seeded pre, appended during, closed post |
-| Prioritisation | Fixed dimension weights | Regret orders rows; the clarity display scores quadrants |
-| Clearing instrument | Socratic Q&A | Route-typed per unknown: interview / territory / experiment / audit |
-| Execution | Approval-gated handoff into OMC pipelines | Ends at the spec by default; planner + reviewer consensus plan offered. Workflow execution with per-task refute-framed verification is experimental, only on request |
-
-```
-finding-unknowns  (orient: which quadrant is this unknown in?)
-        ├─ a light reframe is sufficient            → the eight techniques
-        ├─ high-stakes, want a coverage gate         → Cartographer mode
-        ├─ want ambiguity gating + resumable state   → OMC Deep Interview
-        ├─ goal clear, only options needed           → superpowers:brainstorming
-        ├─ a rigorous written plan                   → superpowers:writing-plans / omc-plan
-        ├─ the specification is already concrete     → OMC autopilot / ralph / team
-        ├─ the work is done, the risk is the handoff → keep-the-reasoning
-        └─ a result is in, the risk is misreading it → theory-vs-result
-```
-
-</details>
-
----
-
-## Design Notes
-
-What field tests and reviews changed:
-
-- **Field test → the route column (v3.3.0).** In a quant × deep-learning research task, the three highest-regret unknowns all had non-interview routes. The loop became a router: territory rows are never asked of the user; pending experiments suspend the loop instead of spawning empty rounds.
-- **A strong result is not a resolved one (v3.4.0).** A strong RankIC looked like it settled "is the signal real?" — but leakage produces the same IC. Cost ≥ 4 rows now need an adversarial check and two independent sources.
-- **Field test → visible clarity scoring (v3.6.0).** Discovery was strong, but work drifted into a fuzzy zone the user could not steer. Fix: per-quadrant scores every round, scored in one call from ledger evidence only, with "score drift" named as a failure mode.
-- **Gate on ledger facts, not a self-scored figure (v4.2.0).** A gate condition on weighted ambiguity let a self-assigned number decide when building could start. The figure stays as a per-round display; the gate keeps six conditions a reviewer can check against the ledger.
-- **Confidence vs blast radius (v4.0.0).** Regret multiplies by P(wrong) — the input most prone to optimism — so a confident agent could silently default an irreversible step. Hence the irreversibility floor.
-- **Three review rounds of `fu-execute-verified` (v4.0.0).**
-  - **Round 1** — an independent adversarial review found 1 CRITICAL and 6 HIGH, reproduced against a stubbed runtime, including argument validation that let an unknown or missing lane through. Validation now fails closed.
-  - **Round 2** — closed the remaining fail-open edges: paths normalized and globs rejected before locking, mandatory check files for `wide`/`irreversible` tasks, writes outside every declared path stop the run.
-  - **Round 3** — fixed the scope check's false halts: paths already dirty before the run are baselined and excluded.
-  - Exercised by [`tests/workflows/run.mjs`](tests/workflows/run.mjs), 69 scenarios against a stubbed agent runtime that read the templates straight from `workflows.md`, run in CI on every push to `main` and every pull request.
-- **One word, one meaning (v4.3.0).** "Lane" meant reversibility in Cartographer, a rigor level in `theory-vs-result`, and a packet size in `keep-the-reasoning`. It now means reversibility only; the other two are *rigor level* and *packet size*, finding-unknowns' lightweight/Cartographer split is a *mode*, and the [Glossary](docs/GLOSSARY.md) holds the shared terms.
-- **A first comparative eval (v4.3.2).** gpt-6.1-sol in Codex, with and without these skills, on six pre-registered tasks with blinded grading: both arms caught nearly every trap (22 vs 22.75 of 25, inside the noise), and the skills cost 47 % more input tokens. Two misses the skill arm shared with the baseline (a recorded login that predated a migration was not re-checked; no noise estimate from reruns in hand) became the two 4.3.2 fixes. Web search was on, blinding was partial, and one trap's evidence was wrong; the write-up says so. Details, raw outputs and grader replies: [docs/evals/2026-11-10-codex-pilot](docs/evals/2026-11-10-codex-pilot/README.md).
-- **A second eval (v2, unreleased).** Two current models, harder tasks, two runs per cell, cross-family blinded grading. gpt-6.1-sol: can't tell, with or without the skills. Sonnet never invoked the skills on its own, although their descriptions matched the tasks. With a one-line CLAUDE.md nudge it gained +2.5 of 25, beyond the noise estimate. The nudge alone gave +1.1, within the noise. Whether the gain comes from the reminder or the procedures is not established. Details and limitations: [docs/evals/2026-11-11-v2-cross-model](docs/evals/2026-11-11-v2-cross-model/README.md).
-- **Deliberately not adopted.** "Approve only the last step" — a human reviewing only a final artifact they never framed is rubber-stamping. "Confidence is the only input the model can influence" — agents can also edit their own checks, hence the locked contract.
-
-### Roadmap
-
-Not done yet:
-
-- **Run `fu-execute-verified` in a live Workflow runtime** — so far exercised only against a stubbed agent runtime.
-- **Evaluate the human side.** The simulated-user part is done (Stage 0, [report](docs/evals/2026-11-11-stage0/README.md)). The study with real people (Stage 1) is pending; it now tests the 82-word `CLAUDE.md`.
-- **Move the remaining prompted guarantees into code** where the runtime allows.
-- **Ontology / entity-convergence tracking** — consciously deferred in v3.6.0 because the Round 0 topology gate covers convergence more cheaply; to revisit if component drift shows up in tests.
-
----
-
-## Documentation
-
-- **[5-minute tutorial](docs/TUTORIAL.md)** — install, then three copy-paste exercises
-- **[Glossary](docs/GLOSSARY.md)** — one vocabulary across the three skills: lane, rigor level, packet size, mode, prior, fresh-context refutation, artifacts
-- **[Architecture](docs/ARCHITECTURE.md)** — layers, artifact contracts, design principles
-- **[finding-unknowns SKILL.md](skills/finding-unknowns/SKILL.md)** — routing, the eight techniques, Cartographer summary, defaults
-- **[Cartographer protocol](skills/finding-unknowns/references/cartographer.md)** — the normative ledger, gate, close-out, and Phase E rules
-- **[Workflow templates](skills/finding-unknowns/references/workflows.md)** — the four scripts, code-vs-prompt table, fallback ladder
-- **[keep-the-reasoning SKILL.md](skills/keep-the-reasoning/SKILL.md)** — stakes triage, handoff packet, surrender signals
-- **[theory-vs-result SKILL.md](skills/theory-vs-result/SKILL.md)** — prediction card, result cards, mechanism tiers, the two verdicts
-- **[Examples](EXAMPLES.md)** — copy-paste, end-to-end prompts
-- **[Changelog](CHANGELOG.md)** — release history
-- **[AGENTS.md](AGENTS.md)** — repository guide and invariants for coding agents and contributors
-- **[Contributing](CONTRIBUTING.md)** — workflow and local validation; contributions welcome
-
----
-
-## Requirements
-
-- **Claude Code** — the CLI, desktop app, or an IDE extension.
-- **No runtime, no dependencies** — skills, agents, and commands are plain Markdown; nothing is compiled.
-- **Optional, all degrade gracefully** — the five companion agents and the Workflow tool; every technique also runs inline.
-- **`bash`** — only for `install.sh`.
-
-## Project Layout
-
-<details>
-<summary><b>Repository tree</b></summary>
+<summary><b>Repository layout</b></summary>
 
 ```
 finding-unknowns-skill/
-├── .claude-plugin/          Plugin and marketplace manifests (/plugin install)
-├── commands/                Slash-command entry points (thin dispatchers; the skills answer to their own names)
-│   ├── blindspot.md           /blindspot — blind-spot pass
-│   ├── cartographer.md        /cartographer — Cartographer mode
-│   └── change-quiz.md         /change-quiz — report + merge quiz
-├── skills/
-│   ├── finding-unknowns/
-│   │   ├── SKILL.md         Routing, eight techniques, Cartographer summary
-│   │   └── references/
-│   │       ├── cartographer.md  Full Cartographer protocol (normative), read on demand
-│   │       └── workflows.md     Workflow templates + fallback ladder
-│   ├── keep-the-reasoning/
-│   │   └── SKILL.md         Stakes triage, handoff packet
-│   └── theory-vs-result/
-│       └── SKILL.md         Prediction card, Theory → Measured → Consistent? → Mechanism cards
-├── agents/                  blindspot-scout (sonnet) · prototype-smith · ledger-keeper · quiz-master · mechanism-auditor (inherit)
+├── CLAUDE.md                     The always-on text (127 words)
+├── skills/finding-unknowns/
+│   └── SKILL.md                  Templates, interview, look-back with the transcript filter
+├── commands/
+│   ├── fu-interview.md           /fu-interview
+│   └── fu-lookback.md            /fu-lookback
+├── .claude-plugin/               Plugin and marketplace manifests
+├── install.sh                    Installer (skill, commands, always-on text; retires 4.x files)
+├── assets/                       Diagrams (SVG); assets/zh/ holds the Chinese versions
 ├── docs/
-│   ├── ARCHITECTURE.md      Design reference: layers, contracts, principles
-│   ├── GLOSSARY.md          Shared vocabulary across the three skills
-│   └── TUTORIAL.md          5-minute tutorial (TUTORIAL.zh.md: Chinese)
-├── assets/                  README diagrams (SVG); assets/zh/ = Chinese versions
-├── AGENTS.md                Repository guide for coding agents and contributors
-├── EXAMPLES.md              Copy-paste, end-to-end prompts
-├── CLAUDE.md                The 82-word setup, promoted after Tier 1
-├── install.sh               Installer (skills + references + agents + commands)
-├── CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)
-└── README.md (English, canonical) · README.zh.md (简体中文)
+│   ├── design/                   6.0.md (accepted design), 5.0.md and advisors (history)
+│   ├── evals/                    Evaluation reports, pre-registrations and the 6.0 own-use plan
+│   ├── field-notes/              Notes from real use
+│   └── GLOSSARY.md               Terms in English and Chinese
+├── scripts/                      validate.py (CI checks), outline_cjk.py (Chinese diagrams),
+│                                 diagrams/ (lifecycle diagram generator)
+├── tests/                        install.sh and the look-back filter
+├── AGENTS.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)
+└── README.md · README.zh.md
 ```
 
 </details>
@@ -656,10 +558,23 @@ finding-unknowns-skill/
 
 Released under the [MIT License](LICENSE).
 
-- Technique ideas and names: Thariq Shihipar, _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
-- `keep-the-reasoning` and the verification contract: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
-- `theory-vs-result`: distilled from the author's own empirical research practice, generalized for any measured claim.
-- Phase E execution rules: Anthropic's _"Building effective agents"_ (evaluator-optimizer, orchestrator-workers) and @hanakoxbt's _"Loops and Graphs"_ ([source](https://x.com/hanakoxbt/status/2091515787366306154)).
-- Cartographer's per-quadrant clarity scoring and the topology gate are adapted from the deep-interview skill in [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode); the comparison also references [Superpowers](https://github.com/obra/superpowers).
+- **The four quadrants and the idea of interviewing for unknowns:** Thariq Shihipar,
+  _"A Field Guide to Fable: Finding Your Unknowns"_
+  ([@trq212](https://x.com/trq212/status/2073100352921215386)).
+- **Offloading → deferral → cognitive surrender, and the habits that interrupt it** (predict
+  before you look, say what a check did not prove, the "can you predict my next answers?"
+  stop test): Addy Osmani's posts on critical thinking when agents do the work
+  ([source](https://x.com/addyosmani/status/2117512471930167377)).
+- **The interview** borrows two things from Matt Pocock's `grill-me`: a recommended answer
+  worded so that "yes" accepts it, and batches of independent questions. It also borrows,
+  and changes, one from the `deep-interview` skill in
+  [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode): a progress line every
+  round, shown here as counts, with no clarity score.
+- **Expected → found → verdict → why:** the owner's own empirical research practice
+  (`theory-vs-result`, on branch `v4`).
+- **Reporting the choices and changes you did not ask for** (`Decided for you`) adapts one idea from the
+  Karpathy-style `CLAUDE.md` by Jiayuan Zhang ([andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)), written
+  from Andrej Karpathy's [post of 2026-01-26](https://x.com/karpathy/status/2015883857489522876).
 
-**Disclaimer.** This is an independent community project. It is not affiliated with, authorised by, or endorsed by Anthropic.
+**Disclaimer.** This is an independent community project. It is not affiliated with,
+authorised by, or endorsed by Anthropic.

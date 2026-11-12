@@ -1,72 +1,108 @@
 # Glossary
 
-One vocabulary across the three skills (`finding-unknowns`, `keep-the-reasoning`,
-`theory-vs-result`), the five agents and the three commands. Each skill still defines what it
-uses, because skills are installed standalone; this page is where the terms meet.
+One name per thing, in English and Chinese. `SKILL.md` and the two READMEs use these terms;
+the Chinese column is the wording `README.zh.md` and the Chinese diagrams use. The 4.x
+vocabulary (techniques, Cartographer, ledger, lanes, packet sizes, rigor levels) lives on
+branch `v4`.
 
-- **KK / KU / UK / UU** — the quadrant map of a gap: Known Knowns (stated; write them down),
-  Known Unknowns (nameable gaps), Unknown Knowns ("I'll know it when I see it" taste), Unknown
-  Unknowns (blind spots). The quadrant picks the discovery technique. *Used in:*
-  finding-unknowns Phase 0, Cartographer ledger rows and clarity scores.
-- **Regret** — `cost-if-wrong (1–5) × P(wrong)` for one ledger row. It *orders* the work; it
-  never decides what must reach the user (reversibility does). *Used in:* Cartographer C0–C2,
-  `ledger-keeper`.
-- **Route** — how a ledger row gets cleared: `interview` · `territory` · `experiment` ·
-  `audit`. Regret picks the row; route picks the instrument. *Used in:* Cartographer C1.
-- **Lane** — reserved for **reversibility**: `reversible` · `wide` · `irreversible`. A row's,
-  a contract criterion's, or a task's lane decides who may close it; irreversible work is
-  prepared by the agent and executed by the user. *Used in:* Cartographer C0, the verification
-  contract's `lane` column, Phase E, `fu-execute-verified`.
-- **Rigor level** — how much of `theory-vs-result` a measured result gets: `note` (one line) ·
-  `report` (cards + table) · `decision` (adds the frozen rule and the rule/direction split).
-  A reproducible, deterministic failure takes the lighter **debug path** instead. *Used in:*
-  theory-vs-result Step 0, `mechanism-auditor`.
-- **Packet size** — how much of the handoff packet `keep-the-reasoning` delivers: `offload`
-  (one line) · `compact` (four sections) · `full` (nine sections). Scales with consequence,
-  not effort. *Used in:* keep-the-reasoning Step 0, Cartographer merge (always `full`).
-- **Mode** — finding-unknowns' operating mode: **lightweight** (techniques 1–8, short report)
-  or **Cartographer** (ledger, gate, spec). Cartographer's breadth is its **depth**
-  (`--quick` · `--standard` · `--deep`). *Used in:* finding-unknowns Phase 0, `/cartographer`.
-- **Prior** — any expectation recorded before the result is seen: the user's or the agent's.
-  A theory-vs-result **Theory** (prior + mechanism chain) and its **prediction card** are the
-  measured-claim form of a prior. A prior recorded by any of the three skills in a session is
-  reused, never asked again. *Used in:* finding-unknowns Phase 0, ledger `prior:` entries,
-  keep-the-reasoning Step 1 and Prior vs result, theory-vs-result Step 1.
-- **Verification contract / "verified"** — per claim or acceptance criterion, written before
-  the work: the check, its artifact, what it proves, what it does NOT prove. A claim is
-  "verified" only when its contract checks ran and could have failed. A plan's **Definition of
-  verified** (Technique 5) is the same contract at plan scale. *Used in:* keep-the-reasoning
-  Step 1, Cartographer spec (C2.5), Phase E.
-- **Mechanism tier** — the evidence behind an explanation of a measured result: `verified`
-  (a discriminating test ran) · `supported` · `inferred` · `untested`. The tier word
-  `verified` grades a *mechanism*; it is not the contract sense above. *Used in:*
-  theory-vs-result Step 3, `mechanism-auditor`, Cartographer `experiment` mapping.
-- **Fresh-context refutation** — the shared primitive: a context that did not produce a claim
-  tries to refute it from the same evidence and returns the strongest alternative explanation
-  plus the cheapest discriminating check. Without a separate context, the fallback is labelled
-  `same-context — weaker`. Canonical in keep-the-reasoning ("Fresh-context refutation (shared
-  primitive)"). *Used in:* the full packet's Strongest counterargument / Did I miss anything?,
-  theory-vs-result Fresh_Context_Check and `mechanism-auditor`, Cartographer C1 step 3.5 and
-  `fu-verify-panel`.
-- **Ledger** — `.finding-unknowns/unknowns-ledger.md`: header + one row per unknown (quadrant,
-  prior, regret, route, lane, status). It is the Cartographer resume state; rows are never
-  deleted. *Used in:* Cartographer, `ledger-keeper`, `quiz-master`.
-- **Spec** — `.finding-unknowns/unknowns-spec-{slug}.md`, written on gate PASS: goal,
-  constraints, acceptance criteria, verification contract; pending approval, and the default
-  end of Cartographer. *Used in:* Cartographer C2.5, Phase E.
-- **Artifact directory** — `.finding-unknowns/` at the project root holds every file the
-  skills write (ledger, spec, `implementation-notes.md`, `prototypes/`, `change-report.md`,
-  `predictions/`, handoff packets written to disk). It is working state, ignored by default
-  (`.gitignore` line `.finding-unknowns/`). To review ledgers and specs in PRs, ignore the
-  contents instead and re-include the two files (git cannot re-include a file inside an
-  ignored directory):
-  ```
-  .finding-unknowns/*
-  !.finding-unknowns/unknowns-ledger.md
-  !.finding-unknowns/unknowns-spec-*.md
-  ```
-  *Used in:* all three skills, `ledger-keeper`, `prototype-smith`, `quiz-master`.
-- **Schema** — the ledger format version, the ledger's first line (`schema: 2` since 4.3.0;
-  no line = schema 1, pre-4.3). On resume, `ledger-keeper` upgrades schema 1 by adding the
-  missing header fields and reports what it added. *Used in:* Cartographer C0 and Resume,
-  `ledger-keeper`.
+## The map
+
+| Term | 中文 | Meaning |
+|---|---|---|
+| the map | 地图（这张地图） | The person's own view of what they know and do not know, shown before the work and updated after it, on evidence only |
+| KK, known knowns | 已知的已知 | What the person relies on: facts and beliefs, each with a source. The risk is a false known |
+| KU, known unknowns | 已知的未知 | A question the person can name. Either the assistant finds it out, or it needs the person |
+| UK, unknown knowns | 未知的已知 | What the person knows but did not say: taste, constraints, context. The assistant guesses it out loud |
+| UU, unknown unknowns | 未知的未知 | What the person did not know to ask. At most three entries, each with why it matters |
+| non-trivial | 非琐碎 | Work where being wrong costs more than reading a short block. Trivial requests, lookups and casual talk get no block |
+
+## Blocks and headers
+
+The header tokens stay literal in every language; the look-back searches for them.
+
+| Token | Meaning |
+|---|---|
+| `fu:before` | The map before the work: your expectation, KK, KU, UK, UU, the assistant's expectation and what would prove it wrong. Shown in the reply before the first change, then the turn ends (the pause). At most 12 lines; one line (`fu:before · no significant unknowns`, 没有重要的未知项) when nothing is worth mapping |
+| `fu:after` | What moved: expected → found, now known, not proved, still unknown, decided for you. At most 15 lines; for small work only not proved and still unknown; the turn ends after it |
+| `fu:interview` | The map an interview ends with: decisions, your expectations, assumptions, still unknown, the request rewritten |
+| `fu:lookback` | A look-back over this session or past transcripts |
+| `fu-note:` | A line the person types when a block taught, annoyed or missed something. Never asked for; the always-on text tells the assistant to ignore it (no reply, no change of course) |
+
+## Fields
+
+| Field | 中文 | Meaning |
+|---|---|---|
+| You expect | 你的预期 | The person's expectation, quoted verbatim, or `not stated` (未说明). Never written for them |
+| KK · relying on | 已知的已知 · 我依据的 | What the work rests on, with sources: you said, `file:line`, a source, or assumed |
+| `✗` | `✗` | A belief that a check contradicted |
+| KU · open | 已知的未知 · 待解决 | "I will find out by …" (我去查) or "needs you" (需要你定), with a recommended answer |
+| UK · I assume you want | 未知的已知 · 我猜你默认 | The assistant's guess at an unstated preference or constraint, with why |
+| UU · you did not ask, but it matters | 未知的未知 · 你没问但要紧 | Blind spots, with why each matters |
+| I expect … wrong if … | 我的预期……若……则我错了 | The assistant's expectation and what would falsify it |
+| Expected → found | 预期 → 实际 | Each expectation against the evidence, with a verdict |
+| why | 原因 | One line of mechanism, only where an expectation did not hold or partly held |
+| Now known | 新知道的 | What was open or wrong before, with evidence |
+| Not proved | 没有证明的 | What each check or source leaves open |
+| Still unknown | 仍然未知 | Open items, each with the cheapest way to find out and who does it |
+| Decided for you | 替你定的 | Choices and changes the person did not ask for, each with the alternative and the cost if wrong. Omitted when there are none; never padded |
+| I will find out by … | 我去查：… | A KU entry the assistant answers itself |
+| needs you; I would pick … | 需要你定；我建议 …… | A KU entry only the person can answer, with a recommended answer |
+| cheapest way to find out | 最省事的查法 | How a `Still unknown` item can be settled, and by whom (你 / 我) |
+| instead of … · if wrong: … | 没选 …… · 若错：…… | The alternative to a `Decided for you` entry and the cost if the choice was wrong |
+| no significant unknowns | 没有重要的未知项 | The one-line `fu:before` when nothing is worth mapping |
+
+## Interview
+
+| Field | 中文 | Meaning |
+|---|---|---|
+| Map: known · open (needing you) · assumed · blind spots | 地图：已知 · 待解决（项需要你定）· 假定 · 盲区 | The count line printed after each round |
+| Decisions | 已做的决定 | The person's decisions, quoted |
+| Your expectations | 你的预期 | Quoted, each with what would change the person's mind |
+| I will proceed on | 我据以推进的假设 | Assumptions the work will start from |
+| Still unknown | 仍然未知 | Open items, each with how it will be found and by whom |
+| The request, rewritten | 改写后的需求 | The request as the interview leaves it |
+
+## Look-back
+
+| Field | 中文 | Meaning |
+|---|---|---|
+| Expected → turned out | 预期 → 结果 | Past expectations, quoted, against what was found |
+| Became known | 新知道的 | Facts that moved into the known, with date and evidence |
+| Still unknown (oldest first) | 仍然未知（最早的在前） | Items still open, with how many days |
+| Your pattern | 你的规律 | Shown from 5 graded expectations: how often stated, how often held, where misses cluster |
+| Worth learning next | 接下来值得弄懂的 | One item and its first step |
+
+## Verdicts and evidence tiers
+
+| Term | 中文 | Meaning |
+|---|---|---|
+| held · partly · did not hold · can't tell | 成立 · 部分成立 · 不成立 · 无法判断 | Verdict on an expectation. A difference inside the noise is can't tell |
+| post-hoc | 事后拟合 | An expectation written after the data was seen |
+| verified · supported · inferred · untested | 已验证 · 有数据支持 · 推断 · 未检验 | How well the `why` is evidenced |
+| from memory | 凭记忆 | A quote the assistant could not re-read from the transcript |
+
+## Stops and steps
+
+| Term | 中文 | Meaning |
+|---|---|---|
+| the pause | 改动之前的停顿 | After `fu:before` on non-trivial work the turn ends; the person's reply (a go, answers, corrections) starts the work. Reading comes before it; changes wait for it |
+| "just do it" | “直接做” | Said in the request (or similar wording): the assistant does not wait; the skill still asks for `fu:before`. The skill says an irreversible step still waits for a yes; the always-on text does not say this explicitly, and no test covered it. Only the English "Just do it, I'm in a hurry." was tested: the map came before the first change in 1 of 3 runs |
+| stop-point | 打断点 | One of three reasons to stop after the person's reply: a scope change (范围变化), a falsified premise that changes the task (前提失效), an irreversible step (不可逆操作). A refuted expectation is reported, not a stop |
+| irreversible step | 不可逆操作 | Shown as the exact command or message; run once after the person's yes, never as a check. Outside code: sending, paying, publishing, deleting |
+| recommended answer | 建议答案 | Worded so that "yes" accepts it |
+
+## Evaluations
+
+| Term | 中文 | Meaning |
+|---|---|---|
+| Stage 0 | Stage 0（第 0 阶段评测） | The simulated-user evaluation of 2026-11-11. Kept as a proper name in Chinese text |
+| Tier 1 | Tier 1（第 1 级回归检验） | The regression check of the 82-word text, 2026-11-12. Kept as a proper name in Chinese text |
+| wording tests | 措辞测试 | The five pre-registered tests of 2026-11-12 that chose the 6.0 always-on text (C1, A/B, F2, F3, F4/F4b); `docs/evals/2026-11-12-6.0-wording/` |
+| safeguard stop | 安全拦截 | The API's safeguard stopping a response (category `reasoning_extraction` in these tests); fatal when the one retry is also stopped |
+
+## Critical thinking
+
+| Term | 中文 | Meaning |
+|---|---|---|
+| offloading → deferral → cognitive surrender | 委托 → 依赖 → 放弃判断 | Addy Osmani's slide across many handoffs: the output becomes your "known" without an update step |
+| theory → measured → consistent? → mechanism | 理论预期 → 实测 → 是否一致 → 机理 | The owner's research practice; in 6.0, one row of `fu:after` |

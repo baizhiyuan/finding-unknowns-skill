@@ -7,7 +7,8 @@
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "Discover your unknowns before they get expensive (blind-spot pass, prototype, interview, references, plan, notes, pitch, quiz, Cartographer mode) — keep the reasoning when agents hand work back (keep-the-reasoning handoff packets) — and report every measured result as Theory → Measured → Consistent? → Mechanism (theory-vs-result, with a fresh-context mechanism-auditor)."
+      "description": "Keep your own map of what you know and do not know: a four-quadrant map (KK, KU, UK, UU) before non-trivial changes, with one pause for your reply (fu:before), and what moved after the work (fu:after), plus /fu-interview and /fu-lookback. Pair it with the 127-word always-on text in CLAUDE.md.",
+      "version": "6.0.0"
     }
   ]
 }

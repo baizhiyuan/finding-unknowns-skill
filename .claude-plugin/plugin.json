@@ -1,7 +1,7 @@
 {
   "name": "finding-unknowns",
-  "description": "Surface your unknowns before they get expensive, and keep your judgment when agents hand work back. finding-unknowns: eight discovery techniques plus Cartographer mode (coverage-gated, regret-ordered unknowns ledger with reversibility floor, verification contract, the spec as its default end, and experimental Workflow execution, graph-ordered and approval-gated). keep-the-reasoning: stakes-triaged handoff packets — evidence first, what checks did not prove, what went unchecked, and decisions listed at high stakes. theory-vs-result: every measured result reported as Theory → Measured → Consistent? → Mechanism — prediction before data, noise floor, evidence-tiered mechanism, rule verdict kept apart from direction verdict, plus a debug path for reproducible failures. Five companion agents: blindspot-scout, prototype-smith, ledger-keeper, quiz-master, mechanism-auditor.",
-  "version": "4.3.2",
+  "description": "Keep your own map of what you know and do not know, and update it only on evidence. An always-on text (CLAUDE.md, 127 words, appended by hand or by install.sh) shows a four-quadrant map before non-trivial changes and then waits for your reply (fu:before: KK what you rely on, KU what is open, UK what the assistant assumes you want, UU what you did not ask; say \"just do it\" to skip the wait), and shows what moved after the work (fu:after: expected vs found, now known, not proved, still unknown). The finding-unknowns skill holds the templates, an interview you start with /fu-interview, and a look-back over past Claude Code sessions with /fu-lookback. No agents or hooks; nothing is written to disk unless you say \"save\".",
+  "version": "6.0.0",
   "author": {
     "name": "baizhiyuan"
   },
