@@ -12,11 +12,13 @@ It is about maintaining the project. For what the plugin does at runtime, read
 | Path | Role | Rule |
 |------|------|------|
 | `docs/design/5.2.md` | The design | Accepted 2026-11-12, with the owner's decisions in its header. A behavioural change that contradicts it needs a design change first. `docs/design/5.0.md` is history (the 5.0 reasons and evaluation plan); do not edit it to match 5.2. |
-| `skills/finding-unknowns/SKILL.md` | The only skill | Holds the card, the three operations, the four stop-points and the rules that must always be loaded. At most 700 words. Everything else goes in a reference. |
+| `skills/finding-unknowns/SKILL.md` | The only skill | Holds the card, the four operations (`/fu-brief`, `/fu-catch-up`, `/fu-debrief`, `/fu-view`), the four stop-points and the rules that must always be loaded. At most 700 words. Everything else goes in a reference. |
 | `skills/finding-unknowns/references/*.md` | Per-phase detail | `card.md` (normative card schema and lint rules) · `brief.md` (questions, predictions, contract; ≤ 350 words) · `debrief.md` (grading, field rules, reply; ≤ 450) · `results.md` (Theory → Measured → Consistent? → Mechanism; ≤ 1,200) · `view.md` (HTML view offer; ≤ 150). Normative for their topic. On conflict, fix whichever contradicts the design. |
 | `commands/*.md` | `/fu-brief`, `/fu-catch-up`, `/fu-debrief`, `/fu-view` | Thin: invoke the skill with the Skill tool and name the operation; together at most 450 words. Exception: `/fu-brief` holds the card's fill-in template (not counted). Never name a command after a skill or a Claude Code built-in (`/brief`, `/status` and `/resume` collide). |
 | `agents/mechanism-auditor.md` | The one agent | Read-only grader, at most 500 words; used for irreversible-lane cards, measured results, or on request; never given the builder's claims. |
-| `scripts/fu.py` | The `fu` script (5.2 phase 2) | Stdlib only. Everything deterministic: lint, freeze, integrity, log, list, render, guard. Built to `docs/design/fu-cli.md`. |
+| `scripts/fu.py`, `bin/fu` | The `fu` script (stdlib only) | Everything deterministic: lint, freeze, integrity, log, list, render, guard. Built to `docs/design/fu-cli.md`; change the contract and the code together. `bin/fu` is a shim. |
+| `hooks/hooks.json` | The guard hook | PreToolUse, PostToolUse and PostToolUseFailure on Bash run `fu guard pre|post`. Advisory: asks on a command named by an open card's `Irreversible:` line (Brief, or under a dated Amendment), records runs, never denies, fails open. |
+| `tests/test_fu.py`, `tests/fixtures/` | Tests for `fu.py` | Stdlib `unittest`. `fixtures/valid` must lint clean (0 FAIL, 0 WARN on `search-export`); `fixtures/qwen-card` must fail with the pilot's rules. |
 | `CLAUDE.next.md` | Candidate always-on text | At most 82 words. Replaces `CLAUDE.md` only after the Tier 1 check passes. |
 | `docs/evals/`, `docs/field-notes/` | Evidence and field notes | Protected: do not rewrite results or notes after the fact. |
 | `docs/ARCHITECTURE.md`, `docs/GLOSSARY.md` | Reference | Update when a part, a file or a term changes. |
@@ -63,6 +65,7 @@ These came from 4.x and must keep a home in 5.x (5.0 design §9). Do not weaken 
   finding.
 - **Never commit raw eval logs** (for example the `events.jsonl` run logs).
 - YAML frontmatter values containing `:` must be quoted.
+- `decisions.md` lines read `{YYYY-MM-DD} "{their words}" → {what it settles}`; `Irreversible:` lines live in the Brief or under a dated Amendment only.
 - Every step stays runnable without extras: without the agent, grading is labelled
   `same-context — weaker`; without the `fu` script, Timing is `self-reported` and
   integrity `not run`.
@@ -85,9 +88,11 @@ keep-the-reasoning and theory-vs-result skills. 4.x is at tag `v4.3.2`.
 
 1. Validate (CI runs the same on every push to `main` and every pull request):
    ```bash
+   python3 -m unittest discover -s tests   # the fu script, lint rules and guard
    python3 scripts/validate.py   # frontmatter, JSON, SVG safety, links, fences, en/zh
                                  # README parity, em dashes in zh docs,
                                  # version/count drift, install.sh
    ```
+   Behaviour of `fu` changed: update `docs/design/fu-cli.md` and `references/card.md` with it.
 2. Bump `version` in `.claude-plugin/plugin.json` (SemVer) and add a `CHANGELOG.md` entry.
 3. Use Conventional Commits (`feat:`, `fix:`, `docs:`, …).

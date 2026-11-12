@@ -69,7 +69,7 @@ its header): [docs/design/5.2.md](docs/design/5.2.md); the script's contract:
   checks are dry runs; it runs once. With the guard, the permission prompt is the yes;
   without it, only a chat yes to that exact command.
 - **The completion report is the Debrief;** `/fu-debrief` is for late results and
-  re-grades. This removes the turn in which most of 5.0's post-build interruptions fell.
+  re-grades. This removes the turn where 8 of 17 of 5.0's M4 failures began.
 - **The card format:** lines with fixed keys in a fixed order and nested lists, no tables.
   Deltas live only in `{slug}.deltas.md`, with times; a `decided-for-you` delta states its
   cost if wrong; `Needs you` exists once, in the header.

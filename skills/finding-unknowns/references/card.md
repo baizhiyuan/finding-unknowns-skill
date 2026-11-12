@@ -79,7 +79,10 @@ fails; a missing `HH:MM` warns. The card's `## Deltas` holds `Latest: D{n} | non
 until the first delta) and `Rollup:` with at most three lines.
 
 **Amendment**: `M{n} {time} · after D{n} · {decided-for-you | confirmed}: {what changed} ·
-why: {text}`. No `after D{n}`: WARN.
+why: {text}`. No `after D{n}`: WARN. An irreversible step found mid-build is registered by
+an ``Irreversible: `{exact command}` `` line directly under its `M{n}` entry (same form as
+in the Brief; nowhere else outside the Brief); adding one is a scope stop-point, so the
+person confirms it first, and the guard then asks for that command.
 
 **Model changes**: `- You expected X → it is Y, because Z [shown, not confirmed |
 confirmed]`, at most five, in this section only (WARN elsewhere).

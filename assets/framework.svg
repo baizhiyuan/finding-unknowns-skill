@@ -78,7 +78,7 @@
 <path d="M500 556L500 572" stroke="#B1ADA1" stroke-width="1.5" fill="none" marker-end="url(#ahc)"/>
 <rect x="330" y="576" width="810" height="50" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2"/>
 <text x="350" y="607" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#141413" font-weight="700">SKILL.md</text>
-<text x="450" y="607" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">≤ 700 words · the card, four stop-points, the always rules</text>
+<text x="450" y="607" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">≤ 700 words · the card, four stop-points, the always-on rules</text>
 <rect x="330" y="640" width="152" height="58" rx="12" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="330" y="650" width="5" height="38" rx="2.5" fill="#D4A27F"/>
 <text x="348" y="664" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">card.md</text>

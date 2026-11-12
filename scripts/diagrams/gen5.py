@@ -184,7 +184,7 @@ def framework(zh):
     f.arrow(500, 556, 500, 572, MUTE, "ahc", 1.5)
     f.rect(330, 576, 810, 50, "#FFFFFF", ORG, 1.2, 10)
     f.serif(350, 607, "SKILL.md", 17)
-    f.text(450, 607, T("≤ 700 words · the card, four stop-points, the always rules", "不超过 700 词 · 任务卡、四个打断点、常驻规则"), 13, SUB, SANS)
+    f.text(450, 607, T("≤ 700 words · the card, four stop-points, the always-on rules", "不超过 700 词 · 任务卡、四个打断点、常驻规则"), 13, SUB, SANS)
     refs = [("card.md", T("schema · lint", "格式规范")), ("brief.md", T("questions", "提问与预测")), ("debrief.md", T("grading", "评判")),
             ("results.md", T("measured", "实测结果")), ("view.md", T("HTML view", "HTML 视图"))]
     for i, (n, d) in enumerate(refs):
@@ -289,8 +289,8 @@ def stops(zh):
              T("Checked against the card, never against the agent's sense of what feels risky.", "对照任务卡核对，而不是由智能体凭感觉判断风险高低。"))
     rows = [
         ("1", T("Irreversible step", "不可逆操作"), T("data rewritten or deleted · production · money · publishing · promises", "改写或删除数据、生产环境、资金、对外发布、对他人的承诺"),
-         T("Exact command on a Brief Irreversible: line; runs once.", "确切命令写在简报的 Irreversible: 行上，只执行一次。"),
-         T("Guard asks, or a chat yes to that exact command; dry-run checks.", "由防护钩子请你确认，无钩子时须你在对话中同意；检查只做演练。")),
+         T("Exact command on an Irreversible: line; runs once.", "确切命令写在 Irreversible: 行上，只执行一次。"),
+         T("Guard asks, or a chat yes to that exact command; dry-run checks.", "由防护钩子请你确认，无钩子时须你在对话中同意；检查只做试运行。")),
         ("2", T("Scope change", "范围变化"), T("outside the Brief", "超出简报约定的范围"),
          T("You decide whether the scope changes.", "由你决定是否改变范围。"), ""),
         ("3", T("Dead premise, no way back", "前提失效且无退路"), T("a premise died or a falsifier fired; no reversible path left", "简报前提不成立或反证条件已触发，且无可逆做法"),

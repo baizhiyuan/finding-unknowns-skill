@@ -56,8 +56,8 @@ The whole text:
 > each check did not prove.
 
 There are no commands to learn. Start a task as usual; the assistant asks for your
-prediction first. This exact text is what Stage 0 measured (the report calls it "w60",
-the 60 words). It is pinned in this repository and changes only after a new check.
+prediction first. This exact text is what Stage 0 measured (the report calls it "w60"
+from an earlier count; `wc -w` gives 56). It is pinned in this repository and changes only after a new check.
 
 [`CLAUDE.next.md`](CLAUDE.next.md) is an 82-word candidate that targets the three holes
 Stage 0 found: it skips trivial work, asks once for the decisions only you can make, and
@@ -152,6 +152,20 @@ For a typo or a one-liner, use neither the card nor the commands.
 
 ### Install and update
 
+Next release: **v5.2.0**. It is not released yet: until it is, the marketplace serves
+v4.3.2, and 5.2 is available only from branch `v5` through `install.sh`.
+
+`install.sh` copies the skill, the commands, the agent and the script into
+`~/.claude/`, **without the guard hook** (hooks ship with the plugin only). With that
+install, an irreversible step runs only after your chat yes to the exact command.
+
+```bash
+git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
+cd finding-unknowns-skill && git checkout v5 && bash install.sh
+```
+
+After release:
+
 From the plugin marketplace. These are Claude Code slash commands; enter them **one at a
 time**:
 
@@ -168,18 +182,7 @@ hook. It needs `python3` (3.8 or later, standard library only) for the script an
 hook; without it, the card still works, with Timing `self-reported` and no lint or
 integrity check.
 
-`install.sh` copies the skill, the commands, the agent and the script into
-`~/.claude/`, **without the guard hook** (hooks ship with the plugin only). With that
-install, an irreversible step runs only after your chat yes to the exact command.
-
-```bash
-git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
-cd finding-unknowns-skill && git checkout v5 && bash install.sh
-```
-
-Next release: **v5.2.0**. It is not released yet: until it is, the marketplace serves
-v4.3.2, and 5.2 is available only from branch `v5` through `install.sh` as above. Update
-the way you installed:
+Update the way you installed:
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -257,8 +260,8 @@ Without the auditor, the Debrief is graded in the same context and says so
 <p align="center"><img src="assets/stop-points.svg" alt="The four stop-points; the irreversible step names its exact command, the guard hook asks, it runs once and its checks are dry runs; everything else is logged" width="100%"></p>
 
 1. **Irreversible step:** data rewritten or dropped, deletion, production, money,
-   publication, commitments to people. The exact command is on the Brief's
-   `Irreversible:` line; it runs once; its contract checks are dry runs. With the guard
+   publication, commitments to people. The exact command is on the Brief's (or a dated
+   Amendment's) `Irreversible:` line; it runs once; its contract checks are dry runs. With the guard
    hook, the permission prompt is the stop and your answer is the yes. Without it, the
    agent stops and only a chat yes to that exact command runs it ("go ahead" is not one).
 2. **Scope change** outside the Brief.
@@ -356,7 +359,7 @@ P1 (you · medium) "the bulky parcel's cheapest quote is Economy at 4.00"
 ### Terminal lists
 
 In the terminal everything is a nested list. `fu list --all` on the repository's test
-fixtures (open cards first; `fu list` alone shows only those):
+fixtures (newest first; `fu list` alone shows only open cards):
 
 ```
 search-export · building

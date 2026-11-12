@@ -464,6 +464,34 @@ class GuardForms(GuardBase):
             self.assertIn("irreversible step `", self.pre(cmd)["hookSpecificOutput"]["permissionDecisionReason"], cmd)
         self.assertIn("variant", self.pre("python publish.py build/quotes.json --force")["hookSpecificOutput"]["permissionDecisionReason"])
 
+    AMEND_IRR = "M2 2026-11-12 09:50 · after D2 · confirmed: also drop the stale cache · why: found mid-build\n"
+
+    def _amend_irreversible(self, cmd="rm -rf cache/old"):
+        self.edit("## Deltas\n", self.AMEND_IRR + "Irreversible: `%s`\n\n## Deltas\n" % cmd)
+
+    def test_irreversible_line_under_an_amendment_lints_clean_and_the_guard_asks(self):
+        self._amend_irreversible()
+        r = self.lint()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertNotIn("brief-form", rules(r.stdout, "FAIL"))
+        out = self.pre("rm -rf cache/old")
+        self.assertEqual(out["hookSpecificOutput"]["permissionDecision"], "ask")
+        self.assertIn("irreversible step `rm -rf cache/old`", out["hookSpecificOutput"]["permissionDecisionReason"])
+
+    def test_malformed_irreversible_line_under_an_amendment_fails(self):
+        self._amend_irreversible("x")
+        self.edit("Irreversible: `x`", "Irreversible: rm -rf cache/old")
+        self.assertIn("brief-form", rules(self.lint().stdout, "FAIL"))
+
+    def test_irreversible_line_outside_brief_and_amendments_fails(self):
+        self.edit("## Open\n", "## Open\nIrreversible: `rm -rf cache/old`\n")
+        self.assertIn("brief-form", rules(self.lint().stdout, "FAIL"))
+
+    def test_decisions_line_form_warns(self):
+        self.assertNotIn("decisions-form", self.lint().stdout)
+        (self.fu / "decisions.md").write_text("# decisions\n- billing basis: scale weight only (2026-11-12)\n", encoding="utf-8")
+        self.assertIn("decisions-form", rules(self.lint().stdout, "WARN"))
+
     def test_npm_run_script(self):
         self.edit("Irreversible: `%s`" % IRR, "Irreversible: `npm run deploy`")
         self.edit("  - check: `python publish.py --dry-run build/quotes.json` exits 0", "  - check: `npm run build` exits 0")

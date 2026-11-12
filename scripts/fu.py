@@ -76,6 +76,7 @@ DEBRIEF_HEAD = re.compile(r"^## Debrief \((" + TIME + r"); graded by (fresh cont
 PRED_RE = re.compile(r"^([PA])(\d+) \((you|agent) · ([^()]*)\) (.+)$")
 PRED_LIKE = re.compile(r"^[PA]\d+\b")
 CONTRACT_RE = re.compile(r"^C(\d+) (.+)$")
+DECISION_RE = re.compile(r"^\d{4}-\d{2}-\d{2} \".+\" → .+$")
 IRREVERSIBLE_RE = re.compile(r"^Irreversible: `([^`]+)`\s*$")
 SUB_RE = re.compile(r"^  - ([^:]+?): ?(.*)$")
 BULLET_RE = re.compile(r"^  - (.*)$")
@@ -887,6 +888,12 @@ def _parse_amendments(body: list, f: str, lint: Lint, m: dict) -> None:
     for ln, text in body:
         if not text.strip():
             continue
+        if text.startswith("Irreversible:"):
+            if not m["amendments"]:
+                lint.add("FAIL", f, ln, "brief-form", "an `Irreversible:` line goes under the dated `M{n}` amendment that adds it")
+            elif not IRREVERSIBLE_RE.match(text):
+                lint.add("FAIL", f, ln, "brief-form", "must read ``Irreversible: `{exact command}` ``, one command per line")
+            continue
         am = AMEND_RE.match(text)
         if not am:
             lint.add("WARN", f, ln, "amend-form", "amendment should read `M{n} {time} · after D{n} · decided-for-you|confirmed: {what} · why: {why}`")
@@ -1051,6 +1058,8 @@ def _scan_card_lines(lines: list, sections: list, f: str, lint: Lint) -> None:
             lint.add("FAIL", f, 3, "needs-you-once", "no `Needs you:` header line")
     for i, t in enumerate(lines, 1):
         sec = section_of.get(i, "")
+        if t.startswith("Irreversible:") and not sec.startswith("## Brief") and sec != "## Amendments":
+            lint.add("FAIL", f, i, "brief-form", "`Irreversible:` lines live in the Brief or under a dated Amendment only")
         if DELTA_IN_CARD.match(t) and not t.lstrip().startswith(("D" + "elta",)):
             lint.add("FAIL", f, i, "delta-location", "a D{n} delta line in the card; deltas live only in {slug}.deltas.md")
         if sec != "## Model changes" and (MODEL_CHANGE_LIKE.match(t) or re.match(r"^#+ Model changes", t) and sec != ""):
@@ -1320,6 +1329,10 @@ def lint_paths(root: Path, card, claim, slug: str, strict_flag: bool):
         if n > DECISIONS_MAX_LINES:
             lint.add("WARN", "decisions.md", DECISIONS_MAX_LINES + 1, "decisions-length",
                      "decisions.md has %d lines (at most %d)" % (n, DECISIONS_MAX_LINES))
+        for i, t in enumerate(read_text(dec).splitlines(), 1):
+            if t.strip() and not t.startswith("#") and not DECISION_RE.match(t):
+                lint.add("WARN", "decisions.md", i, "decisions-form",
+                         "a decision reads `{YYYY-MM-DD} \"{their words}\" → {what it settles}`")
     return lint, model
 
 

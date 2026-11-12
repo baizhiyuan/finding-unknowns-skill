@@ -105,7 +105,8 @@ Brief · `CREATE INDEX CONCURRENTLY orders_created_at_id ON orders (created_at, 
 The index is a scope change and also irreversible (production). It was not on the frozen
 Brief, so the guard has no line to match: the agent stops, and only your chat yes to that
 exact command would run it. You reply: "Not now; I'll run it in Thursday's maintenance
-window." It goes to Open, unexecuted.
+window." It goes to Open, unexecuted. Had you said yes, the agent would add it under a dated
+Amendment with an `Irreversible:` line, and the guard would then ask before it runs.
 
 ## 4. Next session: `/fu-catch-up` (30 seconds)
 

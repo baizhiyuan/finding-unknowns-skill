@@ -124,7 +124,7 @@ Rule IDs (stable; the renderer shows WARN as chips):
 | `sections` | FAIL | sections exactly `## Brief (draft)` or `## Brief (frozen {time})`, `## Amendments`, `## Deltas`, `## Model changes`, `## Open`, in that order, then `## Debrief (…)` sections only at the end (absent until the Debrief: not a FAIL) |
 | `placeholder` | FAIL | a template placeholder is left: in prose `{…}`, `{a \| b}` or `{lowercase words}`; inside code spans only the template's command placeholders (`{exact command}`, `{command that can fail}`, `{command}`), since code may use braces. The unfilled template fails; the filled template passes |
 | `needs-you-once` | FAIL | exactly one `Needs you:` line, on header line 3 |
-| `brief-form` | FAIL | `Approach:` alone, then `  - {decision} because {why}` (at least one); `Stop-points: irreversible · scope · dead-premise · budget > …`; ``Irreversible: `{command}` `` one per line; `Check files: {paths} \| none`; no other line in the Brief |
+| `brief-form` | FAIL | `Approach:` alone, then `  - {decision} because {why}` (at least one); `Stop-points: irreversible · scope · dead-premise · budget > …`; ``Irreversible: `{command}` `` one per line (also allowed directly under a dated `M{n}` Amendment, same form; an `Irreversible:` line anywhere else outside the Brief FAILs); `Check files: {paths} \| none`; no other line in the Brief |
 | `id-reserved` | FAIL in the Brief, WARN elsewhere | a single-digit `P{n}`/`A{n}` cited in the card or deltas file (outside code spans, and not inside a prediction line's quoted claim, Brief or Debrief) is a defined Brief prediction; `P10` and longer are not read as IDs. FAIL always: P belongs to `you`, A to `agent`; no ID defined twice |
 | `prediction-form` | FAIL | `{ID} ({you\|agent} · {confidence}) "{claim}"` then `  - falsifier:` and `  - should not change:`; a `P` claim is one double-quoted string whose inner quotes are written `\"` (an unescaped inner quote fails); `A` may be unquoted; no answer is exactly `P: none given`; not both |
 | `confidence` | FAIL | person `low · medium · high · no idea · not given`; agent `low · medium · high` |
@@ -136,6 +136,7 @@ Rule IDs (stable; the renderer shows WARN as chips):
 | `rollup` | FAIL | the card's `## Deltas` holds `Latest: D{n} \| none`, `Rollup:`, then at most three lines |
 | `amend-anchor` | WARN | amendment without `after D{n}` |
 | `amend-form` | WARN | amendment not in the form `M{n} {time} · after D{n} · {decided-for-you\|confirmed}: {what} · why: {why}` |
+| `decisions-form` | WARN | a `decisions.md` line (not blank, not `#`) not in the form `{YYYY-MM-DD} "{their words}" → {what it settles}` |
 | `model-changes` | FAIL | `## Model changes` lines read `- You expected X → it is Y, because Z [shown, not confirmed \| confirmed]`, at most five |
 | `model-changes-place` | WARN | a `You expected … →` line or Model changes heading outside its section |
 | `live-length` | WARN (FAIL strict) | header to Open > 40 non-blank lines, a frozen Brief's lines not counted |
@@ -277,7 +278,7 @@ decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
 - **Advisory.** The guard asks; it never denies and fails open. Hard enforcement is a
   Claude Code `permissions.ask` rule for the exact command in user or managed settings,
   which the agent cannot edit.
-- **Per-card isolation.** Collects ``Irreversible: `…` `` commands from open cards; a card
+- **Per-card isolation.** Collects ``Irreversible: `…` `` commands from open cards (Brief or Amendments; adding one mid-build is a scope stop-point the person confirms); a card
   that cannot be read (invalid UTF-8 is replaced, a dangling symlink or unreadable file is
   skipped) does not stop the others. The prior-run lookup and each log write fail on their
   own without changing the decision.

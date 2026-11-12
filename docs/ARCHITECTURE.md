@@ -27,7 +27,7 @@ bin/fu           optional wrapper for PATH; the skill never relies on it
 
 | Part | Role |
 |---|---|
-| `SKILL.md` | Tools and memory (`fu`, `profile.md`, `decisions.md`), the always rules, the quiet build and its four stop-points, the turn-end rule, `/fu-catch-up`, learn and strict modes |
+| `SKILL.md` | Tools and memory (`fu`, `profile.md`, `decisions.md`), the always-on rules, the quiet build and its four stop-points, the turn-end rule, `/fu-catch-up`, learn and strict modes |
 | `references/card.md` | Normative card schema; `fu lint` enforces it. Files, header, Brief lines, deltas, Amendments, Debrief, strict caps, the prediction-log line |
 | `references/brief.md` | One batch of questions, predictions, the contract, the irreversible lane |
 | `references/debrief.md` | Grading steps, field rules, the reply, no rescue, surrender signals |
