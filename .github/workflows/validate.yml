@@ -20,3 +20,5 @@ jobs:
         run: python -m pip install --quiet pyyaml
       - name: Repository consistency checks
         run: python scripts/validate.py
+      - name: fu script tests (Tier 0)
+        run: python -m unittest discover -s tests -v

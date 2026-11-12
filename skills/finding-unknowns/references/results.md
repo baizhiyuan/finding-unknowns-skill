@@ -1,6 +1,6 @@
 # Results: Theory → Measured → Consistent? → Mechanism
 
-*From the author's own empirical research practice.*
+*From the author's research practice.*
 
 A number alone is not a finding. Two failures follow. **Dismissal**: a bad result drops
 a good direction without asking which assumption broke. **Rescue**: a later story
@@ -18,8 +18,8 @@ Chinese labels: 理论预期 → 实测 → 是否一致 → 机理; 一致 · �
   the reporting block below.
 - **Decision**: adopt or reject, ship or not, money or production. Report, plus the frozen
   rule quoted verbatim, with the two verdicts kept apart. No frozen rule: propose one
-  (threshold gate) and stop; the decision is the person's. A rule approved after the
-  result was seen does not apply to it: `descriptive only`.
+  (threshold gate) under `Needs you`; the decision is the person's, and a rule approved
+  after seeing the result does not apply to it: `descriptive only`.
 
 ## Debug path (reproducible, deterministic failures)
 
@@ -34,7 +34,7 @@ The repro is the experiment; no noise floor. Record in order:
 6. Re-run       : the same repro → expected output; one neighbouring case → unchanged
 ```
 
-An unchecked explanation stays a guess. Flaky: Report. A ship decision rides on it:
+An unchecked explanation is a guess. Flaky: Report. A ship decision rides on it:
 Decision.
 
 ## Before measuring: the claim file
@@ -47,8 +47,8 @@ the result was opened means `post-hoc`.
 ```
 Claim under test  : {one sentence}
 Mechanism chain   : A → B → C   (each link can fail on its own)
-Your prediction   : direction + rough size + where it shows up ({confidence})
-Agent prediction  : the same, written after yours
+Person prediction : their words verbatim ({confidence}), or `none given`; never authored
+Agent prediction  : direction + rough size + where it shows up, written after theirs
 Should not change : where the effect should be absent, and the size that would matter
 Noise floor       : how measured (≥ 3 reruns or an A/A comparison), and its size
 Stopping rule     : seeds, runs or windows before any verdict
@@ -59,10 +59,10 @@ Trials so far     : raw configurations tried; effective independent hypotheses
 Written           : {date; "before running" | "before opening <path>"}
 ```
 
-- At Note level the prediction line is enough. The person's and the agent's stay on
-  separate lines; their disagreement is the most informative row.
+- At Note level the prediction lines are enough; the person's and the agent's
+  disagreement is the most informative row.
 - **Locate the effect**: most mechanisms act on a subset (tails, cold caches).
-- **Noise floor before any rule**: three reruns or an A/A comparison, or no signal calls.
+- **Noise floor before any rule**, or no signal calls.
 - **Threshold gate**: a new or tighter pass line is explained in plain words first (what
   it protects, why this number, what failing means, what it might wrongly reject), frozen
   only on the person's approval, applied only from then on.
@@ -75,11 +75,11 @@ Written           : {date; "before running" | "before opening <path>"}
 
 Append-only in the claim file: `{date} · {run} · {config} · {what changed} · {result} ·
 {cumulative trials} · {data spent}`. Before the stopping rule, no verdict on interim
-numbers. Failed and voided runs stay.
+results. Failed and voided runs stay.
 
 ## Measure fairly
 
-Report each failed or skipped check as a caveat: matched baseline (window, coverage,
+Each failed or skipped check is a caveat: matched baseline (window, coverage,
 seeds, pipeline); one variable changed or confounds named; a simple baseline; equal
 reruns (state N), independent batches apart; all segments, not the best; proxies
 labelled; leakage, units, NaNs; holdout read once, when approved. Overlapping windows are
@@ -114,7 +114,7 @@ not independent.
 
 1. **Pipeline**: bug, leakage, misalignment, units. `void: pipeline defect` only with
    evidence that it changes the headline number; the original verdict stays visible. A
-   rerun on data already read is `re-read, not confirmatory` and needs the person's yes.
+   rerun on data already read is `re-read, not confirmatory`: propose it under `Needs you`.
 2. **Comparison**: baseline mismatch, confound, low power, wrong segment.
 3. **Metric**: the proxy moved and the objective did not, or the reverse.
 4. **Theory**: name the broken link, or the candidates and the check that separates them.
@@ -128,14 +128,15 @@ bottom line; result entries; facts, inferences and to-test apart; caveats; not c
 
 - **Rule verdict**: the rule's own labels (`PASS · FAIL · UNCERTAIN`), `descriptive only`
   or `void`, computed on the rule's metric as frozen. "The metric was a proxy" feeds the
-  direction verdict, never this one. A result on an uncovered boundary: say so and ask.
+  direction verdict, never this one. A result outside the rule's boundary: say so under
+  `Needs you`.
 - **Direction verdict**: `alive · alive-but-constrained · weakened · dead`, with the
   reason. You propose it; the person owns it. `dead` needs a fired falsifier or
   independent failures naming the same link; one failed run constrains an assumption.
 - A good mechanism never turns `FAIL` into `PASS`; it justifies a new pre-registered test.
   A pooled result never covers a failed independent batch.
 
-**Audit.** At Report and Decision levels, `mechanism-auditor` gets the result entries,
-the claim file, the frozen rule and the artifact paths, never your write-up. Its
-downgrades stand; put disagreement under caveats. Without subagents:
-`same-context — weaker`.
+**Audit.** At Report and Decision levels, `mechanism-auditor` gets the result entries
+with `consistent?` and `mechanism` stripped, the claim file, the frozen rule and the
+artifact paths, never your write-up. Its verdicts and tiers stand; caveats show where
+yours differed. Without subagents: `same-context — weaker`.

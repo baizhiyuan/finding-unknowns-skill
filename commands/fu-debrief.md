@@ -9,4 +9,5 @@ argument-hint: "[slug]"
    `references/debrief.md` on the named card, else the most recently changed card
    (say which in one line; do not ask).
 2. Measured results follow `references/results.md`.
-3. A re-grade adds a new Debrief; the earlier one stays.
+3. A re-grade adds a new Debrief; the earlier one stays. End with
+   `fu freeze {slug} --stage debrief`.

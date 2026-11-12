@@ -1,0 +1,21 @@
+{
+  "description": "finding-unknowns guard: asks before a Bash command named on an open card's Irreversible: line and records each run; logs generic destructive patterns. Fails open, never denies.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard pre", "timeout": 10 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard post", "timeout": 10 }
+        ]
+      }
+    ]
+  }
+}

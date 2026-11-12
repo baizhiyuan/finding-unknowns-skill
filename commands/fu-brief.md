@@ -7,22 +7,22 @@ argument-hint: "<task>"
 
 1. Invoke the `finding-unknowns` skill with the Skill tool; `references/…` paths are
    relative to its base directory.
-2. Read `profile.md` and `decisions.md`; look at the repository silently, read-only. If an
-   open card covers this task, say so and point to `/fu-catch-up`.
-3. One message: ask the person's prediction and confidence (no recommendation), plus the
-   decisions only they can make, each with your recommendation (`references/brief.md`).
-   At most three questions.
-4. Record their words, quoted, or `P: none given`. Then write your predictions.
+2. Read `profile.md` and `decisions.md`; look at the repository silently, read-only. An
+   open card covering this task: point to `/fu-catch-up`; that is the offer and counts as
+   a question. A new card only if the person asks.
+3. One message, at most three questions: the person's prediction with its confidence (one
+   question, no recommendation), plus decisions only they can make, each recommended
+   (`references/brief.md`).
+4. Record their words verbatim (`"` as `\"`), or `P: none given`. Then write yours.
 5. Fill the template below as `.finding-unknowns/tasks/{slug}.md`; run `fu lint {slug}`
-   and fix every FAIL (strict: it must pass).
-6. Show the Brief in the reply. End with one approval ask: open decisions, the view offer
-   for a complex task (`references/view.md`), and a note that the card will be committed.
+   and fix every FAIL without trimming the person's words (`references/card.md`).
+6. Show the Brief. End with one approval ask: open decisions, the view offer for a complex
+   task (`references/view.md`), that the card will be committed, and `lint not run` when
+   `fu` is missing.
 7. On yes: `fu freeze {slug} --stage brief`.
-8. Build quietly (the skill's stop-points); the completion report is the Debrief
-   (`references/debrief.md`).
+8. Build quietly; the completion report is the Debrief (`references/debrief.md`).
 
-Omit `Irreversible:` and `post-check` when nothing is irreversible; fill the Debrief
-section only at the end.
+Omit `Irreversible:` and `post-check` when nothing is irreversible.
 
 ```markdown
 # {slug}
@@ -58,22 +58,4 @@ Rollup:
 ## Model changes
 
 ## Open
-
-## Debrief ({time}; graded by {fresh context | same-context — weaker})
-Evidence:
-  - `{command}` → {output, trimmed}
-P1 (you · {confidence}) "{identical to the Brief line}"
-  - measured: {the number the verdict rests on} ({path})
-  - consistent?: {consistent | partly | inconsistent | can't tell | post-hoc fit}
-  - mechanism: {verb matched to tier} [{verified | supported | inferred | untested}]
-Integrity:
-  - {the three fu integrity lines}
-Did NOT prove:
-  - {check} → leaves open: {…} · still holds: {…}
-Not checked:
-  - {at least one item}
-Bottom line:
-  - holds: {claim} ({IDs})
-  - did not hold: {claim} ({IDs}) | none
-  - stops at: {boundary}
 ```

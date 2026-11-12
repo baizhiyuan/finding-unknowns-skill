@@ -30,13 +30,20 @@ DOCS += sorted(str(Path(p).relative_to(ROOT)) for p in glob.glob(str(ROOT / "doc
                + glob.glob(str(ROOT / "docs/evals/*/README.md")))
 # Word budgets for runtime text (wc -w), from the 5.2 design. Commands are counted together,
 # without fenced blocks in fu-brief.md (the card template lives there).
-BUDGETS = {"CLAUDE.md": 82, "CLAUDE.next.md": 82, "skills/finding-unknowns/SKILL.md": 700,
+BUDGETS = {"CLAUDE.next.md": 82, "skills/finding-unknowns/SKILL.md": 700,
            "skills/finding-unknowns/references/brief.md": 350,
            "skills/finding-unknowns/references/debrief.md": 450,
            "skills/finding-unknowns/references/results.md": 1200,
            "skills/finding-unknowns/references/view.md": 150,
            "agents/mechanism-auditor.md": 500}
 COMMANDS_BUDGET = 450
+# CLAUDE.md is the always-on text measured in Stage 0 (56 words). It is pinned verbatim;
+# changes go through CLAUDE.next.md and the Tier 1 check.
+CLAUDE_MD = ("Before building, ask me to predict the outcome, then give yours; write both, with what "
+             "would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for "
+             "irreversible steps, scope changes, a falsified premise or a budget overrun; log other "
+             "deviations there. Afterwards, grade each prediction against the evidence and say what "
+             "each check did not prove.")
 # Phase 3 of 5.2 rewrites these docs. Until CHANGELOG.md has an entry for this version, their
 # problems are reported as PENDING and do not fail the run; the entry ends the grace period.
 PHASE3_VERSION = "5.2.0"
@@ -168,6 +175,8 @@ def check_install_script() -> None:
 
 
 def check_budgets() -> None:
+    if read("CLAUDE.md").strip() != CLAUDE_MD:
+        fail("CLAUDE.md: differs from the measured 56-word text (change CLAUDE.next.md instead)")
     for rel, limit in BUDGETS.items():
         words = len(read(rel).split())
         if words > limit:

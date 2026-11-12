@@ -1,32 +1,31 @@
 # Debrief
 
-One agent wrote the predictions and the work, so honesty here is structural.
-
 ## Steps
 
 1. Run `fu integrity {slug}`; its three lines go in verbatim.
 2. **Grader.** Irreversible lane, measured result, or on request: `mechanism-auditor`
-   gets the frozen card, deltas file and artifact paths, never the transcript or your
-   claims, and fills `measured` and `consistent?`. Otherwise grade yourself:
+   gets artifact paths and the frozen card (`git show {brief commit}:{card}` plus
+   Amendments and deltas file; no Debrief or Model changes), never the transcript or your
+   claims. Its verdicts and tiers stand; the reply shows where yours differed. Otherwise:
    `same-context — weaker`.
 3. Grade every Brief prediction, the person's first, quoted exactly as frozen. An
    Amendment never removes a miss.
 4. Write `mechanism` with its tier. Explain misses only, the person's first, in one line.
 5. Card `Model changes`: `You expected X → it is Y, because Z`, `shown, not confirmed`
    until the person confirms; no verdicts or numbers.
-6. Fill the card's Debrief section and its header `Needs you`; then `fu lint {slug}`,
-   `fu log {slug}`, `fu freeze {slug} --stage debrief`; update Last seen.
+6. Append `## Debrief ({time}; graded by fresh context | same-context — weaker)`, fields
+   as in `card.md`; set the header `Needs you`; run `fu lint`, `fu log`,
+   `fu freeze {slug} --stage debrief`; update Last seen.
 
 ## Field rules
 
-- A row runs claim → evidence → boundary: the quote; `measured` with its path and only
-  the number the verdict rests on; `mechanism`.
+- `measured`: its path and only the number the verdict rests on.
 - The verb matches the tier: `verified` is or causes; `supported` fits; `inferred` may;
   `untested` opens with "untested:". One hedge per claim. A verdict word is never upgraded:
   `consistent` is not "confirmed".
 - `Did NOT prove`: `{check} → leaves open: {part of which claim} · still holds: {…}`.
-- `Bottom line` IDs match the rows.
-- `Needs you` names what the answer settles.
+- Every graded ID appears once in `Bottom line`: `holds` consistent; `did not hold`
+  partly, inconsistent; `stops at` can't tell, post-hoc fit.
 - The terminal never hides a miss, a fired falsifier, an unlogged hunk or
   `same-context — weaker`.
 - A rewrite for clarity changes words only; verdicts, tiers, quotes, numbers and
@@ -34,7 +33,7 @@ One agent wrote the predictions and the work, so honesty here is structural.
 
 ## Reply
 
-Nested lists, fixed keys, this order; no tables. Consistent rows: ID line and
+Nested lists in this order. Consistent rows: ID line and
 `consistent?` only.
 
 ```
@@ -51,7 +50,7 @@ Model changes: {at most five}
 Bottom line:
   - holds: {claim} ({IDs})
   - did not hold: {claim} ({IDs}) | none
-  - stops at: {boundary}
+  - stops at: {boundary} ({IDs})
 Needs you: {X} (recommendation: {Y}; settles {Z}) | nothing
 ```
 

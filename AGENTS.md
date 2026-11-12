@@ -3,31 +3,32 @@
 This file orients AI coding agents (and human contributors) working **on** this repository.
 It is about maintaining the project. For what the plugin does at runtime, read
 `skills/finding-unknowns/SKILL.md` and its references; for why it is built this way, read
-[`docs/design/5.0.md`](docs/design/5.0.md) and the 5.2 re-architecture it led to; the `fu`
-script's contract is [`docs/design/fu-cli.md`](docs/design/fu-cli.md).
+[`docs/design/5.2.md`](docs/design/5.2.md) (the governing design;
+[`5.0.md`](docs/design/5.0.md) is history); the `fu` script's contract is
+[`docs/design/fu-cli.md`](docs/design/fu-cli.md).
 
 ## Layout and single-source-of-truth rules
 
 | Path | Role | Rule |
 |------|------|------|
-| `docs/design/5.0.md` | The design | The reasons and the evaluation plan. A behavioural change that contradicts it needs a design change first. |
+| `docs/design/5.2.md` | The design | Accepted 2026-11-12, with the owner's decisions in its header. A behavioural change that contradicts it needs a design change first. `docs/design/5.0.md` is history (the 5.0 reasons and evaluation plan); do not edit it to match 5.2. |
 | `skills/finding-unknowns/SKILL.md` | The only skill | Holds the card, the three operations, the four stop-points and the rules that must always be loaded. At most 700 words. Everything else goes in a reference. |
 | `skills/finding-unknowns/references/*.md` | Per-phase detail | `card.md` (normative card schema and lint rules) · `brief.md` (questions, predictions, contract; ≤ 350 words) · `debrief.md` (grading, field rules, reply; ≤ 450) · `results.md` (Theory → Measured → Consistent? → Mechanism; ≤ 1,200) · `view.md` (HTML view offer; ≤ 150). Normative for their topic. On conflict, fix whichever contradicts the design. |
 | `commands/*.md` | `/fu-brief`, `/fu-catch-up`, `/fu-debrief`, `/fu-view` | Thin: invoke the skill with the Skill tool and name the operation; together at most 450 words. Exception: `/fu-brief` holds the card's fill-in template (not counted). Never name a command after a skill or a Claude Code built-in (`/brief`, `/status` and `/resume` collide). |
 | `agents/mechanism-auditor.md` | The one agent | Read-only grader, at most 500 words; used for irreversible-lane cards, measured results, or on request; never given the builder's claims. |
 | `scripts/fu.py` | The `fu` script (5.2 phase 2) | Stdlib only. Everything deterministic: lint, freeze, integrity, log, list, render, guard. Built to `docs/design/fu-cli.md`. |
-| `CLAUDE.next.md` | Candidate always-on text | 82 words. Replaces `CLAUDE.md` only after the Tier 1 check passes. |
+| `CLAUDE.next.md` | Candidate always-on text | At most 82 words. Replaces `CLAUDE.md` only after the Tier 1 check passes. |
 | `docs/evals/`, `docs/field-notes/` | Evidence and field notes | Protected: do not rewrite results or notes after the fact. |
 | `docs/ARCHITECTURE.md`, `docs/GLOSSARY.md` | Reference | Update when a part, a file or a term changes. |
 | `docs/TUTORIAL.md` / `docs/TUTORIAL.zh.md` | 5-minute tutorial | One illustrative card; keep both in step with the commands and with each other. |
-| `CLAUDE.md` | Always-on text | The 56 measured words (Stage 0). Frozen; changes go through `CLAUDE.next.md`. |
+| `CLAUDE.md` | Always-on text | The 56 measured words (Stage 0), pinned verbatim by `scripts/validate.py`. Frozen; changes go through `CLAUDE.next.md`. |
 | `EXAMPLES.md` | Copy-paste prompts | Keep consistent with SKILL.md. Keep the `#a-real-blind-spot-pass-recorded` anchor; `docs/recordings/` links to it. |
 | `README.md` / `README.zh.md` | Landing pages | English is canonical. The Chinese README must match it heading for heading (`##` and `###`); update both together. |
 | `assets/zh/src/*.svg` | Chinese diagram sources | Edit here, then outline the glyphs: `python3 scripts/outline_cjk.py --fonts /path/to/noto-sans-sc --out assets/zh assets/zh/src/*.svg`. Never hand-edit `assets/zh/*.svg`. |
 
 ## Protected rules
 
-These came from 4.x and must keep a home in 5.0 (design §9). Do not weaken or drop them:
+These came from 4.x and must keep a home in 5.x (5.0 design §9). Do not weaken or drop them:
 
 - The irreversibility floor, the three lanes and the build rule: exact command, one run,
   dry-run contract checks (SKILL.md body; `references/card.md`).
