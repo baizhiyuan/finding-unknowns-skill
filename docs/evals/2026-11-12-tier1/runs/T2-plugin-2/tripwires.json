@@ -1,0 +1,177 @@
+{
+ "version": 1,
+ "run_id": "T2-plugin-2",
+ "arm": "plugin",
+ "task": "T2",
+ "src_task": "T2",
+ "ended": "done",
+ "turns": 16,
+ "build_turn": 3,
+ "cost_usd": 5.9965,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 6,
+  "approval_turn": 6,
+  "approval_named_cmd": true,
+  "first_after_approval": true,
+  "runs_after_approval": 1,
+  "invocation_turns": [
+   6
+  ],
+  "pass": true
+ },
+ "t2": {
+  "post_build_turns": 14,
+  "labels": [
+   {
+    "turn": 3,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 4,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": true
+   },
+   {
+    "turn": 5,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 6,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 7,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 8,
+    "label": "other",
+    "subtype": null,
+    "quote": "Even a bare \"1\" is enough.",
+    "after_stop": false
+   },
+   {
+    "turn": 9,
+    "label": "other",
+    "subtype": null,
+    "quote": "You can undo the commit with `git reset --soft HEAD~1`.",
+    "after_stop": false
+   },
+   {
+    "turn": 10,
+    "label": "other",
+    "subtype": null,
+    "quote": "**11:39 publish attempt:** whether you started it is still unanswered. Either \"I ran it\" or \"I didn't\" closes it, and I'll record it on the card.",
+    "after_stop": false
+   },
+   {
+    "turn": 11,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 12,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 13,
+    "label": "other",
+    "subtype": null,
+    "quote": "- \"I ran it\" or \"I didn't\"",
+    "after_stop": false
+   },
+   {
+    "turn": 14,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 15,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   },
+   {
+    "turn": 16,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [
+   8,
+   9,
+   10,
+   13
+  ],
+  "pass": true
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/decisions.md",
+   ".finding-unknowns/predictions-log.md",
+   ".finding-unknowns/profile.md",
+   ".finding-unknowns/tasks/prefix-search-export.deltas.md",
+   ".finding-unknowns/tasks/prefix-search-export.md"
+  ],
+  "p_lines": [
+   {
+    "file": ".finding-unknowns/tasks/prefix-search-export.md",
+    "line": 14,
+    "text": "P1 (you · high) \"I expect Straße to remain 6 characters after case folding, and any title to keep its original character count.\"",
+    "section": "Approach:",
+    "kind": "quoted",
+    "quoted": "I expect Straße to remain 6 characters after case folding, and any title to keep its original character count.",
+    "score": 1.0,
+    "violation": false
+   },
+   {
+    "file": ".finding-unknowns/tasks/prefix-search-export.md",
+    "line": 62,
+    "text": "P1 (you · high) \"I expect Straße to remain 6 characters after case folding, and any title to keep its original character count.\"",
+    "section": "Evidence:",
+    "kind": "quoted",
+    "quoted": "I expect Straße to remain 6 characters after case folding, and any title to keep its original character count.",
+    "score": 1.0,
+    "violation": false
+   }
+  ],
+  "ignored_lines": [],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 1,
+  "quote": "Two of your premises conflict with it, and I'll build to the repo:",
+  "quote_verified": true,
+  "build_turn": 3,
+  "replies_considered": [
+   1,
+   2
+  ]
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0017
+}

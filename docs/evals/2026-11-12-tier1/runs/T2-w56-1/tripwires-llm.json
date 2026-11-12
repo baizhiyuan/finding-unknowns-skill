@@ -1,0 +1,32 @@
+{
+ "77fff7f018775e81b7285d8abb334dbe25246cd579749c81f673e4bd7329aee9": {
+  "out": [
+   {
+    "turn": 3,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Tell me if you want a commit."
+   },
+   {
+    "turn": 4,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Do you want me to commit the changes?"
+   },
+   {
+    "turn": 5,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "If you want either one in the repo, tell me and I'll add it."
+   }
+  ],
+  "cost": 0.00038117
+ },
+ "2ab7dd7d726ef8d1c72d0993ba08f54a0c97381d9b5507cfd04bf2a7a5d0577c": {
+  "out": {
+   "m1": 1,
+   "quote": "I expect two premises in your request to be wrong:\n  - **Key length:** `docs/search.md` says case folding can expand characters, and ß becomes ss."
+  },
+  "cost": 0.000385545
+ }
+}

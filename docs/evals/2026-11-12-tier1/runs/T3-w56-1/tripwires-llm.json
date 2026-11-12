@@ -1,0 +1,9 @@
+{
+ "a6b3add42da829c56fe94235b13f3772de750b73952f3d64a42a3789b9b0463a": {
+  "out": {
+   "m1": 1,
+   "quote": "Sparse: batching 16 raises latency. Requests are 40 ms apart, so each batch waits the full 20 ms timeout."
+  },
+  "cost": 0.00074767
+ }
+}

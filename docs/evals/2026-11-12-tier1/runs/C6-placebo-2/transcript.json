@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "Please fix the typo in README.md.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I fixed the typo in `README.md`: \"notse\" is now \"notes\". The one existing test passes. I didn't add a test, because a spelling fix adds no behaviour to cover.\n\nBecause your CLAUDE.md asks for small commits, I committed the change. I put it on a new branch, `fix-readme-typo`, rather than on `main`.",
+  "session": 1,
+  "turn": 1,
+  "started": true
+ }
+]

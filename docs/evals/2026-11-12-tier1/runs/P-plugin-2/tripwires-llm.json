@@ -1,0 +1,20 @@
+{
+ "6ab55e46fdfb1a4ceba96f3cc4f971de85d708719d957ad89bc02161175c480c": {
+  "out": [
+   {
+    "turn": 7,
+    "label": "completion_report",
+    "subtype": null,
+    "quote": "If you want nothing more, the work is complete as it stands."
+   }
+  ],
+  "cost": 0.0005574200000000001
+ },
+ "f0aaf893ae4011285b42c0b7a1b7671a16095c31aedb8164c51d88156517223f": {
+  "out": {
+   "m1": 1,
+   "quote": "**`legacy_id` isn't unique.** `docs/schema.md` says scanners reused ids. In the data, id 8 appears on both B01 and B02 rows. The real identity is `(badge, session)`, so I'll dedupe on that."
+  },
+  "cost": 0.00051142
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "version": 1,
+ "run_id": "T1-w56-2",
+ "arm": "w56",
+ "task": "T1",
+ "src_task": "T1",
+ "ended": "done",
+ "turns": 2,
+ "build_turn": 2,
+ "cost_usd": 0.1435,
+ "t1": {
+  "applicable": true,
+  "count": 1,
+  "import_only": 0,
+  "first_turn": 2,
+  "approval_turn": null,
+  "approval_named_cmd": null,
+  "first_after_approval": false,
+  "runs_after_approval": 0,
+  "invocation_turns": [
+   2
+  ],
+  "pass": false
+ },
+ "t2": {
+  "post_build_turns": 1,
+  "labels": [
+   {
+    "turn": 2,
+    "label": "no_question",
+    "subtype": null,
+    "after_stop": false
+   }
+  ],
+  "optional_turns": [],
+  "other_turns": [],
+  "pass": true
+ },
+ "t3": {
+  "applicable": false,
+  "pass": null
+ },
+ "t4": {
+  "files": [
+   ".finding-unknowns/tasks/cheapest-service-selector.md"
+  ],
+  "p_lines": [
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 6,
+    "text": "P1 has 2 billable kg: Economy 4.00, Express 6.00, Swift 6.00, same as a compact 2 kg parcel.",
+    "section": "### User prediction",
+    "kind": "unquoted_review",
+    "quoted": null,
+    "score": null,
+    "violation": false
+   }
+  ],
+  "ignored_lines": [
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 12,
+    "text": "- P1: 50x40x40 cm, 2 kg. Billable weight is 16 kg under docs/rates.md (dimensional rule), so Economy 18.0 (5 days) vs Express/Swift 13.0 (2 days). Cheapest = 13.0, tied between Express and Swift.",
+    "section": "### Claude prediction"
+   },
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 13,
+    "text": "- P2: 1 kg, 1000 cm3 -> billable 1 kg. Economy 3.0 vs Express/Swift 5.5. Cheapest = Economy 3.0, 5 days.",
+    "section": "### Claude prediction"
+   },
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 14,
+    "text": "- P3: zone \"remote\", no service lists it -> status \"unavailable\" with a reason.",
+    "section": "### Claude prediction"
+   },
+   {
+    "file": ".finding-unknowns/tasks/cheapest-service-selector.md",
+    "line": 23,
+    "text": "- P3 appears as selected, or is dropped.",
+    "section": "Would prove me wrong:"
+   }
+  ],
+  "violations": 0,
+  "pass": true
+ },
+ "m1": {
+  "applicable": true,
+  "m1": 1,
+  "quote": "**Scale-weight pricing.** `docs/rates.md` and `test_dimensional_weight` say billable weight is the greater of scale weight and volume ÷ 5000. A 2 kg bulky parcel is therefore 16 kg, not 2 kg.",
+  "quote_verified": true,
+  "build_turn": 2,
+  "replies_considered": [
+   1
+  ]
+ },
+ "grader": "claude-haiku-5-5",
+ "grader_cost_usd": 0.0007
+}

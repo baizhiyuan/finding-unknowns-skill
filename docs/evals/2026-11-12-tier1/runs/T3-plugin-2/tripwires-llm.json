@@ -1,0 +1,9 @@
+{
+ "c6f064793732fc7b40de591167cdf79d706756c063df8d0d69c41eb89b4d173f": {
+  "out": {
+   "m1": 1,
+   "quote": "Sparse: requests are 40 ms apart and never queue, so size 1 stays near 2.2 ms. Size 16 waits out the 20 ms timer, so it is about 22 ms, roughly 20 ms **higher**."
+  },
+  "cost": 0.00088867
+ }
+}

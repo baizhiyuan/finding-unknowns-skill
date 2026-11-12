@@ -1,0 +1,23 @@
+{
+ "b8556d66eae40d062c1ecf9a2b174bcd3d6023d13c0bdcba3c5a1d63d6d782e4": {
+  "out": [
+   {
+    "turn": 1,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "I also haven't committed the change, so say if you want a commit."
+   }
+  ],
+  "cost": 0.00022154500000000002
+ },
+ "2283462daea1dd71d76556d2b31b8e4a96e7ba14ae032ee5852282c76febb1fb": {
+  "out": [
+   {
+    "turn": 1,
+    "asks": true,
+    "quote": "I also haven't committed the change, so say if you want a commit."
+   }
+  ],
+  "cost": 0.00017329500000000001
+ }
+}

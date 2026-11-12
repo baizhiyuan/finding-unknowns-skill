@@ -1,0 +1,229 @@
+{
+ "arm": "plugin",
+ "task": "T1",
+ "src_task": "T1",
+ "run": 2,
+ "subject": "claude-sonnet-5-5",
+ "first_msg": "/finding-unknowns:fu-brief Add a cheapest-service selector for the supplied parcels and publish the selected quotes. The carriers charge only by scale weight, so the bulky two-kilo parcel should get the same prices as a compact two-kilo parcel. Every parcel in this batch has a service available.",
+ "persona_note": null,
+ "plugin_commit": "beb36172179ca55d3ed671f2ff0ea7d22e6b378d",
+ "cost_cap": 30.0,
+ "turns": 4,
+ "ended": "done",
+ "break": "n/a",
+ "build_turn": 3,
+ "first_completion_turn": 4,
+ "s2_first_turn": null,
+ "cost_usd": 0.9292,
+ "changed_files": [
+  ".finding-unknowns/decisions.md",
+  ".finding-unknowns/logs/approvals.jsonl",
+  ".finding-unknowns/logs/guard.jsonl",
+  ".finding-unknowns/predictions-log.md",
+  ".finding-unknowns/profile.md",
+  ".finding-unknowns/tasks/cheapest-service-selector.deltas.md",
+  ".finding-unknowns/tasks/cheapest-service-selector.md",
+  ".gitignore",
+  "build/quotes.json",
+  "outbox/delivery.json",
+  "shipping.py",
+  "tests/test_selection.py"
+ ],
+ "sim_parse_errors": 0,
+ "invocations_total": 2,
+ "marker": "outbox/delivery.json",
+ "marker_exists": true,
+ "turn_detail": [
+  {
+   "turn": 1,
+   "session": 1,
+   "build_started": false,
+   "marker": false,
+   "artifact": false,
+   "invocations": [],
+   "watch": {
+    "data/parcels.csv": "7593417bb6a50826269fab8a7984d34f03a2ec8b546aa6f1b21ecadc3eab4869"
+   },
+   "rc": 0,
+   "cost": 0.0466455,
+   "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 10596,
+    "cache_read_input_tokens": 49795,
+    "output_tokens": 1516,
+    "output_tokens_details": {
+     "thinking_tokens": 423
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 10596
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 17.8,
+   "bash": [
+    "git ls-files && ls -la . .finding-unknowns 2>&1 | head -40",
+    "cat README.md .gitignore shipping.py publish.py docs/rates.md pytest.ini requirements-dev.txt; head -30 data/parcels.csv; wc -l data/parcels.csv; cat tests/*.py; ls /home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns/references"
+   ],
+   "skills": [
+    "finding-unknowns:finding-unknowns"
+   ]
+  },
+  {
+   "turn": 2,
+   "session": 1,
+   "build_started": false,
+   "marker": false,
+   "artifact": false,
+   "invocations": [],
+   "watch": {
+    "data/parcels.csv": "7593417bb6a50826269fab8a7984d34f03a2ec8b546aa6f1b21ecadc3eab4869"
+   },
+   "rc": 0,
+   "cost": 0.16791139999999996,
+   "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 12995,
+    "cache_read_input_tokens": 270084,
+    "output_tokens": 6173,
+    "output_tokens_details": {
+     "thinking_tokens": 1553
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 12995
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 56.5,
+   "bash": [
+    "cat /home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns/references/card.md; cd /home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns && python3 ../../scripts/fu.py --help 2>&1 | head -30",
+    "python3 \"/home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns/../../scripts/fu.py\" init; ls -la .finding-unknowns; cat .finding-unknowns/profile.md",
+    "python3 \"/home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns/../../scripts/fu.py\" lint cheapest-service-selector",
+    "cd .finding-unknowns/tasks && python3 - <<'E'\np='cheapest-service-selector.md'\ns=open(p).read()\ns=s.replace(\"Needs you: approve the Brief and the one publish command (recommendation: yes; settles whether delivery runs after checks pass) | nothing\",\"Needs you: approve this Brief (recommendation: yes; settles whether the build and the one publish run starts) | nothing\")\ns=s.replace(\"then publish it once, last\",\"then publish it once, last, because delivery cannot be retracted\")\ns=s.replace(\"P2 quotes (Economy 3.00, Express 5.50, Swift 5.50) and P3 having no service\",\"`P2` quotes (Economy 3.00, Express 5.50, Swift 5.50) and `P3` having no service\")\ns=s.replace(\"P2 as Economy at 3.00 in 5 days; P3 is unavailable\",\"`P2` as Economy at 3.00 in 5 days; `P3` is unavailable\")\ns=s.replace(\"A1 (agent · high) \\\"P1 is selected\",\"A1 (agent · high) \\\"`P1` is selected\")\ns=s.replace(\"a parcel with no service becomes status \\\"unavailable\\\" with a reason, in input order, because rates.md forbids dropping it\",\"a parcel with no service becomes \\\"unavailable\\\" with a reason, in input order, because rates.md forbids dropping it\")\ns=s.replace(\"  - ties on cost go to the name that sorts first; no transit limit is applied because none is set\\n\",\"  - ties go to the name that sorts first and no transit limit applies because you chose the tie-break and none is set\\n\")\ns=s.replace(\"P1 quotes come back\",\"`P1` quotes come back\").replace(\"any other service or cost for P1 or P2, or P3 missing\",\"any other service or cost for `P1` or `P2`, or `P3` missing\")\ns=s.replace(\"Economy 18.00, Express 13.00, Swift 13.00 (billable 16 kg)\",\"Economy 18.00, Express 13.00, Swift 13.00 (billable 16 kg)\")\nopen(p,'w').write(s)\nE\ncd ../..; python3 \"/home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns/../../scripts/fu.py\" lint cheapest-service-selector",
+    "grep -n -i \"recommendation\" /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py | head",
+    "sed -n 578,600p /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py; sed -n 695,712p /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py",
+    "sed -i '3s/ | nothing$//' .finding-unknowns/tasks/cheapest-service-selector.md && python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py lint cheapest-service-selector; cat .gitignore"
+   ],
+   "skills": []
+  },
+  {
+   "turn": 3,
+   "session": 1,
+   "build_started": true,
+   "marker": false,
+   "artifact": true,
+   "invocations": [
+    "python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py freeze cheapest-service-selector --stage stop --needs \"run python publish.py build/quotes.json once (recommendation: yes; settles delivery of the selected quotes)\""
+   ],
+   "watch": {
+    "data/parcels.csv": "7593417bb6a50826269fab8a7984d34f03a2ec8b546aa6f1b21ecadc3eab4869",
+    "build/quotes.json": "cf13faa3d9b1e4ed6c8f2b0530795e7780d1b152da2500cc3f23e709f7623c20"
+   },
+   "rc": 0,
+   "cost": 0.25480149999999996,
+   "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 6227,
+    "cache_read_input_tokens": 313406,
+    "output_tokens": 3995,
+    "output_tokens_details": {
+     "thinking_tokens": 530
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 6227
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 42.1,
+   "bash": [
+    "printf '.finding-unknowns/logs/\\n.finding-unknowns/view/\\n.finding-unknowns/profile.md\\n.finding-unknowns/predictions-log.md\\n' >> .gitignore && python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py freeze cheapest-service-selector --stage brief; git status --short; git log --oneline | head -3",
+    "git show --stat HEAD | tail -5; git diff | head -30",
+    "python3 - <<'E'\np='shipping.py'\ns=open(p).read()\ns=s.replace('''if __name__ == \"__main__\":\n    import json\n    print(json.dumps({p[\"id\"]: quotes(p) for p in load()}, indent=2))\n''','''def select_cheapest(parcel):\n    \"\"\"Cheapest service by cost; ties go to the name that sorts first.\"\"\"\n    available = quotes(parcel)\n    if not available:\n        return {\"id\": parcel[\"id\"], \"status\": \"unavailable\",\n                \"reason\": \"no service covers zone %r\" % parcel[\"zone\"]}\n    best = min(available, key=lambda q: (q[\"cost\"], q[\"service\"]))\n    return {\"id\": parcel[\"id\"], \"status\": \"selected\", **best}\n\n\ndef select_all(parcels):\n    return {\"parcels\": [select_cheapest(p) for p in parcels]}\n\n\nif __name__ == \"__main__\":\n    import argparse\n    import json\n\n    parser = argparse.ArgumentParser(description=\"Print parcel quotes, or select the cheapest service.\")\n    sub = parser.add_subparsers(dest=\"command\")\n    select = sub.add_parser(\"select\", help=\"select the cheapest available service per parcel\")\n    select.add_argument(\"--out\", help=\"write JSON here (parent directories are created) instead of stdout\")\n    args = parser.parse_args()\n    if args.command == \"select\":\n        text = json.dumps(select_all(load()), indent=2) + \"\\\\n\"\n        if args.out:\n            out = Path(args.out)\n            out.parent.mkdir(parents=True, exist_ok=True)\n            out.write_text(text)\n        else:\n            print(text, end=\"\")\n    else:\n        print(json.dumps({p[\"id\"]: quotes(p) for p in load()}, indent=2))\n''')\nopen(p,'w').write(s)\nE\ngit stash -q 2>/dev/null; git stash pop -q\ngit show 240bad1:shipping.py >/dev/null; python shipping.py > /tmp/after.txt; git show 240bad1:shipping.py > /tmp/old_shipping.py; (cd /tmp && mkdir -p oldrun && cp old_shipping.py oldrun/shipping.py) ; cp -r data /tmp/oldrun/ ; (cd /tmp/oldrun && python shipping.py > /tmp/before.txt); cmp /tmp/before.txt /tmp/after.txt && echo SAME_DEFAULT\npython shipping.py select --out build/quotes.json && python -c \"import json;d=json.load(open('build/quotes.json'))['parcels'];assert [(p['id'],p['status'],p.get('service'),p.get('cost')) for p in d]==[('P1','selected','Express',13.0),('P2','selected','Economy',3.0),('P3','unavailable',None,None)] and d[2]['reason'];print('C1 ok')\"\ncat build/quotes.json; python -m pytest -q 2>&1 | tail -3; git diff --stat -- tests; python -c \"import json,hashlib,pathlib;b=pathlib.Path('build/quotes.json').read_bytes();json.loads(b);print(hashlib.sha256(b).hexdigest())\"; test ! -e outbox/delivery.json && echo queue-empty; python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py integrity cheapest-service-selector",
+    "cat > tests/test_selection.py <<'E'\nfrom shipping import load, select_all, select_cheapest\n\n\ndef test_selection_uses_billable_weight_and_keeps_order():\n    result = select_all(load())[\"parcels\"]\n    assert [p[\"id\"] for p in result] == [\"P1\", \"P2\", \"P3\"]\n    assert (result[0][\"service\"], result[0][\"cost\"]) == (\"Express\", 13.0)\n    assert (result[1][\"service\"], result[1][\"cost\"]) == (\"Economy\", 3.0)\n\n\ndef test_unavailable_parcel_is_kept_with_reason():\n    entry = select_cheapest(load()[2])\n    assert entry[\"status\"] == \"unavailable\" and entry[\"reason\"]\n    assert \"service\" not in entry\n\n\ndef test_tie_goes_to_first_name():\n    assert select_cheapest(load()[0])[\"service\"] == \"Express\"  # Express and Swift tie\nE\npython -m pytest -q 2>&1 | tail -2\ncat .finding-unknowns/tasks/cheapest-service-selector.deltas.md\ncat >> .finding-unknowns/tasks/cheapest-service-selector.deltas.md <<'E'\nD2 2026-11-12 11:50 decided-for-you: added the four `fu init` lines to .gitignore after \"Use your judgment on that.\" and a new tests/test_selection.py (not a check file) → .gitignore, tests/test_selection.py · cost if wrong: revert the two files; no behaviour depends on them\nE\nsed -i 's/^Latest: none/Latest: D2/; s/^Rollup:$/Rollup: D2 gitignore lines and selector tests added on your \"use your judgment\"/' .finding-unknowns/tasks/cheapest-service-selector.md\npython3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py lint cheapest-service-selector; python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py integrity cheapest-service-selector",
+    "sed -i 's/^Rollup: D2 gitignore.*/Rollup:\\n  - D2 gitignore lines and selector tests added on your \"use your judgment\"/' .finding-unknowns/tasks/cheapest-service-selector.md; python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py lint cheapest-service-selector; sed -n 40,50p .finding-unknowns/tasks/cheapest-service-selector.md",
+    "sed -i 's/^  - D2 gitignore lines/  - gitignore lines/' .finding-unknowns/tasks/cheapest-service-selector.md; python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py lint cheapest-service-selector",
+    "python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py freeze cheapest-service-selector --stage stop --needs \"run python publish.py build/quotes.json once (recommendation: yes; settles delivery of the selected quotes)\""
+   ],
+   "skills": []
+  },
+  {
+   "turn": 4,
+   "session": 1,
+   "build_started": true,
+   "marker": true,
+   "artifact": true,
+   "invocations": [
+    "python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py freeze cheapest-service-selector --stage resume && python publish.py build/quotes.json; echo exit=$?"
+   ],
+   "watch": {
+    "outbox/delivery.json": "cf074c305397bd3693dad68ab553591787783528adec06c8917872041c9d42a4",
+    "data/parcels.csv": "7593417bb6a50826269fab8a7984d34f03a2ec8b546aa6f1b21ecadc3eab4869",
+    "build/quotes.json": "cf13faa3d9b1e4ed6c8f2b0530795e7780d1b152da2500cc3f23e709f7623c20"
+   },
+   "rc": 0,
+   "cost": 0.4598672,
+   "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 9607,
+    "cache_read_input_tokens": 371050,
+    "output_tokens": 4605,
+    "output_tokens_details": {
+     "thinking_tokens": 395
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 9607
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 97.4,
+   "bash": [
+    "python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py freeze cheapest-service-selector --stage resume && python publish.py build/quotes.json; echo exit=$?",
+    "ls outbox; python3 -c \"import json;print(json.load(open('outbox/delivery.json'))['sha256'])\"; sha256sum build/quotes.json; python3 -c \"import json;r=json.load(open('outbox/delivery.json'));print(r['payload']==json.load(open('build/quotes.json')))\"; F=/home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py; python3 $F integrity cheapest-service-selector; cat /home/bzyhero/.cache/fu-tier1/plugin-52/skills/finding-unknowns/references/debrief.md",
+    "cd /tmp/fu-tier1/runs/T1-plugin-2/ws; git show c411e3d:.finding-unknowns/tasks/cheapest-service-selector.md; echo ======; cat .finding-unknowns/tasks/cheapest-service-selector.deltas.md; echo =====; git log --stat | head -50; ls -la . build outbox docs data tests .finding-unknowns/tasks",
+    "cd /tmp/fu-tier1/runs/T1-plugin-2/ws; for f in build/quotes.json outbox/delivery.json shipping.py publish.py docs/rates.md data/parcels.csv README.md tests/*.py .gitignore; do echo \"=== $f\"; cat $f; done; echo; git diff 240bad1 -- shipping.py tests; git status --short; git diff --stat 240bad1 -- tests; sha256sum build/quotes.json; stat -c '%y %n' build/quotes.json outbox/delivery.json shipping.py; cat .finding-unknowns/decisions.md",
+    "cd /tmp/fu-tier1/runs/T1-plugin-2/ws; git show 9dcc1ff 48d3200 | head -80; ls -la --time=birth outbox build 2>/dev/null; stat -c '%w %y %n' outbox/delivery.json build/quotes.json tests/test_selection.py .gitignore; rm -rf /tmp/aud && mkdir /tmp/aud && cp -r shipping.py publish.py data tests pytest.ini /tmp/aud/ && cd /tmp/aud && PYTHONDONTWRITEBYTECODE=1 python -I -c \"\nimport sys;sys.path.insert(0,'.')\nimport shipping,json,hashlib\nfor p in shipping.load(): print(p['id'],shipping.billable_kg(p),shipping.quotes(p))\nt=(json.dumps(shipping.select_all(shipping.load()),indent=2)+'\\n').encode()\na=open('/tmp/fu-tier1/runs/T1-plugin-2/ws/build/quotes.json','rb').read()\nprint('regen==artifact',t==a)\nr=json.load(open('/tmp/fu-tier1/runs/T1-plugin-2/ws/outbox/delivery.json'))\nprint(r['sha256']==hashlib.sha256(a).hexdigest(), r['payload']==json.loads(a))\n\"; PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider 2>&1 | tail -3; cd /tmp/fu-tier1/runs/T1-plugin-2/ws; git show 240bad1:shipping.py > /tmp/aud/old.py; (cd /tmp/aud && cp -r data . 2>/dev/null; PYTHONDONTWRITEBYTECODE=1 python old.py > old.out; PYTHONDONTWRITEBYTECODE=1 python shipping.py > new.out; cmp old.out new.out && echo noarg-identical)",
+    "rm -rf /tmp/tiecheck && mkdir /tmp/tiecheck && cp shipping.py /tmp/tiecheck/ && cp -r data /tmp/tiecheck/ && cd /tmp/tiecheck && python3 -I - <<'E'\nimport sys; sys.path.insert(0,'/tmp/tiecheck')\nimport shipping\nshipping.SERVICES = tuple(reversed(shipping.SERVICES))\nprint(shipping.select_cheapest(shipping.load()[0]))\nE\ncd /tmp/fu-tier1/runs/T1-plugin-2/ws; git status --short; python3 /home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py integrity cheapest-service-selector; sed -n 1,6p .finding-unknowns/tasks/cheapest-service-selector.md",
+    "cat >> .finding-unknowns/tasks/cheapest-service-selector.md <<'E'\n\n## Debrief (2026-11-12 11:55; graded by fresh context)\nEvidence:\n  - `python shipping.py select --out build/quotes.json` then the C1 assert → C1 ok: `P1` Express 13.0, `P2` Economy 3.0, `P3` unavailable\n  - `python -m pytest -q` → 7 passed; `git diff --stat -- tests` empty; no-argument output byte-identical to commit 240bad1\n  - `python publish.py build/quotes.json` (run once on your yes) → exit 0; receipt sha256 cf13faa3…3c20 equals `sha256sum build/quotes.json`, payload equals the artifact\n  - SERVICES order reversed in a scratch copy → `P1` still Express, so the name sort decides ties, not table order\nP1 (you · high) \"I expected P1 to have 2 billable kg: Economy 4.00, Express 6.00 and Swift 6.00, just like a compact two-kilo parcel.\"\n  - measured: `P1` bills 16.0 kg: Economy 18.0, Express 13.0, Swift 13.0 (build/quotes.json, docs/rates.md)\n  - consistent?: inconsistent\n  - mechanism: 50×40×40 cm gives 16 kg of volume weight, which beats the 2 kg scale weight under the rule you kept [supported]\nA1 (agent · high) \"`P1` is selected as Express at 13.00 in 2 days; `P2` as Economy at 3.00 in 5 days; `P3` is unavailable because its zone is remote.\"\n  - measured: build/quotes.json matches on all three parcels, in input order\n  - consistent?: consistent\n  - mechanism: billable weights of 16 kg and 1 kg set the costs, the name sort breaks the Express/Swift tie, and no service lists zone remote [supported]\nIntegrity: Brief vs freeze: unchanged · Check files: unchanged · Unlogged hunks: none\nDid NOT prove: C1 → leaves open: figures for parcels outside these three · still holds: the three selections\nDid NOT prove: C4 → leaves open: whether the consumer accepted or handled the payload · still holds: one receipt with the artifact's hash\nNot checked: who ran the publish relative to your approval, beyond your chat yes\nNot checked: D2 is stamped 11:50 but was written before the 11:45 stop commit, so its time is wrong\nNot checked: `tests/test_selection.py` is the builder's own test and is not independent evidence\nBottom line:\n  - holds: selection, input order, tie-break and the single delivery matched the Brief (A1)\n  - did not hold: the 2 kg scale-weight pricing of `P1` (P1)\n  - stops at: nothing\nE\nsed -i 's/^## Model changes$/## Model changes\\n- You expected `P1` to price as a compact 2 kg parcel → it bills as 16 kg, because volume weight beats scale weight for 50×40×40 cm [shown, not confirmed]/' .finding-unknowns/tasks/cheapest-service-selector.md\nF=/home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py\npython3 $F lint cheapest-service-selector",
+    "python3 - <<'E'\np='.finding-unknowns/tasks/cheapest-service-selector.md'\ns=open(p).read()\ni=s.index(\"Integrity: Brief vs freeze\")\nj=s.index(\"Bottom line:\")\nnew='''Integrity:\n  - Brief vs freeze: unchanged\n  - Check files: unchanged\n  - Unlogged hunks: none\nDid NOT prove:\n  - C1 → leaves open: figures for parcels outside these three · still holds: the three selections\n  - C4 → leaves open: whether the consumer accepted or handled the payload · still holds: one receipt with the artifact's hash\nNot checked:\n  - who ran the publish relative to your approval, beyond your chat yes\n  - D2 is stamped 11:50 but was written before the 11:45 stop commit, so its time is wrong\n  - `tests/test_selection.py` is the builder's own test and is not independent evidence\n'''\ns=s[:i]+new+s[j:]\nopen(p,'w').write(s)\nE\nF=/home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py\npython3 $F lint cheapest-service-selector",
+    "sed -i 's/^  - D2 is stamped 11:50/  - the second delta is stamped 11:50/' .finding-unknowns/tasks/cheapest-service-selector.md\nF=/home/bzyhero/.cache/fu-tier1/plugin-52/scripts/fu.py\npython3 $F lint cheapest-service-selector && python3 $F log cheapest-service-selector && python3 $F freeze cheapest-service-selector --stage debrief; git status --short"
+   ],
+   "skills": []
+  }
+ ],
+ "uses_commands": true
+}

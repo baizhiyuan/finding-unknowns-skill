@@ -1,0 +1,20 @@
+{
+ "0a714daa89093e5737dfb465fa34a9b612f6c1d1fc87a5261107c25f39623ac5": {
+  "out": [
+   {
+    "turn": 2,
+    "label": "optional_question",
+    "subtype": null,
+    "quote": "Let me know if you'd like it removed or updated."
+   }
+  ],
+  "cost": 0.00029842
+ },
+ "65c7ef1c645b6ccfa1a8b92078291c90bdc8d5e6274f9ef55dc4e0d40f48334f": {
+  "out": {
+   "m1": 1,
+   "quote": "**Legacy id is not unique.** Rows 1 and 2 both have id `8`, so 5 rows have only 4 distinct ids. `docs/schema.md` says the ids were reused by different scanners and the real key is `(badge, session)`."
+  },
+  "cost": 0.00055617
+ }
+}

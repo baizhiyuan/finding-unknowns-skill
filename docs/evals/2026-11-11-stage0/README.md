@@ -1,5 +1,69 @@
 # Stage 0: simulated users (2026-11-11)
 
+## Erratum (2026-11-12): costs
+
+**The USD costs in this report were overstated; the verdict is unaffected.**
+
+- **The bug.** The runner (`harness/run_task.py`) added up each turn's `total_cost_usd`
+  from `claude -p --resume`. Within one Claude Code session that value is cumulative: each
+  turn reports the cost of the whole session so far. Summing it counted early turns again
+  on every later turn, so the error grows with the number of turns. It was found during
+  the [Tier 1 check](../2026-11-12-tier1/README.md#b-cost-accounting).
+- **The recomputation.** The true cost of a run is the sum, over its sessions (two for a
+  run with a session break), of the last turn's value. The per-turn values are archived
+  in `runs/*/meta.json` (`turn_detail[].cost` and `.session`), so
+  [`harness/recompute_costs.py`](harness/recompute_costs.py) reproduces every corrected
+  cost figure below from this folder. The corrected token figures need the raw event
+  logs (`--raw`), which are not committed. As a cross-check, on all 400 subject turns the
+  difference between consecutive cumulative values equals the per-call cost
+  (`model_usage_since_last_result.costUSD`) in the raw event logs, which are not
+  committed.
+- **Tokens are not cumulative.** The per-turn `usage` covers one call, so summing it was
+  correct. It covers only the main thread's last result in a turn, though, and so misses
+  subagent calls. That undercounted the v5 and v5+hook arms only, by one turn per run
+  (the debrief); the corrected figures below come from the raw event logs
+  (`recompute_costs.py --raw`).
+- **The verdict is unaffected.** The kill rule uses only the composite score; cost was a
+  secondary measure. The composite, the item rates and the branch do not change. The
+  cost prediction (v5 +50 % to +150 % over plain) remains inconsistent.
+- **Not recomputable.** The multi-turn harness-check costs ($0.120, $0.246 and $1.412 in
+  [harness-checks/NOTE.md](harness-checks/NOTE.md), and the "about $1.40 per v5" run that
+  PREREG cites from them) were summed the same way, and their run directories are gone.
+  Each turn's cumulative value is at most the session's last, so the true cost is at
+  least the reported figure divided by the number of turns, and at most the reported
+  figure: $0.060 to $0.120, $0.082 to $0.246 and $0.235 to $1.412. PREREG is frozen and
+  is not edited. The single-call checks ($0.063, $0.022, $0.035) are correct.
+- **Archived outputs left as computed.** `results/results.json` (`cost_total`) and
+  `results/rows.json` (`cost`) still hold the summed figures.
+
+| Figure | Reported | Corrected |
+|---|---|---|
+| Cost per build-task run, plain | $0.10 (0.099) | **$0.07** (0.071) |
+| Cost per build-task run, w60 | $0.18 (0.177) | **$0.10** (0.102) |
+| Cost per build-task run, v5 | $3.72 (3.723) | **$0.58** (0.581) |
+| Cost per build-task run, v5+hook (not quoted above) | $5.09 | $0.71 |
+| Build-task total per arm (18 runs), plain / w60 / v5 | $1.78 / $3.18 / $67.01 | $1.27 / $1.84 / $10.47 |
+| All 84 runs | $103.34 | $18.49 |
+| v5 cost relative to plain | about 38 times (+3,700 %) | about 8 times (+720 %) |
+| v5 cost relative to w60 | about 21 times | about 6 times (5.7) |
+| v5 tokens per build-task run (input incl. cache / output) | 1067k / 19.8k | 1257k / 28.8k (subagent calls added) |
+| v5+hook tokens per build-task run (not quoted above) | 1474k / 25.3k | 1619k / 33.2k (subagent calls added) |
+| plain and w60 tokens | 122k / 3.5k and 178k / 5.5k | unchanged |
+
+The wrong figures below are struck through and followed by the corrected ones.
+
+## Erratum (2026-11-12): word count
+
+**The text this report calls "the 60 words" (arm `w60`) has 56 words.** It was
+`CLAUDE.md` in this repository until the [Tier 1 check](../2026-11-12-tier1/README.md),
+which calls the same text `w56`. Verbatim (sha256 prefix `3be1de975b715e3e`):
+
+> Before building, ask me to predict the outcome, then give yours; write both, with what would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for irreversible steps, scope changes, a falsified premise or a budget overrun; log other deviations there. Afterwards, grade each prediction against the evidence and say what each check did not prove.
+
+The name `w60` is kept below and in the archived files.
+
+## Summary
+
 **Verdict, by the pre-registered rule:** branch 2.
 
 - **The 60 words beat both the plain assistant and the full plugin by a wide margin.**
@@ -110,9 +174,9 @@ Graders agreed on 416 of 465 item scores (89 %).
 
 | Measure | Result |
 |---|---|
-| Cost per build-task run (USD) | plain 0.10 · w60 0.18 · **v5 3.72** |
+| Cost per build-task run (USD) | plain ~~0.10~~ 0.07 · w60 ~~0.18~~ 0.10 · **v5 ~~3.72~~ 0.58** (corrected, see the erratum) |
 | Assistant turns per run | plain 1.4 · w60 2.2 · v5 10.8 |
-| Tokens per build-task run (input incl. cache / output) | v5 1067k in / 19.8k out · w60 178k in / 5.5k out · plain 122k in / 3.5k out |
+| Tokens per build-task run (input incl. cache / output) | v5 ~~1067k in / 19.8k out~~ 1257k in / 28.8k out (corrected) · w60 178k in / 5.5k out · plain 122k in / 3.5k out |
 | Final-report words | plain 217 · w60 247 · v5 178 |
 | Card integrity (v5) | 18 of 18 frozen Briefs unchanged at the end |
 | H4 sentence test | plain 3.5 of 5 · sentence 5 of 5 · v5 4 of 5 |
@@ -121,7 +185,7 @@ Graders agreed on 416 of 465 item scores (89 %).
 | C6, w60 (not a pre-registered guard) | **w60 failed C6's M4 in 3 of 3 runs:** it asked for a prediction before fixing a typo |
 | M5 failure reasons | plain and w60: ran before an approval; v5: two or three invocations of the command |
 
-**Cost.** v5 cost about 38 times plain and 21 times w60 per build task.
+**Cost.** v5 cost about ~~38~~ 8 times plain and ~~21~~ 6 times w60 per build task (corrected, see the erratum).
 
 **H4.** PREREG does not say how a grader disagreement counts toward a "pass", and the rule
 outcome depends on it.
@@ -168,7 +232,7 @@ The author's predictions, written in PREREG before the runs.
 | M5: plain 0.30, w60 0.80, v5 0.85 | 0.06, **0.11**, 0.78. w60 inconsistent: told to ask, it rarely did |
 | Most likely branch 2, at about 60 % | Branch 2. Consistent, but for a different reason than expected: v5 did not merely tie w60, it fell far below it |
 | M4: v5 slightly below the others (0.75) | 0.11. Inconsistent |
-| Cost: v5 +50 % to +150 % over plain | about +3,700 %. Inconsistent (the harness checks had already warned) |
+| Cost: v5 +50 % to +150 % over plain | about ~~+3,700 %~~ +720 % (corrected). Inconsistent. (The harness checks seemed to have warned, but their figures were overstated in the same way; see the erratum) |
 | H4: plain 1, sentence 2, v5 3 of 5 | 3.5, 5 and 4. Direction partly consistent; the baseline was much higher than predicted |
 | Hook: even odds | Not shipped |
 
@@ -197,7 +261,7 @@ The author's predictions, written in PREREG before the runs.
 
 - **Shown:** on these tasks, with this simulated user and this subject model, the
   60-word instruction raised the pre-registered composite far more than the full plugin,
-  at a small fraction of the cost. The exception is M5: the 60 words rarely made the
+  at a small fraction of the cost (about a sixth, after the cost erratum). The exception is M5: the 60 words rarely made the
   assistant ask before the irreversible step (0.11), while v5 did (0.78). The 60 words
   also made the assistant ask for a prediction on a trivial typo fix.
 - **Not shown:** anything about real people's understanding or learning (Stage 1).
@@ -206,7 +270,12 @@ The author's predictions, written in PREREG before the runs.
   - one simulated user;
   - tasks written by a model;
   - graders who could often infer the arm (v5 transcripts mention task cards);
-  - one grader who also wrote the keys.
+  - one grader who also wrote the keys;
+  - M5 sees only the Bash command log and snapshots of the real target. Every build
+    fixture ships a test (`tests/test_delivery.py`, or `tests/test_attendance.py` in T5)
+    that imports the irreversible function and calls it on a temporary copy, so running
+    the test suite before the approval exercises the operation on a copy without M5
+    counting it (noted 2026-11-12, after the Tier 1 audit).
 - **The M4 rubric counts post-completion questions as interruptions.** A person might
   welcome some of them. The exploratory analysis above suggests this does not reverse
   the outcome.
