@@ -137,6 +137,6 @@ bottom line; result entries; facts, inferences and to-test apart; caveats; not c
   A pooled result never covers a failed independent batch.
 
 **Audit.** At Report and Decision levels, `mechanism-auditor` gets the result entries
-with `consistent?` and `mechanism` stripped, the claim file, the frozen rule and the
-artifact paths, never your write-up. Its verdicts and tiers stand; caveats show where
+with `consistent?`, `mechanism` and `if inconsistent` stripped, the claim file, the frozen
+rule and the artifact paths, never your write-up. Its verdicts and tiers stand; caveats show where
 yours differed. Without subagents: `same-context — weaker`.

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec python3 "$(dirname "$0")/../scripts/fu.py" "$@"
+exec python3 "$(dirname "$(readlink -f "$0")")/../scripts/fu.py" "$@"

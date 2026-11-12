@@ -1,4 +1,5 @@
 ---
+#finding-unknowns:plugin-file
 description: "Start a task card: you predict first and answer only what only you can decide; the agent predicts, writes the Brief with four stop-points and a contract, and freezes it on your yes."
 argument-hint: "<task>"
 ---
@@ -7,18 +8,19 @@ argument-hint: "<task>"
 
 1. Invoke the `finding-unknowns` skill with the Skill tool; `references/…` paths are
    relative to its base directory.
-2. Read `profile.md` and `decisions.md`; look at the repository silently, read-only. An
-   open card covering this task: point to `/fu-catch-up`; that is the offer and counts as
-   a question. A new card only if the person asks.
-3. One message, at most three questions: the person's prediction with its confidence (one
-   question, no recommendation), plus decisions only they can make, each recommended
+2. Read `profile.md` and `decisions.md`, then the repository, silently. An open card
+   covering this task: offer `/fu-catch-up` (counts as a question); a new card only on
+   request.
+3. One message, at most three questions: the person's prediction and confidence (no
+   recommendation), plus decisions only they can make, each recommended
    (`references/brief.md`).
 4. Record their words verbatim (`"` as `\"`), or `P: none given`. Then write yours.
-5. Fill the template below as `.finding-unknowns/tasks/{slug}.md`; run `fu lint {slug}`
-   and fix every FAIL without trimming the person's words (`references/card.md`).
+5. Run `fu init`. Fill the template below as `.finding-unknowns/tasks/{slug}.md`; run
+   `fu lint {slug}` and fix every FAIL without trimming the person's words
+   (`references/card.md`).
 6. Show the Brief. End with one approval ask: open decisions, the view offer for a complex
-   task (`references/view.md`), that the card will be committed, and `lint not run` when
-   `fu` is missing.
+   task (`references/view.md`), that the card will be committed, the `.gitignore` lines
+   `fu init` printed (first time only), and `lint not run` when `fu` is missing.
 7. On yes: `fu freeze {slug} --stage brief`.
 8. Build quietly; the completion report is the Debrief (`references/debrief.md`).
 

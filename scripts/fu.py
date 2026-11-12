@@ -29,8 +29,10 @@ import json
 import os
 import re
 import shlex
+import stat
 import subprocess
 import sys
+import urllib.parse
 from pathlib import Path
 
 FU_DIR = ".finding-unknowns"
@@ -48,21 +50,22 @@ GITIGNORE_LINES = (".finding-unknowns/logs/", ".finding-unknowns/view/",
                    ".finding-unknowns/profile.md", ".finding-unknowns/predictions-log.md")
 PROFILE_DEFAULTS = (("mode", "ship"), ("strict", "no"), ("commits", "yes"), ("guard", "ask"))
 LIVE_MAX_LINES = 40
-STRICT_MAX_WORDS = 600
+STRICT_MAX_WORDS = 900  # holds a card at the item caps (3 agent, 5 contract) with ~10-word fields
 STRICT_MAX_FIELD_WORDS = 20
 STRICT_MAX_AGENT_PREDICTIONS = 3
 STRICT_MAX_CONTRACT = 5
 MAX_ROLLUP = 3
 MAX_MODEL_CHANGES = 5
 DECISIONS_MAX_LINES = 30
+MAX_LINE = 2000        # card lines longer than this are not pattern-matched
 STAT_MIN_N = 5          # stat line once a side has this many graded predictions
 CURVE_MIN_N = 10        # calibration curve only from this many graded with a confidence
 GIT_TIMEOUT = 120
+MAX_UNTRACKED_BYTES = 5 * 1024 * 1024
 
 HEADER_SLUG = re.compile(r"^# (\S+)$")
 HEADER_GOAL = re.compile(r"^Goal: (.+) · State: (.+)$")
 HEADER_NEEDS = re.compile(r"^Needs you: (.+)$")
-NEEDS_FORM = re.compile(r"^(.+?) \(recommendation: (.+); settles (.+)\)$")
 HEADER_MODE = re.compile(r"^Mode: (ship|learn) · Last seen by you: (never|(" + TIME + r"), after D(\d+))$")
 TIMING_RE = re.compile(r"^Timing: (draft|self-reported|Brief frozen (" + TIME + r"), commit ([0-9a-f]{4,40}))$")
 BRIEF_HEAD = re.compile(r"^## Brief \((draft|frozen (" + TIME + r"))\)$")
@@ -77,10 +80,10 @@ DELTA_LINE = re.compile(r"^D(\d+) (\d{4}-\d{2}-\d{2})(?: (\d{2}:\d{2}))? ([A-Za-
 DELTA_IN_CARD = re.compile(r"^\s*(?:- )?D\d+\s")
 STOP_TAG = re.compile(r" \[stop: ([a-z-]+)\]$")
 AMEND_RE = re.compile(r"^M(\d+) (" + TIME + r") · (?:after D(\d+) · )?(decided-for-you|confirmed): (.+) · why: (.+)$")
-MODEL_CHANGE_RE = re.compile(r"^- You expected (.+) → (.+), because (.+) \[(shown, not confirmed|confirmed)\]$")
 MODEL_CHANGE_LIKE = re.compile(r"^\s*(?:- )?You expected .+ → ")
 MECH_RE = re.compile(r"^(.*?)\s*\[(verified|supported|inferred|untested)\]\s*$")
 ID_RE = re.compile(r"(?<![\w-])([PA])(\d+)(?!\w)")
+CITE_RE = re.compile(r"(?<![\w-])([PA])(\d)(?![\w])")   # P10, P99 and longer are not read as IDs
 PLACEHOLDER_RE = re.compile(r"\{([^{}\n]*)\}")
 PLACEHOLDER_WORDS = re.compile(r"^[a-z][a-z '’,-]*$")
 CODE_PLACEHOLDERS = {"exact command", "command that can fail", "command", "command that would catch it"}
@@ -88,10 +91,7 @@ CJK = re.compile(r"[぀-ヿ㐀-䶿一-鿿가-힯]")
 STRONG_VERBS = re.compile(r"\b(causes?|caused|proves?|proven|confirms?|confirmed|demonstrates?|"
                           r"guarantees?|establishes|due to|results? in|leads? to|drives?)\b", re.I)
 SUPERLATIVE = re.compile(r"\b(all|every|works|no regressions)\b", re.I)
-DESTRUCTIVE = (("rm -rf", re.compile(r"(?:^|[\s;&|(])rm\s+(?:-[a-zA-Z]*[rR][a-zA-Z]*\s+-?[a-zA-Z]*[fF]|-[a-zA-Z]*[fF][a-zA-Z]*\s+-?[a-zA-Z]*[rR]|-[a-zA-Z]*(?:[rR][a-zA-Z]*[fF]|[fF][a-zA-Z]*[rR]))")),
-               ("force-push", re.compile(r"\bgit\b[^;&|]*\bpush\b[^;&|]*(?:\s--force(?:-with-lease)?\b|\s-[a-zA-Z]*f\b|\s\+\S)")),
-               ("DROP", re.compile(r"\bDROP\s+(?:TABLE|DATABASE|SCHEMA|INDEX|VIEW)\b", re.I)),
-               ("reset --hard", re.compile(r"\bgit\b[^;&|]*\breset\b[^;&|]*--hard\b")))
+DROP_RE = re.compile(r"\bDROP\s+(?:TABLE|DATABASE|SCHEMA|INDEX|VIEW)\b", re.I)
 # Known runners: the variant key is runner + target (at least 3 tokens); trailing args may vary.
 RUNNERS = {("python", "-m"), ("npm", "run"), ("pnpm", "run"), ("yarn", "run"), ("bun", "run"),
            ("uv", "run"), ("poetry", "run"), ("pipenv", "run"), ("npm", "exec"), ("pnpm", "exec"),
@@ -124,27 +124,96 @@ def sha(text: str) -> str:
 
 
 def read_text(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    return path.read_text(encoding="utf-8", errors="replace")
 
 
-def write_text(path: Path, text: str) -> None:
-    path.write_text(text, encoding="utf-8")
+class UnsafePath(UsageError):
+    """A write would follow a symlink or leave .finding-unknowns/ (exit 2; the guard fails open)."""
+
+
+def _is_link(p: Path) -> bool:
+    return os.path.islink(str(p))
+
+
+def safe_dir(fu: Path, path: Path) -> Path:
+    """Create `path` (a directory inside `fu`) one level at a time, refusing any symlink on
+    the way from `fu` itself down; return it."""
+    fu, path = Path(os.path.abspath(str(fu))), Path(os.path.abspath(str(path)))
+    try:
+        rel = path.relative_to(fu)
+    except ValueError:
+        raise UnsafePath("refusing to write outside %s: %s" % (fu, path))
+    cur = fu
+    for part in ("",) + rel.parts:
+        cur = cur / part if part else cur
+        if _is_link(cur):
+            raise UnsafePath("refusing to write through a symlink: %s" % cur)
+        if not cur.exists():
+            os.mkdir(str(cur))
+        elif not cur.is_dir():
+            raise UnsafePath("not a directory: %s" % cur)
+    if not os.path.realpath(str(path)).startswith(os.path.realpath(str(fu)) + os.sep) and path != fu:
+        raise UnsafePath("refusing to write outside %s: %s" % (fu, path))
+    return path
+
+
+def safe_write(fu: Path, path: Path, text: str, append: bool = False) -> None:
+    """The only way fu writes a file: inside `fu`, no symlink on the path or any parent up to
+    and including `fu`; appends open with O_NOFOLLOW, writes go to a fresh temp file
+    (O_EXCL|O_NOFOLLOW) that replaces the target atomically."""
+    path = Path(os.path.abspath(str(path)))
+    parent = safe_dir(fu, path.parent)
+    if _is_link(path):
+        raise UnsafePath("refusing to write through a symlink: %s" % path)
+    data = text.encode("utf-8")
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    if append:
+        fd = os.open(str(path), os.O_WRONLY | os.O_APPEND | os.O_CREAT | nofollow, 0o644)
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        return
+    mode = (os.lstat(str(path)).st_mode & 0o777) if path.exists() else 0o644
+    tmp = parent / (".%s.%d.%s.tmp" % (path.name, os.getpid(), os.urandom(4).hex()))
+    fd = os.open(str(tmp), os.O_WRONLY | os.O_CREAT | os.O_EXCL | nofollow, mode)
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        os.replace(str(tmp), str(path))
+    except BaseException:
+        try:
+            os.unlink(str(tmp))
+        except OSError:
+            pass
+        raise
+
+
+def clean(s, limit: int = 0) -> str:
+    """Control and bidi characters replaced, optionally truncated (text from the repo shown
+    in a permission prompt)."""
+    s = re.sub("[\\x00-\\x1f\\x7f-\\x9f\\u200e\\u200f\\u202a-\\u202e\\u2066-\\u2069]", "?", "" if s is None else str(s))
+    return s[:limit - 1] + "…" if limit and len(s) > limit else s
 
 
 def read_profile(fu: Path) -> dict:
     prof = {}
     path = fu / "profile.md"
-    if path.is_file():
-        for line in read_text(path).splitlines():
-            m = re.match(r"^\s*([a-z]+)\s*:\s*(\S.*?)\s*$", line)
-            if m:
-                prof[m.group(1)] = m.group(2)
+    try:
+        lines = read_text(path).splitlines() if path.is_file() else []
+    except OSError:
+        lines = []
+    for line in lines:
+        m = re.match(r"^\s*([a-z]+)\s*:\s*(\S.*?)\s*$", line)
+        if m:
+            prof[m.group(1)] = m.group(2)
     return prof
 
 
 def git(root: Path, *args: str, timeout: int = GIT_TIMEOUT) -> subprocess.CompletedProcess:
+    """git with stdin closed, no prompt and fsmonitor off. The person's commit hooks still run
+    (never --no-verify): a failing hook makes freeze self-report instead of committing."""
     env = dict(os.environ, GIT_TERMINAL_PROMPT="0")
-    return subprocess.run(["git", *args], cwd=str(root), capture_output=True, text=True,
+    safe = ["-c", "core.fsmonitor=false"]
+    return subprocess.run(["git", *safe, *args], cwd=str(root), capture_output=True, text=True,
                           stdin=subprocess.DEVNULL, env=env, timeout=timeout)
 
 
@@ -178,8 +247,14 @@ def card_files(fu: Path) -> list:
     tasks = fu / "tasks"
     if not tasks.is_dir():
         return []
+
+    def mtime(p: Path) -> float:
+        try:
+            return p.stat().st_mtime
+        except OSError:  # a dangling symlink or a vanished file sorts last, never raises
+            return 0.0
     return sorted((p for p in tasks.glob("*.md") if not p.name.endswith(".deltas.md")),
-                  key=lambda p: p.stat().st_mtime, reverse=True)
+                  key=mtime, reverse=True)
 
 
 def quick_header(text: str) -> dict:
@@ -237,7 +312,13 @@ def resolve_card(root: Path, arg, allow_default: bool):
     fu = root / FU_DIR
     if not fu.is_dir():
         raise UsageError("no %s/ under %s" % (FU_DIR, root))
-    open_cards = [p for p in card_files(fu) if is_open(read_text(p))]
+    open_cards = []
+    for p in card_files(fu):
+        try:
+            if is_open(read_text(p)):
+                open_cards.append(p)
+        except OSError:
+            continue
     if not open_cards:
         raise UsageError("no open card under %s" % (fu / "tasks"))
     card = open_cards[0]
@@ -253,49 +334,112 @@ def _claim(fu: Path, slug: str):
 
 # ------------------------------------------------------------ command tokens and matching
 
-def _tokens(segment: str) -> list:
+MAX_COMMAND = 8192      # longer commands are matched on their first 8192 characters
+MAX_DEPTH = 3           # nesting of sh -c, eval, $( … ) and backticks that is followed
+SEPARATORS = set(";&|()\n")
+SHELLS = {"sh", "bash", "zsh", "dash", "ksh"}
+KEYWORDS = {"!", "{", "}", "then", "do", "else", "elif", "if", "while", "until", "nohup"}
+# wrapper → options that take a separate argument; the wrapper's own options are dropped
+WRAPPERS = {"sudo": {"-u", "-g", "-h", "-p", "-C", "-D", "-r", "-t", "-U", "-T"}, "doas": {"-u", "-C"},
+            "time": set(), "command": set(), "exec": {"-a"}, "nice": {"-n"}, "stdbuf": set(),
+            "xargs": {"-I", "-n", "-P", "-L", "-d", "-E", "-s", "-a"}, "env": {"-u", "-C", "-S"},
+            "timeout": {"-s", "-k"}}
+INTERPRETER_PATH = re.compile(r"^(?:\S*/)?(python3?(?:\.\d+)?|node|bash|sh|zsh|dash|ruby|perl|deno|bun)$")
+SUBST = re.compile(r"\$\(([^()]*)\)|`([^`]*)`")
+
+
+def _tokens(text: str) -> list:
     try:
-        lex = shlex.shlex(segment, posix=True, punctuation_chars=True)
+        lex = shlex.shlex(text, posix=True, punctuation_chars=";&|()<>\n")
+        lex.whitespace = " \t\r"
         lex.whitespace_split = True
         return list(lex)
     except ValueError:
-        return segment.split()
+        return text.replace("\n", " ; ").split()
 
 
-def segments(command: str) -> list:
-    """Normalised token lists, one per simple command (split on newlines, ;, &&, ||, |, &)."""
+def segments(command: str, depth: int = 0) -> list:
+    """Normalised token lists, one per simple command. Splits on newlines, ;, &&, ||, |, &,
+    ( and ); drops redirections (`2>&1`, `> out.log`) and wrappers (env, timeout, sudo, …);
+    follows `sh -c "…"`, `eval`, `$( … )` and backticks into their own segments."""
+    text = command[:MAX_COMMAND]
     out = []
-    for line in command.splitlines():
-        cur = []
-        for tok in _tokens(line):
-            if tok and set(tok) <= set(";&|"):
-                if cur:
-                    out.append(cur)
-                cur = []
-            else:
-                cur.append(tok)
-        if cur:
-            out.append(cur)
-    return [normalise(seg) for seg in out if normalise(seg)]
+    if depth < MAX_DEPTH:
+        for a, b in SUBST.findall(text):
+            out += segments(a or b, depth + 1)
+    text = re.sub(r"(?<!\S)\d+(?=[<>])", "", text.replace("`", " ; "))
+    cur, skip = [], False
+    for tok in _tokens(text):
+        if skip:
+            skip = False
+            continue
+        if tok and set(tok) <= set(";&|()<>\n") and ("<" in tok or ">" in tok):
+            skip = True  # a redirection and its target
+            continue
+        if tok == "$" or (tok and set(tok) <= SEPARATORS):
+            out += _finish(cur, depth)
+            cur = []
+            continue
+        cur.append(tok)
+    out += _finish(cur, depth)
+    return out
+
+
+def _finish(tokens: list, depth: int) -> list:
+    seg = normalise(tokens)
+    if not seg:
+        return []
+    out = [seg]
+    if depth < MAX_DEPTH:
+        if seg[0] == "eval" and len(seg) > 1:
+            return segments(" ".join(seg[1:]), depth + 1)
+        if seg[0] in SHELLS:
+            for i, t in enumerate(seg[1:-1], 1):
+                if re.match(r"^-[a-zA-Z]*c[a-zA-Z]*$", t):
+                    out += segments(seg[i + 1], depth + 1)
+                    break
+    return out
+
+
+def _strip_wrappers(toks: list) -> list:
+    while toks:
+        head = os.path.basename(toks[0])
+        if re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", toks[0]) or toks[0] in KEYWORDS:
+            toks = toks[1:]
+            continue
+        if head not in WRAPPERS:
+            break
+        takes, toks = WRAPPERS[head], toks[1:]
+        while toks and (toks[0].startswith("-") or (head == "env" and "=" in toks[0])):
+            toks = toks[2:] if toks[0] in takes else toks[1:]
+            if toks and toks[0] == "--":
+                toks = toks[1:]
+                break
+        if head == "timeout" and toks:
+            toks = toks[1:]  # the duration
+    return toks
 
 
 def normalise(tokens: list) -> list:
-    toks = list(tokens)
-    while toks and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", toks[0]):
-        toks.pop(0)
+    toks = _strip_wrappers(list(tokens))
     out = []
     for i, t in enumerate(toks):
         while t.startswith("./"):
             t = t[2:]
-        if i == 0:
+        im = INTERPRETER_PATH.match(t)
+        if i == 0 or im:
             t = os.path.basename(t) or t
             t = re.sub(r"^python3(?:\.\d+)?$", "python", t)
         out.append(t)
+    if len(out) > 1 and out[0] in ("npm", "pnpm", "yarn") and out[1] == "run-script":
+        out[1] = "run"
+    if len(out) > 2 and out[0] in ("uv", "poetry", "pipenv") and out[1] == "run" and out[2] in INTERPRETERS:
+        out = out[2:]
     return out
 
 
 def variant_key(irr: list):
-    """Runner + target for known runners (>= 3 tokens), else None (exact match only)."""
+    """Runner + target for known runners (>= 3 tokens), else None."""
     if len(irr) < 3 or (irr[0], irr[1]) not in RUNNERS:
         return None
     if irr[2] in INTERPRETERS:
@@ -306,31 +450,63 @@ def variant_key(irr: list):
     return irr[:3]
 
 
-def match_command(command: str, irr_cmds: list) -> list:
-    """[(index into irr_cmds, exact)] for every Irreversible command the command runs."""
+def _contains(seq: list, run: list) -> bool:
+    n = len(run)
+    return n > 0 and any(seq[i:i + n] == run for i in range(len(seq) - n + 1))
+
+
+def match_command(command: str, irr_cmds: list, exempt: list = None) -> list:
+    """[(index into irr_cmds, exact)] for every Irreversible command the command may run.
+    Exact: a segment equals the command (wrappers and redirections aside). Otherwise a
+    variant: the command's tokens, or a known runner's target, appear as a contiguous run
+    anywhere in a segment. A variant segment equal to one in `exempt[idx]` (the card's own
+    contract checks) is not a hit."""
     hits = []
     segs = segments(command)
     for idx, irr in enumerate(irr_cmds):
         irr_segs = segments(irr)
-        if len(irr_segs) != 1:
-            # a compound Irreversible line matches only the whole normalised command
-            if [s for s in segs] == irr_segs:
+        if not irr_segs:
+            continue
+        if len(irr_segs) > 1:
+            if _contains(segs, irr_segs):
                 hits.append((idx, True))
             continue
         target = irr_segs[0]
-        key = variant_key(target)
-        for seg in segs:
-            if seg == target:
-                hits.append((idx, True))
-                break
-            if key and seg[:len(key)] == key:
-                hits.append((idx, False))
-                break
+        key = variant_key(target) or target
+        skip = exempt[idx] if exempt else []
+        exact = any(seg == target for seg in segs)
+        variant = any(_contains(seg, key) and seg not in skip for seg in segs)
+        if exact or variant:
+            hits.append((idx, exact))
     return hits
 
 
 def norm_command(command: str) -> str:
     return " ; ".join(" ".join(s) for s in segments(command))
+
+
+def _flags(tokens: list) -> str:
+    return "".join(t[1:] for t in tokens if re.match(r"^-[A-Za-z]+$", t))
+
+
+def destructive(command: str):
+    """The first generic destructive pattern the command runs, by tokens (no backtracking)."""
+    for seg in segments(command):
+        for i, t in enumerate(seg):
+            rest = seg[i + 1:]
+            if t == "rm":
+                fl = _flags(rest)
+                if (("r" in fl or "R" in fl or "--recursive" in rest) and ("f" in fl or "--force" in rest)):
+                    return "rm -rf"
+            if t == "git" and "push" in rest:
+                after = rest[rest.index("push") + 1:]
+                if ("f" in _flags(after) or any(a.startswith("--force") or a.startswith("+") for a in after)):
+                    return "force-push"
+            if t == "git" and "reset" in rest and "--hard" in rest:
+                return "reset --hard"
+    if DROP_RE.search(command[:MAX_COMMAND]):
+        return "DROP"
+    return None
 
 
 # ---------------------------------------------------------------------------- lint model
@@ -371,6 +547,31 @@ def parse_quoted(s: str):
         out.append(c)
         i += 1
     return None
+
+
+def needs_parts(s: str):
+    """(X, Y, Z) of `{X} (recommendation: {Y}; settles {Z})`, else None (no regex: linear)."""
+    x, sep, rest = s.partition(" (recommendation: ")
+    if not (x and sep and rest.endswith(")")):
+        return None
+    y, sep, z = rest[:-1].rpartition("; settles ")
+    return (x, y, z) if y and sep and z else None
+
+
+def model_change(s: str):
+    """(X, Y, Z, tag) of `- You expected X → Y, because Z [tag]`, else None."""
+    if not s.startswith("- You expected "):
+        return None
+    body = s[len("- You expected "):]
+    for tag in ("shown, not confirmed", "confirmed"):
+        if body.endswith(" [%s]" % tag):
+            body = body[:-len(tag) - 3]
+            break
+    else:
+        return None
+    x, sep, rest = body.partition(" → ")
+    y, sep2, z = rest.rpartition(", because ")
+    return (x, y, z, tag) if x and sep and y and sep2 and z else None
 
 
 def blocks(body: list) -> list:
@@ -472,11 +673,9 @@ def _parse_header(lines: list, slug: str, f: str, lint: Lint, m: dict) -> None:
     else:
         m["needs"] = nm.group(1)
         if m["needs"] != "nothing":
-            pm = NEEDS_FORM.match(m["needs"])
-            if not pm:
+            m["needs_parts"] = needs_parts(m["needs"])
+            if not m["needs_parts"]:
                 lint.add("FAIL", f, 3, "header", "Needs you must read `{X} (recommendation: {Y}; settles {Z})` or `nothing`")
-            else:
-                m["needs_parts"] = pm.groups()
     mm = HEADER_MODE.match(get(3))
     if not mm:
         lint.add("FAIL", f, 4, "header", "line 4 must be `Mode: ship|learn · Last seen by you: {time}, after D{n} | never`")
@@ -645,22 +844,16 @@ def _check_brief_presence(b: dict, body: list, f: str, lint: Lint) -> None:
         lint.add("FAIL", f, at, "contract-form", "an irreversible contract item but no `Irreversible:` line")
     if b["irreversible"] and not has_irr_lane:
         lint.add("FAIL", f, b["irreversible"][0][0], "contract-form", "an `Irreversible:` line but no contract item in the irreversible lane")
-    irr = [(ln, segments(cmd), cmd) for ln, cmd in b["irreversible"]]
+    cmds = [cmd for _, cmd in b["irreversible"]]
     for c in b["contract"]:
         for key in ("check", "post_check"):
             if key not in c:
                 continue
             cl, val = c[key]
             spans = re.findall(r"`([^`]+)`", val) or [val]
-            for _, isegs, cmd in irr:
-                if not isegs:
-                    continue
-                for span in spans:
-                    ssegs = segments(span)
-                    if any(ssegs[i:i + len(isegs)] == isegs for i in range(len(ssegs))):
-                        lint.add("FAIL", f, cl, "irreversible-check",
-                                 "%s %s re-runs the irreversible command `%s`" % (c["id"], key.replace("_", "-"), cmd))
-                        break
+            for idx in sorted({i for span in spans for i, exact in match_command(span, cmds) if exact}):
+                lint.add("FAIL", f, cl, "irreversible-check",
+                         "%s %s re-runs the irreversible command `%s`" % (c["id"], key.replace("_", "-"), cmds[idx]))
 
 
 def _parse_amendments(body: list, f: str, lint: Lint, m: dict) -> None:
@@ -704,12 +897,12 @@ def _parse_model_changes(body: list, f: str, lint: Lint, m: dict) -> None:
     for ln, text in body:
         if not text.strip():
             continue
-        mm = MODEL_CHANGE_RE.match(text)
+        mm = model_change(text)
         if not mm:
             lint.add("FAIL", f, ln, "model-changes", "must read `- You expected X → it is Y, because Z [shown, not confirmed | confirmed]`")
             m["model_changes"].append((ln, text.strip(), None))
         else:
-            m["model_changes"].append((ln, text[2:].rsplit(" [", 1)[0], mm.group(4)))
+            m["model_changes"].append((ln, text[2:].rsplit(" [", 1)[0], mm[3]))
     if len(m["model_changes"]) > MAX_MODEL_CHANGES:
         lint.add("FAIL", f, m["model_changes"][MAX_MODEL_CHANGES][0], "model-changes", "at most %d Model changes lines" % MAX_MODEL_CHANGES)
 
@@ -849,19 +1042,27 @@ def scan_placeholders(lines: list, f: str, lint: Lint) -> None:
             lint.add("FAIL", f, i, "placeholder", "template placeholder left in: {%s}" % body)
 
 
-def scan_ids(lines: list, defined: dict, f: str, lint: Lint) -> None:
+def scan_ids(lines: list, defined: dict, f: str, lint: Lint, brief: tuple = (0, 0)) -> None:
+    """Undefined P{n}/A{n} citations: FAIL inside the Brief, WARN elsewhere. A prediction
+    line's quoted claim (the person's words, in the Brief or a Debrief row) is not read."""
     for i, t in enumerate(lines, 1):
-        if i == 1 and t.startswith("# "):
+        if (i == 1 and t.startswith("# ")) or len(t) > MAX_LINE:
             continue
+        pm = PRED_RE.match(t)
+        if pm:
+            if pm.group(5).startswith('"'):
+                continue
+            t = pm.group(5)
         seen = set()
-        for letter, num in ID_RE.findall(strip_code(t)):
+        for letter, num in CITE_RE.findall(strip_code(t)):
             pid = letter + num
             if pid in seen:
                 continue
             seen.add(pid)
             if pid not in defined:
-                lint.add("FAIL", f, i, "id-reserved",
-                         "%s is cited but not a Brief prediction; P{n}/A{n} name predictions only, name premises in words" % pid)
+                lint.add("FAIL" if brief[0] <= i <= brief[1] else "WARN", f, i, "id-reserved",
+                         "%s is cited but not a Brief prediction; P{n}/A{n} name predictions only: "
+                         "name premises in words, put domain identifiers in backticks" % pid)
 
 
 def lint_deltas(path: Path, f: str, lint: Lint) -> list:
@@ -937,10 +1138,38 @@ def lint_claim(path: Path, f: str, lint: Lint) -> dict:
     return fields
 
 
+def counted_lines(lines: list, m: dict) -> list:
+    """The lines the word cap counts: header to Open, then the last Debrief only."""
+    live = lines[:m["live_end"]]
+    if m["debriefs"]:
+        live = live + lines[m["debriefs"][-1]["line"] - 1:]
+    return live
+
+
+def strict_words(lines: list, m: dict) -> int:
+    """Words in counted_lines(), without the person's quoted claims and code spans (the
+    same exemptions as the per-field cap)."""
+    n = 0
+    for t in counted_lines(lines, m):
+        pm = PRED_RE.match(t) if len(t) <= MAX_LINE else None
+        if pm and pm.group(1) == "P" and pm.group(5).startswith('"'):
+            t = t[:pm.start(5)]
+        n += count_words(strip_code(t))
+    return n
+
+
+def live_lines(lines: list, m: dict) -> int:
+    """Non-blank lines from the header to Open; a frozen Brief's lines are not counted
+    (they cannot be shortened)."""
+    lo, hi = m["brief_range"] if m["brief_frozen"] else (0, -1)
+    return sum(1 for i, t in enumerate(lines[:m["live_end"]], 1) if t.strip() and not lo <= i <= hi)
+
+
 def strict_caps(text: str, m: dict, f: str, lint: Lint) -> None:
-    words = count_words(text)
+    words = strict_words(text.splitlines(), m)
     if words > STRICT_MAX_WORDS:
-        lint.add("FAIL", f, 1, "strict-caps", "card has %d words (strict: at most %d)" % (words, STRICT_MAX_WORDS))
+        lint.add("FAIL", f, 1, "strict-caps", "card has %d counted words (strict: at most %d; header to Open plus "
+                 "the last Debrief, without the person's quotes and code spans)" % (words, STRICT_MAX_WORDS))
     b = m["brief"]
     agent = [p for p in b["preds"] if p["letter"] == "A"]
     person = [p for p in b["preds"] if p["letter"] == "P"]
@@ -969,7 +1198,7 @@ def strict_caps(text: str, m: dict, f: str, lint: Lint) -> None:
         for key in ("check", "does_NOT_prove", "post_check"):
             if key in c:
                 fields.append((c[key][0], c["id"] + " " + key.replace("_", " "), c[key][1]))
-    for d in m["debriefs"]:
+    for d in m["debriefs"][-1:]:
         for r in d["rows"]:
             fields += [(r["line"], r["id"] + " measured", r["measured"]), (r["line"], r["id"] + " mechanism", r["mechanism"] or "")]
         fields += [(ln, "Not checked", t) for ln, t in d["not_checked"]]
@@ -1045,15 +1274,15 @@ def lint_paths(root: Path, card, claim, slug: str, strict_flag: bool):
         deltas_path = card.with_name(slug + ".deltas.md")
         model["deltas"] = lint_deltas(deltas_path, "tasks/%s.deltas.md" % slug, lint)
         defined = {p["id"]: p for p in model["brief"]["preds"]}
-        scan_ids(lines, defined, f, lint)
+        scan_ids(lines, defined, f, lint, model["brief_range"])
         if deltas_path.is_file():
             scan_ids(read_text(deltas_path).splitlines(), defined, "tasks/%s.deltas.md" % slug, lint)
         scan_placeholders(lines, f, lint)
         check_debrief_rows(model, f, lint)
-        live = [t for t in lines[:model["live_end"]] if t.strip()]
-        if len(live) > LIVE_MAX_LINES:
+        live = live_lines(lines, model)
+        if live > LIVE_MAX_LINES:
             lint.add("FAIL" if strict else "WARN", f, 1, "live-length",
-                     "header to Open is %d lines (at most %d)" % (len(live), LIVE_MAX_LINES))
+                     "header to Open is %d lines outside the frozen Brief (at most %d)" % (live, LIVE_MAX_LINES))
         if strict:
             strict_caps(text, model, f, lint)
     if claim is not None:
@@ -1069,18 +1298,25 @@ def lint_paths(root: Path, card, claim, slug: str, strict_flag: bool):
 
 # ------------------------------------------------------------------------------ commands
 
-def cmd_init(a) -> int:
-    root = find_root(a.root)
+def guard_installed() -> bool:
+    """The plugin's hook ships beside this script; an install.sh copy has none."""
+    return (Path(__file__).resolve().parent.parent / "hooks" / "hooks.json").is_file()
+
+
+def init_fu(root: Path, flags: dict) -> list:
+    """Create the directories and profile.md (idempotent). Returns the .gitignore lines to
+    show: the missing ones, only when this call created profile.md."""
     fu = root / FU_DIR
+    if _is_link(fu):
+        raise UnsafePath("refusing to write through a symlink: %s" % fu)
+    if not fu.exists():
+        os.mkdir(str(fu))
     for sub in ("tasks", "predictions", "logs", "view"):
-        (fu / sub).mkdir(parents=True, exist_ok=True)
+        safe_dir(fu, fu / sub)
     prof_path = fu / "profile.md"
-    existing = read_text(prof_path).splitlines() if prof_path.is_file() else []
-    flags = {}
-    if a.strict:
-        flags["strict"] = "yes"
-    if a.guard:
-        flags["guard"] = a.guard
+    created = not prof_path.exists() and not _is_link(prof_path)
+    existing = read_text(prof_path).splitlines() if prof_path.is_file() and not _is_link(prof_path) else []
+    defaults = dict(PROFILE_DEFAULTS, guard="ask" if guard_installed() else "off")
     out, keys = [], set()
     for line in existing:
         km = re.match(r"^\s*([a-z]+)\s*:", line)
@@ -1090,18 +1326,39 @@ def cmd_init(a) -> int:
             out.append(line)
         if km:
             keys.add(km.group(1))
-    for k, v in PROFILE_DEFAULTS:
+    for k, v in defaults.items():
         if k not in keys:
             out.append("%s: %s" % (k, flags.get(k, v)))
-    write_text(prof_path, "\n".join(out) + "\n")
-    print("initialised %s" % fu)
+    text = "\n".join(out) + "\n"
+    if created or text != "\n".join(existing) + "\n":
+        safe_write(fu, prof_path, text)
+    if not created:
+        return []
     gi = root / ".gitignore"
-    have = set(read_text(gi).splitlines()) if gi.is_file() else set()
-    missing = [ln for ln in GITIGNORE_LINES if ln not in have]
+    try:
+        have = set(read_text(gi).splitlines()) if gi.is_file() else set()
+    except OSError:
+        have = set()
+    return [ln for ln in GITIGNORE_LINES if ln not in have]
+
+
+def print_gitignore(missing: list) -> None:
     if missing:
         print("add to .gitignore:")
         for ln in missing:
             print("  %s" % ln)
+
+
+def cmd_init(a) -> int:
+    root = find_root(a.root)
+    flags = {}
+    if a.strict:
+        flags["strict"] = "yes"
+    if a.guard:
+        flags["guard"] = a.guard
+    missing = init_fu(root, flags)
+    print("initialised %s" % (root / FU_DIR))
+    print_gitignore(missing)
     return 0
 
 
@@ -1119,7 +1376,11 @@ def _set_state(text: str, state: str) -> str:
     return re.sub(r"^(Goal: .+ · State: ).*$", lambda mm: mm.group(1) + state, text, count=1, flags=re.M)
 
 
-def _set_timing(path: Path, value: str, claim: bool) -> None:
+def _set_needs(text: str, needs: str) -> str:
+    return re.sub(r"^Needs you: .*$", lambda _m: "Needs you: " + needs, text, count=1, flags=re.M)
+
+
+def _set_timing(fu: Path, path: Path, value: str, claim: bool) -> None:
     text = read_text(path)
     pat = r"^Timing\s*:.*$"
     if re.search(pat, text, flags=re.M):
@@ -1129,7 +1390,7 @@ def _set_timing(path: Path, value: str, claim: bool) -> None:
             text = re.sub(r"^(Written\s*:.*)$", lambda mm: mm.group(1) + "\nTiming: " + value, text, count=1, flags=re.M)
         else:
             text = text.rstrip("\n") + "\nTiming: " + value + "\n"
-    write_text(path, text)
+    safe_write(fu, path, text)
 
 
 def _freeze_skip(root: Path, rels: list, profile: dict):
@@ -1185,16 +1446,25 @@ def cmd_freeze(a) -> int:
     fu = root / FU_DIR
     stage = a.stage
     main = card if card is not None else claim
+    needs = None
+    if a.needs is not None:
+        needs = " ".join(clean(a.needs).split())
+        if stage != "stop" or not (needs == "nothing" or needs_parts(needs)):
+            raise UsageError("--needs goes with --stage stop and reads `{X} (recommendation: {Y}; settles {Z})`")
+    if stage == "brief":
+        print_gitignore(init_fu(root, {}))
     # Step 1: the card's own edits, before any skip check (fu freeze owns State).
     if card is not None:
         text = read_text(card)
         if stage == "brief":
             text = re.sub(r"^## Brief \(draft\)$", "## Brief (frozen %s)" % now_str(), text, count=1, flags=re.M)
         text = _set_state(text, STAGE_STATE[stage])
-        write_text(card, text)
+        if needs is not None or stage == "resume":
+            text = _set_needs(text, needs or "nothing")
+        safe_write(fu, card, text)
         deltas = card.with_name(slug + ".deltas.md")
         if stage == "brief" and not deltas.is_file():
-            write_text(deltas, "# %s deltas (append-only)\n" % slug)
+            safe_write(fu, deltas, "# %s deltas (append-only)\n" % slug)
     rels = [main.relative_to(root).as_posix()]
     if card is not None:
         deltas = card.with_name(slug + ".deltas.md")
@@ -1206,7 +1476,7 @@ def cmd_freeze(a) -> int:
     reason = _freeze_skip(root, rels, read_profile(fu))
     if reason:
         if stage == "brief":
-            _set_timing(main, "self-reported", card is None)
+            _set_timing(fu, main, "self-reported", card is None)
         print("self-reported: %s" % reason)
         return 3
     msg = "chore(card): %s %s" % (stage, slug)
@@ -1221,13 +1491,13 @@ def cmd_freeze(a) -> int:
         except (OSError, subprocess.SubprocessError):
             pass
         if stage == "brief":
-            _set_timing(main, "self-reported", card is None)
+            _set_timing(fu, main, "self-reported", card is None)
         detail = (com.stderr or com.stdout or "").strip().splitlines()
         print("self-reported: commit failed%s" % (" (%s)" % detail[-1][:120] if detail else ""))
         return 3
     short = git(root, "rev-parse", "--short", "HEAD").stdout.strip()
     if stage == "brief":
-        _set_timing(main, "Brief frozen %s, commit %s" % (now_str(), short), card is None)
+        _set_timing(fu, main, "Brief frozen %s, commit %s" % (now_str(), short), card is None)
     print("committed %s (%s %s)" % (short, stage, slug))
     return 0
 
@@ -1301,18 +1571,36 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
     if not files:
         print("Check files: none named")
     else:
-        changed = git(root, "diff", "--name-only", "--relative", commit, "--", *files).stdout.split()
-        if changed:
+        changed = git(root, "diff", "--no-ext-diff", "--no-textconv", "--name-only", "--relative", commit,
+                      "--", *files).stdout.split()
+        untracked = git(root, "ls-files", "--others", "--exclude-standard", "--", *files).stdout.splitlines()
+        created = sorted(set(p for p in files if (root / p).exists()
+                             and git(root, "cat-file", "-e", "%s:./%s" % (commit, p)).returncode != 0)
+                         | set(p for p in untracked if p))
+        created_set = set(created)
+        changed = [p for p in changed if p not in created_set and not any(p.startswith(c.rstrip("/") + "/") for c in created)]
+        parts = (["changed: %s" % ", ".join(changed)] if changed else []) + \
+                (["created after the freeze: %s" % ", ".join(created)] if created else [])
+        if parts:
             findings += 1
-            print("Check files: changed: %s" % ", ".join(changed))
+            print("Check files: %s" % " · ".join(parts))
         else:
             print("Check files: unchanged")
-    logged_text = " ".join([read_text(card.with_name(slug + ".deltas.md")) if card.with_name(slug + ".deltas.md").is_file() else ""]
+    deltas_path = card.with_name(slug + ".deltas.md")
+    logged_text = " ".join([read_text(deltas_path) if deltas_path.is_file() else ""]
                            + [x["what"] + " " + x["why"] for x in model["amendments"]]
                            + [t for _, t in model["brief"]["approach"]]
                            + [" ".join([c["claim"]] + [v[1] for k, v in c.items() if isinstance(v, tuple)]) for c in model["brief"]["contract"]])
+    logged = set()
+    for tok in re.findall(r"[\w./-]+", logged_text):
+        tok = tok.rstrip(".")
+        while tok.startswith("./"):
+            tok = tok[2:]
+        if tok:
+            logged.add(tok)
     unlogged = []
-    diff = git(root, "diff", "-U0", "--relative", commit, "--", ".", ":(exclude)%s" % FU_DIR).stdout
+    diff = git(root, "diff", "--no-ext-diff", "--no-textconv", "-U0", "--relative", commit,
+               "--", ".", ":(exclude)%s" % FU_DIR).stdout
     path = None
     for line in diff.splitlines():
         if line.startswith("+++ "):
@@ -1329,19 +1617,27 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
     untracked = git(root, "ls-files", "--others", "--exclude-standard", "--", ".", ":(exclude)%s" % FU_DIR).stdout.split("\n")
     for p in untracked:
         if p:
-            try:
-                n = len((root / p).read_text(encoding="utf-8", errors="replace").splitlines())
-            except OSError:
-                n = 1
-            unlogged.append((p, 1, max(n, 1)))
+            unlogged.append((p, 1, _line_count(root / p)))
     hunks = ["%s:%d-%d" % h for h in unlogged
-             if h[0] not in logged_text and os.path.basename(h[0]) not in logged_text]
+             if h[0] not in logged and os.path.basename(h[0]) not in logged]
     if hunks:
         findings += 1
         print("Unlogged hunks: %s" % ", ".join(hunks))
     else:
         print("Unlogged hunks: none")
     return 1 if findings else 0
+
+
+def _line_count(path: Path) -> int:
+    """Lines of an untracked file: regular files up to 5 MB only (no symlink, FIFO or device)."""
+    try:
+        st = os.lstat(str(path))
+        if not stat.S_ISREG(st.st_mode) or st.st_size > MAX_UNTRACKED_BYTES:
+            return 1
+        with open(str(path), "rb") as fh:
+            return max(len(fh.read().splitlines()), 1)
+    except OSError:
+        return 1
 
 
 def read_log(fu: Path) -> list:
@@ -1383,7 +1679,7 @@ def stat_line(stats: dict, force: bool = False):
     (yk, yn), (ak, an) = stats["you"], stats["agent"]
     if not force and yn < STAT_MIN_N and an < STAT_MIN_N:
         return None
-    soft = " (too soft?)" if an >= STAT_MIN_N and ak == an else ""
+    soft = " · the agent held every one: its predictions are likely too safe" if an >= STAT_MIN_N and ak == an else ""
     return "You: %d of %d held · Agent: %d of %d held%s" % (yk, yn, ak, an, soft)
 
 
@@ -1417,10 +1713,9 @@ def cmd_log(a) -> int:
             new.append(line)
     if new:
         path = fu / "predictions-log.md"
-        prev = read_text(path) if path.is_file() else ""
-        if prev and not prev.endswith("\n"):
-            prev += "\n"
-        write_text(path, prev + "\n".join(new) + "\n")
+        prev = read_text(path) if path.is_file() and not _is_link(path) else ""
+        lead = "\n" if prev and not prev.endswith("\n") else ""
+        safe_write(fu, path, lead + "\n".join(new) + "\n", append=True)
     for line in new:
         print(line)
     if not new:
@@ -1458,6 +1753,17 @@ def card_summary(path: Path) -> dict:
             "rows": rows, "mtime": path.stat().st_mtime, "text": text}
 
 
+def summaries(fu: Path) -> list:
+    """card_summary of every readable card; an unreadable one is skipped."""
+    out = []
+    for p in card_files(fu):
+        try:
+            out.append(card_summary(p))
+        except OSError:
+            continue
+    return out
+
+
 def graded_counts(rows: list) -> dict:
     out = {}
     for side in ("you", "agent"):
@@ -1472,7 +1778,7 @@ def cmd_list(a) -> int:
     fu = root / FU_DIR
     if not fu.is_dir():
         raise UsageError("no %s/ under %s" % (FU_DIR, root))
-    cards = [card_summary(p) for p in card_files(fu)]
+    cards = summaries(fu)
     shown = [c for c in cards if a.all or c["header"]["state"] != "debriefed"]
     if not shown:
         print("no open cards" if not a.all else "no cards")
@@ -1624,6 +1930,7 @@ def rich(s) -> str:
 def page(title: str, body: list) -> str:
     return ("<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+            "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'; img-src data:\">\n"
             "<title>%s</title>\n<style>%s</style>\n</head>\n<body>\n<div class=\"wrap\">\n%s\n</div>\n</body>\n</html>\n"
             % (esc(title), CSS, "\n".join(body)))
 
@@ -1664,7 +1971,7 @@ def render_card(fu: Path, slug: str, m: dict, brief_fails: list, warns: list) ->
     chips += ['<span class="chip warn" title="%s">%s</span>' % (esc(w[4]), esc("%s · %s:%d" % (w[3], w[1], w[2]))) for w in warns]
     out.append('<div class="chips">%s</div>' % "".join(chips))
     if brief_fails:
-        out.append('<div class="banner"><b>lint FAIL inside the frozen Brief · reported, not edited</b><ul>%s</ul></div>'
+        out.append('<div class="banner"><b>lint FAIL in the frozen Brief or a whole-card cap · reported, not edited</b><ul>%s</ul></div>'
                    % "".join("<li>%s</li>" % esc("%s:%d %s: %s" % (i[1], i[2], i[3], i[4])) for i in brief_fails))
     out.append(_needs_html(m))
     out += _stops_html(m, last)
@@ -1849,7 +2156,7 @@ def _folded_html(m: dict, last) -> list:
 
 
 def render_index(fu: Path) -> str:
-    cards = [card_summary(p) for p in card_files(fu)]
+    cards = summaries(fu)
     cards.sort(key=lambda c: (c["header"]["needs"] in (None, "nothing"), -c["mtime"]))
     states = [c["header"]["state"] for c in cards]
     graded = sum(1 for c in cards for r in c["rows"] if r[2])
@@ -1880,7 +2187,8 @@ def _index_item(fu: Path, c: dict) -> str:
     needs = h["needs"] not in (None, "nothing")
     state = h["state"] or "unparsable"
     link = (fu / "view" / (c["slug"] + ".html")).is_file()
-    slug_html = '<a href="%s.html">%s</a>' % (esc(c["slug"]), esc(c["slug"])) if link else esc(c["slug"])
+    href = "./" + urllib.parse.quote(c["slug"] + ".html")
+    slug_html = '<a href="%s">%s</a>' % (esc(href), esc(c["slug"])) if link else esc(c["slug"])
     parts = ['<li class="%s"><div><span class="slug">%s</span><span class="st %s">%s</span>%s</div>'
              % ("needs-you" if needs else "", slug_html, "waiting" if state == "waiting on you" else esc(state), esc(state),
                 ' <span class="chip warn">%s</span>' % esc(plural(bad, "lint FAIL", "lint FAILs")) if bad else ""),
@@ -1951,9 +2259,8 @@ def cmd_render(a) -> int:
     if a.list:
         if not fu.is_dir():
             raise UsageError("no %s/ under %s" % (FU_DIR, root))
-        (fu / "view").mkdir(parents=True, exist_ok=True)
         out = fu / "view" / "index.html"
-        write_text(out, render_index(fu))
+        safe_write(fu, out, render_index(fu))
         print(out)
         return 0
     root, card, claim, slug, note = resolve_card(root, a.slug, True)
@@ -1965,43 +2272,69 @@ def cmd_render(a) -> int:
     lint, model = lint_paths(root, card, None, slug, False)
     lo, hi = model["brief_range"]
     f = "tasks/%s.md" % slug
-    in_brief = [i for i in lint.fails() if model["brief_frozen"] and i[1] == f and lo <= i[2] <= hi]
+    # Banner-only: FAILs inside the frozen Brief, and whole-card caps (line 1) the Brief may cause.
+    in_brief = [i for i in lint.fails() if i[1] == f and ((model["brief_frozen"] and lo <= i[2] <= hi)
+                                                          or (i[2] == 1 and i[3] in ("strict-caps", "live-length")))]
     blocking = [i for i in lint.fails() if i not in in_brief]
     if blocking:
         for line in lint.lines():
             print(line)
         print("render: lint FAIL outside the frozen Brief; fix the card, nothing written")
         return 1
-    (fu / "view").mkdir(parents=True, exist_ok=True)
     out = fu / "view" / (slug + ".html")
-    write_text(out, render_card(fu, slug, model, sorted(set(in_brief), key=lambda i: i[2]), sorted(set(lint.warns()), key=lambda i: (i[1], i[2]))))
+    safe_write(fu, out, render_card(fu, slug, model, sorted(set(in_brief), key=lambda i: i[2]), sorted(set(lint.warns()), key=lambda i: (i[1], i[2]))))
     print(out)
     return 0
 
 
 # -------------------------------------------------------------------------------- guard
 
-def _open_irreversible(fu: Path) -> list:
+def _card_checks(text: str) -> list:
+    """Normalised segments of a card's `check:` and `post-check:` code spans."""
     out = []
-    for p in card_files(fu):
-        text = read_text(p)
-        if not is_open(text):
-            continue
-        for line in text.splitlines():
-            im = IRREVERSIBLE_RE.match(line)
-            if im:
-                out.append((p.name[:-3], im.group(1)))
+    for line in text.splitlines():
+        cm = re.match(r"^  - (?:check|post-check): (.*)$", line)
+        if cm and len(line) <= MAX_LINE:
+            for span in re.findall(r"`([^`]+)`", cm.group(1)):
+                out += segments(span)
     return out
 
 
-def _append_jsonl(path: Path, rec: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(str(path), "a", encoding="utf-8") as fh:
-        fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+def _open_irreversible(fu: Path) -> list:
+    """(slug, command, contract-check segments) per Irreversible line of each open card.
+    A card that cannot be read is skipped; the others are still guarded."""
+    out = []
+    for p in card_files(fu):
+        try:
+            text = read_text(p)
+        except OSError:
+            continue
+        if not is_open(text):
+            continue
+        checks = None
+        for line in text.splitlines():
+            im = IRREVERSIBLE_RE.match(line) if len(line) <= MAX_LINE else None
+            if im:
+                checks = _card_checks(text) if checks is None else checks
+                out.append((p.name[:-3], im.group(1), checks))
+    return out
+
+
+def _append_jsonl(fu: Path, path: Path, rec: dict) -> None:
+    safe_write(fu, path, json.dumps(rec, ensure_ascii=False) + "\n", append=True)
+
+
+def _quietly(fn, *args):
+    """Run a guard side effect; a failure (unreadable log, refused symlink) never stops the
+    decision."""
+    try:
+        return fn(*args)
+    except Exception:  # noqa: BLE001 - the guard fails open per side effect
+        return None
 
 
 def _guard(phase: str, raw: str):
-    """Return the hook JSON to print, or None. Raises on any problem (caller fails open)."""
+    """Return the hook JSON to print, or None. Raises on a malformed call (caller fails open)."""
     data = json.loads(raw)
     if not isinstance(data, dict) or data.get("tool_name") != "Bash":
         return None
@@ -2018,51 +2351,59 @@ def _guard(phase: str, raw: str):
     if mode == "off":
         return None
     named = _open_irreversible(fu)
-    hits = match_command(command, [c for _, c in named])
+    hits = match_command(command, [c for _, c, _ in named], [ch for _, _, ch in named])
     hits.sort(key=lambda h: not h[1])
     norm = norm_command(command)
     when = now_str()
     if phase == "post":
+        failed = data.get("hook_event_name") == "PostToolUseFailure"
         for idx, exact in hits:
-            slug, irr = named[idx]
-            _append_jsonl(fu / "logs" / "approvals.jsonl",
-                          {"sha256": sha(norm), "line_sha256": sha(norm_command(irr)), "exact": exact,
-                           "time": when, "slug": slug})
-            card = fu / "tasks" / (slug + ".md")
-            text = read_text(card)
-            if quick_header(text).get("state") == "waiting on you":
-                write_text(card, _set_state(text, "building"))
+            slug, irr, _ = named[idx]
+            rec = {"sha256": sha(norm), "line_sha256": sha(norm_command(irr)), "exact": exact,
+                   "time": when, "slug": slug}
+            if failed:
+                rec["failed"] = True
+            _quietly(_append_jsonl, fu, fu / "logs" / "approvals.jsonl", rec)
+            _quietly(_resume_card, fu, slug)
         return None
     if hits:
         idx, exact = hits[0]
-        slug, irr = named[idx]
-        prior = _prior_run(fu, slug, norm, irr)
-        what = "irreversible step" if exact else "variant of the irreversible step"
+        slug, irr, _ = named[idx]
+        prior = _quietly(_prior_run, fu, slug, norm, irr)
+        shown, where = clean(irr, 120), ".finding-unknowns/tasks/%s.md" % clean(slug, 80)
         if prior:
-            reason = "card %s: `%s` already ran once at %s; a post-check must not re-execute it" % (slug, irr, prior)
+            how = " and failed (it may have partly run)" if prior[1] else ""
+            reason = ("card %s: `%s` already ran once at %s%s; a post-check must not re-execute it · %s"
+                      % (clean(slug, 80), shown, clean(prior[0], 20), how, where))
         else:
-            reason = "card %s: %s `%s`" % (slug, what, irr)
+            what = "irreversible step" if exact else "variant of the irreversible step"
+            reason = "card %s: %s `%s` · %s" % (clean(slug, 80), what, shown, where)
         if mode != "ask":
-            _append_jsonl(fu / "logs" / "guard.jsonl", {"time": when, "slug": slug, "sha256": sha(norm),
-                                                       "would": "ask", "reason": reason})
+            _quietly(_append_jsonl, fu, fu / "logs" / "guard.jsonl",
+                     {"time": when, "slug": slug, "sha256": sha(norm), "would": "ask"})
             return None
         return _ask(reason)
-    for name, rx in DESTRUCTIVE:
-        if rx.search(command):
-            _append_jsonl(fu / "logs" / "guard.jsonl", {"time": when, "pattern": name, "sha256": sha(norm),
-                                                       "command": command[:200], "would": "ask"})
-            if mode == "ask" and profile.get("strict") == "yes":
-                return _ask("finding-unknowns (strict): destructive pattern `%s`" % name)
-            return None
+    name = destructive(command)
+    if name:
+        _quietly(_append_jsonl, fu, fu / "logs" / "guard.jsonl", {"time": when, "pattern": name, "sha256": sha(norm)})
+        if mode == "ask" and profile.get("strict") == "yes":
+            return _ask("finding-unknowns (strict): destructive pattern `%s`" % name)
     return None
 
 
+def _resume_card(fu: Path, slug: str) -> None:
+    card = fu / "tasks" / (slug + ".md")
+    text = read_text(card)
+    if quick_header(text).get("state") == "waiting on you":
+        safe_write(fu, card, _set_needs(_set_state(text, "building"), "nothing"))
+
+
 def _prior_run(fu: Path, slug: str, norm: str, irr: str):
+    """(time, failed) of the first recorded run of this command or line on this card, or None."""
     path = fu / "logs" / "approvals.jsonl"
     if not path.is_file():
         return None
     line_sha, cmd_sha = sha(norm_command(irr)), sha(norm)
-    found = None
     for line in read_text(path).splitlines():
         try:
             rec = json.loads(line)
@@ -2071,8 +2412,8 @@ def _prior_run(fu: Path, slug: str, norm: str, irr: str):
         if not isinstance(rec, dict) or rec.get("slug") != slug:
             continue
         if rec.get("sha256") == cmd_sha or (rec.get("line_sha256") == line_sha and rec.get("exact")):
-            found = found or rec.get("time")
-    return found
+            return str(rec.get("time")), bool(rec.get("failed"))
+    return None
 
 
 def _ask(reason: str) -> dict:
@@ -2112,6 +2453,7 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("freeze", parents=[common], help="commit the card at a stage")
     s.add_argument("slug")
     s.add_argument("--stage", required=True, choices=("brief", "stop", "resume", "debrief"))
+    s.add_argument("--needs", help="with --stage stop: the header's Needs you text; resume sets it to nothing")
     s = sub.add_parser("integrity", parents=[common], help="Brief, check files and unlogged hunks vs the freeze")
     s.add_argument("slug", nargs="?")
     s = sub.add_parser("log", parents=[common], help="append graded predictions to predictions-log.md")

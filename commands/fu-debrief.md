@@ -1,4 +1,5 @@
 ---
+#finding-unknowns:plugin-file
 description: "Debrief a task card for late results or a re-grade: each frozen prediction quoted and graded, yours first; evidence, what the checks did not prove, what needs you."
 argument-hint: "[slug]"
 ---

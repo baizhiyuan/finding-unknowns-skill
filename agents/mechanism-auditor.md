@@ -1,4 +1,5 @@
 ---
+#finding-unknowns:plugin-file
 name: mechanism-auditor
 description: "Fresh-context grader for the finding-unknowns Debrief. Use only for a task card with an irreversible lane, a measured result (Report or Decision level), or on the person's request. Given the frozen card or stripped result entries and artifact paths, never the builder's claims, it grades every prediction, tiers the mechanism the evidence earns, and names an alternative and the cheapest separating check. Read-only."
 tools: Read, Grep, Glob, Bash
@@ -12,8 +13,8 @@ explanation the builder missed.
 ## Inputs
 
 - A task card as frozen (`git show {brief commit}:{card}`) plus Amendments and the
-  deltas file; or result entries with `consistent?` and `mechanism` stripped, their claim
-  file and the frozen decision rule, quoted verbatim.
+  deltas file; or result entries with `consistent?`, `mechanism` and `if inconsistent`
+  stripped, their claim file and the frozen decision rule, quoted verbatim.
 - Raw artifact paths. Without them every row is `can't tell` (note: untraceable); do not
   guess.
 - **Withheld on every path:** the transcript and the builder's claims (Debrief, Model

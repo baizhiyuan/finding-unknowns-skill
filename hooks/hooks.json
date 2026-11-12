@@ -1,11 +1,11 @@
 {
-  "description": "finding-unknowns guard: asks before a Bash command named on an open card's Irreversible: line and records each run; logs generic destructive patterns. Fails open, never denies.",
+  "description": "finding-unknowns guard: asks before a Bash command named on an open card's Irreversible: line and records each run, failed runs included; logs generic destructive patterns. Advisory: fails open, never denies.",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard pre", "timeout": 10 }
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard pre 2>/dev/null || python \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard pre 2>/dev/null || true", "timeout": 10 }
         ]
       }
     ],
@@ -13,7 +13,15 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard post", "timeout": 10 }
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard post 2>/dev/null || python \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard post 2>/dev/null || true", "timeout": 10 }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard post 2>/dev/null || python \"${CLAUDE_PLUGIN_ROOT}/scripts/fu.py\" guard post 2>/dev/null || true", "timeout": 10 }
         ]
       }
     ]

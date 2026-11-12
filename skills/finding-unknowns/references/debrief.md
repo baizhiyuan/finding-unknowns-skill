@@ -11,8 +11,8 @@
 3. Grade every Brief prediction, the person's first, quoted exactly as frozen. An
    Amendment never removes a miss.
 4. Write `mechanism` with its tier. Explain misses only, the person's first, in one line.
-5. Card `Model changes`: `You expected X → it is Y, because Z`, `shown, not confirmed`
-   until the person confirms; no verdicts or numbers.
+5. Card `Model changes`: `- You expected X → it is Y, because Z [shown, not confirmed]`,
+   `[confirmed]` once the person confirms; no verdicts or numbers.
 6. Append `## Debrief ({time}; graded by fresh context | same-context — weaker)`, fields
    as in `card.md`; set the header `Needs you`; run `fu lint`, `fu log`,
    `fu freeze {slug} --stage debrief`; update Last seen.

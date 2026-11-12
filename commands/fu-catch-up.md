@@ -1,4 +1,5 @@
 ---
+#finding-unknowns:plugin-file
 description: "Catch up on a task card: only what changed since you last looked, and what needs you."
 argument-hint: "[slug]"
 ---

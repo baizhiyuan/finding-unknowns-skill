@@ -15,9 +15,14 @@ fixed order, nested lists, no tables.
 - `decisions.md`: answers only the person could give, the newest 30 lines; older lines
   move to `decisions-archive.md`, which is not read at Brief time · committed
 - `profile.md`: `mode: ship | learn` · `strict: no | yes` · `view: yes | no` (absent until
-  offered) · `commits: yes | no` · `guard: off | log | ask` (default `ask`) · local
+  offered) · `commits: yes | no` · `guard: off | log | ask` (default `ask` when the plugin's
+  `hooks/hooks.json` is installed, else `off`) · local
 - `predictions-log.md`: written by `fu log` only · local
 - `logs/`, `view/`: command output, guard records, HTML · local
+
+The guard is advisory: it asks, never denies, and fails open. Hard enforcement is a
+Claude Code `permissions.ask` rule for the exact command in a settings file the agent
+cannot edit (user or managed settings).
 
 Gitignore lines: `.finding-unknowns/logs/`, `.finding-unknowns/view/`,
 `.finding-unknowns/profile.md`, `.finding-unknowns/predictions-log.md`.
@@ -36,14 +41,16 @@ Timing: draft | Brief frozen {time}, commit {hash} | self-reported
 
 - `Needs you` exists once, here; the Debrief updates it (FAIL if twice).
 - `fu freeze` owns `State`, `Timing` and the frozen Brief heading; never edit them by hand.
-  `--stage brief` → `building`; `--stage stop` → `waiting on you`; `--stage resume` (after
-  the person answers a stop) → `building`; `--stage debrief` → `debriefed`. The guard sets
-  `building` itself after an approved card-named irreversible run. It writes the heading and State even when it skips the commit. A card is
+  `--stage brief` → `building`; `--stage stop --needs "{X} (recommendation: {Y}; settles
+  {Z})"` → `waiting on you`, with that `Needs you`; `--stage resume` (after the person
+  answers a stop) → `building`, `Needs you: nothing`; `--stage debrief` → `debriefed`. The
+  guard sets `building` and `Needs you: nothing` itself after a card-named irreversible
+  run. `fu freeze` writes the heading and State even when it skips the commit. A card is
   open while State is not `debriefed`.
 - Sections in order: `## Brief (draft)` or `## Brief (frozen {time})`, `## Amendments`,
   `## Deltas`, `## Model changes`, `## Open`, then `## Debrief (…)`, added only at the end.
-- The live part (header to Open) stays within 40 lines (WARN); a new line first replaces
-  the line it supersedes.
+- The live part (header to Open, a frozen Brief's lines not counted) stays within 40 lines
+  (WARN); a new line first replaces the line it supersedes.
 
 **Brief lines** (FAIL unless noted):
 
@@ -52,8 +59,10 @@ Timing: draft | Brief frozen {time}, commit {hash} | self-reported
   `  - should not change: …`. `P{n}` is the person's, quoted verbatim (a `"` inside is
   written `\"`); `A{n}` is the agent's. No answer: exactly `P: none given`. Confidence:
   person `low | medium | high | no idea | not given`; agent `low | medium | high`.
-- `P{n}`/`A{n}` name predictions only. Every one cited anywhere is defined in the Brief;
-  premises are named in words.
+- `P{n}`/`A{n}` name predictions only. Every one cited is defined in the Brief (an
+  undefined one: FAIL in the Brief, WARN elsewhere); premises are named in words, domain
+  identifiers that look like IDs (a parcel `P3`) go in backticks. A prediction's quoted
+  claim is never scanned, and `P10` or longer is not read as an ID.
 - `Stop-points: irreversible · scope · dead-premise · budget > {k}× {estimate}`.
 - ``Irreversible: `{exact command}` ``, one line per irreversible step.
 - Contract item `C{n} {claim}`, then `  - check: …`, `  - does NOT prove: …`,
@@ -88,9 +97,12 @@ missed.
 
 ## Strict caps (FAIL under `strict: yes`)
 
-Card at most 600 words; at most 3 agent predictions (extra person predictions WARN); at
-most 5 contract items; at most 20 words per field, except quoted `P{n}` claims,
-`Irreversible:` lines and `check:`/`post-check:` commands; live part at most 40 lines.
+At most 3 agent predictions (extra person predictions WARN); at most 5 contract items; at
+most 20 words per field, except quoted `P{n}` claims, `Irreversible:` lines and code
+spans; at most 900 words counting the live part plus the last Debrief only, without the
+person's quoted claims and code spans (enough for a card at the item caps with fields of
+about ten words); live part at most 40 lines, a frozen Brief's lines not counted. Whole-card
+caps and FAILs inside a frozen Brief show under the render banner and do not block it.
 Never trim or drop the person's words to pass lint.
 
 ## Prediction log line
