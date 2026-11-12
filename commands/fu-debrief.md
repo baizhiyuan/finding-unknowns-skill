@@ -8,7 +8,6 @@ argument-hint: "[slug]"
 
 1. Invoke the `finding-unknowns` skill with the Skill tool and follow
    `references/debrief.md` on the named card, else the most recently changed card
-   (say which in one line; do not ask).
+   (say which in one line; never ask).
 2. Measured results follow `references/results.md`.
-3. A re-grade adds a new Debrief; the earlier one stays. End with
-   `fu freeze {slug} --stage debrief`.
+3. A re-grade adds a new Debrief; the earlier one stays.

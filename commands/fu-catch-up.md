@@ -9,4 +9,4 @@ argument-hint: "[slug]"
 1. Invoke the `finding-unknowns` skill with the Skill tool and run its **/fu-catch-up**
    steps on the named card, else the most recently changed open card (say which in one
    line; do not ask).
-2. `fu list` shows every open card when the person asks for all of them.
+2. `fu list` when the person asks for all open cards.

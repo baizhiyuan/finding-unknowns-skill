@@ -19,9 +19,11 @@ The person predicts, you build quietly, the evidence grades both. One **card**,
 ## Tools and memory
 
 - `fu` means `python3 "{base}/../../scripts/fu.py"`, `{base}` being this skill's base
-  directory. Never do by hand what `fu` does. If it cannot start, say so once; Timing
-  is then `self-reported`, integrity and lint `not run`.
+  directory. Never do by hand what `fu` does. If it cannot start, say so once: Timing
+  `self-reported`, integrity and lint `not run`.
 - Read `.finding-unknowns/profile.md` and `decisions.md` before the Brief.
+- **Lean calls.** Read each reference once per session; never print the card after `fu`
+  (it prints what changed). `fu freeze` lints; at `debrief` it also logs.
 
 ## Always
 
@@ -72,15 +74,14 @@ re-grades.
 
 Named card, else the most recently changed open one (say which). Reconcile with files
 and runs; show only what changed since Last seen, and `Needs you`; update Last
-seen. Recall questions only on request: two or three, applied, from misses and recent
-deltas; no pass mark.
+seen. Recall questions (two or three, no pass mark) only on request.
 
 ## Modes (profile.md)
 
 - **learn**, only on request: missed rows get a short why and one example until the
   person predicts that behaviour.
 - **strict** (`strict: yes`, on request): template only; `fu lint` enforces the caps in
-  `references/card.md` and passes before the Brief-approval ask.
+  `references/card.md`.
 
 ## References
 

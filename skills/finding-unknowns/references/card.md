@@ -45,9 +45,11 @@ Timing: draft | Brief frozen {time}, commit {hash} | self-reported
 
 - `Needs you` exists once, here; the Debrief updates it (FAIL if twice).
 - `fu freeze` owns `State`, `Timing` and the frozen Brief heading; never edit them by hand.
+  At `brief` and `debrief` it lints first and refuses on a FAIL (outside a frozen Brief).
   `--stage brief` → `building`; `--stage stop --needs "{X} (recommendation: {Y}; settles
   {Z})"` → `waiting on you`, with that `Needs you`; `--stage resume` (after the person
-  answers a stop) → `building`, `Needs you: nothing`; `--stage debrief` → `debriefed`. The
+  answers a stop) → `building`, `Needs you: nothing`; `--stage debrief` → `debriefed`,
+  and it writes the Debrief's `Integrity:` block, runs `fu log` and sets `Last seen`. The
   guard sets `building` and `Needs you: nothing` itself after a card-named irreversible
   run. `fu freeze` writes the heading and State even when it skips the commit. A card is
   open while State is not `debriefed`.
@@ -95,7 +97,7 @@ confirmed]`, at most five, in this section only (WARN elsewhere).
 `## Debrief ({time}; graded by fresh context | same-context — weaker)`, then `Evidence:`, every Brief prediction (P before A, ID line identical to the Brief) with
 `  - measured:`, `  - consistent?: consistent | partly | inconsistent | can't tell |
 post-hoc fit`, `  - mechanism: {text} [verified | supported | inferred | untested]`; then
-`Integrity:` (the `fu integrity` lines), `Did NOT prove:`, `Not checked:` (at least one item),
+`Integrity:` (the `fu integrity` lines, written by `fu freeze --stage debrief`), `Did NOT prove:`, `Not checked:` (at least one item),
 `Bottom line:` with `  - holds:`, `  - did not hold:`, `  - stops at:`. Every graded ID
 appears exactly once: `consistent` under `holds`; `partly` and `inconsistent` under `did
 not hold`; `can't tell` and `post-hoc fit` under `stops at`. WARN: a

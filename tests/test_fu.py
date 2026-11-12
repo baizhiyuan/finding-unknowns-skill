@@ -496,6 +496,38 @@ class GuardForms(GuardBase):
             self.assertIn("irreversible step `", self.pre(cmd)["hookSpecificOutput"]["permissionDecisionReason"], cmd)
         self.assertIn("variant", self.pre("python publish.py build/quotes.json --force")["hookSpecificOutput"]["permissionDecisionReason"])
 
+    def test_heredoc_bodies_are_data_unless_a_shell_reads_them(self):
+        card_write = "cat > .finding-unknowns/tasks/x.md <<'EOF'\nIrreversible: `%s`\n  - post-check: %s\nEOF\necho ok" % (IRR, IRR)
+        script = "python3 - <<'EOF'\ns = open('c').read().replace('a', 'b')\n%s\nEOF" % IRR
+        for cmd in (card_write, script, "cat >> notes.md <<-E\n\t%s\n\tE" % IRR):
+            self.assertIsNone(self.pre(cmd), cmd)
+            self.post(cmd)
+        self.assertFalse((self.fu / "logs" / "approvals.jsonl").exists())
+        for cmd in ("bash <<'EOF'\n%s\nEOF" % IRR, "cat <<EOF | sh\n%s\nEOF" % IRR,
+                    "cat > f <<EOF\nx\nEOF\n%s" % IRR, "cat > f <<EOF\n%s" % IRR,
+                    "echo 'a <<EOF'\n%s\nEOF" % IRR):
+            self.assertIsNotNone(self.pre(cmd), cmd)
+
+    def test_heredoc_body_stays_unless_a_known_data_reader_consumes_it(self):
+        body = "<<EOF\n%s\nEOF" % IRR
+        asks = ["cat > r.sh %s\nbash r.sh" % body, "tee r.sh %s\nsh r.sh" % body,
+                "cat > r.sh <<'EOF' && bash r.sh\n%s\nEOF" % IRR,
+                "tee r.sh >/dev/null %s\nchmod +x r.sh && ./r.sh" % body,
+                "cat > r.sh %s\n. r.sh" % body, "cat > r.sh %s\nsh < r.sh" % body,
+                "ssh host %s" % body, ". /dev/stdin %s" % body, '"bash" %s' % body,
+                "$SHELL %s" % body, "${SHELL} %s" % body, "busybox ash %s" % body,
+                "fish %s" % body, "mksh %s" % body, "csh %s" % body, "tcsh %s" % body,
+                "cat <<EOF |\n%s\nEOF\nsh" % IRR, "cat <<EOF|sh\n%s\nEOF" % IRR,
+                "while read c; do $c; done %s" % body, "xargs -L1 %s" % body,
+                "python3 -c 'import sys; exec(sys.stdin.read())' %s" % body]
+        for cmd in asks:
+            out = self.pre(cmd)
+            self.assertIsNotNone(out, cmd)
+            self.assertEqual(out["hookSpecificOutput"]["permissionDecision"], "ask", cmd)
+        card = "cat > .finding-unknowns/tasks/x.md <<'EOF'\nIrreversible: `%s`\nEOF\npython3 fu.py lint x" % IRR
+        for cmd in (card, "tee notes.md >/dev/null %s\ngit add notes.md" % body, "node - %s" % body):
+            self.assertIsNone(self.pre(cmd), cmd)
+
     AMEND_IRR = "M2 2026-11-12 09:50 · after D2 · confirmed: also drop the stale cache · why: found mid-build\n"
 
     def _amend_irreversible(self, cmd="rm -rf cache/old"):
@@ -880,6 +912,17 @@ class IdsAndCaps(Workspace):
         html = (self.fu / "view" / "quote-export.html").read_text(encoding="utf-8")
         self.assertIn("live-length", html)
 
+    def test_whole_card_caps_block_render_before_the_brief_is_frozen(self):
+        prof = self.fu / "profile.md"
+        prof.write_text(prof.read_text(encoding="utf-8").replace("strict: no", "strict: yes"), encoding="utf-8")
+        self.edit("- the remote-zone rate is synthetic until the carrier card arrives",
+                  "\n".join("- open item %d" % n for n in range(45)))
+        self.edit("## Brief (frozen 2026-11-12 09:05)", "## Brief (draft)")
+        self.assertIn("live-length", rules(self.lint().stdout, "FAIL"))
+        r = run(["render", "quote-export"], self.tmp)
+        self.assertNotEqual(r.returncode, 0, r.stdout)
+        self.assertIn("live-length", r.stdout)
+
     def test_frozen_brief_lines_do_not_count_toward_live_length(self):
         text = self.card.read_text(encoding="utf-8")
         pad = "".join("  - decision %d because reason %d\n" % (n, n) for n in range(40))
@@ -945,10 +988,16 @@ class Freeze(FreezeBase):
 
     def test_stop_resume_debrief_set_state(self):
         self.assertEqual(self.freeze().returncode, 0)
-        for stage, state in (("stop", "waiting on you"), ("resume", "building"), ("debrief", "debriefed")):
+        for stage, state in (("stop", "waiting on you"), ("resume", "building")):
             r = self.freeze(stage)
             self.assertEqual(r.returncode, 0, r.stdout)
             self.assertIn("State: %s" % state, self.card.read_text(encoding="utf-8"))
+        head, text = git(self.tmp, "rev-parse", "HEAD").stdout, self.card.read_text(encoding="utf-8")
+        r = self.freeze("debrief")  # no `## Debrief (` section yet: refused, nothing written
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("## Debrief (", r.stdout + r.stderr)
+        self.assertEqual(self.card.read_text(encoding="utf-8"), text)
+        self.assertEqual(git(self.tmp, "rev-parse", "HEAD").stdout, head)
 
     def test_skip_commits_no_still_freezes_heading_and_state(self):
         (self.tmp / ".finding-unknowns" / "profile.md").write_text("commits: no\n", encoding="utf-8")
@@ -1164,6 +1213,97 @@ class FreezeAndIntegrity(FreezeBase):
         line = r.stdout.splitlines()[2]
         for name in ("big.bin:1-1", "zero-link:1-1"):
             self.assertIn(name, line)
+
+
+
+DEBRIEF = """
+## Debrief (2026-11-12 12:00; graded by fresh context)
+Evidence:
+  - `python -m json.tool build/search.json` → exit 0
+P1 (you · high) "前缀搜索会比全文搜索快"
+  - measured: 12 ms vs 30 ms (logs/bench.txt)
+  - consistent?: consistent
+  - mechanism: the prefix index skips the scan [supported]
+A1 (agent · medium) "prefix search returns the same top 10 as full text for single-word queries"
+  - measured: 10 of 10 queries identical (logs/top10.txt)
+  - consistent?: consistent
+  - mechanism: both rank by the same tokenizer [inferred]
+Integrity: written by hand, wrong form
+Did NOT prove:
+  - C1 → leaves open: ranking · still holds: valid JSON
+Not checked:
+  - multi-word queries
+Bottom line:
+  - holds: speed and top 10 (P1, A1)
+  - did not hold: none
+  - stops at: none
+"""
+
+
+class FreezeLintsAndDebriefs(FreezeBase):
+    """One call per phase: freeze lints first; at debrief it also writes Integrity, logs and
+    sets Last seen."""
+
+    def test_brief_freeze_refuses_a_card_that_fails_lint(self):
+        text = self.card.read_text(encoding="utf-8").replace("  - reuse the existing tokenizer because", "  - reuse the existing tokenizer since")
+        self.card.write_text(text, encoding="utf-8")
+        head = git(self.tmp, "rev-parse", "HEAD").stdout
+        r = self.freeze()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertRegex(r.stdout, r"(?m)^FAIL tasks/search-export.md:\d+ brief-form: ")
+        self.assertNotIn("WARN", r.stdout)
+        self.assertIn("nothing committed", r.stdout)
+        self.assertEqual(self.card.read_text(encoding="utf-8"), text)
+        self.assertEqual(git(self.tmp, "rev-parse", "HEAD").stdout, head)
+
+    def test_debrief_freeze_fills_integrity_logs_sets_last_seen_and_commits(self):
+        self.assertEqual(self.freeze().returncode, 0)
+        deltas = self.card.with_name("search-export.deltas.md")
+        deltas.write_text(deltas.read_text(encoding="utf-8") + "D1 2026-11-12 11:30 deviation: x → app.py\n"
+                          + "D2 2026-11-12 11:31 deviation: y → notes.txt\n", encoding="utf-8")
+        self.card.write_text(self.card.read_text(encoding="utf-8").rstrip("\n") + "\n" + DEBRIEF, encoding="utf-8")
+        self.assertEqual(run(["lint", "search-export"], self.tmp).returncode, 1)  # the hand-written Integrity
+        r = self.freeze("debrief")
+        self.assertEqual(r.returncode, 0, r.stdout)
+        out = r.stdout.splitlines()
+        self.assertEqual(out[:3], ["Brief vs freeze: unchanged", "Check files: none named", "Unlogged hunks: none"])
+        self.assertEqual(out[3], "log: 2 new rows")
+        self.assertRegex(out[-1], r"^committed [0-9a-f]+ \(debrief search-export\)$")
+        text = self.card.read_text(encoding="utf-8")
+        self.assertIn("Integrity:\n  - Brief vs freeze: unchanged\n  - Check files: none named\n"
+                      "  - Unlogged hunks: none\nDid NOT prove:", text)
+        self.assertRegex(text, r"(?m)^Mode: learn · Last seen by you: \d{4}-\d{2}-\d{2} \d{2}:\d{2}, after D2$")
+        self.assertIn("State: debriefed", text)
+        self.assertEqual(len((self.tmp / ".finding-unknowns" / "predictions-log.md").read_text(encoding="utf-8").splitlines()), 2)
+        self.assertEqual(run(["lint", "search-export"], self.tmp).returncode, 0)
+        committed = git(self.tmp, "show", "HEAD:.finding-unknowns/tasks/search-export.md").stdout
+        self.assertIn("  - Unlogged hunks: none", committed)
+
+    def test_debrief_freeze_inserts_integrity_when_missing_and_refuses_on_fail(self):
+        self.assertEqual(self.freeze().returncode, 0)
+        bad = DEBRIEF.replace("Integrity: written by hand, wrong form\n", "").replace("  - multi-word queries\n", "")
+        self.card.write_text(self.card.read_text(encoding="utf-8").rstrip("\n") + "\n" + bad, encoding="utf-8")
+        head = git(self.tmp, "rev-parse", "HEAD").stdout
+        r = self.freeze("debrief")
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("not-checked: ", r.stdout)
+        self.assertEqual(git(self.tmp, "rev-parse", "HEAD").stdout, head)
+        text = self.card.read_text(encoding="utf-8")
+        self.assertIn("State: building", text)
+        self.assertIn("  - Unlogged hunks: app.py:1-1, notes.txt:1-1\nDid NOT prove:", text)
+        self.assertFalse((self.tmp / ".finding-unknowns" / "predictions-log.md").exists())
+
+    def test_gitignore_lines_fu_asked_for_are_not_unlogged_hunks(self):
+        self.assertEqual(self.freeze().returncode, 0)
+        gi = self.tmp / ".gitignore"
+        gi.write_text(gi.read_text(encoding="utf-8") + ".finding-unknowns/profile.md\n.finding-unknowns/predictions-log.md\n",
+                      encoding="utf-8")
+        deltas = self.card.with_name("search-export.deltas.md")
+        deltas.write_text(deltas.read_text(encoding="utf-8") + "D1 2026-11-12 11:30 deviation: x → app.py\n"
+                          + "D2 2026-11-12 11:31 deviation: y → notes.txt\n", encoding="utf-8")
+        self.assertEqual(run(["integrity", "search-export"], self.tmp).stdout.splitlines()[2], "Unlogged hunks: none")
+        gi.write_text(gi.read_text(encoding="utf-8") + "dist/\n", encoding="utf-8")
+        self.assertRegex(run(["integrity", "search-export"], self.tmp).stdout.splitlines()[2], r"^Unlogged hunks: \.gitignore:3-5$")
 
 
 # -------------------------------------------------------------------- render, list, log

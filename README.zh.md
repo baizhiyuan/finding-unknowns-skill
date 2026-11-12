@@ -193,7 +193,7 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 | 常驻说明 | `CLAUDE.md` 中的 56 个词 | 每个会话约 75 个 token |
 | 防护钩子与 fu 脚本 | 确定性的工作：不可逆命令的确认、格式检查、冻结、完整性检查、预测记录、列表、渲染 | 无需加载；每项一次简短调用 |
 | 任务卡技能与命令 | `SKILL.md`（不超过 700 词）和五个按阶段加载的参考文件；四个很薄的命令 | 只在你开始建卡时加载 |
-| 一个评判子代理 | `mechanism-auditor`，在新上下文中评判 | 只用于含不可逆操作的任务卡、实测结果，或应你要求 |
+| 一个评判子代理 | `mechanism-auditor`，在新上下文中评判，使用 Haiku 模型档（`model: haiku`） | 只用于含不可逆操作的任务卡、实测结果，或应你要求 |
 
 没有评判子代理时，复盘在同一上下文中完成，并标明 `same-context — weaker`（同一上下文评判，较弱）。
 

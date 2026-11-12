@@ -8,16 +8,16 @@ argument-hint: "<task>"
 
 1. Invoke the `finding-unknowns` skill with the Skill tool; `references/…` paths are
    relative to its base directory.
-2. Read `profile.md` and `decisions.md`, then the repository, silently. An open card
+2. Read `profile.md`, `decisions.md` and the repository silently. An open card
    covering this task: offer `/fu-catch-up` (counts as a question); a new card only on
    request.
 3. One message, at most three questions: the person's prediction and confidence (no
    recommendation), plus decisions only they can make, each recommended
    (`references/brief.md`).
 4. Record their words verbatim (`"` as `\"`), or `P: none given`. Then write yours.
-5. Run `fu init`. Fill the template below as `.finding-unknowns/tasks/{slug}.md`; run
-   `fu lint {slug}` and fix every FAIL without trimming the person's words
-   (`references/card.md`).
+5. Run `fu init`. Write the template below to `.finding-unknowns/tasks/{slug}.md` in one
+   write: at most three Approach lines, two agent predictions, four contract items. Run
+   `fu lint {slug}`; fix each FAIL as it says, never trimming the person's words.
 6. Show the Brief. End with one approval ask: open decisions, the view offer for a complex
    task (`references/view.md`), that the card will be committed, the `.gitignore` lines
    `fu init` printed (first time only), and `lint not run` when `fu` is missing.

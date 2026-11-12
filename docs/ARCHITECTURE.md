@@ -12,7 +12,7 @@ evaluated; whether any of this helps people is untested.
 | **1. Always-on text** | `CLAUDE.md`, 56 words (for Codex, the same words in your own `AGENTS.md`); `CLAUDE.next.md` is an untested 82-word candidate | about 75 tokens per session | The one part Stage 0 measured: +10.5 of 42 over no setup at +$0.08 per task |
 | **2. Guard hook + `fu` script** | `hooks/hooks.json` → `scripts/fu.py guard pre\|post`; `scripts/fu.py` (`init`, `lint`, `freeze`, `integrity`, `log`, `list`, `render`) | none to carry; one short Bash call each | The only clear plugin win in Stage 0 (M5, the irreversible step) is a rule code can enforce. The rest is bookkeeping the model used to do by hand |
 | **3. Card skill + commands** | `skills/finding-unknowns/SKILL.md` (≤ 700 words) and five references; `/fu-brief`, `/fu-catch-up`, `/fu-debrief`, `/fu-view` (≤ 450 words together, plus the card template inside `/fu-brief`) | loaded only when a card is started or open | The card survives sessions, where phases in a conversation do not. A design argument, not a finding |
-| **4. One auditor** | `agents/mechanism-auditor.md` (≤ 500 words) | one subagent call, only when used | Fresh-context grading for an irreversible-lane card, a measured result, or on request. Kept narrow because Stage 0 gave it weak support |
+| **4. One auditor** | `agents/mechanism-auditor.md` (≤ 500 words; `model: haiku`) | one subagent call, only when used | Fresh-context grading for an irreversible-lane card, a measured result, or on request. Kept narrow because Stage 0 gave it weak support |
 
 ```
 commands/        /fu-brief · /fu-catch-up · /fu-debrief · /fu-view    thin; /fu-brief holds the card template
@@ -33,7 +33,7 @@ bin/fu           optional wrapper for PATH; the skill never relies on it
 | `references/debrief.md` | Grading steps, field rules, the reply, no rescue, surrender signals |
 | `references/results.md` | Theory → Measured → Consistent? → Mechanism, the run table, the Debug path, the two verdicts |
 | `references/view.md` | When to offer the HTML view, and what the page leads with |
-| `mechanism-auditor` | Grades every prediction, tiers the mechanism, names an alternative and the cheapest separating check; never given the transcript or the builder's claims |
+| `mechanism-auditor` | Grades every prediction, tiers the mechanism, names an alternative and the cheapest separating check; never given the transcript or the builder's claims. Runs on the Haiku tier (`model: haiku`, owner decision 2026-11-12, to cut cost) |
 
 The commands invoke the skill and name an operation. Every step runs without extras:
 without the auditor, grading is labelled `same-context — weaker`; without the script,
@@ -66,7 +66,7 @@ Everything the plugin writes is under `.finding-unknowns/`; `.gitignore` is neve
               │   stop-point → fu freeze --stage stop ──► your answer ──► --stage resume
               │   irreversible command → stop → your chat yes → runs once → approvals.jsonl
               ▼
-completion report = Debrief ──► fu integrity · fu lint · fu log · fu freeze --stage debrief
+completion report = Debrief ──► fu freeze --stage debrief (integrity · lint · log · commit)
 /fu-catch-up: what changed since Last seen · /fu-debrief: late results, re-grade · /fu-view: fu render
 ```
 
@@ -83,10 +83,11 @@ completion report = Debrief ──► fu integrity · fu lint · fu log · fu fr
    `Stop ({stop-point}): … · {exact command or decision} · recommend: …`. Every turn ends
    with a completion report or a stop, never a menu or an optional question; the person's
    code is left uncommitted.
-3. **Debrief.** The completion report of carded work is the Debrief. `fu integrity`
-   prints three lines (four if a card-named command ran twice); the auditor grades when the card has an irreversible lane, a
-   measured result, or the person asks; every prediction is graded, the person's first;
-   `fu log` appends to the prediction log; `fu freeze --stage debrief` closes the card.
+3. **Debrief.** The completion report of carded work is the Debrief. The auditor grades
+   when the card has an irreversible lane, a measured result, or the person asks; every
+   prediction is graded, the person's first. One call, `fu freeze --stage debrief`,
+   writes the `fu integrity` lines into the Debrief (three, four if a card-named command
+   ran twice), lints, appends to the prediction log, sets Last seen and closes the card.
 4. **Catch-up.** The named card, else the most recently changed open one: only what
    changed since Last seen, and `Needs you`. Recall questions only on request.
 

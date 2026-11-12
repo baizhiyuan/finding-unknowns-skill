@@ -160,13 +160,30 @@ of `1` means the whole file.
 `--stage stop`; it must read `{X} (recommendation: {Y}; settles {Z})`, else exit 2 before
 any write) replaces the header's `Needs you`; `--stage resume` sets it to `nothing`. At
 `brief`, `fu init`'s step runs first (and prints the gitignore lines if it created
-`profile.md`).
+`profile.md`). One call per phase: the model never runs `lint`, `integrity` or `log`
+around a freeze.
 
+0. **Lint gate** (`brief` and `debrief`, cards only; a claim file alone is not gated).
+   At `debrief`, a card with no `## Debrief (` section is refused before any write
+   (exit 2: write the Debrief first; nothing written or committed).
+   Otherwise the `fu integrity` lines
+   are first written into the last Debrief as `Integrity:` with one `  - ` bullet per
+   line (an existing `Integrity:` block, or an inline `Integrity: …` line, is replaced;
+   otherwise the block goes before `Did NOT prove:`, `Not checked:` or `Bottom line:`)
+   and printed. Then the card is linted as `fu lint` does. Blocking FAILs (the same set
+   that blocks `fu render`: every FAIL, except, once the Brief is frozen, those inside it
+   and the line-1 `strict-caps`/`live-length` caps it may cause) are printed, one line each, followed by
+   `freeze: {n} lint FAIL; fix the card and run this again; nothing committed`; no WARN
+   lines; nothing else is written; exit 1. At `debrief` with a Debrief, `fu log`'s
+   append runs next and prints `log: {n} new rows` plus the calibration line when
+   `fu log` would print one.
 1. Card edits first, before any skip check, so they happen even when the commit is
    skipped: at `brief`, replace `## Brief (draft)` with `## Brief (frozen {YYYY-MM-DD HH:MM})`
    and create the deltas file with a one-line `# {slug} deltas (append-only)` header if
    missing. Every stage sets State: `brief` → `building`, `stop` → `waiting on you`,
-   `resume` → `building`, `debrief` → `debriefed` (from any State).
+   `resume` → `building`, `debrief` → `debriefed` (from any State). At `debrief` with a
+   Debrief, `Last seen by you: {now}, after D{n}`, n the highest `D{n}` in the deltas
+   file (`D0` when there is none).
 2. Paths: the card, its deltas file if present, `predictions/{slug}.md` if present,
    `decisions.md` if changed (with `decisions-archive.md` if that changed too). A claim
    file without a card: the claim file plus the decisions files; step 1 does not apply.
@@ -200,7 +217,11 @@ Irreversible runs: `{command}` ran {n} times[ ({k} failed)]; expected once
   from the freeze commit (`git cat-file -e {hash}:{path}` fails) that exists now, or an
   untracked file under one, is `created after the freeze`.
 - Hunks: `git diff -U0 {hash}` plus untracked files (whole file; line count read only for
-  regular files up to 5 MB, else `1-1`), excluding `.finding-unknowns/`. A hunk is logged
+  regular files up to 5 MB, else `1-1`), excluding `.finding-unknowns/` and any hunk of
+  the root `.gitignore`, tracked at the freeze commit, whose lines are all added and each
+  equals one of the gitignore lines from `card.md` (the lines `fu init` asks the person to
+  add are not the builder's change). A hunk that also removes or adds any other line, a
+  nested `.gitignore`, and an untracked `.gitignore` (whole file) are reported. A hunk is logged
   when its path or file name equals a path token (`[\w./-]+`, `:line` and trailing dots
   dropped) in the deltas file, an Amendment, the Approach or the contract; a substring is
   not a match. This is a mechanical approximation; the Debrief lists what it prints.
@@ -297,7 +318,22 @@ returns `deny`.
   that cannot be read (invalid UTF-8 is replaced, a dangling symlink or unreadable file is
   skipped) does not stop the others. The prior-run lookup and each log write fail on their
   own without changing the decision.
-- **Matching** (first 8192 characters). A command is split into segments on newlines, `;`,
+- **Matching** (first 8192 characters). Heredoc bodies stay as commands unless they are
+  known data, an allowlist: a body is dropped only when the command it feeds (wrappers
+  and quotes aside) is `cat` or `tee` writing to a file, not piped on, and no later
+  command in the same call runs that file (as the program, `./r.sh`; as an argument or
+  input of `sh`, `bash`, `zsh`, `dash`, `ksh`, `ash`, `mksh`, `fish`, `csh`, `tcsh`,
+  `busybox`, `.`, `source`, `eval`, `ssh` or a `$VAR` head, e.g. `bash r.sh`, `sh < r.sh`;
+  or as an interpreter's script), or is `python`/`node` reading its script from stdin
+  (`python3 - <<'EOF'`, `node <<EOF`). So writing a card with `cat > card <<'EOF'`, which
+  quotes its `Irreversible:` line, is not a run, while `bash <<EOF`, `"bash" <<EOF`,
+  `ssh host <<EOF`, `. /dev/stdin <<EOF`, `$SHELL <<EOF`, `cat <<EOF | sh`,
+  `while read c; do $c; done <<EOF`, `xargs <<EOF` and `cat > r.sh <<EOF` followed by
+  `bash r.sh` keep their bodies. A body whose delimiter never comes stays. An operator
+  inside quotes (`echo 'a <<EOF'`) is not a heredoc. **Not seen**: Python- or Node-level
+  calls inside a dropped stdin script (`python - <<EOF` with `import publish;
+  publish.main()` or `os.system(…)`), and a file written in one Bash call and run in
+  another. Then the command is split into segments on newlines, `;`,
   `&&`, `||`, `|`, `&`, `(`, `)`, `$(`, backticks; redirections (`2>&1`, `> out.log`,
   `<<EOF`) and their targets are dropped; the bodies of `sh|bash|zsh|dash|ksh -c "…"`,
   `eval …`, `$( … )` and backticks become segments of their own (three levels deep).

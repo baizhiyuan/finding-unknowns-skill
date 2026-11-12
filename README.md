@@ -252,7 +252,7 @@ non-interactive `claude -p`, use the full names (`/finding-unknowns:fu-brief`).
 | Always-on text | The 56 words in `CLAUDE.md` | about 75 tokens per session |
 | Guard hook + `fu` script | Deterministic work: the irreversible-command prompt, lint, freeze, integrity, log, list, render | none to carry; one short call each |
 | Card skill + commands | `SKILL.md` (≤ 700 words) and five references loaded per phase; four thin commands | loaded only when you start a card |
-| One auditor | `mechanism-auditor`, a fresh-context grader | called only for an irreversible-lane card, a measured result, or on request |
+| One auditor | `mechanism-auditor`, a fresh-context grader on the Haiku model tier (`model: haiku`) | called only for an irreversible-lane card, a measured result, or on request |
 
 Without the auditor, the Debrief is graded in the same context and says so
 (`same-context — weaker`).

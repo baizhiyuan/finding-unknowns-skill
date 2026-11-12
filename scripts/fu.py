@@ -8,7 +8,8 @@ One file, Python 3.8+ standard library only, no network.
 
   fu init [--strict] [--guard off|log|ask]
   fu lint [slug] [--strict]
-  fu freeze <slug> --stage brief|stop|resume|debrief
+  fu freeze <slug> --stage brief|stop|resume|debrief   (brief, debrief: lint first; debrief:
+                                                       also Integrity, log, Last seen)
   fu integrity [slug]
   fu log [slug]
   fu list [--all]
@@ -366,6 +367,163 @@ WRAPPERS = {"sudo": {"-u", "-g", "-h", "-p", "-C", "-D", "-r", "-t", "-U", "-T"}
             "timeout": {"-s", "-k"}}
 INTERPRETER_PATH = re.compile(r"^(?:\S*/)?(python3?(?:\.\d+)?|node|bash|sh|zsh|dash|ruby|perl|deno|bun)$")
 SUBST = re.compile(r"\$\(([^()]*)\)|`([^`]*)`")
+HEREDOC_OP = re.compile(r"(?<!<)<<(-?)[ \t]*(['\"]?)([A-Za-z_][\w.-]*)\2")
+# a later command with one of these heads runs a file named anywhere in it (`bash r.sh`,
+# `. r.sh`, `sh < r.sh`, `eval "$(cat r.sh)"`, `ssh host < r.sh`)
+RUNS_FILES = SHELLS | {"ash", "mksh", "fish", "csh", "tcsh", "busybox", ".", "source", "eval", "ssh"}
+STDIN_INTERPRETER = re.compile(r"^(?:python3?(?:\.\d+)?|node)$")
+
+
+def _unquoted(line: str) -> str:
+    """The line with quoted spans blanked (one line; a quote left open blanks the rest)."""
+    out, quote, i = [], None, 0
+    while i < len(line):
+        c = line[i]
+        if quote:
+            if c == "\\" and quote == '"':
+                out.append("  ")
+                i += 2
+                continue
+            if c == quote:
+                quote = None
+            out.append(" ")
+        elif c == "\\":
+            out.append("  ")
+            i += 2
+            continue
+        elif c in "'\"":
+            quote = c
+            out.append(" ")
+        else:
+            out.append(c)
+        i += 1
+    return "".join(out)
+
+
+def _segment_bounds(bare: str, pos: int):
+    """Start and end of the simple command around `pos` in a quote-blanked line."""
+    def sep(k):
+        c = bare[k]
+        if c == "&":
+            return not (k and bare[k - 1] in "<>") and bare[k + 1:k + 2] != ">"
+        return c in ";()" or (c == "|" and not (k and bare[k - 1] == ">"))
+    start = max((k + 1 for k in range(pos) if sep(k)), default=0)
+    end = next((k for k in range(pos, len(bare)) if sep(k)), len(bare))
+    return start, end
+
+
+def _stdin_script(head: str, args: list) -> bool:
+    """True when `python`/`node` with these arguments runs its stdin as the script."""
+    for a in args:
+        if a == "-":
+            return True
+        if not a.startswith("-") or (head == "node" and a.startswith(("-e", "-p", "-r", "--eval", "--print",
+                                                                      "--require", "--import"))) \
+                or (head != "node" and re.match(r"^-[a-zA-Z]*[cmWX]", a)):
+            return False
+    return True
+
+
+def _runs_file(rest: str, names: set) -> bool:
+    """Whether a command in `rest` runs a file with one of these base names: as the program
+    (`./r.sh`, `chmod +x r.sh && ./r.sh`), as a shell's input (RUNS_FILES heads, `$SHELL`),
+    or as an interpreter's script (`python r.py`)."""
+    cmds, cur = [], []
+    for t in _tokens(rest) + [";"]:
+        if t and set(t) <= set(";&|()\n"):
+            cmds.append(cur)
+            cur = []
+        elif not (t and set(t) <= set("<>&|")):
+            cur.append(t)
+    for words in cmds:
+        words = _strip_wrappers(words)
+        if not words:
+            continue
+        head = os.path.basename(words[0])
+        if head in names:
+            return True
+        if head in RUNS_FILES or head.startswith("$"):
+            if any(n in t for t in words[1:] for n in names):
+                return True
+        elif INTERPRETER_PATH.match(words[0]):
+            for k, t in enumerate(words[1:], 1):
+                if re.match(r"^-[a-zA-Z]*[ce]$", t):
+                    return k + 1 < len(words) and any(n in words[k + 1] for n in names)
+                if not t.startswith("-"):
+                    if any(n in t for n in names):
+                        return True
+                    break
+    return False
+
+
+def _data_body(line: str, bare: str, pos: int, after: str) -> bool:
+    """Whether the heredoc whose operator is at `pos` feeds data, not commands: its command
+    is `cat`/`tee` writing to a file (not piped on) that no later command in `after` runs,
+    or `python`/`node` reading the script from stdin. Anything else reads it as commands."""
+    if line.rstrip().endswith("\\"):
+        return False
+    start, end = _segment_bounds(bare, pos)
+    if bare[end:end + 1] == "|" and bare[end + 1:end + 2] != "|":
+        return False  # piped on: `cat <<EOF | sh`, `cat <<EOF |` with `sh` on a later line
+    toks = _tokens(re.sub(r"(?<!\S)\d+(?=[<>])", "", line[start:end]))
+    words, outs, k = [], [], 0
+    while k < len(toks):
+        t = toks[k]
+        if t and set(t) <= set("<>&|"):
+            target = toks[k + 1] if k + 1 < len(toks) else ""
+            if ">" in t and target and not target.startswith("/dev/") \
+                    and not ("&" in t and re.match(r"^(\d+|-)$", target)):
+                outs.append(target)
+            k += 2
+            continue
+        words.append(t)
+        k += 1
+    if any(os.path.basename(w) == "xargs" for w in words):
+        return False
+    words = _strip_wrappers(words)
+    if not words:
+        return False
+    head, args = os.path.basename(words[0]), words[1:]
+    if STDIN_INTERPRETER.match(head):
+        return _stdin_script(head, args)
+    if head == "tee":
+        outs += [a for a in args if not a.startswith("-")]
+    elif head != "cat":
+        return False
+    names = {os.path.basename(o.rstrip("/")) for o in outs} - {""}
+    return bool(names) and not _runs_file(line[end:] + "\n" + after, names)
+
+
+def drop_heredocs(text: str) -> str:
+    """Remove heredoc bodies that are data: `cat > file <<EOF` or `tee file <<EOF` that
+    nothing later in the command runs (a card written with its `Irreversible:` line), and
+    `python3 - <<EOF` / `node <<EOF` scripts. Every other body stays as commands (`bash
+    <<EOF`, `ssh host <<EOF`, `cat <<EOF | sh`, `cat > r.sh <<EOF` then `bash r.sh`), and so
+    does every body on a line whose delimiters do not all come."""
+    lines, out, i = text.split("\n"), [], 0
+    while i < len(lines):
+        line = lines[i]
+        out.append(line)
+        i += 1
+        bare = _unquoted(line)
+        ops = [m for m in HEREDOC_OP.finditer(line) if bare[m.start():m.start() + 2] == "<<"]  # not quoted
+        spans, j = [], i
+        for m in ops:
+            delim, tabs = m.group(3), m.group(1) == "-"
+            k = j
+            while k < len(lines) and (lines[k].lstrip("\t") if tabs else lines[k]) != delim:
+                k += 1
+            if k >= len(lines):
+                spans = []
+                break
+            spans.append((m.start(), j, k))
+            j = k + 1
+        for pos, b0, b1 in spans:
+            if not _data_body(line, bare, pos, "\n".join(lines[b1 + 1:])):
+                out += lines[b0:b1 + 1]
+        if spans:
+            i = j
+    return "\n".join(out)
 
 
 def _tokens(text: str) -> list:
@@ -382,7 +540,7 @@ def segments(command: str, depth: int = 0) -> list:
     """Normalised token lists, one per simple command. Splits on newlines, ;, &&, ||, |, &,
     ( and ); drops redirections (`2>&1`, `> out.log`) and wrappers (env, timeout, sudo, …);
     follows `sh -c "…"`, `eval`, `$( … )` and backticks into their own segments."""
-    text = command[:MAX_COMMAND]
+    text = drop_heredocs(command[:MAX_COMMAND])
     out = []
     if depth < MAX_DEPTH:
         for a, b in SUBST.findall(text):
@@ -1488,6 +1646,49 @@ def _changed_decisions(root: Path, fu: Path) -> list:
     return out
 
 
+DEBRIEF_ANY = re.compile(r"^## Debrief \(", re.M)
+DEBRIEF_TOP = ("Did NOT prove:", "Not checked:", "Bottom line:")
+
+
+def blocking_fails(lint: Lint, model: dict, slug: str) -> list:
+    """FAILs that block render and freeze: once the Brief is frozen, not those inside it (it
+    is never edited to clear them) nor the whole-card caps it may cause (line 1)."""
+    lo, hi = model["brief_range"]
+    f = "tasks/%s.md" % slug
+    return [i for i in lint.fails() if not (i[1] == f and model["brief_frozen"]
+                                            and (lo <= i[2] <= hi or (i[2] == 1 and i[3] in ("strict-caps", "live-length"))))]
+
+
+def fill_integrity(text: str, lines: list) -> str:
+    """Write `Integrity:` with the given lines into the last Debrief, replacing the block (or
+    an inline `Integrity: …` line) if there is one, else before `Did NOT prove:`,
+    `Not checked:` or `Bottom line:`."""
+    rows = text.split("\n")
+    start = max(i for i, t in enumerate(rows) if t.startswith("## Debrief ("))
+    end = next((i for i in range(start + 1, len(rows)) if rows[i].startswith("## ")), len(rows))
+    block = ["Integrity:"] + ["  - " + ln for ln in lines]
+    at = next((i for i in range(start + 1, end) if rows[i].startswith("Integrity:")), None)
+    if at is not None:
+        stop = at + 1
+        while stop < end and rows[stop].startswith("  "):
+            stop += 1
+        rows[at:stop] = block
+    else:
+        at = next((i for i in range(start + 1, end) if rows[i].rstrip() in DEBRIEF_TOP), end)
+        while at == end and at > start + 1 and not rows[at - 1].strip():
+            at -= 1   # append after the last non-blank line of the section
+        rows[at:at] = block
+    return "\n".join(rows)
+
+
+def _set_last_seen(text: str, deltas: Path) -> str:
+    """`Last seen by you: {now}, after D{n}`, n the newest delta (0 when there is none)."""
+    nums = [int(m.group(1)) for m in re.finditer(r"^D(\d+) ", read_text(deltas), flags=re.M)] if deltas.is_file() else []
+    seen = "%s, after D%d" % (now_str(), max(nums, default=0))
+    return re.sub(r"^(Mode: (?:ship|learn) · Last seen by you: ).*$", lambda mm: mm.group(1) + seen, text,
+                  count=1, flags=re.M)
+
+
 def cmd_freeze(a) -> int:
     root, card, claim, slug, _ = resolve_card(find_root(a.root), a.slug, False)
     fu = root / FU_DIR
@@ -1498,6 +1699,30 @@ def cmd_freeze(a) -> int:
         needs = " ".join(clean(a.needs).split())
         if stage != "stop" or not (needs == "nothing" or needs_parts(needs)):
             raise UsageError("--needs goes with --stage stop and reads `{X} (recommendation: {Y}; settles {Z})`")
+    logged = []
+    has_debrief = card is not None and stage == "debrief" and bool(DEBRIEF_ANY.search(read_text(card)))
+    if card is not None and stage == "debrief" and not has_debrief:
+        raise UsageError("--stage debrief needs a `## Debrief (` section in tasks/%s.md; write it first; "
+                         "nothing committed" % slug)
+    if card is not None and stage in ("brief", "debrief"):
+        if has_debrief:
+            # Step 0 (debrief): the Integrity block is fu's, filled before lint.
+            _, lines = integrity_lines(root, card, slug)
+            safe_write(fu, card, fill_integrity(read_text(card), lines))
+            for line in lines:
+                print(line)
+        lint, model = lint_paths(root, card, None, slug, False)
+        blocking = blocking_fails(lint, model, slug)
+        if blocking:
+            for item in sorted(set(blocking), key=lambda i: (i[1], i[2], i[3])):
+                print("%s %s:%d %s: %s" % item)
+            print("freeze: %d lint FAIL; fix the card and run this again; nothing committed" % len(set(blocking)))
+            return 1
+        if has_debrief:
+            rows = log_debrief(root, card, slug, model)
+            stat = [ln for ln in rows if ln.startswith("You: ")]
+            n = len([ln for ln in rows if not ln.startswith(("You: ", "log: "))])
+            logged = ["log: %d new %s" % (n, "row" if n == 1 else "rows")] + stat
     if stage == "brief":
         print_gitignore(init_fu(root, {}))
     # Step 1: the card's own edits, before any skip check (fu freeze owns State).
@@ -1508,7 +1733,11 @@ def cmd_freeze(a) -> int:
         text = _set_state(text, STAGE_STATE[stage])
         if needs is not None or stage == "resume":
             text = _set_needs(text, needs or "nothing")
+        if has_debrief:
+            text = _set_last_seen(text, card.with_name(slug + ".deltas.md"))
         safe_write(fu, card, text)
+        for line in logged:
+            print(line)
         deltas = card.with_name(slug + ".deltas.md")
         if stage == "brief" and not deltas.is_file():
             safe_write(fu, deltas, "# %s deltas (append-only)\n" % slug)
@@ -1578,28 +1807,33 @@ def cmd_integrity(a) -> int:
         print(note)
     if card is None:
         raise UsageError("integrity reads a card; %s has only a claim file" % slug)
+    code, lines = integrity_lines(root, card, slug)
+    for line in lines:
+        print(line)
+    return code
+
+
+def integrity_lines(root: Path, card: Path, slug: str):
+    """(exit code, lines) of `fu integrity`: 0 clean, 1 a finding, 3 not run."""
     text = read_text(card)
     tm = TIMING_RE.match(next((t for t in text.splitlines() if t.startswith("Timing:")), ""))
+    keys = ("Brief vs freeze", "Check files", "Unlogged hunks")
     if not tm or not tm.group(3):
         why = "timing: %s" % (tm.group(1) if tm else "unparsable")
-        for k in ("Brief vs freeze", "Check files", "Unlogged hunks"):
-            print("%s: not run (%s)" % (k, why))
-        return 3
-    commit = tm.group(3)
+        return 3, ["%s: not run (%s)" % (k, why) for k in keys]
+    out = []
     try:
-        return _integrity(root, card, slug, text, commit)
+        return _integrity(root, card, slug, text, tm.group(3), out), out
     except (OSError, subprocess.SubprocessError) as exc:
-        for k in ("Brief vs freeze", "Check files", "Unlogged hunks"):
-            print("%s: not run (git: %s)" % (k, exc.__class__.__name__))
-        return 3
+        return 3, ["%s: not run (git: %s)" % (k, exc.__class__.__name__) for k in keys]
 
 
-def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int:
+def _integrity(root: Path, card: Path, slug: str, text: str, commit: str, out: list) -> int:
     rel = card.relative_to(root).as_posix()
     shown = git(root, "show", "%s:./%s" % (commit, rel))
     if shown.returncode != 0:
-        for k in ("Brief vs freeze", "Check files", "Unlogged hunks"):
-            print("%s: not run (commit %s not readable)" % (k, commit))
+        out += ["%s: not run (commit %s not readable)" % (k, commit)
+                for k in ("Brief vs freeze", "Check files", "Unlogged hunks")]
         return 3
     findings = 0
     start, now_block = _brief_block(text)
@@ -1611,14 +1845,14 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
             edited += list(range(start + 1 + j1, start + 1 + max(j2, j1 + 1)))
     if edited:
         findings += 1
-        print("Brief vs freeze: edited: lines %s" % _ranges(edited))
+        out.append("Brief vs freeze: edited: lines %s" % _ranges(edited))
     else:
-        print("Brief vs freeze: unchanged")
+        out.append("Brief vs freeze: unchanged")
     lint = Lint()
     model = parse_card(text, slug, "card", lint)
     files = model["brief"]["check_files"]
     if not files:
-        print("Check files: none named")
+        out.append("Check files: none named")
     else:
         changed = git(root, "diff", "--no-ext-diff", "--no-textconv", "--name-only", "--relative", commit,
                       "--", *files).stdout.split()
@@ -1632,9 +1866,9 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
                 (["created after the freeze: %s" % ", ".join(created)] if created else [])
         if parts:
             findings += 1
-            print("Check files: %s" % " · ".join(parts))
+            out.append("Check files: %s" % " · ".join(parts))
         else:
-            print("Check files: unchanged")
+            out.append("Check files: unchanged")
     deltas_path = card.with_name(slug + ".deltas.md")
     logged_text = " ".join([read_text(deltas_path) if deltas_path.is_file() else ""]
                            + [x["what"] + " " + x["why"] for x in model["amendments"]]
@@ -1650,7 +1884,7 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
     unlogged = []
     diff = git(root, "diff", "--no-ext-diff", "--no-textconv", "-U0", "--relative", commit,
                "--", ".", ":(exclude)%s" % FU_DIR).stdout
-    path = None
+    path, ours = None, []   # ours: (hunk index, fu's own .gitignore lines only so far)
     for line in diff.splitlines():
         if line.startswith("+++ "):
             path = None if line[4:] == "/dev/null" else line[6:] if line.startswith("+++ b/") else line[4:]
@@ -1661,8 +1895,15 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
             if hm:
                 s, n = int(hm.group(1)), int(hm.group(2) or 1)
                 unlogged.append((path, s, s + max(n, 1) - 1))
+                if path == ".gitignore":
+                    ours.append([len(unlogged) - 1, True])
+        elif ours and ours[-1][0] == len(unlogged) - 1 and line[:1] in ("+", "-") \
+                and not line.startswith(("+++", "---")):
+            ours[-1][1] = ours[-1][1] and line[0] == "+" and line[1:].strip() in GITIGNORE_LINES
         if line.startswith("diff --git"):
             path = None
+    for idx in sorted((i for i, only in ours if only), reverse=True):
+        del unlogged[idx]  # the gitignore lines fu asked for are not the builder's change
     untracked = git(root, "ls-files", "--others", "--exclude-standard", "--", ".", ":(exclude)%s" % FU_DIR).stdout.split("\n")
     for p in untracked:
         if p:
@@ -1671,14 +1912,14 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
              if h[0] not in logged]
     if hunks:
         findings += 1
-        print("Unlogged hunks: %s" % ", ".join(hunks))
+        out.append("Unlogged hunks: %s" % ", ".join(hunks))
     else:
-        print("Unlogged hunks: none")
-    findings += _repeat_runs(card.parent.parent, slug, text)
+        out.append("Unlogged hunks: none")
+    findings += _repeat_runs(card.parent.parent, slug, text, out)
     return 1 if findings else 0
 
 
-def _repeat_runs(fu: Path, slug: str, text: str) -> int:
+def _repeat_runs(fu: Path, slug: str, text: str, out: list) -> int:
     """Print `Irreversible runs:` for each Irreversible line with more than one recorded run
     (the guard records runs in every permission mode). Returns the number printed."""
     counts = {}
@@ -1694,7 +1935,7 @@ def _repeat_runs(fu: Path, slug: str, text: str) -> int:
         seen.add(key)
         n += 1
         failed = " (%d failed)" % sum(runs) if any(runs) else ""
-        print("Irreversible runs: `%s` ran %d times%s; expected once" % (clean(im.group(1), 120), len(runs), failed))
+        out.append("Irreversible runs: `%s` ran %d times%s; expected once" % (clean(im.group(1), 120), len(runs), failed))
     return n
 
 
@@ -1767,6 +2008,13 @@ def cmd_log(a) -> int:
         if not model["debriefs"]:
             print("log: no Debrief section in tasks/%s.md" % slug)
         return 1
+    for line in log_debrief(root, card, slug, model):
+        print(line)
+    return 0
+
+
+def log_debrief(root: Path, card: Path, slug: str, model: dict) -> list:
+    """Append the last Debrief's graded rows to predictions-log.md; return the lines to print."""
     d = model["debriefs"][-1]
     date = (d["time"] or now_str())[:10]
     fu = root / FU_DIR
@@ -1786,14 +2034,9 @@ def cmd_log(a) -> int:
         prev = read_text(path) if path.is_file() and not _is_link(path) else ""
         lead = "\n" if prev and not prev.endswith("\n") else ""
         safe_write(fu, path, lead + "\n".join(new) + "\n", append=True)
-    for line in new:
-        print(line)
-    if not new:
-        print("log: nothing new for %s" % slug)
+    out = list(new) or ["log: nothing new for %s" % slug]
     sl = stat_line(calibration(read_log(fu)))
-    if sl:
-        print(sl)
-    return 0
+    return out + ([sl] if sl else [])
 
 
 def card_summary(path: Path) -> dict:
@@ -2340,12 +2583,9 @@ def cmd_render(a) -> int:
         raise UsageError("render reads a card; %s has only a claim file" % slug)
     fu = root / FU_DIR
     lint, model = lint_paths(root, card, None, slug, False)
-    lo, hi = model["brief_range"]
-    f = "tasks/%s.md" % slug
-    # Banner-only: FAILs inside the frozen Brief, and whole-card caps (line 1) the Brief may cause.
-    in_brief = [i for i in lint.fails() if i[1] == f and ((model["brief_frozen"] and lo <= i[2] <= hi)
-                                                          or (i[2] == 1 and i[3] in ("strict-caps", "live-length")))]
-    blocking = [i for i in lint.fails() if i not in in_brief]
+    # Banner-only once the Brief is frozen: FAILs inside it, and whole-card caps (line 1) it may cause.
+    blocking = blocking_fails(lint, model, slug)
+    in_brief = [i for i in lint.fails() if i not in blocking]
     if blocking:
         for line in lint.lines():
             print(line)
@@ -2526,7 +2766,7 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("lint", parents=[common], help="check a card against card.md")
     s.add_argument("slug", nargs="?")
     s.add_argument("--strict", action="store_true")
-    s = sub.add_parser("freeze", parents=[common], help="commit the card at a stage")
+    s = sub.add_parser("freeze", parents=[common], help="commit the card at a stage (brief, debrief: lint first; debrief also writes Integrity, logs, sets Last seen)")
     s.add_argument("slug")
     s.add_argument("--stage", required=True, choices=("brief", "stop", "resume", "debrief"))
     s.add_argument("--needs", help="with --stage stop: the header's Needs you text; resume sets it to nothing")
