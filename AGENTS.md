@@ -1,59 +1,48 @@
 # Repository guide for coding agents
 
 This file orients AI coding agents (and human contributors) working **on** this repository.
-It is about maintaining the project — for what the skill does at runtime, read
-`skills/finding-unknowns/SKILL.md`, `skills/keep-the-reasoning/SKILL.md`, and
-`skills/theory-vs-result/SKILL.md`.
+For what the skill does at runtime, read `CLAUDE.md` and `skills/finding-unknowns/SKILL.md`.
 
-## Layout and single-source-of-truth rules
+## What ships in 6.0
+
+Three things and no machinery: an always-on text, one skill, two thin commands. No agents,
+installed scripts, hooks, HTML or files written by the skill (except on "save"). `install.sh`
+is the only script, and the look-back runs one inline filter.
+The design and its owner decisions are in `docs/design/6.0.md`.
 
 | Path | Role | Rule |
 |------|------|------|
-| `skills/finding-unknowns/SKILL.md` | The protocol (before/during work) | The ONLY place procedure lives for this skill, except Cartographer (next row). All behavioural changes happen here first. |
-| `skills/finding-unknowns/references/cartographer.md` | Full Cartographer protocol | Normative for Cartographer. `SKILL.md` holds only its summary. |
-| `skills/finding-unknowns/references/workflows.md` | Workflow templates | Dynamic-workflow scripts; keep consistent with the Cartographer reference. |
-| `skills/keep-the-reasoning/SKILL.md` | The handoff protocol | Single source of truth for that skill; invoked directly as `/keep-the-reasoning` (no command file). |
-| `skills/theory-vs-result/SKILL.md` | The measured-result protocol | Single source of truth for that skill; invoked directly as `/theory-vs-result` (no command file). `agents/mechanism-auditor.md` is its read-only fresh-context audit. |
-| `commands/*.md` | Slash-command dispatchers (`/blindspot`, `/cartographer`, `/change-quiz`) | Thin: invoke the skill with the Skill tool, name a section, and pass `$ARGUMENTS`. Never restate procedure or hard-code a SKILL.md path. Never name a command after a skill: the skills already answer to `/finding-unknowns`, `/keep-the-reasoning`, `/theory-vs-result`, and a same-named command shadows the skill. |
-| `agents/*.md` | Specialist subagents | Each declares tools, model tier, and an I/O contract. Keep read-only agents read-only. |
-| `docs/ARCHITECTURE.md` | Design reference | Update when layers/contracts change. |
-| `docs/GLOSSARY.md` | Shared vocabulary | Where the three skills' terms meet. Update when a term is added, renamed, or changes meaning; each SKILL.md still defines what it uses. |
-| `docs/TUTORIAL.md` / `docs/TUTORIAL.zh.md` | 5-minute tutorial | Keep both in step with the commands, packet sizes, rigor levels, and EXAMPLES.md's recorded run. |
-| `CLAUDE.md` | Passive drop-in | The 82-word text promoted after the Tier 1 regression check (`docs/evals/2026-11-12-tier1/`), byte-identical to the text tested there. It replaced the 56 words measured in Stage 0. Frozen: any change needs a new pre-registered check. |
-| `EXAMPLES.md` | User-facing prompts | Keep consistent with the SKILL.md files after edits. |
-| `README.md` / `README.zh.md` | Landing pages | zh is a faithful translation of the English structure; update both together. |
+| `CLAUDE.md` | The always-on text | At most 130 words (CI checks). It is quoted verbatim in both READMEs; change all three together. Any change in meaning is a behaviour change: say so in the CHANGELOG and note that it is unmeasured |
+| `skills/finding-unknowns/SKILL.md` | Templates, interview, look-back with the inline transcript filter | The only place procedure lives. At most 1,150 words (CI checks). The filter is tested as written (`tests/test_lookback_filter.py`) |
+| `commands/fu-interview.md`, `commands/fu-lookback.md` | Opt-in entry points | Thin: name the skill section and pass `$ARGUMENTS`. Never restate procedure. Never name a command after the skill |
+| `install.sh` | Installer | Installs the 6.0 files; retires 4.x files only when they carry this project's marker; backs up anything else before replacing it; never edits `CLAUDE.md` outside its marker comments. Tested by `tests/test_install.py` in temporary config directories |
+| `README.md` / `README.zh.md` | Landing pages | Same heading structure (CI checks). The Chinese templates must match `SKILL.md`'s Chinese labels and `docs/GLOSSARY.md` |
+| `docs/GLOSSARY.md` | Terms, English and Chinese | Update when a field, header or verdict is added or renamed |
+| `docs/design/` | Design history | `6.0.md` is the accepted design. Do not rewrite history files |
+| `docs/evals/` | Evaluation reports and plans | Never edit a report's results after the fact; add a dated erratum instead |
 
 ## Invariants to preserve
 
-- YAML frontmatter values containing `:` must be quoted (a colon in an unquoted
-  description has broken parsing before).
-- `blindspot-scout`, `quiz-master`, and `mechanism-auditor` stay read-only (no Write/Edit in `tools:`).
-- `prototype-smith` writes throwaway files only; `ledger-keeper` touches only the ledger.
-- The Cartographer summary in `finding-unknowns/SKILL.md` and `references/cartographer.md`
-  must stay consistent; on conflict the reference is correct, so fix the summary.
-- Every technique must remain runnable inline — no hard dependency on agents or commands.
-- One vocabulary (see `docs/GLOSSARY.md`): "lane" means reversibility only; use *rigor level*
-  (`theory-vs-result`), *packet size* (`keep-the-reasoning`), *mode* (lightweight vs
-  Cartographer), and *prior* for any expectation recorded before a result.
-- Every file the skills write goes under `.finding-unknowns/` at the project root; the
-  ledger's first line is `schema: 2`. Root-level legacy files are read and a move offered,
-  never moved silently.
-- Preserve the attribution block (Thariq Shihipar / @trq212) and the non-affiliation
-  disclaimer in SKILL.md and README.md (the frozen `CLAUDE.md` carries neither). Credit
-  sources as in each SKILL.md `metadata.credits` (Osmani for `keep-the-reasoning` and the verification contract;
-  Anthropic and @hanakoxbt for the execution heuristics; the author's own
-  empirical research practice for `theory-vs-result`); neutral credit only.
+- The header tokens `fu:before`, `fu:after`, `fu:interview`, `fu:lookback` and the note prefix
+  `fu-note:` stay literal in every language. The look-back filter depends on them.
+- The person's expectation is quoted, never written for them.
+- `Not proved` and `Still unknown` are never both empty; nothing follows `fu:after`.
+- The look-back never reads a transcript whole, and only reads transcripts when asked.
+- The README's evidence section says that the 6.0 always-on text was chosen only in wording
+  tests with a simulated user, that its changes relative to the 82 words are unmeasured, and
+  that nobody has measured learning or understanding, until a check says otherwise.
+- YAML frontmatter values containing `:` must be quoted.
+- Preserve the attribution (Thariq Shihipar / @trq212; Addy Osmani) and the non-affiliation
+  disclaimer in both READMEs. Neutral credit only.
 
 ## After any change
 
-1. Validate (the same two commands run in CI on every push to `main` and every pull request):
+1. Validate (the same commands run in CI on every push to `main` and every pull request):
    ```bash
-   python3 scripts/validate.py      # frontmatter, JSON, SVG safety, links, fences, en/zh
-                                    # README parity, em dashes in zh docs,
-                                    # version/count drift, install.sh
-   node tests/workflows/run.mjs     # Workflow templates, extracted from workflows.md
+   python3 scripts/validate.py              # word budgets, frontmatter, file set, JSON, SVG
+                                            # safety, links, fences, en/zh README parity,
+                                            # em dashes in zh, version drift, install.sh syntax
+   python3 -m unittest discover -s tests    # install.sh and the look-back filter
    ```
-   When you change a Workflow template, add a scenario to `tests/workflows/run.mjs` that
-   fails on the old code and passes on the new.
 2. Bump `version` in `.claude-plugin/plugin.json` (SemVer) and add a `CHANGELOG.md` entry.
 3. Use Conventional Commits (`feat:`, `fix:`, `docs:`, …).

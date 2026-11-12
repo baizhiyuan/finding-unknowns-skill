@@ -4,9 +4,206 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [6.0.0] - unreleased
+
+A redesign from first principles. 6.0 is three things and no machinery: an always-on text,
+one skill and two commands. The 4.x line stays on branch `v4`; 5.0 to 5.2 were designed and
+evaluated, never released. Design and owner decisions:
+[`docs/design/6.0.md`](docs/design/6.0.md).
+
+### Why
+- **The owner's starting idea had drifted out of sight.** The four quadrants were meant to be
+  shown to the person. Across the 5.x designs they became internal vocabulary, and the work
+  was organised around a task card on disk, then a script, a guard hook, lint and an HTML
+  renderer to keep the card safe. Each step answered a measured hole; the sum was
+  bookkeeping about a file, with no evidence that the card beat the short text.
+- **The evidence pointed at the short text.** In Stage 0 the 56-word text scored 31.0 of 42
+  against 20.5 for no setup and 21.0 for a rebuilt 5.0 plugin at about 8 times the cost. In
+  Tier 1 the 82-word text passed every tripwire as the detector counts them, and the 5.2
+  plugin cost about 4.6 times the 56 words. The guard hook's `ask` is ignored under
+  `bypassPermissions`, the mode the owner works in.
+- **Scope:** the owner's daily work in the Claude Code terminal: coding, research, writing
+  and decisions at work. No packaging for the Claude apps.
 
 ### Changed
+- **`CLAUDE.md` is a new 127-word always-on text (F4b).** Before non-trivial changes
+  (reading is fine) it shows a `fu:before` map in the reply (what the work relies on and its
+  source; what is open; what the assistant assumes the person wants; what only the person can
+  answer, with recommended answers; what they should have asked), quotes the person's
+  expectation or says `not stated`, adds the assistant's own with what would disprove it, and
+  **then ends its turn: one pause before changes.** After the person's reply it stops only
+  for a scope change, a falsified premise that changes the task (a refuted expectation is
+  reported only) or an irreversible step (exact command or message, a yes, run once, never as
+  a check), and ends with `fu:after`, asking nothing. "Just do it" or "直接做" skips the wait.
+  Against the 82 words it drops the file-writing clause, "ask me once to predict" and the
+  budget-overrun stop. **It was chosen in five pre-registered wording tests with a simulated
+  user (next item); against the 82 words it is unmeasured.**
+- **The wording tests (2026-11-12),** archived in
+  [`docs/evals/2026-11-12-6.0-wording/`](docs/evals/2026-11-12-6.0-wording/README.md); each
+  with its decision rule fixed before the first run; `claude-sonnet-5-5`, 3 runs per task:
+  1. **C1**, "choices and changes I did not ask for" in `fu:after`: NOT USEFUL (disclosure
+     59 % to 91 %, but padding in 3 of 9 runs, limit 2); removed (details below).
+  2. **v6ab**, design draft A against the revised text F: SHIP F, on quadrant coverage (0.50
+     to 1.33 of 4; graded; the pre-registration notes this measure favours F by construction,
+     since only F names the "what you assume I want" quadrant, and a run with no map scores
+     0). The map came before the first change in only 2 of 12 (A) and 4 of 12 (F)
+     non-trivial runs; 0 of 12 on T1 and W1.
+  3. **v6f2**, F against F2 ("show `fu:before` without stopping"): ADOPT F2 (8 of 12 against
+     3 of 12; 4 of the 8 passing runs changed nothing, 2 of those stopped for a reason the rule
+     does not allow); the non-coding task W1 stayed at 0 of 3 in both arms.
+  4. **v6f3**, F2 against F3 ("as reply text, not thinking"): KEEP F2; non-coding 0 of 6 in
+     both. The records show the map announced and then not shown, with edits following;
+     thinking content is redacted, so the likely explanation, that the map stayed in hidden
+     reasoning, is inferred, not observed. The owner then chose one pause before work.
+  5. **v6f4**, F2 against F4 (the pause plus "as visible reply text, not thinking"):
+     INCONCLUSIVE; API safeguards (`reasoning_extraction`) stopped 8 of 18 F4 runs, 5 fatally.
+     **v6f4b**, F4b (the pause without the "thinking" wording), single arm: CONFIRM. The map
+     came before the first change in 11 of 12 runs on the four core tasks (5 of 6 non-coding;
+     1 of 3 under "just do it"), the work was completed in 11 of 12, no guard failure in the
+     11 graded core runs (the 12th was stopped by the safeguards and not graded; the rule
+     counts it as 1 failure each, within the limit of 2), a trivial typo fix
+     never paused (0 of 3), "just do it" paused 1 of 3, and 1 of 18 runs was stopped by the
+     safeguards. The owner adopted F4b.
+  Limits: the reply after the pause was always a simulated "Go ahead."; one subject model;
+  3 runs per task, so the rules screen and do not establish significance; grading deviated
+  from the pre-registrations (partial blinding failures in v6ab and v6f2, missing task keys
+  from v6f3 on); nothing about learning was measured.
+- **"choices and changes I did not ask for" was added to the end of `fu:after` and then
+  removed.** The Karpathy review (2026-11-12) proposed it (C1), adapted from the
+  Karpathy-style `CLAUDE.md` by Jiayuan Zhang, to bring back as disclosure what "Log other
+  deviations there" did in the 82 words. C1 tested 2026-11-12 (`/tmp/fu-c1`, 18 runs): not
+  useful by the pre-written rule; removed. The rule needed a disclosure gain of at least
+  20 points and padded or false entries in at most 2 of the 9 runs with the clause. Disclosure
+  of unrequested choices and changes in `fu:after` was 91 % (20 of 22 items) with the clause
+  against 59 % (29 of 49) without it, +32 points; but 3 of 9 runs padded the field, more than
+  2 of 9. No entry was false, and the grader marked 3 of the 4 flagged entries borderline.
+  Exploratory, outside the rule: the text with the clause also had the revised opening
+  ("Before non-trivial work, show me the unknowns under `fu:before`", without the "one short
+  list" cue), and 5 of its 9 runs stopped after `fu:before` over a falsified premise, against
+  0 of 9 with the §9.1 opening. The revised opening, which the shipped text keeps, may have
+  changed stopping behaviour; that is to be tested next. Neither arm was the shipped text,
+  which had the later review changes. The always-on text was then 122 words. `SKILL.md` keeps
+  `Decided for you`, omitted when none, never padded; the skill loads only on request.
+- **The always-on text after the confirmed review findings (2026-11-12).** Each item is a
+  behaviour change and none is measured:
+  - it asks for the UK quadrant ("what you assume I want"), which the map in the README and
+    `SKILL.md` already showed but the text never asked for;
+  - it asks for `not stated` when the person gave no expectation, so the empty slot that the
+    ask-once fallback counts is printed in everyday runs;
+  - it says "then ask nothing" after `fu:after` and "omit other empty fields";
+  - it tells the assistant to ignore `fu-note:` lines (no reply, no change of course);
+  - the falsified-premise stop is narrowed to "a falsified premise that changes the task", and
+    the irreversible-step rule covers "the exact command or message".
+  To stay within 130 words it opened "Before non-trivial work, show `fu:before`", dropped "Work
+  quietly:" (the "stop only for" list remained) and shortened several clauses. This 122-word
+  text (F) was later replaced by F4b through the wording tests above.
+- **`SKILL.md` after the review:** `Decided for you` lists choices and changes the person did
+  not ask for, and is omitted when there are none ("never pad"). Two rules from the design's
+  §4 that the first implementation missed are added: `fu:before · no significant unknowns`
+  (Chinese label `没有重要的未知项`) when nothing is worth mapping, and small work gets only
+  `Not proved` and `Still unknown`. The skill loads only on request, so these rules and the
+  templates do not reach everyday runs; see the known gap in `docs/design/6.0.md`.
+- **`skills/finding-unknowns/SKILL.md` is rewritten** (at most 1,150 words): the four quadrants;
+  rules that always hold; the `fu:before` and `fu:after` terminal templates; an interview the
+  person starts, by quadrant, with a count line per round and no clarity score; a look-back
+  that quotes `fu:` blocks and `fu-note:` lines from this session or from Claude Code
+  transcripts through a ten-line inline filter. Changes from the draft in the design: the
+  look-back explains how the transcript directory is named and how to select the last seven
+  days, the Chinese field labels are listed, `采访我` is a trigger, and the credits are in the
+  frontmatter.
+- **`SKILL.md` after the wording tests:** after `fu:before` on non-trivial work the turn ends,
+  and the person's reply starts the work (a bare "go" accepts the recommended answers); "just
+  do it" or "直接做" shows `fu:before` without waiting, and an irreversible step still waits
+  for a yes; after the reply, a refuted expectation is reported, not a stop. The rule that held
+  back the assistant's expectation when it stopped ("held until you answer or skip") is gone,
+  since the pause is now the normal path. 1,149 words.
+- **`SKILL.md` after the confirmed review findings:**
+  - it routes its triggers: the interview and look-back phrases start those sections; "what am
+    I missing" and "map the unknowns" get one `fu:before` and a direct answer, with no rounds;
+  - `You expect` is the one field never omitted; `fu-note:` lines get no reply; no
+    `fu:before` or `fu:after` inside an interview or a look-back; "just do it" first stayed
+    silent except one line of risk if a step is irreversible (design §5), and after the
+    wording tests shows `fu:before` without waiting;
+  - a `✗` that only refutes the person's expectation is reported and the work continues; a
+    stop is needed only when it changes what was asked;
+  - `fu:interview` has a fenced template like the other blocks;
+  - the Chinese labels now cover `未说明`, the sub-labels, verdicts, evidence tiers, the
+    interview count line and the interview and look-back fields;
+  - the look-back filter prints each block from its header to the next blank line or code
+    fence (at most 1,500 characters), instead of the first 4,000 characters of a message,
+    which cut off a `fu:after` at the end of a long reply; it skips `isMeta` records (the
+    injected skill body) and earlier `fu:lookback` output; the transcript path honours
+    `$CLAUDE_CONFIG_DIR` and is derived with `sed`; `7d` drops blocks older than seven days by
+    timestamp; a session id and a compacted current session are covered; and "prints
+    nothing" is told apart from "no blocks yet".
+- **Differences from the design.** The always-on text is not copied into `AGENTS.md`
+  (design §3): the scope is Claude Code only, and `AGENTS.md` is the repository guide. A
+  this-session look-back reads the transcript only after compaction, as the design says.
+- **`theory-vs-result` is now one row format** in `fu:after`: expected → found → verdict →
+  why, with an evidence tier on the why. **`keep-the-reasoning`'s compact packet is the rest
+  of `fu:after`.**
+- **`install.sh`** installs the skill, the two commands and the always-on text (between marker
+  comments in `~/.claude/CLAUDE.md`, after a timestamped backup; `--no-claude-md` skips it).
+  It moves the 4.x files that 6.0 removed into `finding-unknowns-backup-<timestamp>/` only
+  when they carry this project's marker, saves a same-name file that is not ours as
+  `<file>.<timestamp>.bak` before replacing it, and leaves `theory-vs-result` and
+  `mechanism-auditor` in place. After the review it refuses, with `CLAUDE.md` unchanged, a
+  begin marker without an end marker (it used to drop the text after it) and duplicate
+  blocks; it keeps CRLF line endings outside the block; it never overwrites an earlier backup;
+  it also reports the 56-word text and the 4.x passive drop-in as older texts; and `--help`
+  prints the comment header without `#` or code.
+- **README (en/zh)** leads with the four quadrants, shows the terminal templates with a coding
+  example and a work-decision example, and says plainly what the evals do and do not show.
+  The quadrants and hero diagrams are relabelled for 6.0. After the Karpathy review it also
+  states the tradeoff (fewer stops, more reporting), says what "it is working" means for the
+  own-use week, explains the relation to the Karpathy-style `CLAUDE.md` (written by Jiayuan
+  Zhang from Andrej Karpathy's post of 2026-01-26; the one placebo-controlled audit found
+  measured only its simplicity rules, 4.8 % fewer lines than no instructions, within noise,
+  accuracy unchanged) and advises against installing both, and credits the borrowed idea.
+  After the wording tests it explains the pause before changes (why: without it the map was
+  mostly not shown, likely because it stayed in hidden reasoning, which the records cannot
+  show; cost: one extra round per non-trivial task; how to skip:
+  "just do it" or "直接做"), lists the five tests with their verdicts, key numbers and limits,
+  links the archive, and drops the claims about working quietly without stopping first. The
+  lifecycle diagram (en/zh) is redrawn for the pause.
+- **`docs/GLOSSARY.md`** now holds the 6.0 terms in English and Chinese, including the
+  interview and look-back fields and the Chinese names for Stage 0 and Tier 1; the map is
+  `地图` throughout. `AGENTS.md` and `CONTRIBUTING.md` describe the 6.0 file set.
+- **Plugin and marketplace descriptions** name the four quadrants as KK, KU, UK and UU. The
+  quadrant diagrams (en/zh) add "decided for you" (the `SKILL.md` field) to the AFTER band.
+- **CI** checks word budgets (always-on text at most 130 words, `SKILL.md` at most 1,150),
+  the shipped file set, that both READMEs quote `CLAUDE.md` verbatim, that the marketplace
+  entry has the plugin's name and version and that the README install line matches them, and
+  runs `tests/test_install.py` and `tests/test_lookback_filter.py`.
+
+### Added
+- `commands/fu-interview.md` and `commands/fu-lookback.md`.
+- `docs/design/6.0.md`: the accepted design, with the owner decisions of 2026-11-12.
+- `docs/evals/2026-11-12-6.0-wording/`: the five wording tests (pre-registrations, reports,
+  arm texts, per-run `meta.json`, grades, W1 and W2 fixtures; no transcripts).
+- `docs/evals/2026-11-12-6.0-own-use/PLAN.md`: one week of the owner's own use, `fu-note:`
+  lines, decision rules written in advance, and the fallback (restore ask-once if
+  `You expect` is `not stated` in more than half of the `fu:before` blocks).
+
+### Removed
+- Skills `keep-the-reasoning` and `theory-vs-result`; `references/cartographer.md` and
+  `references/workflows.md` (Cartographer mode and the Workflow templates).
+- Agents `blindspot-scout`, `ledger-keeper`, `prototype-smith`, `quiz-master` and
+  `mechanism-auditor`.
+- Commands `/blindspot`, `/cartographer` and `/change-quiz`.
+- `tests/workflows/run.mjs` (it tested the removed Workflow templates).
+- `docs/ARCHITECTURE.md`, `docs/TUTORIAL.md`, `docs/TUTORIAL.zh.md`, `EXAMPLES.md`,
+  `docs/recordings/itsdangerous-blindspot.md`, and the cartographer, workflows, handoff,
+  framework and 4.x lifecycle diagrams (en and zh). A 6.0 lifecycle diagram (before, with one
+  pause for your reply → work → after → look-back) replaces the last; it is generated by
+  `scripts/diagrams/lifecycle.py` with the 4.x drawing kit (`scripts/diagrams/style.py`).
+- All of these remain on branch `v4` (v4.3.2). The 5.x task card, `fu` script, guard hook and
+  HTML view were never released; they remain on tag `eval/stage0-v5` and the archived branch
+  `v5`.
+
+### Before the redesign (on `main` since 4.3.2)
+
+#### Changed
 - `CLAUDE.md` is now the 82-word text, promoted after the Tier 1 regression check. It met
   the pre-registered promotion criteria (a weak check: simulated users, 40 runs, 2 per
   cell). It replaces the 56-word Stage 0 text introduced by the next entry, which the
@@ -18,7 +215,7 @@ All notable changes to this project are documented in this file. The format is b
   plugin. The README (en/zh) recommends it; the rebuilt plugin (branch `v5`) is not
   released.
 
-### Added
+#### Added
 - `docs/evals/2026-11-12-tier1/`: the Tier 1 regression check (pre-registration, report,
   harness, per-run metadata, transcripts and tripwire results).
   - **Arms:** the 56 words, the 82-word candidate, a length-matched placebo and the 5.2
@@ -83,7 +280,7 @@ All notable changes to this project are documented in this file. The format is b
   evals found no replicated gain from installing the skills, the costs, the one narrow recurring effect, and that
   the human side is untested. The roadmap adds a human-side eval.
 
-### Fixed
+#### Fixed
 - **Stage 0 cost erratum.** The runners summed each turn's `total_cost_usd` from
   `claude -p --resume`, which is cumulative within a session, so the cost of every multi-turn
   run was overstated. The true cost is the last turn's value per session. Corrected cost per build
@@ -787,6 +984,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
+[6.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/compare/v4.3.2...v6.0.0
 [4.3.2]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.2
 [4.3.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.1
 [4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0

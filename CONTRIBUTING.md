@@ -1,35 +1,34 @@
 # Contributing
 
-Thank you for your interest in improving `finding-unknowns`. Contributions of all kinds are
-welcome, including new techniques, prompt refinements, documentation, and diagrams.
+Thank you for your interest in improving `finding-unknowns`. Contributions are welcome:
+wording fixes, evidence from real use, documentation and diagrams.
 
 ## Getting started
 
 1. Fork the repository and create a feature branch from `main`.
-2. Make your changes. Each skill lives in `skills/<name>/SKILL.md` (finding-unknowns,
-   keep-the-reasoning, theory-vs-result); Cartographer's full protocol is in
-   `skills/finding-unknowns/references/`. See [`AGENTS.md`](AGENTS.md) for what to keep in sync.
-3. If you change the skill, keep [`EXAMPLES.md`](EXAMPLES.md), the
-   [glossary](docs/GLOSSARY.md), and the tutorials ([`docs/TUTORIAL.md`](docs/TUTORIAL.md),
-   [`docs/TUTORIAL.zh.md`](docs/TUTORIAL.zh.md)) consistent with it. The passive drop-in
-   [`CLAUDE.md`](CLAUDE.md) is the 82-word text promoted after the
-   [Tier 1 check](docs/evals/2026-11-12-tier1/README.md); it is frozen, so do not edit or
-   expand it without a new pre-registered check.
-4. Update [`CHANGELOG.md`](CHANGELOG.md) under an "Unreleased" heading.
+2. Make your changes. 6.0 is three pieces: [`CLAUDE.md`](CLAUDE.md) (the always-on text),
+   [`skills/finding-unknowns/SKILL.md`](skills/finding-unknowns/SKILL.md) and the two
+   commands in `commands/`. See [`AGENTS.md`](AGENTS.md) for what to keep in sync.
+3. If you change the always-on text or a template, update both READMEs and the
+   [glossary](docs/GLOSSARY.md) in the same change, and say in the CHANGELOG what the change
+   does to behaviour and that it is unmeasured.
+4. Update [`CHANGELOG.md`](CHANGELOG.md).
 5. Open a pull request with a clear description of the change and its motivation.
 
 ## Guidelines
 
-- **Scope.** Keep the skill focused on discovering unknowns. Execution and delivery concerns
-  belong to other tools referenced in the README.
-- **Commands.** `commands/` holds only `/blindspot`, `/cartographer` and `/change-quiz`. Do
-  not add a command with the same name as a skill: Claude Code already exposes each skill
-  as a slash command, and a same-named command shadows it.
-- **Prose quality.** Techniques should be actionable and concise. Prefer concrete, copy-paste
-  prompts over abstract description.
-- **Diagrams.** SVG assets in `assets/` must be well-formed XML and should render on GitHub.
-  `assets/zh/` holds the Simplified Chinese versions used by `README.zh.md`; when you change
-  a diagram, update its Chinese counterpart in the same change.
+- **Scope.** The skill keeps the person's map of known and unknown visible. Do not add
+  machinery (agents, installed scripts, hooks, files written by the skill) without evidence
+  that the short text alone falls short; 5.x added such machinery and was never released.
+  `install.sh` is the only script, and the look-back runs one inline filter.
+- **Size.** The always-on text stays at or below 130 words and `SKILL.md` at or below 1,150;
+  CI enforces both.
+- **Evidence.** Claims in the README about what the text does must point to a report in
+  `docs/evals/`. If nothing measured it, say so.
+- **4.x fixes** go to branch `v4`.
+- **Diagrams.** SVG assets in `assets/` must be well-formed XML and render on GitHub.
+  `assets/zh/` holds the Chinese versions used by `README.zh.md`; when you change a diagram,
+  update its Chinese counterpart in the same change.
 - **Chinese diagrams are generated.** Edit the source in `assets/zh/src/NAME.svg` (Chinese text
   uses `font-family="Noto Sans SC, …"`, one line per `<text>`, no letter-spacing), then
   regenerate the published file, which outlines the Chinese glyphs so every viewer sees the
@@ -42,8 +41,7 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
   ```
 
   Never hand-edit `assets/zh/*.svg`; it is overwritten on every build. Chinese wording follows
-  the terminology already used in `README.zh.md`.
-  Validate with any standard XML parser before committing.
+  [`docs/GLOSSARY.md`](docs/GLOSSARY.md).
 - **Attribution.** Preserve the attribution to the original essay. Do not represent this
   project as affiliated with Anthropic.
 
@@ -55,8 +53,8 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:
 ## Local validation
 
 ```bash
-python3 scripts/validate.py      # repository consistency checks (also run in CI)
-node tests/workflows/run.mjs     # behavioural tests for the Workflow templates
+python3 scripts/validate.py              # repository consistency checks (also run in CI)
+python3 -m unittest discover -s tests    # install.sh and the look-back filter
 ```
 
 ## License
