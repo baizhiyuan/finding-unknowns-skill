@@ -1,15 +1,25 @@
 # 5-minute tutorial
 
-One task card from start to finish: brief, a stop, a catch-up in the next session, a
-debrief. [中文版](TUTORIAL.zh.md)
+One task card from start to finish: the Brief, a stop, a catch-up in the next session,
+and the completion report. [中文版](TUTORIAL.zh.md)
 
-> **An illustration, not a recorded run.** The task, the numbers and the output are
-> invented to show the shape. Your wording will differ; check the shape. Whether this
-> loop helps people is untested ([README](../README.md#what-the-evals-show)).
+> **An illustration, not a recorded run.** The task, the numbers and the replies are
+> invented to show the shape; the card itself passes `fu lint`. Your wording will differ;
+> check the shape. Whether this loop helps people is untested
+> ([README](../README.md#what-the-evals-showed)). If you only want the habit, the 56 words
+> in [`CLAUDE.md`](../CLAUDE.md) are the measured setup and need no install.
 
 ## 1. Install (1 minute)
 
-In Claude Code:
+Until v5.2.0 is released, install 5.2 from branch `v5` (the marketplace still serves
+v4.3.2):
+
+```bash
+git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
+cd finding-unknowns-skill && git checkout v5 && bash install.sh
+```
+
+After the release, the plugin route also installs the guard hook:
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
@@ -19,8 +29,8 @@ In Claude Code:
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-You get one skill, five agents and four commands: `/fu-brief`, `/fu-catch-up`,
-`/fu-debrief`, and `/fu-cartographer` for structured mode. Other install routes are in the [README](../README.md#quick-start).
+You get one skill, one agent (`mechanism-auditor`), the `fu` script and four commands:
+`/fu-brief`, `/fu-catch-up`, `/fu-debrief` and `/fu-view`. The script needs `python3`.
 
 ## 2. Brief (2 minutes)
 
@@ -28,137 +38,141 @@ The task: a nightly job exports the `orders` table to CSV in 10,000-row batches.
 crashes, it starts over. You want it to resume.
 
 ```
-/fu-brief make the nightly order export resumable after a crash
+/fu-brief make the nightly order export resumable after a crash; I'd like to learn this part
 ```
 
-The agent never asks for a mode: it works in `ship` mode unless you say otherwise. For
-this walkthrough, say you want to learn; it records `learn` in `profile.md`. Then,
-before it shows you anything from the code, it asks for your prediction:
+The agent reads the repository silently. Then it sends **one** message with at most three
+questions. Your prediction comes with no suggested answer, so nothing anchors it; a
+decision only you can make comes with a recommendation worded so "yes" accepts it:
 
 ```
-Before I show you anything: if the export crashes halfway and resumes, how long will
-the resumed run take, compared with today's full run? Give a confidence, or say "no idea".
+1. If the export crashes halfway and resumes, how long will the resumed run take,
+   compared with today's full run? Confidence: low, medium, high, or no idea.
+2. Where should the checkpoint live? A local file next to the CSV, or a row in the
+   database. Recommendation: the local file (easiest to undo). Yes?
 ```
 
-You answer: "A full run is about 6 minutes, so roughly 3. 70 %." That is your prior. Only
-now does the agent map the territory, report what contradicts your prior, and give its
-own prediction. After your yes, the card is frozen and committed. Abridged:
+You answer: "A full run is about 6 minutes, so roughly 3. Medium. And yes." Your words go
+on the card verbatim, and your answer to question 2 goes into
+`.finding-unknowns/decisions.md`, so it is never asked again. Only then does the agent
+write its own prediction. It shows the Brief in full and ends with one approval ask
+(open decisions, and here, because you may stop and resume, an offer of the HTML view).
+On your yes, `fu freeze` commits it:
 
 ```
-# Make the nightly order export resumable
-Goal: a crashed export resumes where it stopped · State: building
-Next decision that needs you: none
-Mode: learn · Structured: no · Last seen by you: 2026-11-12, at the Brief
-Timing: Brief frozen 2026-11-12, commit 3f9c2ab
+# export-resumable
+Goal: a crashed nightly export resumes where it stopped · State: building
+Needs you: nothing
+Mode: learn · Last seen by you: never
+Timing: Brief frozen 2026-11-12 09:10, commit 3f9c2ab
 
-## Brief (frozen 2026-11-12)
-Approach: checkpoint the last exported (created_at, id) after each batch, because the
-  job already writes in batches
-Your predictions:  P1 resuming at the halfway point takes about half of today's 6 min
-  (70 %) · falsifier: resume ≥ 6 min on the 5M-row fixture · should not change: an
-  uninterrupted run's row count and checksum
-Agent predictions: A1 created_at repeats across batch boundaries; the importer stamps
-  a whole import with one time (importer.py:88) · falsifier: no repeat at any boundary
-  in the fixture · should not change: rows with unique timestamps keep today's order
-Stop-points: irreversible action · scope change · dead premise · budget > 2× 1 h
-Contract:
-| claim | check (can fail) | does NOT prove | lane |
-| each row exported exactly once after a crash | tests/test_export_resume.py kills the
-  job at 3 batch boundaries, compares ID sets with a full run | a crash between writing
-  a batch and writing its checkpoint | reversible |
+## Brief (frozen 2026-11-12 09:10)
+Approach:
+  - checkpoint the last exported (created_at, id) after each batch because the job already writes in batches
+  - keep the checkpoint in a local file because you chose the most reversible place
+P1 (you · medium) "a full run is about 6 minutes, so resuming from halfway takes roughly 3"
+  - falsifier: resuming from halfway takes 6 min or more on the 5M-row fixture
+  - should not change: an uninterrupted run's row count and checksum
+A1 (agent · medium) "created_at repeats across batch boundaries, because the importer stamps a whole import with one time"
+  - falsifier: no repeated created_at at any batch boundary in the fixture
+  - should not change: rows with unique timestamps keep today's order
+Stop-points: irreversible · scope · dead-premise · budget > 2× 1 h
+C1 each row is exported exactly once after a crash
+  - check: `pytest tests/test_export_resume.py -q` kills the job at 3 batch boundaries and compares ID sets with a full run
+  - does NOT prove: a crash between writing a batch and writing its checkpoint
+  - lane: reversible
+Check files: tests/test_export_resume.py
 ```
 
 P1 is about something the agent does not control: how the database behaves. "The tests
-pass" is something the agent makes true, so it sits in the contract, with what it does
-not prove.
+pass" is something the agent makes true, so it is a contract check (C1), with what it
+does not prove. Nothing on this Brief is irreversible, so there is no `Irreversible:`
+line; if there were, the guard hook would ask before that exact command ran.
 
 ## 3. A stop-point (30 seconds)
 
-The build is quiet: small choices become one-line deltas on the card. Late in the session
-the agent stops:
+The build is quiet: small choices become one line each in `export-resumable.deltas.md`,
+and a decision made for you says what it costs if wrong. Late in the session the agent
+stops:
 
 ```
-Stopped: scope change, production (irreversible lane).
-D4 surprise: resume from 50 % took 9 min 40 s on the fixture (3 runs, ±20 s)
-  → logs/export-resumable-resume.txt
-No index matches ORDER BY created_at, id. With that index on the fixture: 3 min 05 s.
-The fix is an index on production, outside the Brief. Run this yourself, or say yes
-to this exact command:
-  CREATE INDEX CONCURRENTLY orders_created_at_id ON orders (created_at, id);
-Post-check: EXPLAIN on the batch query shows an Index Scan.
+Stop (scope): resume from 50 % took 9 min 40 s on the fixture (D4); an index on
+(created_at, id) brings it to 3 min 05 s, but that index is on production, outside the
+Brief · `CREATE INDEX CONCURRENTLY orders_created_at_id ON orders (created_at, id);`
+· recommend: run it in the next maintenance window
 ```
 
-Two stop-points fired at once: the change is outside the Brief, and it touches
-production, which is irreversible. The agent only prepared the exact command; you run it
-or say yes to that one command. You leave. Nothing ran on production; the card reads
-`waiting on you`.
+The index is a scope change and also irreversible (production). It was not on the frozen
+Brief, so the guard has no line to match: the agent stops, and only your chat yes to that
+exact command would run it. You reply: "Not now; I'll run it in Thursday's maintenance
+window." It goes to Open, unexecuted.
 
-## 4. Next session: `/fu-catch-up` (1 minute)
+## 4. Next session: `/fu-catch-up` (30 seconds)
 
 ```
 /fu-catch-up
 ```
 
-Recall comes before the card (learn mode only: two or three questions; ship mode asks
-none):
-
 ```
-1. What does the checkpoint store, and why not created_at alone?
-2. Your P1 expected about 3 minutes; the resume took longer than a full run.
-   Where would you look first?
+export-resumable · building
+  - since you last looked: D1–D4 (checkpoint format, a lock retry, the fixture, the slow resume)
+  - needs you: nothing; the production index is in Open for Thursday
 ```
 
-A two-sentence teach-back counts instead; there is no pass mark. Then you see only what
-changed since you last looked: deltas D1 to D4 and the next decision, the index. You
-reply "Not now; I'll run it in Thursday's maintenance window." It goes to Open,
-unexecuted, and Last seen moves to D4.
+You see only what changed since you last looked, and Last seen moves to D4. There are no
+recall questions unless you ask for them.
 
-## 5. `/fu-debrief` (1 minute)
+## 5. The completion report is the Debrief (1 minute)
 
-```
-/fu-debrief
-```
-
-A fresh context (`mechanism-auditor`) receives the frozen card and the artifact paths,
-not the build transcript. Your prediction is graded first:
+When the work is done, the completion report is the Debrief. You asked for a fresh grade
+when you approved the Brief, so `mechanism-auditor` grades from the frozen card and the
+artifacts; it never sees the transcript or the builder's claims. Evidence comes first,
+then your prediction:
 
 ```
-Evidence: `pytest tests/test_export_resume.py -q` → 3 passed · `bench/resume.sh` →
-  9:41, 9:22, 9:58
-Graded by: fresh context.
-
-| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
-|----|---------------------|----------|-------------|------------------|
-| P1 | "resuming at the halfway point takes about half of today's 6 min" | 9 min 40 s, 3 runs ±20 s; full-run checksum unchanged | inconsistent; should-not-change half held | each batch is its own query and sorts the table [verified: with the index, 3 min 05 s] |
-| A1 | "created_at repeats across batch boundaries" | at 37 of 499 boundaries | consistent | one timestamp per import [supported] |
-
-Why P1 missed: today's job reads the table once, through one cursor. A resumable job
-asks "rows after this key" for every batch; with no index matching the sort, each of
-the 250 remaining queries scans and sorts all 5M rows. Resuming skips batches, but each
-batch became far more expensive.
-
-Did NOT prove: a crash between a batch write and its checkpoint; the resume test was
-  written in the same context as the code
-Not checked: the production row count and its existing indexes
-Model changes: you expected resume ≈ half a full run → without the index it is slower
-  than a full run, because each batch re-sorts the table [shown, not confirmed]
-Bottom line: resume is correct (no duplicates or gaps in 3 kill tests) and slow until
-  the index exists.
-Needs you: the production index (Open) (recommendation: run it in Thursday's maintenance window)
+Evidence:
+  - `pytest tests/test_export_resume.py -q` → 3 passed
+  - `bench/resume.sh` → 9:41, 9:22, 9:58
+P1 (you · medium) "a full run is about 6 minutes, so resuming from halfway takes roughly 3"
+  - measured: 9 min 40 s over 3 runs, ±20 s (logs/resume.txt)
+  - consistent?: inconsistent
+  - mechanism: each batch is a separate query that sorts the table, since no index matches the sort [verified]
+A1 (agent · medium) "created_at repeats across batch boundaries, because the importer stamps a whole import with one time"
+  - consistent?: consistent
+Integrity:
+  - Brief vs freeze: unchanged
+  - Check files: unchanged
+  - Unlogged hunks: none
+Did NOT prove:
+  - C1 kill tests → leaves open: a crash between a batch write and its checkpoint · still holds: no duplicates or gaps at 3 boundaries
+Not checked:
+  - the production row count and its existing indexes
+Model changes:
+  - You expected resuming from halfway to take half a full run → without an index it is slower than a full run, because each batch re-sorts the table [shown, not confirmed]
+Bottom line:
+  - holds: the checkpoint needs the id as well as created_at (A1)
+  - did not hold: resuming from halfway is faster than a full run (P1)
+  - stops at: the fixture; nothing ran on production
+Needs you: the production index (recommendation: run it in Thursday's maintenance window; settles whether resume is fast in production)
 ```
 
-Read the table as Theory → Measured → Consistent? → Mechanism: P1 is inconsistent and A1
-consistent; their mechanisms are tagged verified and supported. The explanation sits on
-the row that missed, not in a lecture up front. Each graded
-prediction adds one line to your personal prediction log, and the card is committed
-again. Say the model change back in your own words and it becomes `confirmed`.
+Consistent rows are one line; the explanation sits on the row that missed. Because you
+asked to learn, the miss also gets a short why with one example: today's job reads the
+table once through one cursor, while a resumable job asks "rows after this key" for each
+of the 250 remaining batches, and with no index matching the sort, each of those queries
+sorts all 5M rows.
+
+`fu integrity` wrote the three Integrity lines; `fu log` added one line per graded
+prediction to your local prediction log; `fu freeze` committed the card again. Say the
+model change back in your own words and it becomes `confirmed`. `/fu-view` (or the view
+you accepted at the Brief) renders the same card as a page.
 
 ## When not to use it
 
 Typos and one-liners get no card and no question. A task with nothing honestly
-predictable gets a card that says "No real prediction here; contract only".
+predictable gets a card that says so; "no real prediction here" is a valid answer.
 
 ## Next
 
 [README](../README.md) · [Glossary](GLOSSARY.md) · [Architecture](ARCHITECTURE.md) ·
-[EXAMPLES.md](../EXAMPLES.md) (copy-paste prompts) · [5.0 design](design/5.0.md)
+[EXAMPLES.md](../EXAMPLES.md) (copy-paste prompts) · [5.2 design](design/5.2.md)

@@ -4,9 +4,104 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [5.2.0] - unreleased
+
+A rebuild of the plugin as four thin layers, sized by what Stage 0 measured: the
+always-on text, a guard hook and a deterministic script, the card skill with its commands,
+and one auditor used narrowly. Design (accepted 2026-11-12, with the owner's decisions in
+its header): [docs/design/5.2.md](docs/design/5.2.md); the script's contract:
+[docs/design/fu-cli.md](docs/design/fu-cli.md).
+
+- **Version history.** 5.0 was evaluated (Stage 0) and 5.1 was reviewed; neither was
+  released. The tag `eval/stage0-v5` marks the plugin Stage 0 evaluated. The number
+  5.2.0 keeps the eval record unambiguous.
+- **Not evaluated.** 5.2 has not been evaluated. The recommended setup remains the
+  56-word `CLAUDE.md`, which Stage 0 measured; the Tier 1 check (design §8) comes before
+  any claim.
 
 ### Added
+- **The `fu` script** (`scripts/fu.py`, Python standard library, no network). It does
+  everything deterministic, so the model no longer does it by hand:
+  - `init`: creates `.finding-unknowns/` and `profile.md`, and prints the `.gitignore`
+    lines once;
+  - `lint`: the card schema in `references/card.md` (closed values, reserved `P`/`A` IDs,
+    quoted person predictions, the Debrief and its bottom line, strict caps) and a FAIL
+    for a contract check that would run an `Irreversible:` command;
+  - `freeze`: commits the card at `brief`, `stop`, `resume` and `debrief`, owns `State`
+    and `Timing`, never uses `--no-verify`, and falls back to `self-reported`;
+  - `integrity`: three lines (Brief against its freeze commit, check files, unlogged
+    hunks);
+  - `log`: the prediction log and a calibration line from five graded predictions;
+  - `list`: open cards as nested lists in the terminal;
+  - `render`: the HTML view (decision first, then a one-row strip of what happened in
+    order) and a task-list page with a calibration stat line; fixed templates, everything
+    escaped, no script, a CSP.
+  - An optional `bin/fu` wrapper for `PATH`.
+- **The guard hook** (`hooks/hooks.json`, plugin install only):
+  - `PreToolUse` on Bash asks (`ask`) before a command that matches an open card's
+    `Irreversible:` line;
+  - `PostToolUse` and `PostToolUseFailure` record each run, so a second attempt asks
+    again with "already ran once";
+  - generic destructive patterns are logged as hashes and ask only under the strict
+    profile.
+  - It is advisory: it never denies and fails open. Hard enforcement is a Claude Code
+    `permissions.ask` rule in user or managed settings. `guard: off | log | ask` in
+    `profile.md`. Not yet verified: `ask` under bypass-permissions mode, and one live run.
+- **Strict profile** for small models (`strict: yes`, `fu init --strict`): template only,
+  lint caps that must pass before the Brief-approval ask, destructive commands ask.
+  Untested.
+- **`decisions.md`:** answers only the person could give, quoted and dated, read before
+  every Brief so they are never asked again.
+- **HTML view and `/fu-view`:** offered as one clause inside the Brief-approval ask for a
+  complex task; the answer is remembered.
+- **`CLAUDE.next.md`:** an 82-word candidate for the always-on text. Untested; it replaces
+  `CLAUDE.md` only after the Tier 1 check.
+- **Tier 0 tests** (`tests/`, run in CI): lint on fixture cards (the real small-model
+  card must fail), renderer output, guard replay on recorded hook JSON. `validate.py`
+  enforces the word budgets and pins `CLAUDE.md`.
+
+### Changed
+- **Questions:** one batch, only what only the person can decide, each with a recommended
+  answer worded so "yes" accepts it. The prediction ask carries no recommendation.
+- **The person's prediction** is quoted verbatim or recorded as `P: none given`; the
+  agent never writes it.
+- **The irreversible step:** the exact command goes on a Brief `Irreversible:` line; its
+  checks are dry runs; it runs once. With the guard, the permission prompt is the yes;
+  without it, only a chat yes to that exact command.
+- **The completion report is the Debrief;** `/fu-debrief` is for late results and
+  re-grades. This removes the turn in which most of 5.0's post-build interruptions fell.
+- **The card format:** lines with fixed keys in a fixed order and nested lists, no tables.
+  Deltas live only in `{slug}.deltas.md`, with times; a `decided-for-you` delta states its
+  cost if wrong; `Needs you` exists once, in the header.
+- **The Debrief:** the bottom line is `holds · did not hold · stops at`; the verb matches
+  the mechanism tier; `Did NOT prove` names what each check leaves open and what still
+  holds.
+- **`mechanism-auditor`** is used only for an irreversible-lane card, a measured result,
+  or on request, and never receives the builder's claims.
+- **A checkable dead-premise trigger:** two failed fixes that share an assumption are
+  logged and the assumption tested; a third failure is the stop.
+- **Learn mode** is on request only: a short why with one example on missed rows, until
+  the person predicts that behaviour. Recall questions only on request.
+- **Word budgets:** `SKILL.md` at most 700 words, the commands 450 together, the auditor
+  500. Plugin runtime text falls from about 23,700 words to about 3,800.
+- **`install.sh`** also installs `fu.py`, installs no hook, moves a same-named file that is
+  not its own to `{file}.bak.{timestamp}`, and lists unmarked 4.x leftovers instead of
+  deleting them.
+- **`CLAUDE.md`** is the 56 words Stage 0 measured, pinned verbatim.
+- **Docs:** the README leads with the 56 words and what the evals showed, then the plugin;
+  the tutorial, architecture, glossary and examples follow 5.2. Six diagrams per language
+  redrawn, and a screenshot of the HTML view added.
+
+### Removed (kept on branch `v4`, the classic line)
+- **Structured mode:** `/fu-brief --structured`, `/fu-cartographer`, and
+  `references/structured.md`, `cartographer.md` and `handoff-full.md`.
+- **Agents:** `blindspot-scout`, `ledger-keeper`, `prototype-smith` and `quiz-master`.
+- **The SessionStart hook** in `extras/`, which failed its pre-registered rule.
+- **The 457-word passive `CLAUDE.md`** of 5.0, replaced by the measured 56 words.
+- **`references/results-examples.md`,** moved to `docs/results-examples.md`.
+- **The quadrant and Cartographer diagrams.**
+
+### Records added (also on `main`)
 - `docs/design/5.0.md`: the proposed 5.0 design. The plugin is rebuilt around one task
   card per task (`/brief`, `/catch-up`, `/debrief`, renamed `/fu-brief`, `/fu-catch-up`,
   `/fu-debrief` in 5.0.0): predictions frozen before the work,
@@ -47,11 +142,40 @@ All notable changes to this project are documented in this file. The format is b
   evals found no replicated gain from installing the skills, the costs, the one narrow recurring effect, and that
   the human side is untested. The roadmap adds a human-side eval.
 
-## [5.0.0] - unreleased (pending the Stage 0 evaluation)
+## 5.1 - never released (reviewed after Stage 0)
+
+Commit `fe62793` on branch `v5`: fixes for the interruptions Stage 0 found, reviewed
+and never evaluated or released. Superseded by 5.2.0.
+
+- no mode question: ship mode by default, learn mode only when the person asks;
+- no questions about committing the person's code: it is left uncommitted, and the
+  report says so;
+- once the build starts, every turn ends with a completion report or a request at
+  one of the four stop-points, never an optional question or a menu;
+- recall questions at `/fu-catch-up` only in learn mode;
+- the Debrief ends with the bottom line and "Needs you: X (recommendation: Y)", stated,
+  not asked;
+- the first look at the repository is silent and read-only, and nothing from it is
+  shown before the person's prediction;
+- before the build, at most three questions in the first message plus one follow-up
+  round after the sweep; offers and decisions are bundled into those or into the
+  single Brief-approval ask;
+- `/fu-catch-up` and `/fu-debrief` take the most recently changed open card and say
+  which in one line, without asking;
+- the card records `Structured: no | yes | cartographer`; with structured mode the
+  Debrief uses the full packet.
+
+Stage 0 (`docs/evals/2026-11-11-stage0` on `main`) selected branch 2, so 5.0 was not
+released. The re-test planned for 5.1 (Stage 0b) was replaced by the 5.2 design and its
+Tier 1 check.
+
+## [5.0.0] - never released (evaluated in Stage 0)
 
 A rebuild around the person's side of the work. Design, advisor reviews and the
-evaluation plan: [docs/design/5.0.md](docs/design/5.0.md). Whether 5.0 helps people is
-not yet tested.
+evaluation plan: [docs/design/5.0.md](docs/design/5.0.md). Stage 0 (on `main`) evaluated
+this version at commit `19ebd85`, now tagged `eval/stage0-v5`: it did not beat no setup
+and scored well below the 56-word `CLAUDE.md`, so by the pre-registered rule it was not
+released. Superseded by 5.2.0.
 
 ### Added
 - **The task card** (`.finding-unknowns/tasks/{slug}.md`):
@@ -103,28 +227,6 @@ not yet tested.
   the `/cartographer` command becomes `/fu-cartographer`.
 - **Docs:** the README is rewritten around the card and keeps its explanatory
   sections.
-- **Fewer interruptions (v5.1, after Stage 0):**
-  - no mode question: ship mode by default, learn mode only when the person asks;
-  - no questions about committing the person's code: it is left uncommitted, and the
-    report says so;
-  - once the build starts, every turn ends with a completion report or a request at
-    one of the four stop-points, never an optional question or a menu;
-  - recall questions at `/fu-catch-up` only in learn mode;
-  - the Debrief ends with the bottom line and "Needs you: X (recommendation: Y)", stated,
-    not asked;
-  - the first look at the repository is silent and read-only, and nothing from it is
-    shown before the person's prediction;
-  - before the build, at most three questions in the first message plus one follow-up
-    round after the sweep; offers and decisions are bundled into those or into the
-    single Brief-approval ask;
-  - `/fu-catch-up` and `/fu-debrief` take the most recently changed open card and say
-    which in one line, without asking;
-  - the card records `Structured: no | yes | cartographer`; with structured mode the
-    Debrief uses the full packet.
-
-  Stage 0 (`docs/evals/2026-11-11-stage0` on `main`) selected branch 2, so v5 is not
-  released; v5.1 is to be re-tested on a fresh task pack (Stage 0b).
-
 ### Removed
 - **Workflow execution:** `references/workflows.md` and `tests/workflows/`.
 - **Skills:** `keep-the-reasoning` and `theory-vs-result` as separate skills.
@@ -826,7 +928,8 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
-[5.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/compare/v4.3.2...v5
+[5.2.0]: https://github.com/baizhiyuan/finding-unknowns-skill/compare/v4.3.2...v5
+[5.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/tree/eval/stage0-v5
 [4.3.2]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.2
 [4.3.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.1
 [4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0

@@ -1,31 +1,159 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v5.0.0: one task card per task. You predict first; the agent builds quietly and stops only at four points; a fresh context grades the predictions." width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v5.2.0: you predict first, the agent builds quietly and stops only at four points, and the completion report grades every prediction." width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-5.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 5.0.0">
+  <img src="https://img.shields.io/badge/version-5.2.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 5.2.0">
   <img src="https://img.shields.io/badge/skills-1-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="1 skill">
-  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 agents">
+  <img src="https://img.shields.io/badge/agents-1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="1 agent">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
 </p>
 
-<p align="center"><strong>Stay the owner of work an agent does for you: know what is being done, predict what should happen, and see where reality differed.</strong></p>
+<p align="center"><strong>Stay the owner of work an agent does for you: say what you expect before it starts, and see afterwards where reality differed.</strong></p>
 
 <p align="center">
-  <a href="#quick-start">Get started</a> ·
-  <a href="#how-it-works">How it works</a> ·
-  <a href="#commands">Commands</a> ·
+  <a href="#recommended-setup-56-words">Setup</a> ·
+  <a href="#what-the-evals-showed">Evals</a> ·
+  <a href="#the-plugin">Plugin</a> ·
+  <a href="#task-card-and-views">Card and views</a> ·
   <a href="#documentation">Docs</a> ·
   <a href="README.zh.md">中文</a>
 </p>
 
 ---
 
-## Quick Start
+## What it is
 
-Install from the plugin marketplace. These are Claude Code slash commands; enter them
-**one at a time**:
+finding-unknowns is a way of working with a coding agent. Before the work, you predict
+the outcome and the agent gives its own prediction; both are written down with what would
+prove them wrong. During the work, the agent stops only for an irreversible step, a scope
+change, a falsified premise or a budget overrun, and logs everything else. Afterwards,
+each prediction is graded against the evidence, and the report says what each check did
+not prove. It comes in two sizes: 56 words for your `CLAUDE.md`, which is the measured
+setup, and a Claude Code plugin that keeps one task card per task across sessions. The
+plugin (5.2) has not been evaluated, and neither form has been tested for whether it
+helps people understand their work.
+
+---
+
+## Recommended setup: 56 words
+
+Append [`CLAUDE.md`](CLAUDE.md) to your user-level `~/.claude/CLAUDE.md`, where it was
+tested, or to a project's `CLAUDE.md`. Append; do not overwrite your file.
+
+```bash
+printf '\n' >> ~/.claude/CLAUDE.md
+curl -fsSL https://raw.githubusercontent.com/baizhiyuan/finding-unknowns-skill/main/CLAUDE.md >> ~/.claude/CLAUDE.md
+```
+
+The whole text:
+
+> Before building, ask me to predict the outcome, then give yours; write both, with what
+> would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for
+> irreversible steps, scope changes, a falsified premise or a budget overrun; log other
+> deviations there. Afterwards, grade each prediction against the evidence and say what
+> each check did not prove.
+
+There are no commands to learn. Start a task as usual; the assistant asks for your
+prediction first. This exact text is what Stage 0 measured (the report calls it "w60",
+the 60 words). It is pinned in this repository and changes only after a new check.
+
+[`CLAUDE.next.md`](CLAUDE.next.md) is an 82-word candidate that targets the three holes
+Stage 0 found: it skips trivial work, asks once for the decisions only you can make, and
+spells out the irreversible step (exact command, your yes, one run, never as a check).
+**It is untested.** It replaces the 56 words only if the Tier 1 check in the
+[5.2 design](docs/design/5.2.md#8-light-validation) shows that it fixes those holes
+without losing what the 56 words do well.
+
+---
+
+## What the evals showed
+
+### Stage 0: simulated users
+
+The [Stage 0 report](https://github.com/baizhiyuan/finding-unknowns-skill/blob/main/docs/evals/2026-11-11-stage0/README.md)
+(on `main`; pre-registered) ran Claude Sonnet 5.5 in Claude Code with a simulated user
+(gpt-6.1-sol) on six multi-turn build tasks and two controls. The user held one wrong
+belief and two unstated requirements. Three arms, three run-sets each, 84 runs, two
+graders.
+
+| | no setup | 56 words | 5.0 plugin |
+|---|---|---|---|
+| Composite, of 42 (noise 3.0) | 20.5 | **31.0** | 21.0 |
+| Wrong belief named before the first edit (M1) | 0.11 | 0.94 | 1.00 |
+| No interruption after the build started, outside the four stop-points (M4) | 0.78 | 0.92 | 0.11 |
+| Irreversible step only after a yes for that command, run once (M5, secondary) | 0.06 | 0.11 | **0.78** |
+| Cost per build task (USD) | 0.10 | 0.18 | 3.72 |
+| Assistant turns per run | 1.4 | 2.2 | 10.8 |
+
+- **The 56 words beat no setup by 10.5 points**, at $0.08 more per task.
+- **The 5.0 plugin did not beat no setup** (+0.5, inside the noise) and scored 10 points
+  below the 56 words, at about 21 times their cost. Its own procedures added questions:
+  a mode question, commit questions, recall questions in the next session, and menus
+  after the debrief.
+- **The plugin's one clear win was the irreversible step:** it waited for a yes and ran
+  the command once in 0.78 of runs; the 56 words did so in 0.11.
+- **The 56 words also asked for a prediction before fixing a typo** (3 of 3 control runs).
+- **Scope:** one subject model, one simulated user, tasks written by a model. Nothing
+  here measures a real person's understanding; that is Stage 1, not yet run.
+
+By the pre-registered rule, the plugin was not released. The tag
+[`eval/stage0-v5`](https://github.com/baizhiyuan/finding-unknowns-skill/tree/eval/stage0-v5)
+marks the exact plugin that was evaluated.
+
+### Earlier evals
+
+Three earlier pre-registered evaluations ([docs/evals](docs/evals/)) tested the 4.x skills
+as a boost to model output on single-turn tasks with planted traps. No gain survived
+replication (baselines already caught 22 to 23 of 25 traps), and the skills cost roughly
+10 % to 70 % more input tokens or USD.
+
+### What 5.2 changed in response
+
+5.2 is a rebuild of the plugin sized by those numbers
+([design](docs/design/5.2.md)):
+
+- **Fewer turns.** No mode question, no commit question, recall questions only on
+  request; the completion report *is* the Debrief, so there is no separate debrief turn;
+  questions come once, in one batch, each with a recommended answer.
+- **The irreversible step moved into code.** The command is named on the card; a guard
+  hook asks before it runs and flags a second run; a lint rule rejects a contract check
+  that would re-run it.
+- **Bookkeeping moved into a script.** Freezing, integrity checks, lint, the prediction
+  log, lists and the HTML view are done by `fu`, a stdlib Python script, not by the model.
+- **Less to load.** Structured mode, Cartographer and four of the five agents were cut
+  (they stay on branch `v4`). The grader is used only where it matters most.
+- **The person's words stay theirs.** The agent never writes a prediction on your behalf;
+  if you give none, the card says `P: none given`.
+
+**5.2 itself has not been evaluated.** The design's target (at most four of your turns
+and under about $0.60 for a task without an irreversible step) is a guess to check, not
+a result. Until the Tier 1 check runs, the 56 words remain the recommendation.
+
+---
+
+## The plugin
+
+### When to use it
+
+Use the plugin when the 56 words are not enough:
+
+- **Work that spans sessions.** The card is a file; the plan, the predictions and what
+  happened survive a restart, and `/fu-catch-up` shows only what changed.
+- **An irreversible step.** Publishing, a production migration, deleting data, sending
+  money. The card names the exact command, and the guard hook asks before it runs.
+- **Predictions you want graded.** Your predictions are frozen in a git commit before the
+  work, graded afterwards, and logged so you can see your own calibration over time.
+- **Measured results.** Benchmarks, backtests, A/B tests and training runs, with a
+  stopping rule and a noise floor (`references/results.md`).
+
+For a typo or a one-liner, use neither the card nor the commands.
+
+### Install and update
+
+From the plugin marketplace. These are Claude Code slash commands; enter them **one at a
+time**:
 
 ```
 /plugin marketplace add baizhiyuan/finding-unknowns-skill
@@ -35,31 +163,23 @@ Install from the plugin marketplace. These are Claude Code slash commands; enter
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-Or clone and run `install.sh`, which installs the skill, its references, the five agents
-and the four commands:
+The plugin brings the skill, four commands, one agent, the `fu` script and the guard
+hook. It needs `python3` (3.8 or later, standard library only) for the script and the
+hook; without it, the card still works, with Timing `self-reported` and no lint or
+integrity check.
+
+`install.sh` copies the skill, the commands, the agent and the script into
+`~/.claude/`, **without the guard hook** (hooks ship with the plugin only). With that
+install, an irreversible step runs only after your chat yes to the exact command.
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
-cd finding-unknowns-skill && bash install.sh
+cd finding-unknowns-skill && git checkout v5 && bash install.sh
 ```
 
-No install at all? Copy [`CLAUDE.md`](CLAUDE.md) into a project root for the short,
-always-on version.
-
-**First use:**
-
-```
-/fu-brief "make the export job resumable"   # you predict, territory checked, agent predicts; frozen on your yes
-/fu-catch-up                                # next session: what changed (recall first in learn mode)
-/fu-debrief                                 # predictions graded; what changes in your model
-```
-
-The [5-minute tutorial](docs/TUTORIAL.md) walks through one card from brief to debrief.
-
-### Updating
-
-Next release: **v5.0.0**, pending the Stage 0 evaluation. The current release is v4.3.2.
-Update the same way you installed:
+Next release: **v5.2.0**. It is not released yet: until it is, the marketplace serves
+v4.3.2, and 5.2 is available only from branch `v5` through `install.sh` as above. Update
+the way you installed:
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -70,262 +190,272 @@ Update the same way you installed:
 ```
 
 <details>
-<summary><b>Clone, upgrading from 4.x, and version check</b></summary>
+<summary><b>Upgrading from 4.x or 5.0, and version check</b></summary>
 
-`install.sh` overwrites in place and removes 4.x files it recognises as its own (the
-Workflow reference `workflows.md`, the separate keep-the-reasoning and theory-vs-result
-skills, the old commands):
-
-```bash
-cd finding-unknowns-skill && git pull origin main && bash install.sh
-```
-
-4.x remains available from the `v4.3.2` tag. For what moved where, see
-[design §11](docs/design/5.0.md#11-migration-for-4x-users).
+`install.sh` moves a same-named file that is not its own to `{file}.bak.{timestamp}`; it
+never deletes. It sets aside earlier files that carry its marker and lists unmarked 4.x
+leftovers (old commands and agents) for you to remove by hand.
 
 ```bash
 grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unknowns/*/.claude-plugin/plugin.json 2>/dev/null \
-  || ls ~/.claude/skills/finding-unknowns/references/card.md
-# expect: 5.0.0 (plugin) — or the card reference listed
+  || ls ~/.claude/scripts/fu.py
+# expect: 5.2.0 (plugin) — or the script listed (install.sh)
 ```
 
 </details>
 
----
+### Commands
 
-## Why finding-unknowns?
+```
+/fu-brief "make the export job resumable"   # you predict; the agent predicts; frozen on your yes
+/fu-catch-up                                # next session: only what changed, and what needs you
+/fu-debrief                                 # late results or a re-grade
+/fu-view                                    # the card, or the task list, as a local HTML page
+```
 
-When an agent does the work, it is easy to stop knowing what happened. You approve a
-diff you skimmed, a long task drifts from what you meant, and the result becomes yours
-without your judgement in it. Addy Osmani calls this slide **offloading → deferral →
-cognitive surrender**. The term *cognitive surrender* comes from Shaw & Nave, _Thinking—Fast,
-Slow, and Artificial_ (SSRN 6097646); Margaret-Anne Storey writes about the related
-*cognitive debt*.
+| Command | What it does |
+|---|---|
+| `/fu-brief <task>` | Reads the repository silently, then asks once: your prediction (with no suggested answer) and up to two decisions only you can make, each with a recommendation. Writes the Brief, shows it in full, and freezes it on your yes |
+| `/fu-catch-up [slug]` | The named card, else the most recently changed open one: what changed since you last looked, and `Needs you` |
+| `/fu-debrief [slug]` | Grades the card again when results arrive late or you ask for a re-grade. The usual Debrief is the completion report itself |
+| `/fu-view [slug \| --list]` | Renders the card, or the list of cards, with `fu render` |
 
-This plugin keeps one **task card** per task, shared by you and the agent:
+Saying "brief me", "catch me up" or "did it match what we expected" works too. In
+non-interactive `claude -p`, use the full names (`/finding-unknowns:fu-brief`).
 
-- **Before the work,** you write down what you expect. The agent then maps the territory
-  and only after that gives its own prediction. Your prediction is recorded before you see the
-  agent's.
-- **During the work,** the agent stops only at four checkable points. Everything else
-  goes on the card, for you to read when you choose.
-- **After the work,** a context that did not do the work grades every prediction. You see
-  which ones held, what the checks did not prove, and what changes in your own picture.
+### How a carded task runs
 
-The card is a file, so it survives sessions. That matters most for long tasks and for
-research, where results arrive over days.
+<p align="center"><img src="assets/lifecycle.svg" alt="A carded task: the Brief before the build, a quiet build with four stop-points, and a completion report that is the Debrief; catch-up when you come back" width="100%"></p>
 
-> **Attribution.** The discovery techniques come from Thariq Shihipar's _"A Field Guide
-> to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
-> The handoff, including "what the checks did not prove", comes from Addy Osmani's
-> _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
-> Theory → Measured → Consistent? → Mechanism is the author's own research practice.
+1. **Brief.** You predict first, in your own words; the agent then reads what it needs and
+   gives its own prediction. It writes the approach, both predictions, the stop-points,
+   any irreversible command, and a contract of checks that can fail. You approve once;
+   `fu freeze` commits the Brief, so git shows the predictions came first.
+2. **Quiet build.** The agent stops only at the four stop-points. Everything else takes
+   the most reversible option and becomes one line in the deltas file; a decision made for
+   you states what it costs if wrong. Every turn ends with a completion report or a stop,
+   never an optional question or a menu.
+3. **Completion report = Debrief.** Evidence first, every prediction graded (yours first),
+   what the checks did not prove, what nobody checked, and one line on what needs you.
 
-### What the evals show
+### Four layers
 
-Three blinded, pre-registered evaluations ([docs/evals](docs/evals/)) asked whether the
-4.x skills made current models catch more planted traps on single-turn tasks:
+<p align="center"><img src="assets/framework.svg" alt="Four layers: always-on text; the guard hook and the fu script; the card skill and commands; one auditor. All files under .finding-unknowns/" width="100%"></p>
 
-- **No gain survived replication.** Baselines already caught 22–23 of 25 traps.
-- **A measurable cost:** roughly +10 % to +70 % in input tokens or USD, longer answers,
-  and, for Sonnet, more small false claims.
-- **One narrow effect, Sonnet only:** when keep-the-reasoning ran on the merge question,
-  Sonnet named that "the tests pass" rested on one self-updated snapshot test in 4 of 5
-  runs, against 1 of 12 without it. This was found after the fact, so it is a lead, not a
-  result.
+| Layer | What it is | Cost to the model |
+|---|---|---|
+| Always-on text | The 56 words in `CLAUDE.md` | about 75 tokens per session |
+| Guard hook + `fu` script | Deterministic work: the irreversible-command prompt, lint, freeze, integrity, log, list, render | none to carry; one short call each |
+| Card skill + commands | `SKILL.md` (≤ 700 words) and five references loaded per phase; four thin commands | loaded only when you start a card |
+| One auditor | `mechanism-auditor`, a fresh-context grader | called only for an irreversible-lane card, a measured result, or on request |
 
-5.0 was rebuilt around the side those evals never measured: **your** understanding and
-decisions ([design](docs/design/5.0.md)). Whether it helps people is **not yet tested**.
-A simulated-user evaluation with a pre-registered kill rule decides whether 5.0 is
-released at all; a study with real participants follows. Until then, treat this as a
-way of working, not a measured improvement.
-
----
-
-## How it works
-
-<p align="center"><img src="assets/lifecycle.svg" alt="Three moments around one task card: brief before the build, a quiet build, a debrief after, and catch-up when you come back" width="100%"></p>
-
-`/fu-brief` freezes the card, the build stops only at the four stop-points, `/fu-catch-up`
-re-orients you in a new session, and `/fu-debrief` grades the frozen predictions.
-
-### Architecture
-
-<p align="center"><img src="assets/framework.svg" alt="Commands, the skill and its references, five agents, the files on disk, and the principles" width="100%"></p>
-
-Four commands enter one skill. `SKILL.md` holds only what every moment needs (the card,
-the stop-points, the always-on rules); everything else is a reference file loaded when its
-moment comes. Structured mode is a separate layer that is never loaded unless you ask.
-
-### The four kinds of unknowns
-
-<p align="center"><img src="assets/quadrants.svg" alt="The four quadrants of unknowns and the instrument for each" width="100%"></p>
-
-The Brief starts with your prediction. The agent then works out what kind of gap
-remains, because each kind needs a different instrument:
-
-- **Known knowns** are in your request; the risk is that they stay implicit, so they are
-  written down.
-- **Known unknowns** are questions you can name; the agent asks them, architecture first,
-  and never asks what the code already answers.
-- **Unknown knowns** are taste you will recognise but cannot specify; a few genuinely
-  different directions, or a reference implementation, turn it into criteria.
-- **Unknown unknowns** are blind spots; a read-only blind-spot pass looks for landmines,
-  hidden constraints and the questions an expert would ask.
-
-### The task card
-
-<p align="center"><img src="assets/card.svg" alt="Anatomy of a task card: header, frozen Brief, Amendments, Deltas, Model changes, Open, Debrief" width="100%"></p>
-
-`.finding-unknowns/tasks/{slug}.md`, committed to git by default so the commit shows the
-predictions came before the results. It holds:
-
-- a header with the goal, the state and the next decision that needs you;
-- the **frozen Brief:** approach and why, your predictions and the agent's (each with a
-  falsifier and something that should not change), the stop-points, and the contract
-  (each check, and what it does **not** prove);
-- **Amendments:** dated and append-only. The Brief is never edited, and every original
-  prediction is still graded;
-- **Deltas:** one line per deviation, surprise or decision made on your behalf;
-- **Model changes:** "you expected X, it is Y, because Z";
-- **Open** items, then the **Debrief**.
-
-Predictions are about things the agent does not control: where the bug is, how many
-callers break, a benchmark number. "Tests will pass" is a contract check, not a
-prediction. Many tasks honestly have no prediction; the card then says so.
+Without the auditor, the Debrief is graded in the same context and says so
+(`same-context — weaker`).
 
 ### Four stop-points
 
-<p align="center"><img src="assets/stop-points.svg" alt="The four stop-points and what happens at each; everything else is logged and work continues" width="100%"></p>
+<p align="center"><img src="assets/stop-points.svg" alt="The four stop-points; the irreversible step names its exact command, the guard hook asks, it runs once and its checks are dry runs; everything else is logged" width="100%"></p>
 
-The agent stops for you only when one of these holds:
+1. **Irreversible step:** data rewritten or dropped, deletion, production, money,
+   publication, commitments to people. The exact command is on the Brief's
+   `Irreversible:` line; it runs once; its contract checks are dry runs. With the guard
+   hook, the permission prompt is the stop and your answer is the yes. Without it, the
+   agent stops and only a chat yes to that exact command runs it ("go ahead" is not one).
+2. **Scope change** outside the Brief.
+3. **Dead premise:** a premise or a falsifier fired and no reversible path remains. Two
+   failed fixes that share an assumption mean the assumption is logged and tested; a third
+   failure is this stop.
+4. **Budget** past the multiple agreed in the Brief.
 
-1. **Irreversible action:** deleting or rewriting data, production, money, publishing,
-   commitments to people. The agent prepares the exact command; you run it or say yes to
-   that command.
-2. **Scope change.**
-3. **A premise died** and no reversible path is left.
-4. **Budget:** an overrun past the multiple you agreed.
+### The guard hook
 
-Everything else takes the most reversible option and is logged on the card.
+A `PreToolUse` hook on Bash, shipped with the plugin. When a command matches an
+`Irreversible:` line on an open card, it returns `ask`: Claude Code shows its native
+permission prompt with the exact command and the card. After the command has run, a
+second attempt asks again with "already ran once at {time}; a post-check must not
+re-execute it". Generic destructive patterns (`rm -rf`, force-push, `reset --hard`,
+`DROP TABLE`) are only logged, as hashes, unless the strict profile is on.
 
-### Debrief
+- **Advisory.** It asks; it never denies. It fails open: any error, no card or no match,
+  and it does nothing. A command run through another host (`ssh host '…'`) is not read.
+- **Hard enforcement** is Claude Code's own permission system: an `ask` rule for the exact
+  command in user or managed settings, which the agent cannot edit, for example
+  `{"permissions": {"ask": ["Bash(python publish.py build/quotes.json)"]}}`.
+- **Modes:** `guard: off | log | ask` in `.finding-unknowns/profile.md`. The default is
+  `ask` with the plugin, `off` with `install.sh`.
+- **Not yet verified:** how `ask` behaves under bypass-permissions mode, and a live run.
+  Under `claude -p`, where no one can answer, Claude Code denies the call and the agent
+  reads the reason.
 
-<p align="center"><img src="assets/debrief.svg" alt="Debrief: the slide toward cognitive surrender, who grades, and the seven parts in order, evidence first and the bottom line last" width="100%"></p>
+### Completion report = Debrief
 
-- **Predictions quoted, not restated:** each is quoted by ID from the frozen card.
-- **Graded by a fresh context:** `mechanism-auditor` sees the card and the artifacts, not
-  the build transcript, and grades your predictions first.
-- **Explanation where it was wrong:** the explanation goes on the rows that missed.
-- **Evidence first:** the commands that ran and their output, what each check did not
-  prove, and what nobody checked.
-- **Ends with the bottom line:** the last line states `Needs you: X (recommendation: Y)`,
-  not a question; `Needs you: nothing` when nothing is pending.
-- **One screen by default**, with more detail on request.
+<p align="center"><img src="assets/debrief.svg" alt="The Debrief in order: evidence, predictions graded with yours first, integrity, what the checks did not prove, not checked, model changes, bottom line, needs you" width="100%"></p>
+
+When carded work completes, the report you get is the Debrief. It runs in this order:
+
+- **Evidence:** the commands that ran and their output, before any prose.
+- **Every prediction, quoted from the frozen card, yours first,** with what was measured,
+  a verdict (`consistent · partly · inconsistent · can't tell · post-hoc fit`) and a
+  mechanism tagged `verified · supported · inferred · untested`. The verb never claims
+  more than the tier.
+- **Integrity:** three lines from `fu integrity`: the Brief against its freeze commit, the
+  check files, and changes no delta explains.
+- **Did NOT prove** for each check, and **Not checked**, which is never empty.
+- **Bottom line:** what holds, what did not hold, where the evidence stops.
+- **Needs you:** one decision with a recommendation, stated, not asked.
+
+**Who grades.** For a card with an irreversible step, a measured result, or on your
+request, `mechanism-auditor` grades from the frozen card and the artifacts. It never sees
+the transcript or the builder's claims. Otherwise the Debrief is graded in the same
+context and labelled `same-context — weaker`. In Stage 0 the plugin, grader included,
+reported a missed expectation less often than the 56 words (0.50 against 0.83), so the
+grader is now used narrowly.
 
 ### Measured results
 
 Benchmarks, backtests, A/B tests and training runs use **Theory → Measured → Consistent?
-→ Mechanism**:
+→ Mechanism**, from the author's research practice:
 
-- **Prediction:** written before the data, with a stopping rule and a noise floor
-  measured from at least three reruns.
-- **Run table:** results arriving over days go into a run table; no verdict until the
-  stopping rule is met.
-- **Two verdicts:** the rule verdict is mechanical; the verdict on whether the idea is
-  alive is yours.
-
-### Learning
-
-- **You predict first:** one skippable question in `ship` mode (the default; you are
-  never asked to pick), up to three in `learn` mode, which you turn on by asking for it.
-- **Explanation follows your misses:** it goes where your prediction missed, not into a
-  lecture up front.
-- **Recall in `/fu-catch-up`, in `learn` mode only:** before you see the card, two or three
-  questions. `ship` mode asks none. There is no pass mark.
-- **Prediction log:** your hit rate over time is logged for you, not committed.
-
-### Structured mode (optional)
-
-<p align="center"><img src="assets/cartographer.svg" alt="Structured mode: Cartographer, a coverage-gated loop with a ledger, a six-condition gate and a spec" width="100%"></p>
-
-For high-stakes work, or when you want every step spelled out (which may help smaller
-models), `/fu-brief --structured` or `/fu-cartographer` adds the 4.x protocol on top of the
-card:
-
-- **Quadrant routing** and the eight numbered techniques (blind-spot pass, prototypes,
-  interview, references, plan, notes, pitch, quiz).
-- **Cartographer:** every unknown becomes a ledger row with a prior, a regret score
-  (cost × chance of being wrong), a route and a reversibility lane. A clarity display each
-  round lets you steer. A six-condition gate decides when building may start, and the spec's
-  verification contract becomes the card's contract.
-- **The full handoff packet:** stakes triage and nine sections, evidence first.
-
-The card, the four stop-points and fresh-context grading still apply.
+- the prediction is written before the data, with a stopping rule and a noise floor from
+  at least three reruns;
+- results that arrive over days go into a run table; no verdict before the stopping rule
+  is met;
+- the rule verdict is mechanical; whether the idea is still alive is your call.
 
 ---
 
-## Commands
+## Task card and views
 
-| Command | What it does |
-|---|---|
-| `/fu-brief <task>` | Take your prediction, map the territory, then give the agent's; agree the stop-points and the contract; freeze and commit the card |
-| `/fu-catch-up [slug]` | Recall questions in `learn` mode, then only what changed since you last looked, and the next decision that needs you |
-| `/fu-debrief [slug]` | Grade every frozen prediction with a fresh context; evidence, what the checks did not prove, model changes |
-| `/fu-cartographer <task>` | Structured mode for high stakes: the Cartographer ledger, gate and spec on top of the card |
+### The card
 
-Saying "brief me", "catch me up", "where were we" or "did it match what we expected" works
-too. Typos and one-liners get no card and no questions. In non-interactive `claude -p`,
-use the full names (`/finding-unknowns:fu-brief`).
+<p align="center"><img src="assets/card.svg" alt="Anatomy of a task card: a five-line header, the frozen Brief, Amendments, the deltas rollup, Model changes, Open and the Debrief; the deltas file beside it" width="100%"></p>
 
-| Agent | Role |
-|---|---|
-| `blindspot-scout` | Read-only reconnaissance for the Brief: landmines, hidden context, a rewritten request |
-| `mechanism-auditor` | Fresh-context grader for the Debrief and for measured results |
-| `quiz-master` | Optional: drafts the recall questions for `/fu-catch-up`, and flags changes no delta explains |
-| `ledger-keeper` | Structured mode: keeps the Cartographer ledger, scores and gate verdict |
-| `prototype-smith` | Divergent throwaway directions for taste you will recognise (Brief, structured mode) |
+`.finding-unknowns/tasks/{slug}.md`, committed by `fu freeze`. One format everywhere:
+lines with fixed keys in a fixed order, nested lists, no tables.
+
+```
+P1 (you · medium) "the bulky parcel's cheapest quote is Economy at 4.00"
+  - falsifier: cheapest(bulky) is not Economy 4.00
+  - should not change: the small parcel stays Economy 3.00
+```
+
+- **Header:** goal and state, `Needs you`, mode and when you last looked, and Timing (the
+  freeze commit).
+- **Frozen Brief:** the approach with one reason per decision; your predictions, quoted,
+  then the agent's; the stop-points; `Irreversible:` lines; the contract, where each check
+  says what it does **not** prove.
+- **Amendments** (dated, append-only; a miss is still graded), a rollup of the deltas
+  file, **Model changes** ("you expected X, it is Y, because Z"), **Open**, and the
+  **Debrief** at the end.
+- **Beside it:** `{slug}.deltas.md`, one line per deviation, surprise or decision made for
+  you; and `decisions.md`, the answers only you could give, quoted and dated, so an
+  answered question is never asked again.
+
+`fu lint` checks the card against [`references/card.md`](skills/finding-unknowns/references/card.md).
+
+### Terminal lists
+
+In the terminal everything is a nested list. `fu list --all` on the repository's test
+fixtures (open cards first; `fu list` alone shows only those):
+
+```
+search-export · building
+  - needs you: nothing
+  - last seen: never · unseen deltas: 1
+  - graded: not yet
+quote-export · debriefed
+  - needs you: the carrier's remote-zone rate card (recommendation: send it and I re-check parcel 3; settles whether 8.00 stands)
+  - last seen: after D3 · unseen deltas: 0
+  - graded: you 1 of 2 held · agent 1 of 1 held
+```
+
+Once you or the agent have five graded predictions, a calibration line follows, such as
+`You: 4 of 6 held · Agent: 6 of 6 held`; an agent that holds every one is probably
+predicting too safely.
+
+### HTML view
+
+<p align="center"><img src="assets/view-card.png" alt="HTML view of a debriefed card: Needs you first, where the evidence stops, what the checks did not prove, and a one-row strip of what happened in order" width="80%"></p>
+
+For a complex task (an irreversible step, more than three predictions, or work you expect
+to resume later), the Brief-approval ask includes one clause offering an HTML view. Your
+answer is remembered in `profile.md`; it is never a separate question. `fu render` writes
+`.finding-unknowns/view/{slug}.html` from fixed templates: no script, no network,
+everything escaped. The page leads with `Needs you` and where the evidence stops, then
+one row of what happened in order with the irreversible step marked. The task-list page
+carries your calibration as a stat line. The view adds detail; it never shows a miss the
+terminal left out.
 
 ---
 
-## Design Notes
+## Small models: the strict profile
 
-- **Why 5.0 is a rebuild.** Three evals measured the 4.x skills as a boost to model
-  output and found none that replicated. The author's goal was always the person's side,
-  so 5.0 is organised around it. The design, two advisor reviews, and where 5.0 departs
-  from them: [docs/design/5.0.md](docs/design/5.0.md).
-- **What moved.** Cartographer (regret scores, clarity displays, a six-condition gate),
-  the eight numbered techniques and the nine-section handoff packet are no longer the
-  default. They live on as **structured mode**, loaded only on request, because smaller
-  models may need explicit steps that frontier models do not (a hypothesis under test).
-  Workflow execution and the must-pass quiz are gone. keep-the-reasoning and
-  theory-vs-result were merged into the one skill.
-- **What was kept, on design grounds.** The irreversibility floor; checks that can fail and
-  say what they do not prove; territory before questions; prediction before
-  data; the two verdicts. None of these has been shown to help people yet.
-- **Field notes** from real use: [docs/field-notes](docs/field-notes/).
+For open-weight and other small models, turn on the strict profile with `fu init --strict`
+or by saying "strict". It stores `strict: yes` in `profile.md`:
+
+- the agent fills the template inside `/fu-brief` instead of composing a card;
+- `fu lint` enforces caps (at most 3 agent predictions, 5 contract items, 20 words per
+  field, a 40-line live part) and must pass before the Brief-approval ask;
+- your prediction is a quoted slot, or `P: none given`;
+- with the guard on `ask`, generic destructive commands also ask.
+
+This rests on one ungraded run of a small model with the 4.x structured protocol, which
+produced orderly paperwork around a wrong, irreversible result. Whether strict does better
+is untested; a three-run check is in the [design](docs/design/5.2.md#5-small-models).
+
+---
+
+## Classic line: branch `v4`
+
+Structured mode, Cartographer (the unknowns ledger, regret ordering, the six-condition
+gate), the eight numbered techniques and the 4.x agents are not in 5.x. They stay on
+branch `v4` (v4.3.2), which gets bug fixes only:
+
+```bash
+git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
+cd finding-unknowns-skill && git checkout v4 && bash install.sh
+```
+
+---
+
+## Principles
+
+- **You predict first.** Your prediction is recorded before you see the agent's, in your
+  words, and graded first.
+- **Look before asking.** The agent never asks what the code, docs or data answer; it asks
+  only what only you can decide.
+- **A check must be able to fail** and says what it does not prove.
+- **Stop for the four reasons, log the rest.** An interruption costs your attention; a
+  delta line costs nothing until you read it.
+- **Code enforces what code can.** The irreversible-command prompt, the frozen Brief and
+  the integrity checks are mechanical, not promises in prose.
+- **No rescue.** A good story explains a miss; it never turns it into a hit.
+- **Claim nothing beyond the evidence.** Every component is kept on design grounds; what
+  has been measured is stated above.
+
+These come from the discovery practice of Thariq Shihipar's field guide and from Addy
+Osmani's account of the slide from offloading to deferral to **cognitive surrender** (the
+term is from Shaw & Nave, _Thinking—Fast, Slow, and Artificial_, SSRN 6097646).
 
 ### Roadmap
 
-- **Stage 0:** a simulated-user evaluation, three arms (no plugin, a 60-word
-  `CLAUDE.md`, the plugin). If the plugin does not beat the 60 words, the 60 words ship
-  instead.
-- **Smaller models:** the same simulated-user tasks with a 27–38B open-weight model,
-  comparing no plugin, 5.0 and structured mode.
-- **Stage 1:** 8–12 participants, a crossover against plain Claude Code, and a test of
-  understanding 48–72 hours later.
-- **The SessionStart hook** in [`extras/`](extras/session-start-hook/README.md) ships
-  only if Stage 0 shows that it helps a new session find the card.
+- **Tier 1:** four Stage 0 scenarios, two runs each, comparing the 56 words, the 82-word
+  candidate, a length-matched placebo and the plugin with the hook. Mechanical tripwires
+  only (for example, exactly one irreversible run, after a yes); it detects breakage, not
+  small differences.
+- **Small models:** the strict profile against the 4.x structured run, three runs.
+- **Stage 1:** real people, deferred, not cancelled. Until then, nothing here claims to
+  improve understanding.
 
 ---
 
 ## Documentation
 
-- **[5-minute tutorial](docs/TUTORIAL.md):** one card, brief to debrief
+- **[5-minute tutorial](docs/TUTORIAL.md):** one card, Brief to Debrief
 - **[Glossary](docs/GLOSSARY.md):** card, prediction, contract, stop-point, lane, verdicts
-- **[Architecture](docs/ARCHITECTURE.md):** files, agents, data flow, design principles
-- **[5.0 design](docs/design/5.0.md):** why and how, the evaluation plan
-- **[SKILL.md](skills/finding-unknowns/SKILL.md)** and its [references](skills/finding-unknowns/references/card.md)
+- **[Architecture](docs/ARCHITECTURE.md):** the four layers, files and data flow
+- **[5.2 design](docs/design/5.2.md)** (the governing design) and the **[`fu` contract](docs/design/fu-cli.md)**
+- **[SKILL.md](skills/finding-unknowns/SKILL.md)** and its [card schema](skills/finding-unknowns/references/card.md)
 - **[Examples](EXAMPLES.md):** copy-paste prompts
 - **[Changelog](CHANGELOG.md)** · **[AGENTS.md](AGENTS.md)** · **[Contributing](CONTRIBUTING.md)**
 
@@ -333,11 +463,11 @@ use the full names (`/finding-unknowns:fu-brief`).
 
 ## Requirements
 
-- **Claude Code:** the CLI, desktop app or an IDE extension. The Markdown also works in
-  Codex.
-- **No runtime, no dependencies.** Everything is plain Markdown. The agents are optional;
-  without them, grading is done in the same context and labelled weaker.
-- **git** for committing cards (optional; without it, timing is self-reported).
+- **Claude Code:** the CLI, desktop app or an IDE extension. The skill's Markdown also
+  works in Codex, without the hook.
+- **Python 3.8 or later** for the `fu` script and the guard hook, standard library only.
+- **git** for freezing cards (optional; without it, Timing is `self-reported` and the
+  integrity check does not run).
 - **`bash`** only for `install.sh`.
 
 ## Project Layout
@@ -348,16 +478,19 @@ use the full names (`/finding-unknowns:fu-brief`).
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          Plugin and marketplace manifests
-├── commands/                /fu-brief · /fu-catch-up · /fu-debrief · /fu-cartographer (thin dispatchers)
+├── commands/                /fu-brief (holds the card template) · /fu-catch-up · /fu-debrief · /fu-view
 ├── skills/finding-unknowns/
-│   ├── SKILL.md             The card, the three operations, stop-points, always-on rules
-│   └── references/          card · brief · debrief · results · results-examples; structured mode: structured · cartographer · handoff-full
-├── agents/                  blindspot-scout (sonnet) · mechanism-auditor · quiz-master · ledger-keeper · prototype-smith
-├── extras/session-start-hook/   Not shipped; pending the Stage 0 evaluation
+│   ├── SKILL.md             The card, the four stop-points, always-on rules (≤ 700 words)
+│   └── references/          card (schema) · brief · debrief · results · view
+├── agents/                  mechanism-auditor (fresh-context grader, used narrowly)
+├── scripts/                 fu.py (lint, freeze, integrity, log, list, render, guard) · validate.py · diagrams/
+├── hooks/hooks.json         The guard hook (plugin install only)
+├── bin/fu                   Optional wrapper to put fu on PATH
+├── tests/                   Tier 0 tests and fixture cards
 ├── docs/                    design/, evals/, field-notes/, ARCHITECTURE, GLOSSARY, TUTORIAL (+ .zh)
-├── assets/                  Eight diagrams (SVG); assets/zh/ = Chinese versions
-├── CLAUDE.md                Passive single-file drop-in
-├── install.sh               Installer; removes 4.x leftovers it recognises
+├── assets/                  Diagrams (SVG) and the HTML view screenshot; assets/zh/ = Chinese versions
+├── CLAUDE.md                The measured 56 words · CLAUDE.next.md: the untested 82-word candidate
+├── install.sh               Installer without the hook; sets aside, never deletes
 ├── AGENTS.md · EXAMPLES.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE (MIT)
 └── README.md (English, canonical) · README.zh.md (简体中文)
 ```
@@ -368,10 +501,12 @@ finding-unknowns-skill/
 
 Released under the [MIT License](LICENSE).
 
-- Discovery techniques: Thariq Shihipar, _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
+- Discovery: Thariq Shihipar, _"A Field Guide to Fable: Finding Your Unknowns"_ ([@trq212](https://x.com/trq212/status/2073100352921215386)).
+- The handoff, "what the checks did not prove", and grading without the builder's reasoning: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
 - *Cognitive surrender*: Shaw & Nave, _Thinking—Fast, Slow, and Artificial_ (SSRN 6097646); cognitive debt: Margaret-Anne Storey.
-- The handoff and the verification contract: Addy Osmani, _"Critical thinking when agents do the work"_ ([source](https://x.com/addyosmani/status/2117512471930167377)).
 - Theory → Measured → Consistent? → Mechanism: the author's own empirical research practice.
-- The 5.0 design follows an advisor review by Fable 5.2, with a second by GPT 6 Astra ([reviews](docs/design/5.0-advisors/fable.md)).
+- The Debrief's field rules (the verb matches the evidence tier, a three-part bottom line, a rewrite changes words only) paraphrase writing principles from [nature-skills](https://github.com/Yuan1z0825/nature-skills) by Yuan Yizhe (Apache-2.0); no text is copied. For paper-bound write-ups, use its `nature-polishing` and `nature-figure` skills directly.
+- What 5.2 borrowed from other projects: asking only what only the person can decide, and dropping the forced reconnaissance agent, from the pre-registered question-effectiveness evaluation of gateguard (everything-claude-code); recording answered decisions (`decisions.md`) from Matt Pocock's ADR habit in his skills; a cost-if-wrong on every decision made for you from the ruling line in superpowers (Jesse Vincent); the learn-mode stop rule from pstack's `teach` (Lauren Tan).
+- The 5.2 design follows an advisor answer by Fable 5.2 ([design](docs/design/5.2.md)); the 5.0 reviews are in [docs/design/5.0-advisors](docs/design/5.0-advisors/fable.md).
 
 **Disclaimer.** This is an independent community project. It is not affiliated with, authorised by, or endorsed by Anthropic.

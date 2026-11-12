@@ -10,7 +10,7 @@
 </defs>
 <rect x="0.5" y="0.5" width="1199" height="759" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <rect x="0.5" y="0.5" width="1199" height="759" rx="18" fill="url(#dots)" opacity="0.5"/>
-<text x="40" y="52" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700">// 05 · 安静执行</text>
+<text x="40" y="52" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700">// 04 · 安静执行</text>
 <text x="40" y="96" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="32" fill="#141413" font-weight="700">只有四种情况会打断你，其余只记一行</text>
 <text x="40" y="126" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">对照任务卡核对，而不是由智能体凭感觉判断风险高低。</text>
 <rect x="40" y="150" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
@@ -22,14 +22,14 @@
 <path d="M544 192L606 192" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <text x="575" y="184" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">停下</text>
 <rect x="612" y="150" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
-<text x="632" y="186" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">智能体准备好确切的命令。</text>
-<text x="632" y="210" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">由你执行，或同意执行这一条命令；事后检查通过才算完成。</text>
+<text x="632" y="186" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">确切命令写在简报的 Irreversible: 行上，只执行一次。</text>
+<text x="632" y="210" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">由防护钩子请你确认，无钩子时须你在对话中同意；检查只做演练。</text>
 <rect x="40" y="248" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="258" width="5" height="64" rx="2.5" fill="#D97757"/>
 <rect x="62" y="264" width="30" height="30" rx="6" fill="#141413"/>
 <text x="77.0" y="284.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">2</text>
 <text x="106" y="286" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="19" fill="#141413" font-weight="700">范围变化</text>
-<text x="106" y="312" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">超出简报中的做法或验收标准</text>
+<text x="106" y="312" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">超出简报约定的范围</text>
 <path d="M544 290L606 290" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <text x="575" y="282" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">停下</text>
 <rect x="612" y="248" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
@@ -44,7 +44,7 @@
 <text x="575" y="380" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">停下</text>
 <rect x="612" y="346" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
 <text x="632" y="382" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">由你确认修订。</text>
-<text x="632" y="406" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">原来的预测照样评判。</text>
+<text x="632" y="406" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">两次修复因同一假设失败：先检验它，第三次失败即停下。</text>
 <rect x="40" y="444" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="454" width="5" height="64" rx="2.5" fill="#D97757"/>
 <rect x="62" y="460" width="30" height="30" rx="6" fill="#141413"/>
@@ -60,7 +60,7 @@
 <rect x="40" y="564" width="1120" height="66" rx="12" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="574" width="5" height="46" rx="2.5" fill="#788C5D"/>
 <text x="64" y="592" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" fill="#788C5D" font-weight="700">继续执行。</text>
-<text x="64" y="616" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413">选择最容易撤回的做法，在任务卡上记一行；可以等的问题放进待办。</text>
+<text x="64" y="616" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413">选择最容易撤回的做法，在增量记录中记一行；代你做出的决定写明做错的代价。</text>
 <text x="40" y="658" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" font-weight="700">可逆性分级 · 拿不准时归入更高一级</text>
 <rect x="40" y="672" width="1120" height="16" rx="8" fill="url(#spec)"/>
 <text x="40" y="712" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#788C5D" font-weight="700">可逆</text>
@@ -68,5 +68,5 @@
 <text x="430" y="712" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#B07A4F" font-weight="700">影响面广</text>
 <text x="498.0" y="712" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">可以撤回，但涉及共享部分</text>
 <text x="820" y="712" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#B5442E" font-weight="700">不可逆</text>
-<text x="874.0" y="712" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">降级须经你同意</text>
+<text x="874.0" y="712" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">确切命令，只执行一次</text>
 </svg>

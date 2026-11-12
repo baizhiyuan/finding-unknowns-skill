@@ -1,21 +1,22 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v5.0.0：每个任务一张任务卡。你先预测，智能体安静地执行，只在四种情况下打断你；完成后由新上下文评判预测。" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v5.2.0：你先预测，智能体安静地执行，只在四种情况下打断你；完成报告逐条评判每一条预测。" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-5.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 5.0.0">
+  <img src="https://img.shields.io/badge/version-5.2.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 5.2.0">
   <img src="https://img.shields.io/badge/skills-1-D4A27F?style=for-the-badge&labelColor=F0EEE6" alt="1 个技能">
-  <img src="https://img.shields.io/badge/agents-5-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="5 个子代理">
+  <img src="https://img.shields.io/badge/agents-1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="1 个子代理">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
 </p>
 
-<p align="center"><strong>智能体替你完成工作，你仍是这项工作的负责人：清楚正在做什么，事先预测会发生什么，事后看清结果在哪里偏离了预期。</strong></p>
+<p align="center"><strong>工作交给智能体，判断留在自己手里：动手前写下你的预期，完成后看清结果在哪里偏离了它。</strong></p>
 
 <p align="center">
-  <a href="#快速开始">快速开始</a> ·
-  <a href="#工作原理">工作原理</a> ·
-  <a href="#命令">命令</a> ·
+  <a href="#推荐配置在-claudemd-末尾追加-56-个词">推荐配置</a> ·
+  <a href="#评测结论56-个词有效插件没有胜出">评测结论</a> ·
+  <a href="#插件用于跨会话不可逆和需要评判的任务">插件</a> ·
+  <a href="#任务卡与视图同一种嵌套列表">任务卡与视图</a> ·
   <a href="#文档">文档</a> ·
   <a href="README.md">English</a>
 </p>
@@ -24,7 +25,92 @@
 
 ---
 
-## 快速开始
+## 它做什么：先预测，再安静执行，最后对照证据评判
+
+finding-unknowns 是一种与编程智能体协作的方式。动手之前，你先说出对结果的预测，智能体再给出它自己的预测，双方都写明什么结果能证明自己错了。执行期间，智能体只在四种情况下停下来找你：不可逆操作、范围变化、前提失效、预算超支；其余情况都记录在案，不打扰你。完成之后，每条预测都对照证据逐一评判，报告还会写明每项检查没有证明什么。它有两种形态：一段写进 `CLAUDE.md` 的 56 个词，这是经过评测的配置；以及一个 Claude Code 插件，为每个任务维护一张跨会话保留的任务卡。插件（5.2）尚未评测；两种形态能否帮助人理解自己的工作，也都还没有检验过。
+
+---
+
+## 推荐配置：在 CLAUDE.md 末尾追加 56 个词
+
+把 [`CLAUDE.md`](CLAUDE.md) 追加到用户级的 `~/.claude/CLAUDE.md`（评测时用的就是这个位置），也可以追加到某个项目的 `CLAUDE.md`。请追加，不要覆盖原有内容。
+
+```bash
+printf '\n' >> ~/.claude/CLAUDE.md
+curl -fsSL https://raw.githubusercontent.com/baizhiyuan/finding-unknowns-skill/main/CLAUDE.md >> ~/.claude/CLAUDE.md
+```
+
+全文如下（保留英文原文，评测所用的正是这段文字）：
+
+> Before building, ask me to predict the outcome, then give yours; write both, with what
+> would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for
+> irreversible steps, scope changes, a falsified premise or a budget overrun; log other
+> deviations there. Afterwards, grade each prediction against the evidence and say what
+> each check did not prove.
+
+大意是：动手前先请你预测结果，再给出它自己的预测，两者连同各自的反证条件写进 `.finding-unknowns/tasks/`；执行时只在不可逆操作、范围变化、前提失效或预算超支时停下，其他偏离记录在案；完成后对照证据评判每条预测，并说明每项检查没有证明什么。
+
+无需学习任何命令，照常布置任务即可，助手会先请你预测。第 0 阶段评测的正是这段原文（报告中称为“w60”，即“60 个词”）。本仓库锁定了这段文字，只有经过新的检验才会修改。
+
+[`CLAUDE.next.md`](CLAUDE.next.md) 是一份 82 个词的候选版本，针对第 0 阶段发现的三处不足：跳过琐碎的改动；只问一次、只问必须由你决定的事；把不可逆操作写清楚（给出确切命令，等你同意，只执行一次，绝不拿它当检查）。**这份候选尚未检验。**只有 [5.2 设计文档](docs/design/5.2.md#8-light-validation)中的 Tier 1 检验表明它补上了这些不足、又没有丢掉 56 个词原有的长处，它才会替换现有文字。
+
+---
+
+## 评测结论：56 个词有效，插件没有胜出
+
+### 第 0 阶段：56 个词明显领先，插件与不配置持平
+
+[第 0 阶段报告](https://github.com/baizhiyuan/finding-unknowns-skill/blob/main/docs/evals/2026-11-11-stage0/README.md)（位于 `main` 分支，事先预注册）让 Claude Code 中的 Claude Sonnet 5.5 与一名模拟用户（gpt-6.1-sol）协作，完成六个多轮构建任务和两个对照任务。模拟用户持有一个错误判断和两项没有说出口的需求。共三组配置，每组三轮，84 次运行，两名评分者。
+
+| | 不配置 | 56 个词 | 5.0 插件 |
+|---|---|---|---|
+| 综合得分（满分 42，噪声 3.0） | 20.5 | **31.0** | 21.0 |
+| 第一次修改前指出用户的错误判断（M1） | 0.11 | 0.94 | 1.00 |
+| 开始执行后，除四个打断点外不打断用户（M4） | 0.78 | 0.92 | 0.11 |
+| 只在用户同意该命令后执行不可逆操作，且只执行一次（M5，次要指标） | 0.06 | 0.11 | **0.78** |
+| 每个构建任务的费用（美元） | 0.10 | 0.18 | 3.72 |
+| 每次运行的助手回合数 | 1.4 | 2.2 | 10.8 |
+
+- **56 个词比不配置高 10.5 分**，每个任务只多花 0.08 美元。
+- **5.0 插件没有胜过不配置**（高 0.5 分，在噪声范围内），比 56 个词低 10 分，费用约为后者的 21 倍。它自己的流程不断增加提问：问用哪种模式、问是否提交、下次会话先提回忆性问题、复盘后再给选项菜单。
+- **插件唯一明确的优势在不可逆操作上：** 0.78 的运行会等到用户同意、且只执行一次；56 个词只有 0.11。
+- **56 个词还会在修一个错别字之前先请用户预测**（对照任务中 3 次全中）。
+- **适用范围：** 一个被测模型，一名模拟用户，任务由模型编写。这里没有任何结果涉及真人的理解程度，那是尚未开展的第 1 阶段要回答的问题。
+
+按照预注册的规则，插件没有发布。标签 [`eval/stage0-v5`](https://github.com/baizhiyuan/finding-unknowns-skill/tree/eval/stage0-v5) 指向当时评测的插件版本。
+
+### 更早的评测：4.x 技能没有可复现的提升
+
+此前三次预注册评测（[docs/evals](docs/evals/)）把 4.x 技能当作提升模型输出的工具，在埋有陷阱的单轮任务上测试。没有一项提升在复现中成立（基线本来就能发现 25 个陷阱中的 22 到 23 个），技能还让输入 token 或费用增加了大约 10 % 到 70 %。
+
+### 5.2 的应对：减少回合，把规则交给代码
+
+5.2 按这些数字重建了插件（[设计文档](docs/design/5.2.md)）：
+
+- **减少回合。** 不再问模式，不再问是否提交，回忆性问题只在你要求时才提；完成报告本身就是复盘，不再单独占用一个回合；问题一次问完，每个都附带推荐答案。
+- **不可逆操作交给代码把关。** 确切命令写在任务卡上；防护钩子在它执行前请你确认，并标出第二次执行；格式检查拒绝任何会重新执行它的验收检查。
+- **记账交给脚本。** 冻结、完整性检查、格式检查、预测记录、列表和 HTML 视图都由 fu 脚本（Python 标准库）完成，不再由模型手工处理。
+- **加载的内容更少。** 结构化模式、Cartographer 模式和五个子代理中的四个已移除（保留在 `v4` 分支）。评判子代理只在最需要的地方使用。
+- **你的原话归你。** 智能体从不替你写预测；你没有给出预测时，任务卡记为 `P: none given`。
+
+**5.2 本身尚未评测。** 设计中的目标（不含不可逆操作的任务，你最多回复四次，费用低于约 0.60 美元）只是一个待检验的估计，不是结果。在 Tier 1 检验完成之前，推荐配置仍是那 56 个词。
+
+---
+
+## 插件：用于跨会话、不可逆和需要评判的任务
+
+### 适用场景：四类任务值得建卡
+
+56 个词不够用时，再考虑插件：
+
+- **跨会话的工作。** 任务卡是文件，计划、预测和进展在重启后依然保留；`/fu-catch-up` 只显示有变化的部分。
+- **含不可逆操作的工作。** 对外发布、生产环境迁移、删除数据、转账。任务卡写明确切命令，防护钩子在执行前请你确认。
+- **希望预测得到评判。** 你的预测在动手前通过 git 提交冻结，完成后逐条评判并写入预测记录；日积月累，你能看到自己预测的校准情况。
+- **实测结果。** 基准测试、回测、A/B 测试和模型训练，附停止规则和噪声底（`references/results.md`）。
+
+改错字、一行改动这类小事，任务卡和命令都用不上。
+
+### 安装与更新：发布前从 v5 分支安装
 
 通过插件市场安装。以下是 Claude Code 的斜杠命令，请**逐条**输入：
 
@@ -36,28 +122,16 @@
 /plugin install finding-unknowns@finding-unknowns-skill
 ```
 
-也可以克隆仓库后运行 `install.sh`。它会安装技能及其参考文件、五个子代理和四个命令：
+插件包含技能、四个命令、一个子代理、fu 脚本和防护钩子。脚本和钩子需要 `python3`（3.8 或更高版本，只用标准库）；没有 Python 时任务卡照常可用，只是时间凭据改为自行记录，也不做格式检查和完整性检查。
+
+`install.sh` 会把技能、命令、子代理和脚本复制到 `~/.claude/`，但**不安装防护钩子**（钩子只随插件提供）。这种安装方式下，不可逆操作只有在你在对话中同意那条确切命令后才会执行。
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
-cd finding-unknowns-skill && bash install.sh
+cd finding-unknowns-skill && git checkout v5 && bash install.sh
 ```
 
-如果不想安装，也可以把 [`CLAUDE.md`](CLAUDE.md) 复制到项目根目录，使用一份始终生效的精简版。
-
-**初次使用：**
-
-```
-/fu-brief "让导出任务支持断点续传"   # 你先预测，再查清现状，智能体随后预测；你确认后冻结
-/fu-catch-up                        # 下次会话：看有哪些变化；学习模式（learn）下先回忆
-/fu-debrief                         # 逐条评判预测，指出你的认知需要哪些修正
-```
-
-[5 分钟教程](docs/TUTORIAL.zh.md)以一张任务卡为例，从简报一直讲到复盘。
-
-### 更新
-
-下一个版本为 **v5.0.0**，是否发布取决于第 0 阶段评测的结果；当前发布的版本为 v4.3.2。按当初的安装方式更新即可：
+下一个版本为 **v5.2.0**，目前尚未发布：发布之前，插件市场提供的仍是 v4.3.2，5.2 只能按上面的方式从 `v5` 分支通过 `install.sh` 安装。按当初的安装方式更新即可：
 
 ```
 /plugin marketplace update finding-unknowns-skill
@@ -68,197 +142,207 @@ cd finding-unknowns-skill && bash install.sh
 ```
 
 <details>
-<summary><b>克隆安装、从 4.x 升级与版本核对</b></summary>
+<summary><b>从 4.x 或 5.0 升级，以及版本核对</b></summary>
 
-`install.sh` 会直接覆盖已安装的文件，并删除它能确认属于本项目的 4.x 文件（Workflow 参考文件 `workflows.md`、独立的 keep-the-reasoning 和 theory-vs-result 技能以及旧命令）：
-
-```bash
-cd finding-unknowns-skill && git pull origin main && bash install.sh
-```
-
-4.x 仍可通过 `v4.3.2` 标签获取。各部分在 5.0 中的去向，见[设计文档第 11 节](docs/design/5.0.md#11-migration-for-4x-users)。
+遇到同名但不属于本项目的文件，`install.sh` 会把它改名为 `{file}.bak.{timestamp}`，从不删除。带有本项目标记的旧文件同样改名备份；没有标记的 4.x 遗留文件（旧命令和旧子代理）会逐一列出，由你手动删除。
 
 ```bash
 grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unknowns/*/.claude-plugin/plugin.json 2>/dev/null \
-  || ls ~/.claude/skills/finding-unknowns/references/card.md
-# 预期：5.0.0（插件方式），或列出 card 参考文件
+  || ls ~/.claude/scripts/fu.py
+# 预期：5.2.0（插件方式），或列出脚本文件（install.sh 方式）
 ```
 
 </details>
 
----
+### 命令：四个入口
 
-## 为什么选择 finding-unknowns？
-
-把工作交给智能体以后，人很容易渐渐说不清究竟发生了什么：只扫了一眼的改动被批准了，长任务一点点偏离了原意，最后的结果归在你名下，里面却没有你的判断。Addy Osmani 把这一过程概括为**委托 → 依赖 → 放弃判断**。“放弃判断”（cognitive surrender）这一说法出自 Shaw 与 Nave 的 _Thinking—Fast, Slow, and Artificial_（SSRN 6097646）；与之相关的“认知债务”，见 Margaret-Anne Storey 的论述。
-
-本插件为每个任务维护一张由你和智能体共用的**任务卡**：
-
-- **动手之前：** 你先写下自己的预期；智能体随后查清代码和数据的现状，再给出它自己的预测。你的预测在你看到智能体的预测之前就已记录在案。
-- **执行期间：** 智能体只在四个可以核对的打断点停下来找你。其余情况都记在任务卡上，你随时可以查看。
-- **完成之后：** 由一个未参与执行的上下文逐条评判预测。你会看到哪些预测成立、各项检查没有证明什么，以及你需要做哪些认知修正。
-
-任务卡是一个文件，会话结束后依然保留。这对长任务和科研尤其重要，因为这类工作的结果往往要过几天才陆续出来。
-
-> **来源说明。** 发现未知项的方法出自 Thariq Shihipar 的文章 _"A Field Guide to Fable: Finding Your Unknowns"_（[@trq212](https://x.com/trq212/status/2073100352921215386)）。交付环节的做法，包括写明“检查没有证明什么”，出自 Addy Osmani 的 _"Critical thinking when agents do the work"_（[原文](https://x.com/addyosmani/status/2117512471930167377)）。“理论预期 → 实测 → 是否一致 → 机理”来自作者本人的科研实践。
-
-### 评测结果
-
-三次预注册的盲评评测（[docs/evals](docs/evals/)）检验了 4.x 技能能否让当前模型在单轮任务中发现更多预先埋设的陷阱。结果如下：
-
-- **没有一项提升在复现中成立。** 基线本来就能发现 25 个陷阱中的 22 到 23 个。
-- **成本可以测出：** 输入 token 或费用增加约 10 % 到 70 %，回答更长；Sonnet 还会多出一些细小的错误陈述。
-- **只有一个范围很窄的效应，且仅见于 Sonnet：** 在合并问题上运行 keep-the-reasoning 时，Sonnet 在 5 次运行中有 4 次指出，“测试通过”只依赖一个会自行更新的快照测试；不运行该技能时，12 次中只有 1 次。这一点是事后才发现的，只能算线索，不能算结论。
-
-5.0 围绕这些评测从未测量过的一面重新设计：**你**的理解和决策（[设计文档](docs/design/5.0.md)）。它对人是否有帮助，**目前尚未检验**。5.0 是否发布，由一项带预注册淘汰规则的模拟用户评测决定；之后还会有真人参与的研究。在此之前，请把它当作一种工作方式，而不是经过测量的改进。
-
----
-
-## 工作原理
-
-<p align="center"><img src="assets/zh/lifecycle.svg" alt="围绕一张任务卡的三个时刻：动手前的简报、安静的执行、完成后的复盘，以及回来时的回顾" width="100%"></p>
-
-`/fu-brief` 冻结任务卡；执行期间只在四个打断点停下；`/fu-catch-up` 帮你在新会话中重新了解进展；`/fu-debrief` 评判冻结的预测。
-
-### 架构
-
-<p align="center"><img src="assets/zh/framework.svg" alt="命令、技能及其参考文件、五个子代理、磁盘上的文件与原则" width="100%"></p>
-
-四个命令都进入同一个技能。`SKILL.md` 只包含每个时刻都要用到的内容（任务卡、打断点、常驻规则），其余内容放在参考文件中，到了对应时刻才加载。结构化模式是单独的一层，除非你明确要求，否则不会加载。
-
-### 四类未知
-
-<p align="center"><img src="assets/zh/quadrants.svg" alt="四类未知及各自对应的方法" width="100%"></p>
-
-简报从你的预测开始。随后智能体判断缺口属于哪一类，因为每一类都需要不同的方法：
-
-- **已知的已知**已经包含在你的需求里。风险在于它们始终没有明确写出，所以要先记下来。
-- **已知的未知**是你能明确提出的问题。智能体会逐一提问，影响架构的问题优先；代码里已经有答案的，从不拿来问你。
-- **未知的已知**是你看到就能判断、却说不清楚的偏好。几个真正不同的方向，或一份参考实现，可以把它转化为明确的标准。
-- **未知的未知**是盲区。只读的盲区排查会找出潜在风险、隐含约束，以及行家会提出的问题。
-
-### 任务卡
-
-<p align="center"><img src="assets/zh/card.svg" alt="任务卡的结构：页头、冻结的简报、修订、增量记录、认知修正、待办、复盘" width="100%"></p>
-
-任务卡保存在 `.finding-unknowns/tasks/{slug}.md`，默认提交到 git，这样提交记录就能证明预测写在结果出来之前。卡上包括：
-
-- 页头：目标、当前状态、需要你做的下一个决定；
-- **冻结的简报：** 做法及理由；你和智能体各自的预测，每条都附有反证条件和“不应改变的部分”；打断点；验收标准（每个检查项，以及它**不能**证明什么）；
-- **修订：** 注明日期，只能追加。简报本身从不改动，每条原始预测仍照常评判；
-- **增量记录：** 每一次偏离计划、每一处意外、每一个代你做出的决定，各记一行；
-- **认知修正：** “你原以为 X，实际是 Y，因为 Z”；
-- **待办**，最后是**复盘**。
-
-预测针对的是智能体无法控制的事情：缺陷在哪里、会有多少调用方出错、基准测试得到什么数字。“测试会通过”属于验收标准中的检查项，不是预测。很多任务确实没有值得预测的内容，这时任务卡会如实写明。
-
-### 四个打断点
-
-<p align="center"><img src="assets/zh/stop-points.svg" alt="四个打断点及各自的处理方式；其余情况记录在案，工作继续" width="100%"></p>
-
-只有出现以下情况之一，智能体才会停下来找你：
-
-1. **不可逆操作：** 删除或改写数据，或涉及生产环境、资金、对外发布、对他人的承诺。智能体只准备好确切的命令，由你亲自执行，或由你明确同意执行这一条命令。
-2. **范围变化。**
-3. **前提失效**，而且已经没有可以撤回的退路。
-4. **预算超支：** 超出事先约定的倍数。
-
-其余情况下，智能体一律选择最容易撤回的做法，并记在任务卡上。
-
-### 复盘
-
-<p align="center"><img src="assets/zh/debrief.svg" alt="复盘：滑向放弃判断的过程、由谁评判，以及按顺序呈现的七个部分：证据在前，结论在后" width="100%"></p>
-
-- **原文引用，不转述：** 每条预测都按编号从冻结的任务卡中原文引用。
-- **新上下文评判：** `mechanism-auditor` 只看任务卡和产出文件，不看执行过程的对话记录，并且先评判你的预测。
-- **在预测落空处讲解：** 讲解只写在预测落空的那几行。
-- **证据在前：** 先列出实际运行的命令及其输出，再说明每项检查没有证明什么，以及哪些内容没有人检查过。
-- **以结论收尾：** 最后一行写明 `Needs you: X (recommendation: Y)`（需要你：X，建议：Y），不提问；没有待决事项时写 `Needs you: nothing`。
-- **默认控制在一屏之内**，需要时再展开细节。
-
-### 实测结果
-
-基准测试、回测、A/B 测试和模型训练的结果，按**理论预期 → 实测 → 是否一致 → 机理**呈现：
-
-- **预测：** 在看到数据之前写好，附上停止规则；噪声底至少由三次重复运行测出。
-- **运行记录表：** 几天内陆续得到的结果记入运行记录表；满足停止规则之前，不下结论。
-- **两种结论：** 规则结论按事先约定的规则机械判定；这个方向是否还值得继续，由你来判断。
-
-### 学习
-
-- **你先预测：** 交付模式（`ship`）是默认模式，不会让你选择，只问一个可以跳过的问题；学习模式（`learn`）只在你提出时开启，最多问三个。
-- **讲解围绕你的失误：** 讲解放在你预测落空的地方，而不是一开始先讲一大段。
-- **仅在学习模式（`learn`）下，`/fu-catch-up` 先提回忆性问题：** 在你看到任务卡之前，提两到三个；交付模式（`ship`）不提问。不设及格线。
-- **预测记录：** 你的命中率会持续记录下来，只供你本人查看，不提交到仓库。
-
-### 结构化模式（可选）
-
-<p align="center"><img src="assets/zh/cartographer.svg" alt="结构化模式：Cartographer，以未知项台账、六项开工条件和定稿规格组成的循环" width="100%"></p>
-
-对于高风险任务，或者当你希望每一步都写明时（这可能对较小的模型有帮助），可以使用 `/fu-brief --structured` 或 `/fu-cartographer`，在任务卡之上叠加 4.x 的完整流程：
-
-- **按象限选择方法**，以及八种编号方法（T1–T8）：盲区排查、方案原型、需求访谈、参考实现、实施计划、实施记录、变更说明、理解测验。
-- **Cartographer 模式：** 每个未知项都成为未知项台账中的一个条目，带有预期、风险值（出错代价 × 出错概率）、处理方式和可逆性分级。每轮显示清晰度，便于你把握方向；六项开工条件决定何时可以开始实施；定稿规格中的验收标准成为任务卡上的验收标准。
-- **完整交付报告：** 先做影响评估，共九个部分，证据在前。
-
-任务卡、四个打断点和新上下文评判照常适用。
-
----
-
-## 命令
+```
+/fu-brief "让导出任务支持断点续传"   # 你先预测，智能体再预测；你确认后冻结
+/fu-catch-up                        # 下次会话：只看变化，以及需要你决定的事
+/fu-debrief                         # 结果来得晚，或需要重新评判时使用
+/fu-view                            # 把任务卡或任务列表渲染成本地 HTML 页面
+```
 
 | 命令 | 作用 |
 |---|---|
-| `/fu-brief <任务>` | 先记下你的预测，再查清现状，然后给出智能体的预测；约定打断点和验收标准；冻结任务卡并提交 |
-| `/fu-catch-up [slug]` | 学习模式（`learn`）下先提回忆性问题，再只显示你上次查看之后的变化，以及需要你做的下一个决定 |
-| `/fu-debrief [slug]` | 由新上下文评判每条冻结的预测；列出证据、各项检查没有证明什么，以及认知修正 |
-| `/fu-cartographer <任务>` | 高风险任务的结构化模式：在任务卡之上运行 Cartographer 的未知项台账、开工条件和定稿规格 |
+| `/fu-brief <任务>` | 先静默阅读仓库，再一次性提问：你的预测（不附任何参考答案），以及最多两项只能由你决定的事，每项附推荐答案。随后写出简报、完整展示，你同意后冻结 |
+| `/fu-catch-up [slug]` | 指定的任务卡，未指定时取最近改动的未完成任务卡：只显示你上次查看之后的变化，以及需要你决定的事 |
+| `/fu-debrief [slug]` | 结果迟到或你要求重新评判时再评一次。通常的复盘就是完成报告本身 |
+| `/fu-view [slug \| --list]` | 用 `fu render` 渲染任务卡或任务卡列表 |
 
-直接说“brief me”“catch me up”“where were we”或“did it match what we expected”也可以。改错字、一行改动这类小事不建任务卡，也不提问。在非交互的 `claude -p` 中，请使用完整名称（`/finding-unknowns:fu-brief`）。
+直接说“brief me”“catch me up”或“did it match what we expected”也可以。在非交互的 `claude -p` 中，请使用完整名称（`/finding-unknowns:fu-brief`）。
 
-| 子代理 | 职责 |
-|---|---|
-| `blindspot-scout` | 为简报做只读侦察：潜在风险、隐含背景、改写后的需求 |
-| `mechanism-auditor` | 在复盘和实测结果中担任新上下文评判 |
-| `quiz-master` | 可选：为 `/fu-catch-up` 起草回忆性问题，并标出没有任何增量记录能够解释的改动 |
-| `ledger-keeper` | 结构化模式：维护 Cartographer 的未知项台账、评分和开工判定 |
-| `prototype-smith` | 针对“看到才知道”的偏好，做出几个真正不同的一次性方案（用于简报和结构化模式） |
+### 一张任务卡的流程：简报、安静执行、完成报告
+
+<p align="center"><img src="assets/zh/lifecycle.svg" alt="一张任务卡的流程：动手前的简报，只在四个打断点停下的安静执行，以及作为复盘的完成报告；中途回来时先回顾" width="100%"></p>
+
+1. **简报。** 你先用自己的话预测；智能体随后查看所需的代码和数据，再给出它的预测。它写下做法、双方的预测、打断点、不可逆操作的确切命令，以及由可能失败的检查组成的验收标准。你只需确认一次，`fu freeze` 就会提交简报，git 记录可以证明预测写在结果之前。
+2. **安静执行。** 智能体只在四个打断点停下。其余情况一律选择最容易撤回的做法，并在增量记录中记一行；代你做出的决定还要写明一旦做错的代价。每个回合都以完成报告或打断点请求结束，不会附带可有可无的提问或选项菜单。
+3. **完成报告即复盘。** 先列证据，再逐条评判预测（先评你的），写明检查没有证明什么、哪些内容无人检查，最后用一行说明需要你决定的事。
+
+### 四层结构：只有一层始终加载
+
+<p align="center"><img src="assets/zh/framework.svg" alt="四层结构：常驻说明；防护钩子与 fu 脚本；任务卡技能与命令；一个评判子代理。所有文件都在 .finding-unknowns/ 下" width="100%"></p>
+
+| 层 | 内容 | 对模型的开销 |
+|---|---|---|
+| 常驻说明 | `CLAUDE.md` 中的 56 个词 | 每个会话约 75 个 token |
+| 防护钩子与 fu 脚本 | 确定性的工作：不可逆命令的确认、格式检查、冻结、完整性检查、预测记录、列表、渲染 | 无需加载；每项一次简短调用 |
+| 任务卡技能与命令 | `SKILL.md`（不超过 700 词）和五个按阶段加载的参考文件；四个很薄的命令 | 只在你开始建卡时加载 |
+| 一个评判子代理 | `mechanism-auditor`，在新上下文中评判 | 只用于含不可逆操作的任务卡、实测结果，或应你要求 |
+
+没有评判子代理时，复盘在同一上下文中完成，并标明 `same-context — weaker`（同一上下文评判，较弱）。
+
+### 四个打断点：其余情况只记一行
+
+<p align="center"><img src="assets/zh/stop-points.svg" alt="四个打断点；不可逆操作写明确切命令，由防护钩子请你确认，只执行一次，相关检查只做演练；其余情况记录在案" width="100%"></p>
+
+1. **不可逆操作：** 改写或删除数据、删除文件、生产环境、资金、对外发布、对他人的承诺。确切命令写在简报的 `Irreversible:` 行上，只执行一次，验收标准中针对它的检查只做演练（dry run）。装有防护钩子时，权限确认提示就是打断点，你的回答就是同意与否；没有钩子时，智能体会停下，只有你在对话中明确同意这条命令，它才会执行（“继续吧”不算）。
+2. **范围变化：** 超出简报约定的范围。
+3. **前提失效：** 简报中的前提或某个反证条件已被推翻，且没有可以撤回的做法。两次修复因同一个假设而失败时，先记下这个假设并加以检验；第三次失败即触发这个打断点。
+4. **预算超支：** 超出简报中约定的倍数。
+
+### 防护钩子：只提醒，不拦截
+
+防护钩子是插件自带的 Bash `PreToolUse` 钩子。某条命令与未完成任务卡上的 `Irreversible:` 行相符时，它返回 `ask`，Claude Code 随即弹出原生的权限确认提示，显示确切命令和对应的任务卡。命令执行过之后，再次尝试会重新请你确认，并提示“already ran once at {time}; a post-check must not re-execute it”（已于某时执行过一次，事后检查不得重新执行）。通用的破坏性命令（`rm -rf`、强制推送、`reset --hard`、`DROP TABLE`）只以哈希形式记录，开启严格配置后才会请你确认。
+
+- **只作提醒。** 它只请你确认，从不拒绝；出错时一律放行，遇到任何错误、没有任务卡或没有匹配的命令，它都不做任何处理。经由其他主机执行的命令（`ssh host '…'`）不在它的识别范围内。
+- **强制约束**要靠 Claude Code 自身的权限系统：在用户级或托管设置中为这条确切命令添加 `ask` 规则，智能体无法修改这些设置。例如 `{"permissions": {"ask": ["Bash(python publish.py build/quotes.json)"]}}`。
+- **模式：** 在 `.finding-unknowns/profile.md` 中设置 `guard: off | log | ask`。插件安装默认为 `ask`，`install.sh` 安装默认为 `off`。
+- **尚未验证：** `ask` 在 bypass-permissions 模式下的表现，以及一次实际运行。在无人应答的 `claude -p` 中，Claude Code 会拒绝该调用，智能体会读到原因。
+
+### 完成报告即复盘：证据在前，结论在后
+
+<p align="center"><img src="assets/zh/debrief.svg" alt="复盘的顺序：证据、逐条评判预测（先评你的）、完整性检查、检查不能证明什么、未检查、认知修正、结论、需要你决定的事" width="100%"></p>
+
+任务卡上的工作完成时，你收到的报告就是复盘，顺序如下：
+
+- **证据：** 实际运行的命令及其输出，先于任何说明。
+- **每条预测都从冻结的任务卡原文引用，先列你的，** 附上实测值、是否一致的判定（`consistent · partly · inconsistent · can't tell · post-hoc fit`，即一致 · 部分一致 · 不一致 · 无法判断 · 事后拟合）和标明层级的机理（`verified · supported · inferred · untested`，即已验证 · 有数据支持 · 推断 · 未检验）。措辞的强度不超过证据的层级。
+- **完整性检查：** `fu integrity` 输出三行：简报与冻结时的提交是否一致、检查文件是否改动、有哪些改动没有任何增量记录能解释。
+- 每项检查**不能证明什么**，以及**未检查**的内容，后者永不为空。
+- **结论：** 哪些成立，哪些没有成立，证据止于何处。
+- **需要你决定的事：** 一项决定附一条推荐，直接陈述，不提问。
+
+**由谁评判。** 任务卡含不可逆操作、涉及实测结果，或你提出要求时，由 `mechanism-auditor` 根据冻结的任务卡和产出文件评判；它看不到对话记录，也看不到执行者自己的判断。其余情况在同一上下文中评判，并标明 `same-context — weaker`。在第 0 阶段，带评判子代理的插件指出“预期没有成立”的比例反而低于 56 个词（0.50 对 0.83），所以现在只在少数场合使用它。
+
+### 实测结果：先写预测，再看数据
+
+基准测试、回测、A/B 测试和模型训练的结果，按**理论预期 → 实测 → 是否一致 → 机理**呈现，这套做法来自作者本人的科研实践：
+
+- 预测在看到数据之前写好，附停止规则；噪声底至少由三次重复运行测出；
+- 几天内陆续得到的结果记入运行记录表，满足停止规则之前不下结论；
+- 规则结论按约定机械判定，这个方向是否还值得继续，由你判断。
 
 ---
 
-## 设计札记
+## 任务卡与视图：同一种嵌套列表
 
-- **为什么 5.0 是重新设计。** 三次评测把 4.x 技能当作提升模型输出的工具来衡量，没有发现可以复现的提升。作者的目标始终在人这一侧，所以 5.0 围绕人来组织。设计本身、两份顾问意见，以及 5.0 在哪些地方没有采纳这些意见，见 [docs/design/5.0.md](docs/design/5.0.md)。
-- **哪些内容换了位置。** Cartographer 模式（风险值、清晰度显示、六项开工条件）、八种编号方法和九个部分的交付报告不再属于默认流程，而是作为**结构化模式**保留，只在你要求时加载。保留的理由是，较小的模型可能需要前沿模型用不着的明确步骤（这是一个尚在检验的假设）。Workflow 执行和必须通过的理解测验已删除。keep-the-reasoning 和 theory-vs-result 已并入现在唯一的技能。
-- **基于设计判断保留的内容。** 不可逆操作确认规则；检查必须有可能失败，并写明它不能证明什么；先查清现状再提问；先预测再看数据；两种结论分开给出。目前还没有证据表明其中任何一项对人有帮助。
-- **实际使用记录：** [docs/field-notes](docs/field-notes/)。
+### 任务卡：冻结的简报加只追加的记录
 
-### 路线图
+<p align="center"><img src="assets/zh/card.svg" alt="任务卡的结构：五行页头、冻结的简报、修订、增量记录汇总、认知修正、待办与复盘；旁边是单独的增量记录文件" width="100%"></p>
 
-- **第 0 阶段：** 模拟用户评测，分三组：不装插件、在 `CLAUDE.md` 中写一段 60 个词的说明、安装插件。如果插件的效果不如这 60 个词，就改为发布这 60 个词。
-- **较小的模型：** 用同一批模拟用户任务测试一个 27B 到 38B 的开放权重模型，对比不装插件、5.0 和结构化模式。
-- **第 1 阶段：** 招募 8 到 12 名参与者，与未安装插件的 Claude Code 做交叉对照，并在 48 到 72 小时后测试他们的理解程度。
-- **SessionStart 钩子**目前放在 [`extras/`](extras/session-start-hook/README.md) 中。只有第 0 阶段表明它能帮助新会话找到任务卡，才会正式发布。
+任务卡保存在 `.finding-unknowns/tasks/{slug}.md`，由 `fu freeze` 提交。所有地方都用同一种格式：固定的键、固定的顺序、嵌套列表，不用表格。
+
+```
+P1 (you · medium) "the bulky parcel's cheapest quote is Economy at 4.00"
+  - falsifier: cheapest(bulky) is not Economy 4.00
+  - should not change: the small parcel stays Economy 3.00
+```
+
+- **页头：** 目标与状态、需要你决定的事、模式与你上次查看的时间，以及时间凭据（冻结时的提交）。
+- **冻结的简报：** 做法及每项决定的理由；先列你的预测（原文引用），再列智能体的；打断点；`Irreversible:` 行；验收标准，其中每个检查项都写明它**不能**证明什么。
+- 其后是**修订**（写明日期，只追加；落空的预测照样评判）、增量记录的汇总、**认知修正**（“你原以为 X，实际是 Y，因为 Z”）、**待办**，最后是**复盘**。
+- **任务卡之外：** `{slug}.deltas.md` 中，每次偏离计划、每处意外、每个代你做出的决定各占一行；决定记录 `decisions.md` 保存只能由你给出的答案，原文引用并注明日期，答过的问题不会再问。
+
+`fu lint` 按 [`references/card.md`](skills/finding-unknowns/references/card.md) 检查任务卡格式。
+
+### 终端列表：默认视图
+
+在终端里，一切都以嵌套列表呈现。下面是对本仓库测试用例运行 `fu list --all` 的输出（未完成的任务卡在前；只运行 `fu list` 时只显示这些）：
+
+```
+search-export · building
+  - needs you: nothing
+  - last seen: never · unseen deltas: 1
+  - graded: not yet
+quote-export · debriefed
+  - needs you: the carrier's remote-zone rate card (recommendation: send it and I re-check parcel 3; settles whether 8.00 stands)
+  - last seen: after D3 · unseen deltas: 0
+  - graded: you 1 of 2 held · agent 1 of 1 held
+```
+
+你或智能体累计有五条预测得到评判后，会多出一行校准信息，例如 `You: 4 of 6 held · Agent: 6 of 6 held`；智能体的预测如果全部成立，多半说明它预测得过于保守。
+
+### HTML 视图：复杂任务可选
+
+<p align="center"><img src="assets/view-card.png" alt="已复盘任务卡的 HTML 视图：最上方是需要你决定的事，其后是证据止于何处、检查没有证明什么，以及按时间排成一行的事件条" width="80%"></p>
+
+对于复杂任务（含不可逆操作、预测超过三条，或你预计会中途离开再回来），确认简报时会附带一句，询问是否需要 HTML 视图。你的选择记在 `profile.md` 中，不会单独再问。`fu render` 用固定模板生成 `.finding-unknowns/view/{slug}.html`：不含脚本，不联网，所有内容都经过转义。页面最上方是需要你决定的事和证据止于何处，其后用一行按时间顺序列出发生的事件，并标出不可逆操作。任务列表页用一行统计显示你的校准情况。视图只补充细节，绝不会出现终端里没有报告的落空预测。
+
+---
+
+## 小模型：使用严格配置
+
+使用开放权重模型或其他小模型时，可以开启严格配置：运行 `fu init --strict`，或直接说“strict”。它会在 `profile.md` 中写入 `strict: yes`：
+
+- 智能体按 `/fu-brief` 中的模板逐项填写，而不是自行组织任务卡；
+- `fu lint` 强制执行上限（智能体的预测不超过 3 条，验收检查不超过 5 项，每个字段不超过 20 个词，任务卡的动态部分不超过 40 行），并且必须在请你确认简报之前通过；
+- 你的预测是一个加引号的空位，否则记为 `P: none given`；
+- 防护钩子处于 `ask` 时，通用的破坏性命令也会请你确认。
+
+这一设计依据的是一次未评分的运行：一个小模型按 4.x 结构化流程工作，产出了一份井然有序的文档，结果本身却是错的，而且不可逆。严格配置能否做得更好，尚未检验；设计文档中列出了一项三次运行的检验（见[第 5 节](docs/design/5.2.md#5-small-models)）。
+
+---
+
+## 经典版：v4 分支
+
+结构化模式、Cartographer 模式（未知项台账、按风险值排序、六项开工条件）、八种编号方法和 4.x 的子代理都不在 5.x 中，而是保留在 `v4` 分支（v4.3.2），只做缺陷修复：
+
+```bash
+git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
+cd finding-unknowns-skill && git checkout v4 && bash install.sh
+```
+
+---
+
+## 原则：预测在前，证据为准
+
+- **你先预测。** 你的预测在你看到智能体的预测之前就以原话记录，并且最先评判。
+- **先查再问。** 代码、文档或数据能回答的，智能体不拿来问你；它只问必须由你决定的事。
+- **检查必须有可能失败**，并写明它不能证明什么。
+- **只为四种情况打断，其余只记一行。** 打断会占用你的注意力；一行增量记录在你阅读之前不花任何成本。
+- **能由代码保证的，交给代码。** 不可逆命令的确认、冻结的简报和完整性检查都是机械执行的，而不是写在说明里的承诺。
+- **不为失误圆场。** 再好的解释也只能说明预测为何落空，不能把它变成命中。
+- **不说超出证据的话。** 每个组成部分都是基于设计判断保留的；实际测到了什么，上文已经写明。
+
+这些原则来自 Thariq Shihipar 的发现未知项指南，以及 Addy Osmani 对**委托 → 依赖 → 放弃判断**这一滑坡的论述（“放弃判断”一词出自 Shaw 与 Nave 的 _Thinking—Fast, Slow, and Artificial_，SSRN 6097646）。
+
+### 路线图：先做 Tier 1 检验
+
+- **Tier 1 检验：** 选取第 0 阶段的四个场景，每个运行两次，比较 56 个词、82 个词的候选版本、一段字数相同的安慰剂对照，以及带防护钩子的插件。只看机械判定的指标（例如不可逆操作在用户同意后恰好执行一次）；它能发现功能失效，分辨不出细微差异。
+- **小模型：** 严格配置与 4.x 结构化流程对比，各运行三次。
+- **第 1 阶段：** 真人参与的研究，推迟而非取消。在此之前，本项目不声称能提升理解。
 
 ---
 
 ## 文档
 
 - **[5 分钟教程](docs/TUTORIAL.zh.md)：** 以一张任务卡为例，从简报到复盘
-- **[术语表](docs/GLOSSARY.md)：** 任务卡、预测、验收标准、打断点、可逆性分级、两种结论
-- **[架构](docs/ARCHITECTURE.md)：** 文件、子代理、数据流、设计原则
-- **[5.0 设计](docs/design/5.0.md)：** 为什么这样设计、如何设计，以及评测计划
-- **[SKILL.md](skills/finding-unknowns/SKILL.md)** 及其[参考文件](skills/finding-unknowns/references/card.md)
+- **[术语表](docs/GLOSSARY.md)：** 任务卡、预测、验收标准、打断点、可逆性分级、各类结论（英文）
+- **[架构](docs/ARCHITECTURE.md)：** 四层结构、文件与数据流（英文）
+- **[5.2 设计](docs/design/5.2.md)**（现行设计）与 **[fu 脚本规格](docs/design/fu-cli.md)**（英文）
+- **[SKILL.md](skills/finding-unknowns/SKILL.md)** 及其[任务卡格式](skills/finding-unknowns/references/card.md)
 - **[示例](EXAMPLES.md)：** 可直接复制的提示词
 - **[更新日志](CHANGELOG.md)** · **[AGENTS.md](AGENTS.md)** · **[贡献指南](CONTRIBUTING.md)**
 
 ---
 
-## 环境要求
+## 环境要求：Python 3.8 与可选的 git
 
-- **Claude Code：** 命令行、桌面应用或 IDE 扩展均可。这些 Markdown 文件在 Codex 中同样可用。
-- **无运行时，无依赖。** 全部内容都是纯 Markdown。子代理是可选的；没有子代理时，评判在同一上下文中完成，并注明这种评判较弱。
-- **git：** 用于提交任务卡（可选；没有 git 时，时间凭据改为自行记录）。
+- **Claude Code：** 命令行、桌面应用或 IDE 扩展均可。技能的 Markdown 文件在 Codex 中同样可用，但没有防护钩子。
+- **Python 3.8 或更高版本：** fu 脚本和防护钩子需要，只用标准库。
+- **git：** 用于冻结任务卡（可选；没有 git 时，时间凭据改为自行记录，也不做完整性检查）。
 - **`bash`：** 仅 `install.sh` 需要。
 
 ## 项目结构
@@ -269,16 +353,19 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 ```
 finding-unknowns-skill/
 ├── .claude-plugin/          插件与插件市场清单
-├── commands/                /fu-brief · /fu-catch-up · /fu-debrief · /fu-cartographer（只负责转发）
+├── commands/                /fu-brief（含任务卡模板）· /fu-catch-up · /fu-debrief · /fu-view
 ├── skills/finding-unknowns/
-│   ├── SKILL.md             任务卡、三个操作、打断点、常驻规则
-│   └── references/          card · brief · debrief · results · results-examples；结构化模式：structured · cartographer · handoff-full
-├── agents/                  blindspot-scout（sonnet）· mechanism-auditor · quiz-master · ledger-keeper · prototype-smith
-├── extras/session-start-hook/   尚未发布，等待第 0 阶段评测
+│   ├── SKILL.md             任务卡、四个打断点、常驻规则（不超过 700 词）
+│   └── references/          card（格式规范）· brief · debrief · results · view
+├── agents/                  mechanism-auditor（新上下文评判，仅在少数场合使用）
+├── scripts/                 fu.py（lint、freeze、integrity、log、list、render、guard）· validate.py · diagrams/
+├── hooks/hooks.json         防护钩子（仅插件安装）
+├── bin/fu                   可选的包装脚本，便于把 fu 加入 PATH
+├── tests/                   Tier 0 测试与示例任务卡
 ├── docs/                    design/、evals/、field-notes/、ARCHITECTURE、GLOSSARY、TUTORIAL（含 .zh）
-├── assets/                  八张示意图（SVG）；assets/zh/ 为中文版
-├── CLAUDE.md                免安装的单文件精简版
-├── install.sh               安装脚本；会删除能识别的 4.x 遗留文件
+├── assets/                  示意图（SVG）与 HTML 视图截图；assets/zh/ 为中文版
+├── CLAUDE.md                经过评测的 56 个词 · CLAUDE.next.md：未经检验的 82 词候选
+├── install.sh               安装脚本，不含钩子；只改名备份，从不删除
 ├── AGENTS.md · EXAMPLES.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE（MIT）
 └── README.md（英文，以此为准）· README.zh.md（简体中文）
 ```
@@ -289,10 +376,12 @@ finding-unknowns-skill/
 
 本项目以 [MIT 许可证](LICENSE)发布。
 
-- 发现未知项的方法：Thariq Shihipar，_"A Field Guide to Fable: Finding Your Unknowns"_（[@trq212](https://x.com/trq212/status/2073100352921215386)）。
+- 发现未知项：Thariq Shihipar，_"A Field Guide to Fable: Finding Your Unknowns"_（[@trq212](https://x.com/trq212/status/2073100352921215386)）。
+- 交付环节、“检查没有证明什么”，以及不让评判者看到执行者的推理：Addy Osmani，_"Critical thinking when agents do the work"_（[原文](https://x.com/addyosmani/status/2117512471930167377)）。
 - “放弃判断”（cognitive surrender）：Shaw 与 Nave，_Thinking—Fast, Slow, and Artificial_（SSRN 6097646）；认知债务：Margaret-Anne Storey。
-- 交付环节与验收标准：Addy Osmani，_"Critical thinking when agents do the work"_（[原文](https://x.com/addyosmani/status/2117512471930167377)）。
 - 理论预期 → 实测 → 是否一致 → 机理：作者本人的实证研究实践。
-- 5.0 的设计依据 Fable 5.2 的顾问意见，并参考了 GPT 6 Astra 的第二份意见（[意见原文](docs/design/5.0-advisors/fable.md)）。
+- 复盘的字段规则（措辞与证据层级相符、三段式结论、为清晰而改写时只改措辞）转述自 Yuan Yizhe 的 [nature-skills](https://github.com/Yuan1z0825/nature-skills)（Apache-2.0）中的写作原则，未复制原文。撰写面向论文的文字时，请直接使用其中的 `nature-polishing` 和 `nature-figure` 技能。
+- 5.2 从其他项目借鉴的做法：只问必须由人决定的事、去掉强制侦察的子代理，依据 gateguard（everything-claude-code）预注册的提问效果评测；记录已答复的决定（`decisions.md`），借鉴 Matt Pocock 技能中记录架构决策的习惯；每个代你做出的决定都写明做错的代价，借鉴 superpowers（Jesse Vincent）的裁决记录；学习模式的停止规则，来自 pstack 的 `teach`（Lauren Tan）。
+- 5.2 的设计依据 Fable 5.2 的顾问意见（[设计文档](docs/design/5.2.md)）；5.0 的两份评审意见见 [docs/design/5.0-advisors](docs/design/5.0-advisors/fable.md)。
 
 **声明。** 本项目是独立的社区项目，与 Anthropic 无关联，未获其授权或认可。

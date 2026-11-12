@@ -10,26 +10,26 @@
 </defs>
 <rect x="0.5" y="0.5" width="1199" height="759" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <rect x="0.5" y="0.5" width="1199" height="759" rx="18" fill="url(#dots)" opacity="0.5"/>
-<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 05 · QUIET BUILD</text>
+<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// 04 · QUIET BUILD</text>
 <text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Four reasons to stop; everything else is a line</text>
 <text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Checked against the card, never against the agent's sense of what feels risky.</text>
 <rect x="40" y="150" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="160" width="5" height="64" rx="2.5" fill="#D97757"/>
 <rect x="62" y="166" width="30" height="30" rx="6" fill="#141413"/>
 <text x="77.0" y="186.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">1</text>
-<text x="106" y="188" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Irreversible action</text>
+<text x="106" y="188" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Irreversible step</text>
 <text x="106" y="214" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">data rewritten or deleted · production · money · publishing · promises</text>
 <path d="M544 192L606 192" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <text x="575" y="184" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">STOP</text>
 <rect x="612" y="150" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
-<text x="632" y="186" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">The agent prepares the exact command.</text>
-<text x="632" y="210" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">You run it or say yes to that one command; a post-check runs before it closes.</text>
+<text x="632" y="186" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Exact command on a Brief Irreversible: line; runs once.</text>
+<text x="632" y="210" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Guard asks, or a chat yes to that exact command; dry-run checks.</text>
 <rect x="40" y="248" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="258" width="5" height="64" rx="2.5" fill="#D97757"/>
 <rect x="62" y="264" width="30" height="30" rx="6" fill="#141413"/>
 <text x="77.0" y="284.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">2</text>
 <text x="106" y="286" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#141413" font-weight="700">Scope change</text>
-<text x="106" y="312" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">outside the Brief's approach or contract</text>
+<text x="106" y="312" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">outside the Brief</text>
 <path d="M544 290L606 290" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <text x="575" y="282" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">STOP</text>
 <rect x="612" y="248" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
@@ -44,7 +44,7 @@
 <text x="575" y="380" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#C15F3C" font-weight="700" text-anchor="middle">STOP</text>
 <rect x="612" y="346" width="548" height="84" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
 <text x="632" y="382" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">You confirm the Amendment.</text>
-<text x="632" y="406" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">The original prediction is still graded.</text>
+<text x="632" y="406" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Two failed fixes on one assumption: test it; a third failure stops.</text>
 <rect x="40" y="444" width="500" height="84" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="454" width="5" height="64" rx="2.5" fill="#D97757"/>
 <rect x="62" y="460" width="30" height="30" rx="6" fill="#141413"/>
@@ -60,7 +60,7 @@
 <rect x="40" y="564" width="1120" height="66" rx="12" fill="#EEF1E8" stroke="#788C5D" stroke-width="1.5" filter="url(#sh)"/>
 <rect x="40" y="574" width="5" height="46" rx="2.5" fill="#788C5D"/>
 <text x="64" y="592" font-family="Georgia, 'Times New Roman', serif" font-size="18" fill="#788C5D" font-weight="700">Keep going.</text>
-<text x="64" y="616" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Most reversible option, one delta line on the card; questions that can wait go to Open.</text>
+<text x="64" y="616" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Most reversible option, one line in the deltas file; a decision made for you states its cost if wrong.</text>
 <text x="40" y="658" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700" letter-spacing="1.5">LANES · CLASSIFY UPWARD WHEN UNSURE</text>
 <rect x="40" y="672" width="1120" height="16" rx="8" fill="url(#spec)"/>
 <text x="40" y="712" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#788C5D" font-weight="700">reversible</text>
@@ -68,5 +68,5 @@
 <text x="430" y="712" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#B07A4F" font-weight="700">wide</text>
 <text x="475.6" y="712" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">undoable, touches shared surface</text>
 <text x="820" y="712" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#B5442E" font-weight="700">irreversible</text>
-<text x="932.8000000000001" y="712" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">downgrade only with your yes</text>
+<text x="932.8000000000001" y="712" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">exact command, one run</text>
 </svg>

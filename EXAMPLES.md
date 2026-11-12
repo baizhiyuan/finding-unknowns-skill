@@ -1,9 +1,20 @@
 # Examples
 
-Copy-paste prompts for 5.0. Adapt the specifics to your task. The prompts are
+Copy-paste prompts for 5.2. Adapt the specifics to your task. The prompts are
 illustrative; [A real blind-spot pass (recorded)](#a-real-blind-spot-pass-recorded) is an
-actual run. For one card walked end to end, see the [5-minute tutorial](docs/TUTORIAL.md);
-for the terms, the [Glossary](docs/GLOSSARY.md).
+actual run from 4.x. For one card walked end to end, see the
+[5-minute tutorial](docs/TUTORIAL.md); for the terms, the [Glossary](docs/GLOSSARY.md).
+
+## No plugin: the 56 words
+
+Append [`CLAUDE.md`](CLAUDE.md) to `~/.claude/CLAUDE.md` (see the
+[README](README.md#recommended-setup-56-words)). Then work as usual; the assistant asks for
+your prediction first. To be explicit on one task:
+
+```
+Before you start on the CSV importer rewrite, ask me what I expect, then give your own
+prediction, and write both under .finding-unknowns/tasks/ with what would prove each wrong.
+```
 
 ## Start a brief
 
@@ -12,49 +23,73 @@ for the terms, the [Glossary](docs/GLOSSARY.md).
 order-execution path
 ```
 
-You are asked for your prediction first (it is your prior), then the agent maps the
-territory and reports what contradicts it, then gives its own prediction. Ask for a
-blind-spot pass explicitly if you want one:
+You get one message with at most three questions: your prediction first, with no
+suggested answer, then decisions only you can make, each with a recommendation. Answer in
+one reply; "yes" accepts the recommendations. Nothing is built until you approve the
+Brief.
+
+Saying what you already believe helps the agent check it:
 
 ```
-/fu-brief migrate the session store from Redis to Postgres. What am I missing? Do a
-blind-spot pass against my prior before writing the Brief: I expect the hard part to be
-the TTL cleanup job.
+/fu-brief migrate the session store from Redis to Postgres. My prediction: the hard part
+is the TTL cleanup job, medium confidence.
 ```
 
-Nothing is built until you say yes to the Brief and its contract.
+## An irreversible step
 
-## Learn vs ship mode
-
-`ship` by default and never asked; say you want to learn and it is stored in
-`.finding-unknowns/profile.md` (personal, not committed). Edit that file, or ask:
+Name it, so the Brief gets an `Irreversible:` line with the exact command:
 
 ```
-Switch this project to learn mode: ask me up to three predictions per brief, and on
-the rows I get wrong, give me the why with one concrete example.
+/fu-brief regenerate build/quotes.json and publish it with `python publish.py
+build/quotes.json`. Publishing can only happen once.
 ```
 
+The contract's checks for that step are dry runs (`--dry-run`, plan output). With the
+plugin's guard hook, Claude Code asks you before the exact command runs, and asks again if
+anything tries to run it a second time. With `install.sh` (no hook), the agent stops and
+waits for your chat yes to that exact command.
+
+For enforcement the agent cannot edit, add a permission rule to your user settings
+(`~/.claude/settings.json`):
+
+```json
+{ "permissions": { "ask": ["Bash(python publish.py build/quotes.json)"] } }
 ```
-Back to ship mode (the default): one skippable prediction question, one-line
-explanations, no recall questions.
+
+## Learn mode and the strict profile
+
+`ship` by default and never asked. To learn:
+
 ```
+Switch this project to learn mode: on the predictions I miss, give me a short why with
+one example.
+```
+
+For a small or open-weight model, turn on the strict profile (template only, lint caps,
+destructive commands ask):
+
+```
+Use the strict profile for this project.
+```
+
+or, from your project's directory, run `fu init --strict` (with the repository's `bin/fu`
+on your `PATH`).
 
 ## A research claim with a stopping rule
 
 ```
 /fu-brief test whether the new tokenizer cuts p95 latency on the bench suite.
-Write the prediction card before anything runs: my prediction first, then yours, each
-with direction, rough size, where it should show up and where it should not. Measure
-the noise floor from at least three reruns of the current tokenizer first. Stopping
-rule: 5 seeds per arm, no verdict before all 10 runs are in. If I want a pass/fail
-line, explain it in plain words before freezing it.
+My prediction first, then yours, each with direction, rough size, where it should show
+up and where it should not. Measure the noise floor from at least three reruns of the
+current tokenizer first. Stopping rule: 5 seeds per arm, no verdict before all 10 runs
+are in.
 ```
 
 As results arrive over days:
 
 ```
-Add run 3 to the tokenizer claim's run table: config, what changed, result,
-cumulative trials, data spent. One-line note only; no verdict yet.
+Add run 3 to the tokenizer claim's run table: config, what changed, result, cumulative
+trials. One-line note only; no verdict yet.
 ```
 
 ## Resume where you left off
@@ -63,33 +98,40 @@ cumulative trials, data spent. One-line note only; no verdict yet.
 /fu-catch-up
 ```
 
+With several open cards it takes the most recently changed one and says which in one
+line. To see them all:
+
 ```
-Catch me up on export-resumable. Ask me the recall questions first.
+Show me every open card.
 ```
 
-With several open cards, `/fu-catch-up` takes the most recently changed one and says
-which in one line (no list, no question).
+## Views
+
+```
+/fu-view                # the most recently changed card as a local HTML page
+/fu-view --list         # every card, with your calibration as a stat line
+```
 
 ## Debrief
+
+Carded work ends with the Debrief as its completion report. For results that arrive
+later, or a second look:
 
 ```
 /fu-debrief export-resumable
 ```
 
 ```
-Did it match what we expected? Quote each prediction from the frozen card, mine first,
-have a fresh subagent grade them from the card and the artifacts, and explain only
-the ones that missed. Then the commands you ran with their output, what each check did
-not prove, and what nobody checked.
+Re-grade export-resumable with a fresh subagent: the frozen card and the artifacts only,
+mine first, and keep the earlier Debrief.
 ```
 
-For a measured result, the rows follow Theory → Measured → Consistent? → Mechanism, and
-the rule verdict stays apart from the verdict on the idea:
+For a measured result, keep the two verdicts apart:
 
 ```
-Is this result consistent with the prediction card? Keep the frozen rule's verdict
-(PASS/FAIL/UNCERTAIN) separate from whether the idea is still alive; that second
-verdict is mine to make.
+Is this result consistent with the prediction? Keep the frozen rule's verdict
+(PASS/FAIL/UNCERTAIN) separate from whether the idea is still alive; that second verdict
+is mine.
 ```
 
 ## A reproducible failure (Debug path)
@@ -102,26 +144,14 @@ outcome, the fix by path, then the same repro re-run plus one neighbouring case 
 should not change.
 ```
 
-## No install: the passive CLAUDE.md
-
-Copy [`CLAUDE.md`](CLAUDE.md) into a project root, or paste it into your own. It carries
-the habits without the commands or agents: ask for your prediction first, stop only at
-the four points, grade afterwards and say what each check did not prove. Then work as
-usual:
-
-```
-Before you start on the CSV importer rewrite, ask me what I expect, then give your own
-prediction, and write both under .finding-unknowns/tasks/.
-```
-
 ## A real blind-spot pass (recorded)
 
 Unlike the prompts above, this one was actually run: recorded 2026-11-10 with
 finding-unknowns v4.2.0, by sending a brief directly to the `blindspot-scout` agent, on
-[pallets/itsdangerous](https://github.com/pallets/itsdangerous) at commit `672971d`. In
-5.0 the same agent serves the blind-spot pass inside `/fu-brief`, and its compact report
-has the same shape: Surprises against the person's prior, at most three cited findings, a
-rewritten request.
+[pallets/itsdangerous](https://github.com/pallets/itsdangerous) at commit `672971d`. The
+agent is not part of 5.2 (it remains on branch `v4`): in 5.2 the agent reads the
+repository silently before the Brief, and Claude Code's own explorer covers larger
+sweeps.
 
 The user's prior was "add a new parameter to Signer and change how signatures are
 verified". The scout's first Surprise: the feature already exists. `secret_key` accepts a

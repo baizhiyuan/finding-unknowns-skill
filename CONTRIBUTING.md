@@ -7,10 +7,12 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
 
 1. Fork the repository and create a feature branch from `main`.
 2. Make your changes. The one skill lives in `skills/finding-unknowns/SKILL.md` (at most
-   1,500 words); per-phase detail is in `skills/finding-unknowns/references/`. Changes in
-   behaviour start from the [5.0 design](docs/design/5.0.md). See [`AGENTS.md`](AGENTS.md)
+   700 words); per-phase detail is in `skills/finding-unknowns/references/`, and everything
+   deterministic is in `scripts/fu.py` (contract: [`docs/design/fu-cli.md`](docs/design/fu-cli.md)).
+   Changes in behaviour start from the [5.2 design](docs/design/5.2.md). See [`AGENTS.md`](AGENTS.md)
    for what to keep in sync.
-3. If you change the skill, keep the passive drop-in [`CLAUDE.md`](CLAUDE.md),
+3. If you change the skill, keep [`CLAUDE.next.md`](CLAUDE.next.md) (the measured
+   [`CLAUDE.md`](CLAUDE.md) is pinned and changes only after a new check),
    [`EXAMPLES.md`](EXAMPLES.md), the [glossary](docs/GLOSSARY.md), and the tutorials
    ([`docs/TUTORIAL.md`](docs/TUTORIAL.md), [`docs/TUTORIAL.zh.md`](docs/TUTORIAL.zh.md))
    consistent with it.
@@ -23,12 +25,14 @@ welcome, including new techniques, prompt refinements, documentation, and diagra
   and judge work an agent does. Execution and delivery concerns belong to other tools.
 - **Evidence.** Whether the plugin helps people is untested. Do not add claims beyond the
   design and the evals in `docs/evals/`.
-- **Commands.** `commands/` holds only `/fu-brief`, `/fu-catch-up` and `/fu-debrief`. Do not add
+- **Commands.** `commands/` holds only `/fu-brief`, `/fu-catch-up`, `/fu-debrief` and `/fu-view`. Do not add
   a command with the same name as a skill or a Claude Code built-in: Claude Code already
   exposes each skill as a slash command, and a same-named command shadows it.
 - **Prose quality.** Techniques should be actionable and concise. Prefer concrete, copy-paste
   prompts over abstract description.
-- **Diagrams.** SVG assets in `assets/` must be well-formed XML and should render on GitHub.
+- **Diagrams.** `scripts/diagrams/gen5.py` generates the SVGs in `assets/` and the Chinese
+  sources in `assets/zh/src/` (`cd scripts/diagrams && python3 gen5.py ../..`). They must be
+  well-formed XML and should render on GitHub.
   `assets/zh/` holds the Simplified Chinese versions used by `README.zh.md`; when you change
   a diagram, update its Chinese counterpart in the same change.
 - **Chinese diagrams are generated.** Edit the source in `assets/zh/src/NAME.svg` (Chinese text

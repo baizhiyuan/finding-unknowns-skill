@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns v5.0.0</title><desc id="d">Banner: a pin clearing fog on a dotted map. One task card per task: you predict first, the agent builds quietly, a fresh context grades what you both expected.</desc>
+<title id="t">finding-unknowns v5.2.0</title><desc id="d">Banner: a pin clearing fog on a dotted map. You predict first, the agent builds quietly and stops only at four points, and the completion report grades every prediction.</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <pattern id="dotsb" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#D97757" opacity="0.75"/></pattern>
@@ -32,22 +32,22 @@
 <circle cx="930" cy="186" r="15" fill="#FAF9F5"/><circle cx="930" cy="186" r="5" fill="#D97757"/>
 </g>
 
-<text x="56" y="70" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#C15F3C" font-weight="700" letter-spacing="1.5">[ CLAUDE CODE PLUGIN · v5.0.0 ]</text>
+<text x="56" y="70" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#C15F3C" font-weight="700" letter-spacing="1.5">[ CLAUDE CODE PLUGIN · v5.2.0 ]</text>
 <text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#141413" font-weight="700">finding-unknowns</text>
 <text x="56" y="198" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#141413">You predict first. The agent builds quietly.</text>
-<text x="56" y="226" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">A fresh context then grades both predictions.</text>
+<text x="56" y="226" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">The completion report grades every prediction.</text>
 <rect x="56" y="262" width="100" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
 <text x="105.8" y="282.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">task card</text>
 <rect x="165.60000000000002" y="262" width="133" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
 <text x="232.2" y="282.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">4 stop-points</text>
-<rect x="308.80000000000007" y="262" width="200" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="409.0" y="282.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">fresh-context grading</text>
-<rect x="56" y="300" width="91" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="101.6" y="320.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">5 agents</text>
-<rect x="157.2" y="300" width="167" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="240.6" y="320.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">+ structured mode</text>
-<rect x="334.0" y="300" width="184" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
-<text x="425.8" y="320.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">+ theory → measured</text>
+<rect x="308.80000000000007" y="262" width="158" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
+<text x="388.0" y="282.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">report = debrief</text>
+<rect x="56" y="300" width="108" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
+<text x="110.0" y="320.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">guard hook</text>
+<rect x="174.0" y="300" width="100" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
+<text x="223.8" y="320.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">fu script</text>
+<rect x="283.6" y="300" width="100" height="30" rx="15.0" fill="#F5DDD1" stroke="#D97757"/>
+<text x="333.4" y="320.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">1 auditor</text>
 <rect x="56" y="352" width="520" height="40" rx="8" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1"/>
 <circle cx="76" cy="372" r="4" fill="#B5442E"/><circle cx="92" cy="372" r="4" fill="#D4A27F"/><circle cx="108" cy="372" r="4" fill="#788C5D"/>
 <text x="128" y="377" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#D97757">$</text>
