@@ -1,0 +1,4 @@
+[
+  {"label": "Monthly fee", "cents": 1250},
+  {"label": "Refund", "cents": -125}
+]

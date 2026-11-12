@@ -1,0 +1,5 @@
+Base commit: cf8cc097945b63d8712967d096a3bfe2e8c7eb03
+Branch commit: 3e08ab1de0e07c62345e26fe06279f05ac552e73
+The branch commit changes render.py and tests/snapshots/activity.txt together.
+The 41 parameter cases exercise only nonnegative amounts; the remaining case compares the activity snapshot.
+The patch in branch-change.patch is an exact copy of git diff HEAD^ HEAD.

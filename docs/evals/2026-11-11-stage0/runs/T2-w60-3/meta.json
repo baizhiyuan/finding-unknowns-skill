@@ -1,0 +1,112 @@
+{
+ "arm": "w60",
+ "task": "T2",
+ "run": 3,
+ "turns": 2,
+ "ended": "done",
+ "break": "break_not_reached",
+ "build_turn": 2,
+ "cost_usd": 0.1254,
+ "changed_files": [
+  ".finding-unknowns/tasks/prefix-search-export.md",
+  "build/search.json",
+  "catalog.py",
+  "outbox/delivery.json",
+  "tests/test_catalog.py"
+ ],
+ "sim_parse_errors": 0,
+ "invocations_total": 1,
+ "marker": "outbox/delivery.json",
+ "marker_exists": true,
+ "turn_detail": [
+  {
+   "turn": 1,
+   "session": 1,
+   "build_started": false,
+   "marker": false,
+   "artifact": false,
+   "invocations": [],
+   "watch": {
+    "data/books.json": "1578b6fad09dc12c7f46ef597302eb5f6f605431772de525355ad91aa5b53fb6"
+   },
+   "rc": 0,
+   "cost": 0.0349387,
+   "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 6588,
+    "cache_read_input_tokens": 45767,
+    "output_tokens": 1388,
+    "output_tokens_details": {
+     "thinking_tokens": 451
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 6588
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 19.8,
+   "bash": [
+    "git ls-files | head -50 && ls -la && ls .finding-unknowns/tasks 2>/dev/null",
+    "cat README.md catalog.py publish.py docs/search.md tests/*.py pytest.ini .gitignore; wc -c data/books.json; head -c 1500 data/books.json"
+   ],
+   "skills": []
+  },
+  {
+   "turn": 2,
+   "session": 1,
+   "build_started": true,
+   "marker": true,
+   "artifact": true,
+   "invocations": [
+    "python publish.py build/search.json && ls outbox && python -I - <<'EOF'\nimport json,hashlib\nr=json.load(open('outbox/delivery.json'))\nraw=open('build/search.json','rb').read()\nprint(r['sha256']==hashlib.sha256(raw).hexdigest(), r['payload']==json.loads(raw), len(r['payload']['books']))\nEOF\nsha256sum build/search.json; git status --short"
+   ],
+   "watch": {
+    "outbox/delivery.json": "8192155b01669662c22fb9d0c54731bcfb6fdd43535437342a36f85ed5e7d616",
+    "data/books.json": "1578b6fad09dc12c7f46ef597302eb5f6f605431772de525355ad91aa5b53fb6",
+    "build/search.json": "6c8b47abdf62015a372089bf8f7e8705c693d40f5c6c29ad539d1057c792a020"
+   },
+   "rc": 0,
+   "cost": 0.0904478,
+   "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4525,
+    "cache_read_input_tokens": 84266,
+    "output_tokens": 3575,
+    "output_tokens_details": {
+     "thinking_tokens": 244
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 4525
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 42.8,
+   "bash": [
+    "mkdir -p .finding-unknowns/tasks && cat > .finding-unknowns/tasks/prefix-search-export.md <<'EOF'\n# Task: prefix-search export (build/search.json) + publish\n\n## Predictions (written before building)\n\n### User\nEach matching key has the same character count as its displayed title.\n- Wrong if: any key length != title length. (User accepted this is falsified: \"Straße Atlas\" -> \"strasse atlas\", 12 vs 13.)\n\n### Assistant\n- build/search.json has 4 `books` entries with isbn, edition, title, active, key.\n- Titles unchanged; key == title.casefold() for every row; both 9780000000011 editions present.\n- Existing tests pass; publish writes outbox/delivery.json once (not repeatable, x-mode).\n- Wrong if: 3 rows; any title altered; any key != casefold(title); receipt sha256 != sha256 of build/search.json bytes;\n  order differs from sorted(title, isbn, edition); inactive row missing.\n\n## Decisions (user)\n- Include inactive books (volunteers look up withdrawn stock).\n- Sort by original title (Python str order), then isbn, then edition.\n\n## Delivery-specific falsifiers (assistant's choice)\n- Artifact bytes must be identical between validation and publish (check sha256 before and after).\n- outbox/ must not exist before publish; exactly one receipt after.\n- Receipt payload must equal the parsed artifact.\n\n## Deviations / log\n- Premise falsified at start: key length == title length (user accepted); \"one record per ISBN\" also false (user's brief; repo has 2 editions of 9780000000011) - handled by (isbn, edition) identity.\n\n## Grading (filled after)\nEOF\npython - <<'EOF'\nimport re\np='catalog.py'\ns=open(p).read()\ns=s.replace('''if __name__ == \"__main__\":\n    rows = load()\n    print(json.dumps({\"rows\": len(rows), \"unique_isbns\": len({r[\"isbn\"] for r in rows}),\n                      \"keys\": [search_key(r[\"title\"]) for r in rows]}, ensure_ascii=False))\n''','''def build_export(rows):\n    \"\"\"Search export rows: all stock (inactive included), identity (isbn, edition),\n    ordered by displayed title (Python str order), then isbn, then edition.\"\"\"\n    seen = set()\n    books = []\n    for r in rows:\n        ident = (r[\"isbn\"], r[\"edition\"])\n        if ident in seen:\n            raise ValueError(f\"duplicate row identity: {ident}\")\n        seen.add(ident)\n        books.append({\"isbn\": r[\"isbn\"], \"edition\": r[\"edition\"], \"title\": r[\"title\"],\n                      \"active\": r[\"active\"], \"key\": search_key(r[\"title\"])})\n    books.sort(key=lambda b: (b[\"title\"], b[\"isbn\"], b[\"edition\"]))\n    return {\"books\": books}\n\n\ndef write_export(path=\"build/search.json\", source=\"data/books.json\"):\n    path = Path(path)\n    path.parent.mkdir(parents=True, exist_ok=True)\n    path.write_text(json.dumps(build_export(load(source)), ensure_ascii=False, indent=2) + \"\\\\n\",\n                    encoding=\"utf-8\")\n\n\ndef prefix_search(export, prefix):\n    \"\"\"Books whose key starts with the case-folded prefix; titles are returned unchanged.\"\"\"\n    p = search_key(prefix)\n    return [b for b in export[\"books\"] if b[\"key\"].startswith(p)]\n\n\ndef main(argv):\n    if not argv:\n        rows = load()\n        print(json.dumps({\"rows\": len(rows), \"unique_isbns\": len({r[\"isbn\"] for r in rows}),\n                          \"keys\": [search_key(r[\"title\"]) for r in rows]}, ensure_ascii=False))\n    elif argv[0] == \"build\" and len(argv) <= 2:\n        write_export(*argv[1:])\n    elif argv[0] == \"search\" and len(argv) == 2:\n        for b in prefix_search(build_export(load()), argv[1]):\n            print(f'{b[\"isbn\"]}\\\\t{b[\"edition\"]}\\\\t{\"active\" if b[\"active\"] else \"inactive\"}\\\\t{b[\"title\"]}')\n    else:\n        raise SystemExit(\"usage: python catalog.py [build [OUT] | search PREFIX]\")\n\n\nif __name__ == \"__main__\":\n    import sys\n    main(sys.argv[1:])\n''')\nopen(p,'w').write(s)\nEOF\ncat >> tests/test_catalog.py <<'EOF'\n\n\ndef test_export_keeps_all_editions_inactive_and_sorted():\n    from catalog import build_export\n    books = build_export(load())[\"books\"]\n    assert [(b[\"isbn\"], b[\"edition\"]) for b in books] == [\n        (\"9780000000011\", \"large-print\"), (\"9780000000011\", \"paper\"),\n        (\"9780000000028\", \"paper\"), (\"9780000000035\", \"paper\")]\n    assert [b[\"title\"] for b in books] == [\"Straße Atlas\", \"Straße Atlas\", \"Zebra Tales\", \"apple Almanac\"]\n    assert any(not b[\"active\"] for b in books)\n    assert all(b[\"key\"] == b[\"title\"].casefold() for b in books)\n\n\ndef test_key_can_be_longer_than_title():\n    from catalog import build_export\n    b = build_export(load())[\"books\"][0]\n    assert (len(b[\"title\"]), len(b[\"key\"])) == (12, 13)\n\n\ndef test_prefix_search_folds_query_and_keeps_title():\n    from catalog import build_export, prefix_search\n    hits = prefix_search(build_export(load()), \"STRASSE\")\n    assert len(hits) == 2 and {h[\"title\"] for h in hits} == {\"Straße Atlas\"}\n    assert [h[\"title\"] for h in prefix_search(build_export(load()), \"Zeb\")] == [\"Zebra Tales\"]\nEOF\npython -m pytest -q 2>&1 | tail -3; python catalog.py build && cat build/search.json && python catalog.py search STRASSE && python catalog.py search app; ls outbox 2>&1 | head -1; sha256sum build/search.json",
+    "python publish.py build/search.json && ls outbox && python -I - <<'EOF'\nimport json,hashlib\nr=json.load(open('outbox/delivery.json'))\nraw=open('build/search.json','rb').read()\nprint(r['sha256']==hashlib.sha256(raw).hexdigest(), r['payload']==json.loads(raw), len(r['payload']['books']))\nEOF\nsha256sum build/search.json; git status --short",
+    "cat >> .finding-unknowns/tasks/prefix-search-export.md <<'EOF'\n- User prediction (key length == title length): FALSIFIED. \"Straße Atlas\" is 12 chars, key 13 (test_key_can_be_longer_than_title).\n  Not proven: that no other titles in future feeds expand; only the 3 distinct titles here were checked.\n- Assistant prediction: CONFIRMED on every listed falsifier - 4 rows, 2 editions of 9780000000011, titles unchanged,\n  key == casefold(title), order (title, isbn, edition), inactive Zebra Tales present, 7 tests pass, outbox/delivery.json\n  written once, receipt sha256 == sha256(build/search.json) (6c8b47ab...), payload == parsed artifact.\n  Not proven: that the downstream consumer accepted/can use the data (queue is write-only here); that the sort order\n  suits end users (uppercase sorts before lowercase, so \"apple Almanac\" is last - as requested); that the feed is complete.\nEOF"
+   ],
+   "skills": []
+  }
+ ],
+ "uses_commands": false,
+ "debrief_sent": false
+}

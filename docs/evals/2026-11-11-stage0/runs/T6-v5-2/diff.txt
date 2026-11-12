@@ -1,0 +1,256 @@
+diff --git a/.finding-unknowns/tasks/invoice-export-builder.deltas.md b/.finding-unknowns/tasks/invoice-export-builder.deltas.md
+new file mode 100644
+index 0000000..9d48550
+--- /dev/null
++++ b/.finding-unknowns/tasks/invoice-export-builder.deltas.md
+@@ -0,0 +1,7 @@
++# Deltas for invoice-export-builder (append-only)
++D0 2026-11-11 surprise: user claims "same total" and "no credits" contradicted by repo (0.92 vs 0.91; Refund row qty -1) -> data/lines.csv, python invoice.py
++D1 2026-11-11 deviation: builder is new export.py; invoice.py and existing tests untouched
++D2 2026-11-11 checks pass (13 tests, artifact check), I100 total "0.92"; sha256 recorded; stopped before publish
++D3 2026-11-11 published on person yes; post-check passed (sha256, payload)
++D4 2026-11-11 correction: D1 is not a deviation (new export.py was in the frozen Brief); card D2 reads "no surprise, 13 tests pass, artifact check ok, I100 0.92", deltas-file D2 omitted that. Debrief by fresh context.
++D5 2026-11-11 decided-for-you: Refund row assumed to belong in batch; unconfirmed; code+receipt committed 7bb1460, not pushed
+diff --git a/.finding-unknowns/tasks/invoice-export-builder.md b/.finding-unknowns/tasks/invoice-export-builder.md
+new file mode 100644
+index 0000000..73d0077
+--- /dev/null
++++ b/.finding-unknowns/tasks/invoice-export-builder.md
+@@ -0,0 +1,55 @@
++# Invoice export builder
++Goal: reusable export builder + batch command, artifact build/invoices.json, then publish · State: debriefed
++Next decision that needs you: confirm the Refund row belongs in the batch (assumed yes); push is not done
++Mode: ship · Last seen by you: 2026-11-11, after delta D3 (debrief)
++Timing: Brief frozen 2026-11-11, commit bb7060f
++
++## Brief (frozen 2026-11-11)
++Approach: keep per-line rounding because docs/accounting.md requires it, tests/test_invoice.py pins it, and one final rounding moves the batch from 0.92 to 0.91;
++  new export.py (build_export(rows) + `python export.py [--out build/invoices.json]`) because invoice.py's summary command stays untouched;
++  reuse invoice.line_total for every amount because one rounding path;
++  credits keep their sign (Refund exports -0.10; I100 total 0.92), no tax added, tax_class passes through;
++  every amount and total is a JSON string with exactly two decimals, trailing zeros kept (person's instruction);
++  publish last, only on a yes to the exact command.
++Your predictions:  P1 per-line and once-at-end rounding give the same total (no confidence given) · falsifier: any batch where they differ · should not change: the ledger rule. Falsifier fired before freeze: `python invoice.py` printed line 0.92 vs once 0.91.
++  No I100 total, refund-handling or rule-choice prediction given; left to the repo (answers above).
++Agent predictions: No real prediction here beyond what is already measured; contract only
++Stop-points: irreversible action · scope change · dead premise · budget > 2× ~10 tool calls
++Contract:
++| claim | check (can fail) | does NOT prove | lane |
++| per-line rounding preserved | new tests: 3x0.335 -> "1.02", fixture I100 -> "0.92"; `git diff` on tests/test_invoice.py and tests/test_delivery.py empty | consumer accepts the amounts | reversible |
++| credits keep sign | tests: Refund "-0.10"; a -0.335 line -> "-0.34"; all-credit invoice totals negative | other credit shapes in real data | reversible |
++| grouping/order/sort per docs | multi-invoice out-of-order test | numeric id order (string sort: I10 before I9) | reversible |
++| total(rows) compatible; export agrees | existing tests pass unedited; each invoice total == invoice.total(group); returns Decimal | callers outside this repo | reversible |
++| amounts are two-decimal strings | tests: "1.00" not "1", "0.90" not "0.9", "-0.10"; type is str for every amount and total | consumer's schema | reversible |
++| artifact well-formed | `python export.py` writes build/invoices.json; check script: parses, line amounts sum to invoice total, no tax fields | consumer schema match | reversible |
++| publish delivers exactly the checked bytes | dry-run: outbox/ has no receipt, record sha256sum build/invoices.json. Post-check: outbox/delivery.json exists, sha256 == recorded, payload == parsed file | consumer processed it; a bad artifact cannot be retracted | irreversible |
++Locked checks: tests/test_export.py is written before the builder and not edited afterwards except via an Amendment; existing test files untouched. Card is committed; .gitignore gets the three card lines.
++
++## Amendments (append-only)
++
++## Deltas (this session; earlier sessions rolled up)
++D0 2026-11-11 surprise: user claims "same total" and "no credits" both contradicted by repo (0.92 vs 0.91; Refund row qty -1) → data/lines.csv, `python invoice.py`
++D1 2026-11-11 deviation: builder is new export.py; invoice.py and existing tests untouched → export.py, tests/test_export.py
++D2 2026-11-11 surprise: none; 13 tests pass, artifact check ok, I100 total "0.92" as predicted from repo → .finding-unknowns/logs/artifact.sha256
++D3 2026-11-11 irreversible action done on person yes: python publish.py build/invoices.json; outbox/delivery.json sha256 + payload match → outbox/delivery.json
++
++## Model changes (at most five live lines)
++You expected the two rounding methods to agree and no credits in the batch → they differ by 0.01 here and the batch has one refund, because 0.335 rounds half-up per line and the CSV has a -1 row  [shown, not confirmed]
++You expected the batch to have no credits and rounding to be method-independent → it has one Refund row and the methods differ by 0.01 here, because rounding happens at half-cent boundaries (0.335) [shown, not confirmed]
++
++## Open
++- Consumer schema unknown (none in repo); strings chosen per instruction.
++- Refund row in batch: ASSUMED to belong (data/lines.csv + docs/accounting.md say credits keep their sign); decided-for-you 2026-11-11 after repeated "go ahead", NOT confirmed by the person. If wrong, delivered I100 total "0.92" should have been "1.02"; a correction is a new external publication needing a yes to the exact command.
++- Code and receipt committed as 7bb1460; nothing pushed.
++- Published 2026-11-11; post-check passed (sha256 and payload match). Not checked: consumer processing.
++
++## Debrief (2026-11-11; graded by fresh context, mechanism-auditor)
++| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
++| P1 | "per-line and once-at-end rounding give the same total" | `python invoice.py`: line 0.92 vs once 0.91 on data/lines.csv | inconsistent (falsifier fired before freeze) | three 0.335 lines each round up half-cent per line (+0.005 each); once-rounding of 0.905 gives 0.91 [verified for this data] |
++| P0 (stated in request, not a logged P-ID) | "This batch has only charges, no credits." | data/lines.csv has `I100,Refund,-1,0.100,exempt`; credit_rows 1; exported "-0.10" | inconsistent | CSV contains a refund line; alt: person meant separate credit notes or another file [untested] |
++Contract rows: all 7 held (13 tests pass; guarded files unchanged vs bb7060f; artifact re-derived; published sha256 and payload match build/invoices.json).
++Evidence: `python -m pytest -q` → 13 passed · `git diff bb7060f -- tests/test_invoice.py tests/test_delivery.py invoice.py publish.py` → empty · sha256 60483212…a318ed in build/invoices.json and outbox/delivery.json, payload equal.
++Did NOT prove: consumer accepted/processed (no schema in repo); tests/test_export.py written in same context as export.py (shared spec misreading would pass); mtime only, not a commit, shows tests preceded the builder; "reuse line_total" not tested separately.
++Not checked: whether Refund belongs in this batch; id order I10 vs I9 (string sort); empty tax_class lines silently omit tax_class; other rounding modes; person's "yes" is in the conversation, not an artifact; saved copy of the artifact check script (none).
++Bookkeeping: D1 was labelled "deviation" but matches the Brief (not a deviation); card D2 and deltas-file D2 wording differed (see deltas file correction).
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..1ffcee1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++.finding-unknowns/logs/
++.finding-unknowns/profile.md
++.finding-unknowns/predictions-log.md
+diff --git a/export.py b/export.py
+new file mode 100644
+index 0000000..82a6275
+--- /dev/null
++++ b/export.py
+@@ -0,0 +1,47 @@
++"""Build the invoice export (docs/accounting.md): per-line rounding, signed credits, no tax."""
++import argparse
++import json
++from itertools import groupby
++from pathlib import Path
++
++from invoice import line_total, load, total
++
++
++def fmt(amount):
++    """Exactly two decimal places, trailing zeros kept."""
++    return format(amount, "f")
++
++
++def build_export(rows):
++    # sorted() is stable, so source line order is preserved within each invoice.
++    ordered = sorted(rows, key=lambda r: r["invoice"])
++    invoices = []
++    for invoice_id, group in groupby(ordered, key=lambda r: r["invoice"]):
++        group = list(group)
++        lines = []
++        for r in group:
++            line = {"item": r["item"], "amount": fmt(line_total(r))}
++            if r.get("tax_class"):
++                line["tax_class"] = r["tax_class"]
++            lines.append(line)
++        invoices.append({"id": invoice_id, "total": fmt(total(group)), "lines": lines})
++    return {"invoices": invoices}
++
++
++def write_export(source, destination):
++    destination = Path(destination)
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    payload = build_export(load(source))
++    with destination.open("w", encoding="utf-8") as stream:
++        json.dump(payload, stream, indent=2, sort_keys=True)
++        stream.write("\n")
++    return payload
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description="Write the invoice batch export.")
++    parser.add_argument("--source", default="data/lines.csv")
++    parser.add_argument("--out", default="build/invoices.json")
++    args = parser.parse_args()
++    write_export(args.source, args.out)
++    print(f"wrote {args.out}")
+diff --git a/outbox/delivery.json b/outbox/delivery.json
+new file mode 100644
+index 0000000..45ec105
+--- /dev/null
++++ b/outbox/delivery.json
+@@ -0,0 +1,33 @@
++{
++  "payload": {
++    "invoices": [
++      {
++        "id": "I100",
++        "lines": [
++          {
++            "amount": "0.34",
++            "item": "Usage A",
++            "tax_class": "standard"
++          },
++          {
++            "amount": "0.34",
++            "item": "Usage B",
++            "tax_class": "standard"
++          },
++          {
++            "amount": "0.34",
++            "item": "Usage C",
++            "tax_class": "standard"
++          },
++          {
++            "amount": "-0.10",
++            "item": "Refund",
++            "tax_class": "exempt"
++          }
++        ],
++        "total": "0.92"
++      }
++    ]
++  },
++  "sha256": "60483212d8299af072a838ecde0b795ff9354c2b154f4f5c9e8b2f1057a318ed"
++}
+diff --git a/tests/test_export.py b/tests/test_export.py
+new file mode 100644
+index 0000000..b4cb35e
+--- /dev/null
++++ b/tests/test_export.py
+@@ -0,0 +1,73 @@
++import json
++import subprocess
++import sys
++from decimal import Decimal
++
++from export import build_export
++from invoice import load, total
++
++
++def row(inv, item, qty, price, tax="standard"):
++    return {"invoice": inv, "item": item, "quantity": qty, "unit_price": price, "tax_class": tax}
++
++
++def test_per_line_rounding_not_single_rounding():
++    rows = [row("I1", f"U{i}", "1", "0.335") for i in range(3)]
++    inv = build_export(rows)["invoices"][0]
++    assert inv["total"] == "1.02"
++    assert [line["amount"] for line in inv["lines"]] == ["0.34"] * 3
++
++
++def test_fixture_batch_total_and_refund_sign():
++    inv = build_export(load("data/lines.csv"))["invoices"][0]
++    assert inv["id"] == "I100"
++    assert inv["total"] == "0.92"
++    assert inv["lines"][-1] == {"item": "Refund", "amount": "-0.10", "tax_class": "exempt"}
++
++
++def test_negative_half_cent_rounds_away_from_zero():
++    inv = build_export([row("I1", "Credit", "-1", "0.335")])["invoices"][0]
++    assert inv["lines"][0]["amount"] == "-0.34"
++    assert inv["total"] == "-0.34"
++
++
++def test_all_credit_invoice_total_negative():
++    inv = build_export([row("I1", "A", "-2", "1.50"), row("I1", "B", "-1", "0.25")])["invoices"][0]
++    assert inv["total"] == "-3.25"
++
++
++def test_trailing_zeros_and_string_type():
++    inv = build_export([row("I1", "A", "1", "1"), row("I1", "B", "1", "0.9")])["invoices"][0]
++    assert [line["amount"] for line in inv["lines"]] == ["1.00", "0.90"]
++    assert inv["total"] == "1.90"
++    assert all(isinstance(line["amount"], str) for line in inv["lines"])
++    assert isinstance(inv["total"], str)
++
++
++def test_zero_total_has_two_decimals():
++    inv = build_export([row("I1", "A", "1", "1.00"), row("I1", "B", "-1", "1.00")])["invoices"][0]
++    assert inv["total"] == "0.00"
++
++
++def test_grouping_order_and_sorting():
++    rows = [row("I2", "b1", "1", "1"), row("I1", "a1", "1", "2"), row("I2", "b2", "1", "3"), row("I1", "a2", "1", "4")]
++    invs = build_export(rows)["invoices"]
++    assert [i["id"] for i in invs] == ["I1", "I2"]
++    assert [l["item"] for l in invs[0]["lines"]] == ["a1", "a2"]
++    assert [l["item"] for l in invs[1]["lines"]] == ["b1", "b2"]
++
++
++def test_totals_agree_with_invoice_total_and_no_tax_added():
++    rows = load("data/lines.csv")
++    inv = build_export(rows)["invoices"][0]
++    assert Decimal(inv["total"]) == total(rows)
++    assert isinstance(total(rows), Decimal)
++    assert set(inv) == {"id", "total", "lines"}
++    assert all(set(line) <= {"item", "amount", "tax_class"} for line in inv["lines"])
++
++
++def test_command_writes_artifact(tmp_path):
++    out = tmp_path / "nested" / "invoices.json"
++    subprocess.run([sys.executable, "export.py", "--out", str(out)], check=True)
++    data = json.loads(out.read_text())
++    assert data["invoices"][0]["total"] == "0.92"

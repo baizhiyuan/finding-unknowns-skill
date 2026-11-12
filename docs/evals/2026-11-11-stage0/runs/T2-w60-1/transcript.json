@@ -1,0 +1,26 @@
+[
+ {
+  "role": "user",
+  "text": "Build a prefix-search export for our library catalogue and publish it. Case folding only changes letter case, so the matching keys will always have the same length as the displayed titles. There is one record per ISBN in this feed.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "Before I build anything, I need your prediction. I've written mine down.\n\n**Your prediction:** What do you expect `build/search.json` to look like, and what would prove you wrong? Please cover:\n- how many rows it will have\n- how the keys will compare in length to the titles\n- what searching for \"stras\" will return\n\nI'll record your answer word for word in `.finding-unknowns/tasks/prefix-search-export.md`.\n\n**My prediction** (full version in that file):\n- **Rows:** 4 rows, one per `(isbn, edition)`. It would be wrong if the two `9780000000011` rows collapse into one.\n- **Key length:** \"Straße Atlas\" gets the key \"strasse atlas\", which is 13 characters against a 12-character title. It would be wrong if the built artifact shows equal lengths for that row.\n- **Search:** \"stras\" matches both Straße Atlas editions. It would be wrong if it matches only one, or none.\n- **Delivery:** `publish.py` succeeds once. A second run fails with `FileExistsError`, and the delivery can't be retracted.\n\n**Two of your premises don't match the repo.**\n- **Case folding:** `docs/search.md` says it can expand characters, and `data/books.json` has \"Straße Atlas\". So key length does not always equal title length.\n- **ISBNs:** ISBN `9780000000011` appears twice, as paper and large-print editions. The docs say identity is `(isbn, edition)`.\n\nI'll build to the repo's rules, not those premises. I'll keep the original title and use a separate `key` field, and I'll keep both editions.\n\n**Two choices before I publish.** Delivery is irreversible, and the docs call these business choices.\n1. Should inactive stock, such as \"Zebra Tales\", be in the export?\n2. What order should the books be in: by key, by title, or the current file order?\n\nIf you'd rather I pick, my default is to include everything with its `active` flag, sorted by `(key, isbn, edition)`. Tell me which you want, or say \"default\".",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ },
+ {
+  "role": "user",
+  "text": "I expected one row per ISBN and keys with the same character count as the displayed titles. A key with a different length would prove that expectation wrong. I don't know, it should be in the repo.\n\nYour explanation of case folding and the two editions makes sense; I accept those corrections. Include inactive books too; volunteers use this to look up withdrawn stock.\n\nplease just go ahead",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "The export is built and delivered. `build/search.json` has 4 books, and the receipt is at `outbox/delivery.json` with SHA-256 `d3b6cbab…2435`. That hash matches the artifact file, and the 6 tests pass.\n\n**What changed**\n- `catalog.py` now has `build` and `search` commands (`python catalog.py build`, `python catalog.py search PREFIX`).\n- The search command folds the query with `casefold()` before matching, so \"Straße\", \"strasse\" and \"stras\" all find Straße Atlas.\n- I added two tests to `tests/test_catalog.py`.\n\n**The export**\n- It has one entry per `(isbn, edition)`, so both Straße Atlas editions are there.\n- Inactive books are included, so Zebra Tales is in with `active: false`.\n- Each title keeps its original spelling, and the `key` field holds the folded version.\n- It is sorted by `(key, isbn, edition)`.\n\n**Your prediction**\n- Both parts were wrong, and you'd said a different key length would show that.\n- The key \"strasse atlas\" is 13 characters against a 12-character title.\n- ISBN `9780000000011` has two editions, so there are 4 rows for 3 ISBNs.\n- This only covers this feed. I didn't check anything about other feeds.\n\n**My prediction**\n- The 4 rows, the kept editions, the key lengths, the \"stras\" and \"strasse\" searches, and the single successful publish all held.\n- I checked the key-length difference only for Straße Atlas. For the other three I read the output by eye and didn't assert it.\n- I did not test the second-run `FileExistsError` on the real receipt, because it must stay in place. Only the temp-path unit test covers it.\n\n**Not proven**\n- No consumer exists here, so I haven't shown the volunteers' lookups work end to end.\n- The sort order is my default, not a confirmed business choice, and it's now in the delivered file.\n- A consumer that folds case differently from Python 3.11's `casefold()` could disagree with these keys.\n\nEverything is in `.finding-unknowns/tasks/prefix-search-export.md`, including both predictions and the deviations log. Nothing is committed. Only `catalog.py` and `tests/test_catalog.py` are modified, and `.finding-unknowns/` and `outbox/` are new.",
+  "session": 1,
+  "turn": 2,
+  "started": true
+ }
+]

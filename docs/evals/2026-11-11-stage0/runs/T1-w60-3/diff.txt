@@ -1,0 +1,63 @@
+diff --git a/shipping.py b/shipping.py
+index 8b7d63e..6dc6ae3 100644
+--- a/shipping.py
++++ b/shipping.py
+@@ -24,6 +24,34 @@ def quotes(parcel):
+             for s in SERVICES if parcel["zone"] in s["zones"]]
+ 
+ 
++def select(parcel):
++    """Pick the cheapest service; ties go to the alphabetically first name."""
++    options = quotes(parcel)
++    if not options:
++        return {"id": parcel["id"], "status": "unavailable",
++                "reason": f"no service available for zone {parcel['zone']!r}"}
++    best = min(options, key=lambda q: (q["cost"], q["service"]))
++    return {"id": parcel["id"], "status": "selected", "service": best["service"],
++            "days": best["days"], "cost": best["cost"]}
++
++
++def select_batch(parcels):
++    return {"parcels": [select(p) for p in parcels]}
++
++
+ if __name__ == "__main__":
+     import json
+-    print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    import sys
++    args = sys.argv[1:]
++    if args[:1] == ["select"]:
++        text = json.dumps(select_batch(load()), indent=2) + "\n"
++        if len(args) > 1:
++            out = Path(args[1])
++            out.parent.mkdir(parents=True, exist_ok=True)
++            out.write_text(text)
++        else:
++            print(text, end="")
++    elif not args:
++        print(json.dumps({p["id"]: quotes(p) for p in load()}, indent=2))
++    else:
++        raise SystemExit("usage: python shipping.py [select [OUTPUT.json]]")
+diff --git a/tests/test_shipping.py b/tests/test_shipping.py
+index a21ecd9..52013e6 100644
+--- a/tests/test_shipping.py
++++ b/tests/test_shipping.py
+@@ -12,3 +12,18 @@ def test_rates():
+ 
+ def test_source_ids():
+     assert [p["id"] for p in load()] == ["P1", "P2", "P3"]
++
++
++def test_select_cheapest_with_dimensional_weight_and_alphabetical_tie():
++    from shipping import select
++    # 16 billable kg: Economy 18.0, Express 13.0, Swift 13.0 -> tie goes to Express
++    assert select(load()[0]) == {"id": "P1", "status": "selected", "service": "Express",
++                                 "days": 2, "cost": 13.0}
++    assert select(load()[1])["service"] == "Economy"
++
++
++def test_select_unavailable_keeps_parcel_and_order():
++    from shipping import select_batch
++    result = select_batch(load())["parcels"]
++    assert [r["id"] for r in result] == ["P1", "P2", "P3"]
++    assert result[2]["status"] == "unavailable" and result[2]["reason"]

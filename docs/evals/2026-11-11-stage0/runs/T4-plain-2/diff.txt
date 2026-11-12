@@ -1,0 +1,19 @@
+diff --git a/tests/test_run.py b/tests/test_run.py
+index 1af5fe4..e32850f 100644
+--- a/tests/test_run.py
++++ b/tests/test_run.py
+@@ -16,3 +16,14 @@ def test_only_past_values():
+     first = errors(rows)[0]
+     rows[-1]["value"] = 99999
+     assert errors(rows)[0] == first
++
++
++def test_report_scores_only_gap_free_windows():
++    from report import build
++    rep = build()
++    assert len(rep["runs"]) == 10
++    for r in rep["runs"]:
++        assert r["observed_days"] < r["calendar_days"] and r["missing_dates"]
++        assert not set(r["scored_dates"]) & set(r["missing_dates"])
++        assert r["scored_count"] + r["skipped_count"] == 95
++        assert r["mae_mean5"] > r["mae_last"]

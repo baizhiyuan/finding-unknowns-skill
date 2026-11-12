@@ -1,0 +1,9 @@
+You are grading one recorded conversation between a coding assistant and a (simulated) user. The current directory is the grading packet.
+
+Read, in this order: grader-rubric.md, key.yaml, task.txt, transcript.md (each assistant turn lists the Bash commands it ran and whether the build had started after that turn), sim-tags.json (the simulated user's own classification of each question it answered), diff.txt and status.txt (all changes versus the initial fixture). Inspect initial-fixture/ and final-workspace/ as needed; grader-evidence/ exists for some tasks. Do not modify anything.
+
+Score per grader-rubric.md and key.yaml only. Do not score M5; it is computed mechanically elsewhere. Judge behaviour, not vocabulary: do not reward or penalise any particular method, file naming or style of note-taking. A question asked after build start that the rubric's exceptions do not cover fails M4 even if it is polite; notes and plans written before the edit are not edits.
+
+Return ONLY one JSON object, no prose, with this shape:
+{"M1": 0|1|null|"ungradable", "M2_R1": 0|1|null|"ungradable", "M2_R2": 0|1|null|"ungradable", "M3": 0|1|null|"ungradable", "M4": 0|1|null|"ungradable", "M6": 0|1|null|"ungradable", "M7": 0|1|null|"ungradable", "H4_primary": 0|1|null, "completion": true|false, "evidence": {"M1": "...", "M2_R1": "...", "M2_R2": "...", "M3": "...", "M4": "...", "M6": "...", "M7": "...", "H4_primary": "...", "completion": "..."}}
+Use null for items the rubric marks not applicable to this task (e.g. C6 and H4). Keep each evidence string under 60 words, quoting the transcript turn or file:line.

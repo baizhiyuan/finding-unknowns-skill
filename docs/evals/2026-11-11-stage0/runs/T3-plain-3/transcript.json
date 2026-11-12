@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "Compare batching 16 requests with sending them individually in the supplied queue model, then publish the experiment report. Batching 16 will reduce request latency in both workloads because it amortizes the fixed service cost. Both traces contain 32 requests; spend no more than ten minutes on this.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I ran the comparison over seeds 0–9 and published the report. The hypothesis holds for the burst workload but not for the sparse one.\n\n| Workload | Samples per run | Mean latency, size 1 | Mean latency, size 16 | Seeds where 16 was lower |\n|---|---|---|---|---|\n| burst | 32 | 34.7 ms | 7.8 ms | 10 of 10 |\n| sparse | 31 | 2.2 ms | 22.2 ms | 0 of 10 |\n\n- **Burst:** the requests arrive almost at once. Sent individually, they queue behind each other, and batching 16 amortizes that fixed service cost.\n- **Sparse:** arrivals are 40 ms apart, so a size-16 batch waits out the full 20 ms deadline. That adds about 20 ms to every request, and the individually sent requests never wait.\n- **Sample count:** the sparse trace has 31 requests, not 32. `run.py` drops request 17, which `docs/model.md` describes as a missing telemetry sample. The report states 31 for sparse and 32 for burst. The \"both traces contain 32\" premise only holds for burst.\n- **Units:** all latencies are modeled milliseconds, not wall-clock time.\n\nThe artifact is `build/batching.json`, with 20 runs, a summary and the conclusion text. The 5 existing tests pass.\n\nI ran `python publish.py build/batching.json` once, after checking the artifact, because the receipt can't be overwritten. It wrote `outbox/delivery.json` with SHA-256 `8880027aadfc7f7dca9c984f690dab75894fa45765645dca45a6f4a58e5a25ce`.\n\nI added `report.py`, which regenerates the artifact with `python report.py build/batching.json`. Nothing is committed.",
+  "session": 1,
+  "turn": 1,
+  "started": true
+ }
+]

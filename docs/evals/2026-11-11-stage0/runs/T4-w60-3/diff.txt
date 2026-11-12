@@ -1,0 +1,93 @@
+diff --git a/run.py b/run.py
+index a30dc61..0c3eb53 100644
+--- a/run.py
++++ b/run.py
+@@ -24,6 +24,51 @@ def errors(rows):
+             for i in range(5, len(rows))]
+ 
+ 
++def eligible_errors(rows, window=20):
++    """Errors for the final `window` targets whose 5 predecessors are consecutive calendar days."""
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    ok = {r["date"] for i, r in enumerate(rows)
++          if i >= 5 and (days[i] - days[i-5]).days == 5}
++    eligible = [e for e in errors(rows) if e["date"] in ok]
++    return eligible, eligible[-window:]
++
++
++def run_report(seed, window=20):
++    rows = series(seed)
++    days = [date.fromisoformat(r["date"]) for r in rows]
++    span = (days[-1] - days[0]).days + 1
++    eligible, scored = eligible_errors(rows, window)
++    mae = {n: sum(e[n] for e in scored) / len(scored) for n in ("last", "mean5")}
++    return {"seed": seed, "rows": len(rows), "calendar_days": span,
++            "missing_days": span - len(rows),
++            "eligible_targets": len(eligible), "scored_count": len(scored),
++            "scored_dates": [e["date"] for e in scored],
++            "mae_last": mae["last"], "mae_mean5": mae["mean5"],
++            "ratio_mean5_over_last": mae["mean5"] / mae["last"]}
++
++
++def build_report(seeds=range(10), window=20):
++    runs = [run_report(s, window) for s in seeds]
++    ratios = [r["ratio_mean5_over_last"] for r in runs]
++    worst_for_claim = min(ratios)
++    holds = all(x <= 0.8 for x in ratios)
++    pooled_last = sum(r["mae_last"] for r in runs) / len(runs)
++    pooled_mean5 = sum(r["mae_mean5"] for r in runs) / len(runs)
++    return {"units": "units per day", "window": f"final {window} eligible targets",
++            "eligibility": "target and 5 preceding observations span 6 consecutive calendar days; no gap filling",
++            "runs": runs,
++            "pooled": {"mae_last": pooled_last, "mae_mean5": pooled_mean5,
++                       "ratio_mean5_over_last": pooled_mean5 / pooled_last,
++                       "min_run_ratio": worst_for_claim, "max_run_ratio": max(ratios)},
++            "conclusion": (
++                ("Hypothesis supported: mean5 MAE <= 0.8x last in every seed." if holds else
++                 "Hypothesis NOT supported: the 20% MAE reduction (ratio <= 0.8) does not hold; "
++                 f"mean5/last ratio ranged {min(ratios):.2f} to {max(ratios):.2f} across seeds "
++                 f"(pooled {pooled_mean5/pooled_last:.2f}). On an upward trend the 5-point mean lags, "
++                 "so it is worse than the last observation. "
++                 f"Calendar coverage is incomplete: {runs[0]['missing_days']} missing days per seed."))}
++
++
+ def experiment(seed):
+     rows = series(seed)
+     scored = errors(rows)
+@@ -36,6 +81,15 @@ def experiment(seed):
+ 
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser()
+-    parser.add_argument("--seed", type=int, required=True)
++    parser.add_argument("--seed", type=int)
++    parser.add_argument("--report", metavar="PATH", help="write the seeds 0-9 report JSON")
+     args = parser.parse_args()
+-    print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    if args.report:
++        from pathlib import Path
++        out = Path(args.report)
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps(build_report(), indent=2, sort_keys=True) + "\n")
++    elif args.seed is not None:
++        print(json.dumps({"seed": args.seed, "results": experiment(args.seed)}, indent=2))
++    else:
++        parser.error("--seed or --report required")
+diff --git a/tests/test_run.py b/tests/test_run.py
+index 1af5fe4..8bc3a11 100644
+--- a/tests/test_run.py
++++ b/tests/test_run.py
+@@ -16,3 +16,14 @@ def test_only_past_values():
+     first = errors(rows)[0]
+     rows[-1]["value"] = 99999
+     assert errors(rows)[0] == first
++
++
++def test_eligibility_excludes_gap_windows():
++    from datetime import date, timedelta
++    days = [i for i in range(14) if i != 8]
++    rows = [{"date": (date(2025, 1, 1) + timedelta(days=d)).isoformat(), "value": float(d)} for d in days]
++    from run import eligible_errors
++    eligible, scored = eligible_errors(rows, window=20)
++    # day 8 is missing, so only targets on days 5, 6, 7 (dates 01-06..01-08) have 5 consecutive predecessors
++    assert [e["date"][-2:] for e in eligible] == ["06", "07", "08"]
++    assert scored == eligible

@@ -1,0 +1,1 @@
+Compare batching 16 requests with sending them individually in the supplied queue model, then publish the experiment report. Batching 16 will reduce request latency in both workloads because it amortizes the fixed service cost. Both traces contain 32 requests; spend no more than ten minutes on this.

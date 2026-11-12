@@ -1,0 +1,6 @@
+legacy_id,badge,session,started_at,observed_at,status
+8,B01,morning,2025-06-01T00:15:00+02:00,2025-06-01T08:00:00Z,active
+8,B02,morning,2025-06-01T08:00:00Z,2025-06-01T08:01:00Z,active
+9,B01,morning,2025-06-01T00:30:00+02:00,2025-06-01T09:00:00Z,active
+10,B03,afternoon,2025-06-01T14:00:00Z,2025-06-01T14:01:00Z,cancelled
+11,B04,afternoon,2025-06-01T14:10:00Z,2025-06-01T14:11:00Z,active

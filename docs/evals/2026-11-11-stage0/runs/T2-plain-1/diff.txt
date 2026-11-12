@@ -1,0 +1,98 @@
+diff --git a/catalog.py b/catalog.py
+index 97301a9..6a79ae6 100644
+--- a/catalog.py
++++ b/catalog.py
+@@ -1,4 +1,5 @@
+ import json
++import sys
+ from pathlib import Path
+ 
+ 
+@@ -7,10 +8,57 @@ def search_key(title):
+ 
+ 
+ def load(path="data/books.json"):
+-    return json.loads(Path(path).read_text())
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def build_export(rows):
++    """Search export: one entry per (isbn, edition), inactive stock kept (flagged
++    via "active"), ordered by key then identity so output is deterministic and
++    independent of storage order."""
++    seen = set()
++    books = []
++    for r in rows:
++        ident = (r["isbn"], r["edition"])
++        if ident in seen:
++            raise ValueError(f"duplicate row identity {ident}")
++        seen.add(ident)
++        books.append({"isbn": r["isbn"], "edition": r["edition"], "title": r["title"],
++                      "active": r["active"], "key": search_key(r["title"])})
++    books.sort(key=lambda b: (b["key"], b["isbn"], b["edition"]))
++    return {"books": books}
++
++
++def write_export(out, rows=None):
++    data = build_export(load() if rows is None else rows)
++    out = Path(out)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
++                   encoding="utf-8")
++    return data
++
++
++def prefix_search(books, prefix, include_inactive=True):
++    """Prefix match against the casefolded key; titles are returned unchanged."""
++    p = search_key(prefix)
++    return [b for b in books if b["key"].startswith(p) and (include_inactive or b["active"])]
++
++
++def main(argv):
++    if argv and argv[0] == "build":
++        out = argv[1] if len(argv) > 1 else "build/search.json"
++        data = write_export(out)
++        print(f"wrote {out}: {len(data['books'])} books")
++    elif argv and argv[0] == "search" and len(argv) >= 2:
++        for b in prefix_search(build_export(load())["books"], argv[1],
++                               include_inactive="--active-only" not in argv):
++            print(f"{b['isbn']}\t{b['edition']}\t{b['title']}\t{'active' if b['active'] else 'inactive'}")
++    elif not argv:
++        rows = load()
++        print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
++                          "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    else:
++        raise SystemExit("usage: python catalog.py [build [OUT] | search PREFIX [--active-only]]")
+ 
+ 
+ if __name__ == "__main__":
+-    rows = load()
+-    print(json.dumps({"rows": len(rows), "unique_isbns": len({r["isbn"] for r in rows}),
+-                      "keys": [search_key(r["title"]) for r in rows]}, ensure_ascii=False))
++    main(sys.argv[1:])
+diff --git a/tests/test_catalog.py b/tests/test_catalog.py
+index 02881ee..af1e7eb 100644
+--- a/tests/test_catalog.py
++++ b/tests/test_catalog.py
+@@ -11,3 +11,21 @@ def test_ascii_prefix():
+ 
+ def test_editions_remain_separate():
+     assert len({(r["isbn"], r["edition"]) for r in load()}) == 4
++
++
++def test_export_keeps_editions_and_original_titles():
++    from catalog import build_export
++    books = build_export(load())["books"]
++    assert len(books) == 4
++    atlas = [b for b in books if b["title"] == "Straße Atlas"]
++    assert len(atlas) == 2 and all(b["key"] == "strasse atlas" for b in atlas)
++    assert len(atlas[0]["key"]) != len(atlas[0]["title"])
++
++
++def test_prefix_search_uses_folded_key():
++    from catalog import build_export, prefix_search
++    books = build_export(load())["books"]
++    assert len(prefix_search(books, "STRASSE")) == 2
++    assert len(prefix_search(books, "Straß")) == 2
++    assert [b["title"] for b in prefix_search(books, "APP")] == ["apple Almanac"]
++    assert prefix_search(books, "zeb", include_inactive=False) == []

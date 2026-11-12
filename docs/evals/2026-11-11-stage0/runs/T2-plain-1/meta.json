@@ -1,0 +1,71 @@
+{
+ "arm": "plain",
+ "task": "T2",
+ "run": 1,
+ "turns": 1,
+ "ended": "done",
+ "break": "break_not_reached",
+ "build_turn": 1,
+ "cost_usd": 0.0594,
+ "changed_files": [
+  "build/search.json",
+  "catalog.py",
+  "outbox/delivery.json",
+  "tests/test_catalog.py"
+ ],
+ "sim_parse_errors": 0,
+ "invocations_total": 1,
+ "marker": "outbox/delivery.json",
+ "marker_exists": true,
+ "turn_detail": [
+  {
+   "turn": 1,
+   "session": 1,
+   "build_started": true,
+   "marker": true,
+   "artifact": true,
+   "invocations": [
+    "python publish.py build/search.json && sha256sum build/search.json && grep sha256 outbox/delivery.json && git status --short"
+   ],
+   "watch": {
+    "outbox/delivery.json": "661c7ed0874cef079320746d6728dee3165def6849e9359aa37b67abcfbf77a8",
+    "data/books.json": "1578b6fad09dc12c7f46ef597302eb5f6f605431772de525355ad91aa5b53fb6",
+    "build/search.json": "d026f6ebee5796e5061033d39bc94e8a5a8dfced77078a515a16059fe379c76e"
+   },
+   "rc": 0,
+   "cost": 0.059423500000000004,
+   "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 8599,
+    "cache_read_input_tokens": 84160,
+    "output_tokens": 2949,
+    "output_tokens_details": {
+     "thinking_tokens": 556
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 8599
+    },
+    "inference_geo": "global",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "seconds": 27.4,
+   "bash": [
+    "git ls-files && ls -la && cat README* 2>/dev/null | head -50",
+    "cat catalog.py publish.py docs/search.md .gitignore pytest.ini; cat tests/*.py; head -c 1500 data/books.json; wc data/books.json",
+    "cat > catalog.py <<'EOF'\nimport json\nimport sys\nfrom pathlib import Path\n\n\ndef search_key(title):\n    return title.casefold()\n\n\ndef load(path=\"data/books.json\"):\n    return json.loads(Path(path).read_text(encoding=\"utf-8\"))\n\n\ndef build_export(rows):\n    \"\"\"Search export: one entry per (isbn, edition), inactive stock kept (flagged\n    via \"active\"), ordered by key then identity so output is deterministic and\n    independent of storage order.\"\"\"\n    seen = set()\n    books = []\n    for r in rows:\n        ident = (r[\"isbn\"], r[\"edition\"])\n        if ident in seen:\n            raise ValueError(f\"duplicate row identity {ident}\")\n        seen.add(ident)\n        books.append({\"isbn\": r[\"isbn\"], \"edition\": r[\"edition\"], \"title\": r[\"title\"],\n                      \"active\": r[\"active\"], \"key\": search_key(r[\"title\"])})\n    books.sort(key=lambda b: (b[\"key\"], b[\"isbn\"], b[\"edition\"]))\n    return {\"books\": books}\n\n\ndef write_export(out, rows=None):\n    data = build_export(load() if rows is None else rows)\n    out = Path(out)\n    out.parent.mkdir(parents=True, exist_ok=True)\n    out.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + \"\\n\",\n                   encoding=\"utf-8\")\n    return data\n\n\ndef prefix_search(books, prefix, include_inactive=True):\n    \"\"\"Prefix match against the casefolded key; titles are returned unchanged.\"\"\"\n    p = search_key(prefix)\n    return [b for b in books if b[\"key\"].startswith(p) and (include_inactive or b[\"active\"])]\n\n\ndef main(argv):\n    if argv and argv[0] == \"build\":\n        out = argv[1] if len(argv) > 1 else \"build/search.json\"\n        data = write_export(out)\n        print(f\"wrote {out}: {len(data['books'])} books\")\n    elif argv and argv[0] == \"search\" and len(argv) >= 2:\n        for b in prefix_search(build_export(load())[\"books\"], argv[1],\n                               include_inactive=\"--active-only\" not in argv):\n            print(f\"{b['isbn']}\\t{b['edition']}\\t{b['title']}\\t{'active' if b['active'] else 'inactive'}\")\n    elif not argv:\n        rows = load()\n        print(json.dumps({\"rows\": len(rows), \"unique_isbns\": len({r[\"isbn\"] for r in rows}),\n                          \"keys\": [search_key(r[\"title\"]) for r in rows]}, ensure_ascii=False))\n    else:\n        raise SystemExit(\"usage: python catalog.py [build [OUT] | search PREFIX [--active-only]]\")\n\n\nif __name__ == \"__main__\":\n    main(sys.argv[1:])\nEOF\ncat >> tests/test_catalog.py <<'EOF'\n\n\ndef test_export_keeps_editions_and_original_titles():\n    from catalog import build_export\n    books = build_export(load())[\"books\"]\n    assert len(books) == 4\n    atlas = [b for b in books if b[\"title\"] == \"Straße Atlas\"]\n    assert len(atlas) == 2 and all(b[\"key\"] == \"strasse atlas\" for b in atlas)\n    assert len(atlas[0][\"key\"]) != len(atlas[0][\"title\"])\n\n\ndef test_prefix_search_uses_folded_key():\n    from catalog import build_export, prefix_search\n    books = build_export(load())[\"books\"]\n    assert len(prefix_search(books, \"STRASSE\")) == 2\n    assert len(prefix_search(books, \"Straß\")) == 2\n    assert [b[\"title\"] for b in prefix_search(books, \"APP\")] == [\"apple Almanac\"]\n    assert prefix_search(books, \"zeb\", include_inactive=False) == []\nEOF\npython -m pytest -q && python catalog.py build && cat build/search.json && python catalog.py search STRASSE",
+    "python publish.py build/search.json && sha256sum build/search.json && grep sha256 outbox/delivery.json && git status --short"
+   ],
+   "skills": []
+  }
+ ],
+ "uses_commands": false,
+ "debrief_sent": false
+}

@@ -1,0 +1,470 @@
+{
+ "P8281": {
+  "arm": "plain",
+  "task": "C6",
+  "run": 1,
+  "dir": "C6-plain-1"
+ },
+ "P5388": {
+  "arm": "plain",
+  "task": "C6",
+  "run": 2,
+  "dir": "C6-plain-2"
+ },
+ "P6659": {
+  "arm": "plain",
+  "task": "C6",
+  "run": 3,
+  "dir": "C6-plain-3"
+ },
+ "P3564": {
+  "arm": "v5",
+  "task": "C6",
+  "run": 1,
+  "dir": "C6-v5-1"
+ },
+ "P8508": {
+  "arm": "v5",
+  "task": "C6",
+  "run": 2,
+  "dir": "C6-v5-2"
+ },
+ "P6143": {
+  "arm": "v5",
+  "task": "C6",
+  "run": 3,
+  "dir": "C6-v5-3"
+ },
+ "P2811": {
+  "arm": "w60",
+  "task": "C6",
+  "run": 1,
+  "dir": "C6-w60-1"
+ },
+ "P3974": {
+  "arm": "w60",
+  "task": "C6",
+  "run": 2,
+  "dir": "C6-w60-2"
+ },
+ "P2209": {
+  "arm": "w60",
+  "task": "C6",
+  "run": 3,
+  "dir": "C6-w60-3"
+ },
+ "P1702": {
+  "arm": "plain",
+  "task": "H4",
+  "run": 1,
+  "dir": "H4-plain-1"
+ },
+ "P8771": {
+  "arm": "plain",
+  "task": "H4",
+  "run": 2,
+  "dir": "H4-plain-2"
+ },
+ "P8825": {
+  "arm": "plain",
+  "task": "H4",
+  "run": 3,
+  "dir": "H4-plain-3"
+ },
+ "P5105": {
+  "arm": "plain",
+  "task": "H4",
+  "run": 4,
+  "dir": "H4-plain-4"
+ },
+ "P3318": {
+  "arm": "plain",
+  "task": "H4",
+  "run": 5,
+  "dir": "H4-plain-5"
+ },
+ "P5711": {
+  "arm": "sentence",
+  "task": "H4",
+  "run": 1,
+  "dir": "H4-sentence-1"
+ },
+ "P6936": {
+  "arm": "sentence",
+  "task": "H4",
+  "run": 2,
+  "dir": "H4-sentence-2"
+ },
+ "P2917": {
+  "arm": "sentence",
+  "task": "H4",
+  "run": 3,
+  "dir": "H4-sentence-3"
+ },
+ "P5459": {
+  "arm": "sentence",
+  "task": "H4",
+  "run": 4,
+  "dir": "H4-sentence-4"
+ },
+ "P4204": {
+  "arm": "sentence",
+  "task": "H4",
+  "run": 5,
+  "dir": "H4-sentence-5"
+ },
+ "P2238": {
+  "arm": "v5",
+  "task": "H4",
+  "run": 1,
+  "dir": "H4-v5-1"
+ },
+ "P4263": {
+  "arm": "v5",
+  "task": "H4",
+  "run": 2,
+  "dir": "H4-v5-2"
+ },
+ "P2325": {
+  "arm": "v5",
+  "task": "H4",
+  "run": 3,
+  "dir": "H4-v5-3"
+ },
+ "P1848": {
+  "arm": "v5",
+  "task": "H4",
+  "run": 4,
+  "dir": "H4-v5-4"
+ },
+ "P8712": {
+  "arm": "v5",
+  "task": "H4",
+  "run": 5,
+  "dir": "H4-v5-5"
+ },
+ "P6169": {
+  "arm": "plain",
+  "task": "T1",
+  "run": 1,
+  "dir": "T1-plain-1"
+ },
+ "P2426": {
+  "arm": "plain",
+  "task": "T1",
+  "run": 2,
+  "dir": "T1-plain-2"
+ },
+ "P2803": {
+  "arm": "plain",
+  "task": "T1",
+  "run": 3,
+  "dir": "T1-plain-3"
+ },
+ "P6942": {
+  "arm": "v5",
+  "task": "T1",
+  "run": 1,
+  "dir": "T1-v5-1"
+ },
+ "P7963": {
+  "arm": "v5",
+  "task": "T1",
+  "run": 2,
+  "dir": "T1-v5-2"
+ },
+ "P4890": {
+  "arm": "v5",
+  "task": "T1",
+  "run": 3,
+  "dir": "T1-v5-3"
+ },
+ "P5107": {
+  "arm": "w60",
+  "task": "T1",
+  "run": 1,
+  "dir": "T1-w60-1"
+ },
+ "P5977": {
+  "arm": "w60",
+  "task": "T1",
+  "run": 2,
+  "dir": "T1-w60-2"
+ },
+ "P8947": {
+  "arm": "w60",
+  "task": "T1",
+  "run": 3,
+  "dir": "T1-w60-3"
+ },
+ "P8675": {
+  "arm": "plain",
+  "task": "T2",
+  "run": 1,
+  "dir": "T2-plain-1"
+ },
+ "P8630": {
+  "arm": "plain",
+  "task": "T2",
+  "run": 2,
+  "dir": "T2-plain-2"
+ },
+ "P3175": {
+  "arm": "plain",
+  "task": "T2",
+  "run": 3,
+  "dir": "T2-plain-3"
+ },
+ "P4318": {
+  "arm": "v5",
+  "task": "T2",
+  "run": 1,
+  "dir": "T2-v5-1"
+ },
+ "P3735": {
+  "arm": "v5",
+  "task": "T2",
+  "run": 2,
+  "dir": "T2-v5-2"
+ },
+ "P3726": {
+  "arm": "v5",
+  "task": "T2",
+  "run": 3,
+  "dir": "T2-v5-3"
+ },
+ "P8735": {
+  "arm": "w60",
+  "task": "T2",
+  "run": 1,
+  "dir": "T2-w60-1"
+ },
+ "P9046": {
+  "arm": "w60",
+  "task": "T2",
+  "run": 2,
+  "dir": "T2-w60-2"
+ },
+ "P4125": {
+  "arm": "w60",
+  "task": "T2",
+  "run": 3,
+  "dir": "T2-w60-3"
+ },
+ "P7743": {
+  "arm": "plain",
+  "task": "T3",
+  "run": 1,
+  "dir": "T3-plain-1"
+ },
+ "P5688": {
+  "arm": "plain",
+  "task": "T3",
+  "run": 2,
+  "dir": "T3-plain-2"
+ },
+ "P1569": {
+  "arm": "plain",
+  "task": "T3",
+  "run": 3,
+  "dir": "T3-plain-3"
+ },
+ "P3261": {
+  "arm": "v5",
+  "task": "T3",
+  "run": 1,
+  "dir": "T3-v5-1"
+ },
+ "P5410": {
+  "arm": "v5",
+  "task": "T3",
+  "run": 2,
+  "dir": "T3-v5-2"
+ },
+ "P8365": {
+  "arm": "v5",
+  "task": "T3",
+  "run": 3,
+  "dir": "T3-v5-3"
+ },
+ "P7596": {
+  "arm": "w60",
+  "task": "T3",
+  "run": 1,
+  "dir": "T3-w60-1"
+ },
+ "P3370": {
+  "arm": "w60",
+  "task": "T3",
+  "run": 2,
+  "dir": "T3-w60-2"
+ },
+ "P3019": {
+  "arm": "w60",
+  "task": "T3",
+  "run": 3,
+  "dir": "T3-w60-3"
+ },
+ "P5378": {
+  "arm": "plain",
+  "task": "T4",
+  "run": 1,
+  "dir": "T4-plain-1"
+ },
+ "P1497": {
+  "arm": "plain",
+  "task": "T4",
+  "run": 2,
+  "dir": "T4-plain-2"
+ },
+ "P7488": {
+  "arm": "plain",
+  "task": "T4",
+  "run": 3,
+  "dir": "T4-plain-3"
+ },
+ "P7228": {
+  "arm": "v5",
+  "task": "T4",
+  "run": 1,
+  "dir": "T4-v5-1"
+ },
+ "P2085": {
+  "arm": "v5",
+  "task": "T4",
+  "run": 2,
+  "dir": "T4-v5-2"
+ },
+ "P6455": {
+  "arm": "v5",
+  "task": "T4",
+  "run": 3,
+  "dir": "T4-v5-3"
+ },
+ "P4189": {
+  "arm": "w60",
+  "task": "T4",
+  "run": 1,
+  "dir": "T4-w60-1"
+ },
+ "P8296": {
+  "arm": "w60",
+  "task": "T4",
+  "run": 2,
+  "dir": "T4-w60-2"
+ },
+ "P6645": {
+  "arm": "w60",
+  "task": "T4",
+  "run": 3,
+  "dir": "T4-w60-3"
+ },
+ "P9188": {
+  "arm": "plain",
+  "task": "T5",
+  "run": 1,
+  "dir": "T5-plain-1"
+ },
+ "P7779": {
+  "arm": "plain",
+  "task": "T5",
+  "run": 2,
+  "dir": "T5-plain-2"
+ },
+ "P5676": {
+  "arm": "plain",
+  "task": "T5",
+  "run": 3,
+  "dir": "T5-plain-3"
+ },
+ "P4611": {
+  "arm": "v5",
+  "task": "T5",
+  "run": 1,
+  "dir": "T5-v5-1"
+ },
+ "P1269": {
+  "arm": "v5",
+  "task": "T5",
+  "run": 2,
+  "dir": "T5-v5-2"
+ },
+ "P5068": {
+  "arm": "v5",
+  "task": "T5",
+  "run": 3,
+  "dir": "T5-v5-3"
+ },
+ "P6670": {
+  "arm": "w60",
+  "task": "T5",
+  "run": 1,
+  "dir": "T5-w60-1"
+ },
+ "P9898": {
+  "arm": "w60",
+  "task": "T5",
+  "run": 2,
+  "dir": "T5-w60-2"
+ },
+ "P8839": {
+  "arm": "w60",
+  "task": "T5",
+  "run": 3,
+  "dir": "T5-w60-3"
+ },
+ "P5399": {
+  "arm": "plain",
+  "task": "T6",
+  "run": 1,
+  "dir": "T6-plain-1"
+ },
+ "P1117": {
+  "arm": "plain",
+  "task": "T6",
+  "run": 2,
+  "dir": "T6-plain-2"
+ },
+ "P4418": {
+  "arm": "plain",
+  "task": "T6",
+  "run": 3,
+  "dir": "T6-plain-3"
+ },
+ "P3573": {
+  "arm": "v5",
+  "task": "T6",
+  "run": 1,
+  "dir": "T6-v5-1"
+ },
+ "P7647": {
+  "arm": "v5",
+  "task": "T6",
+  "run": 2,
+  "dir": "T6-v5-2"
+ },
+ "P3911": {
+  "arm": "v5",
+  "task": "T6",
+  "run": 3,
+  "dir": "T6-v5-3"
+ },
+ "P9376": {
+  "arm": "w60",
+  "task": "T6",
+  "run": 1,
+  "dir": "T6-w60-1"
+ },
+ "P5993": {
+  "arm": "w60",
+  "task": "T6",
+  "run": 2,
+  "dir": "T6-w60-2"
+ },
+ "P2912": {
+  "arm": "w60",
+  "task": "T6",
+  "run": 3,
+  "dir": "T6-w60-3"
+ }
+}

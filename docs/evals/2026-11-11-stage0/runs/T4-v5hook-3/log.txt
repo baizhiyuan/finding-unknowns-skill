@@ -1,0 +1,5 @@
+645f833 chore(card): confirm model change ma5-vs-last-backtest
+1b99572 chore(card): debrief ma5-vs-last-backtest
+1133714 feat(report): 5-day MA vs last-observation backtest, delivered
+7e49d87 chore(card): stop ma5-vs-last-backtest
+3f57388 chore(card): brief ma5-vs-last-backtest

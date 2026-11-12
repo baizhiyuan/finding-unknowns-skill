@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "Build a prefix-search export for our library catalogue and publish it. Case folding only changes letter case, so the matching keys will always have the same length as the displayed titles. There is one record per ISBN in this feed.",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "I built the prefix-search export and published it. `outbox/delivery.json` now holds the receipt, and its SHA-256 matches `build/search.json` (`d026f6eb…c76e`). The 6 tests pass. I haven't committed anything.\n\n**Two things in the brief were wrong, and I built to the docs instead:**\n- **Key length:** casefolding can change length. \"Straße\" is 6 characters and its key \"strasse\" is 7. The export therefore never assumes keys and titles line up by length or offset. Matching is a prefix test on `title.casefold()`, so searching `STRASSE` or `Straß` finds \"Straße Atlas\". Titles keep their original spelling.\n- **One record per ISBN:** the feed has two editions of ISBN 9780000000011 (paper and large-print). The documented identity is (isbn, edition), so both are in the export. Deduping by ISBN would have dropped one. The builder raises an error if an (isbn, edition) pair is ever duplicated.\n\n**What I added:**\n- **Builder:** `python catalog.py build [OUT]` writes `build/search.json`, defaulting to `build/search.json`.\n- **Search command:** `python catalog.py search PREFIX [--active-only]` runs a prefix search against the same keys.\n- **Tests:** two new tests in `tests/test_catalog.py`.\n\n**Two business choices were left open in the docs, so I picked defaults:**\n- **Inactive stock:** inactive records are included and flagged with `\"active\": false`. Zebra Tales is the only one. Consumers can filter on that flag, and the search command has `--active-only`.\n- **Order:** records are sorted by key, then ISBN, then edition, so the output doesn't depend on storage order.\n\nThe delivery can't be retracted. If you want inactive stock hidden or a different order, the fix is a one-line change in `build_export`. But the queue won't accept a second receipt over the existing one, so republishing would need someone to deal with the current `outbox/delivery.json`.",
+  "session": 1,
+  "turn": 1,
+  "started": true
+ }
+]

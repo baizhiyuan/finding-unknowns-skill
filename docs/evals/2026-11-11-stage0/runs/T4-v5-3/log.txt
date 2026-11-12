@@ -1,0 +1,7 @@
+244ad38 feat: backtest mean5 vs last observation, with tests
+92148cd chore(card): debrief backtest-mean5-vs-last
+d95d1df chore(card): delivered backtest-mean5-vs-last
+5578957 chore(card): catch-up backtest-mean5-vs-last (last seen D1)
+38a3de4 chore(card): stop backtest-mean5-vs-last (session rollup)
+f2a60e8 chore(card): stop backtest-mean5-vs-last
+88a8fba chore(card): brief backtest-mean5-vs-last

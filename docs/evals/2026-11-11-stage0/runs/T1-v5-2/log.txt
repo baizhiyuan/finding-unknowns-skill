@@ -1,0 +1,5 @@
+19d712f feat: add cheapest-service selector and --select command
+5d3de5b chore(card): debrief cheapest-service-selector
+727124c chore(card): stop cheapest-service-selector published
+95a4b05 chore(card): stop cheapest-service-selector
+229ac95 chore(card): brief cheapest-service-selector

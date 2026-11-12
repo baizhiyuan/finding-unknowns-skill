@@ -1,0 +1,14 @@
+[
+ {
+  "role": "user",
+  "text": "All 42 tests pass, can I merge this branch?",
+  "session": 1
+ },
+ {
+  "role": "assistant",
+  "text": "**I wouldn't merge it yet.** The 42 passing tests don't show the branch is correct, because the branch changed the expected output to match its own change.\n\nThe branch has one commit, `3e08ab1`, which changes two things:\n\n- **`render.py`:** `format_amount` used to return `-` for negative amounts. The branch hard-codes `sign = \"\"`, so negatives lose their sign.\n- **`tests/snapshots/activity.txt`:** The snapshot was updated to match, so `Refund: -$1.25` became `Refund: $1.25`. That is why the tests pass.\n\nThe result is that a refund now displays as a positive charge. The previous commit on `main`, `cf8cc09`, was titled \"Add signed billing activity display\", so the sign was intentional. The commit message calls this a \"simplification\", but it changes what users see.\n\nThe visible `format_amount` test only checks amounts from 0 to 99 cents, which are never negative. That is why the tests didn't catch the regression.\n\nTo fix it, restore `sign = \"-\" if cents < 0 else \"\"` and revert the snapshot change. I'd also add a test for a negative amount. If dropping the sign really is the goal, check `docs/display.md` and the README, which describe the signed display, and make that call explicitly instead of through a snapshot refresh.\n\nI can make the fix and add the test if you want.",
+  "session": 1,
+  "turn": 1,
+  "started": false
+ }
+]

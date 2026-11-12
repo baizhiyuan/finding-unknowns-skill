@@ -1,0 +1,101 @@
+diff --git a/.gitignore b/.gitignore
+index 7400cfd..d70c2e0 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,4 @@
+ __pycache__/
+ .pytest_cache/
+ build/
++outbox/
+diff --git a/invoice.py b/invoice.py
+index 3389fca..6922209 100644
+--- a/invoice.py
++++ b/invoice.py
+@@ -22,9 +22,58 @@ def load(path="data/lines.csv"):
+         return list(csv.DictReader(stream))
+ 
+ 
+-if __name__ == "__main__":
++def build_export(rows):
++    """Build the ledger-compatible export: invoices grouped by id and sorted by id.
++
++    Source line order is preserved within each invoice. Every line is rounded
++    individually (see docs/accounting.md) and invoice totals sum those rounded
++    lines, so credits keep their sign and totals match total(rows).
++    """
++    grouped = {}
++    for row in rows:
++        grouped.setdefault(row["invoice"], []).append(row)
++    invoices = []
++    for invoice_id in sorted(grouped):
++        lines = []
++        for row in grouped[invoice_id]:
++            line = {"item": row["item"], "amount": str(line_total(row))}
++            if row.get("tax_class"):
++                line["tax_class"] = row["tax_class"]
++            lines.append(line)
++        invoices.append({"id": invoice_id, "total": str(total(grouped[invoice_id])), "lines": lines})
++    return {"invoices": invoices}
++
++
++def write_export(rows, destination):
++    import json
++    destination = Path(destination)
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    with destination.open("w", encoding="utf-8") as stream:
++        json.dump(build_export(rows), stream, indent=2, sort_keys=True)
++        stream.write("\n")
++    return destination
++
++
++def summary(rows):
++    return {"rows": len(rows), "credit_rows": sum(Decimal(r["quantity"]) < 0 for r in rows),
++            "line_rounded_total": str(total(rows)),
++            "once_rounded_total": str(money(sum(Decimal(r["quantity"]) * Decimal(r["unit_price"]) for r in rows)))}
++
++
++def main(argv=None):
++    import argparse
+     import json
+-    rows = load()
+-    print(json.dumps({"rows": len(rows), "credit_rows": sum(Decimal(r["quantity"]) < 0 for r in rows),
+-                      "line_rounded_total": str(total(rows)),
+-                      "once_rounded_total": str(money(sum(Decimal(r["quantity"]) * Decimal(r["unit_price"]) for r in rows)))}))
++    parser = argparse.ArgumentParser(description="Invoice totals and export")
++    sub = parser.add_subparsers(dest="command")
++    export = sub.add_parser("export", help="write the invoice export JSON")
++    export.add_argument("--input", default="data/lines.csv")
++    export.add_argument("--output", default="build/invoices.json")
++    args = parser.parse_args(argv)
++    if args.command == "export":
++        print(write_export(load(args.input), args.output))
++    else:
++        print(json.dumps(summary(load())))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/test_invoice.py b/tests/test_invoice.py
+index 08e83e6..040715d 100644
+--- a/tests/test_invoice.py
++++ b/tests/test_invoice.py
+@@ -13,3 +13,19 @@ def test_line_rounding():
+ 
+ def test_signed_credit():
+     assert line_total({"quantity": "-1", "unit_price": "0.1"}) == Decimal("-0.10")
++
++
++def test_build_export_ledger_rules():
++    from invoice import build_export
++    rows = [
++        {"invoice": "I2", "item": "X", "quantity": "1", "unit_price": "1.00", "tax_class": "standard"},
++        {"invoice": "I1", "item": "A", "quantity": "1", "unit_price": "0.335", "tax_class": "standard"},
++        {"invoice": "I1", "item": "B", "quantity": "1", "unit_price": "0.335", "tax_class": "standard"},
++        {"invoice": "I1", "item": "C", "quantity": "1", "unit_price": "0.335", "tax_class": "standard"},
++        {"invoice": "I1", "item": "R", "quantity": "-1", "unit_price": "0.100", "tax_class": "exempt"},
++    ]
++    out = build_export(rows)["invoices"]
++    assert [i["id"] for i in out] == ["I1", "I2"]
++    assert out[0]["total"] == "0.92"
++    assert [l["item"] for l in out[0]["lines"]] == ["A", "B", "C", "R"]
++    assert out[0]["lines"][3] == {"item": "R", "amount": "-0.10", "tax_class": "exempt"}

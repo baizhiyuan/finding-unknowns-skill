@@ -1,0 +1,7 @@
+be9dabb chore(card): detrended follow-up demand-backtest-mean5-vs-last
+72cf6dc chore(card): debrief results card demand-backtest-mean5-vs-last
+c17e857 feat(backtest): add mean5 vs last backtest script; ignore card-local files
+7d7989e chore(card): debrief demand-backtest-mean5-vs-last
+bba99ce chore(card): stop demand-backtest-mean5-vs-last
+64b5228 chore(card): stop demand-backtest-mean5-vs-last
+6e8dcd6 chore(card): brief demand-backtest-mean5-vs-last
