@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Install the finding-unknowns skill (with its references), the companion agents and the
-# slash commands into the global Claude Code config directory. Removes 4.x leftovers only
-# when they match files this project installed.
+# Install the finding-unknowns skill (with its references), the mechanism-auditor agent,
+# the slash commands and, once it exists, the fu script into the global Claude Code config
+# directory. Removes files of earlier versions only when they carry a marker of this
+# project; a file of the same name that is not ours is kept as .bak.
 set -euo pipefail
 
 CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
@@ -23,7 +24,7 @@ install_file() {  # <src> <dest>
   cp "$1" "$2"
 }
 
-# Companion agents
+# Agent
 AGENT_DEST="$CONFIG_DIR/agents"
 mkdir -p "$AGENT_DEST"
 for agent in "$SRC"/agents/*.md; do
@@ -39,13 +40,22 @@ for cmd in "$SRC"/commands/*.md; do
   echo "Installed command -> $CMD_DEST/$(basename "$cmd")"
 done
 
-# 4.x leftovers. Each is removed only if it carries a marker of this project.
+# The fu script. The skill calls it as {skill dir}/../../scripts/fu.py, which is
+# $CONFIG_DIR/scripts/fu.py in this layout (docs/design/fu-cli.md).
+if [ -f "$SRC/scripts/fu.py" ]; then
+  mkdir -p "$CONFIG_DIR/scripts"
+  install_file "$SRC/scripts/fu.py" "$CONFIG_DIR/scripts/fu.py"
+  echo "Installed script -> $CONFIG_DIR/scripts/fu.py"
+fi
+
+# Earlier versions. Each file is removed only if it carries a marker of this project.
 remove_if_ours() {  # <file> <marker regex>
   if [ -f "$1" ] && grep -qE "$2" "$1"; then
     rm "$1"
-    echo "Removed 4.x file -> $1"
+    echo "Removed old file -> $1"
   fi
 }
+# 4.x
 remove_if_ours "$dest/references/workflows.md" 'fu-execute|Workflow'
 for old in keep-the-reasoning theory-vs-result; do
   remove_if_ours "$CONFIG_DIR/skills/$old/SKILL.md" "^name: $old\$"
@@ -57,9 +67,23 @@ for old in blindspot cartographer change-quiz finding-unknowns keep-the-reasonin
     remove_if_ours "$f" 'finding-unknowns|keep-the-reasoning|theory-vs-result'
   fi
 done
+# Structured mode and the agents cut in 5.2 (they live on branch v4)
+remove_if_ours "$dest/references/structured.md" '^# Structured mode'
+remove_if_ours "$dest/references/cartographer.md" '^# Cartographer Mode'
+remove_if_ours "$dest/references/handoff-full.md" '^# The full handoff packet'
+remove_if_ours "$dest/references/results-examples.md" '^# Results: examples and anti-patterns'
+f="$CMD_DEST/fu-cartographer.md"
+if [ -f "$f" ] && grep -q 'finding-unknowns' "$f"; then
+  remove_if_ours "$f" 'Cartographer'
+fi
+for old in blindspot-scout ledger-keeper prototype-smith quiz-master; do
+  f="$AGENT_DEST/$old.md"
+  if [ -f "$f" ] && grep -qE "^name: $old\$" "$f"; then
+    remove_if_ours "$f" 'finding-unknowns'
+  fi
+done
 
 echo
-echo "Done. Skill: finding-unknowns. Commands: /fu-brief, /fu-catch-up, /fu-debrief, /fu-cartographer."
-echo "Agents (blindspot-scout, mechanism-auditor, quiz-master; ledger-keeper and prototype-smith for structured mode)"
-echo "are delegated to by the skill."
+echo "Done. Skill: finding-unknowns. Commands: /fu-brief, /fu-catch-up, /fu-debrief, /fu-view."
+echo "Agent: mechanism-auditor (used for irreversible-lane cards, measured results, or on request)."
 echo "Cards live in .finding-unknowns/tasks/ in each project; see the skill's references/card.md."

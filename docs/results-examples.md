@@ -1,6 +1,7 @@
 # Results: examples and anti-patterns
 
-Companion to `results.md`. Load when an example card helps.
+Companion to [`results.md`](../skills/finding-unknowns/references/results.md). Documentation only:
+moved out of the skill in 5.2, so it is not loaded at runtime.
 
 ## Examples
 

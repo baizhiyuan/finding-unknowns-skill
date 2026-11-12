@@ -7,7 +7,7 @@
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "One task card per task, kept by you and the agent: you predict first, the agent works quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and a fresh context grades every frozen prediction at the debrief. /fu-brief, /fu-catch-up, /fu-debrief. Measured results use Theory → Measured → Consistent? → Mechanism. Optional structured mode (/fu-cartographer, /fu-brief --structured) keeps the 4.x protocol: quadrant routing, eight techniques, the Cartographer ledger and gate, the full handoff packet. Agents: blindspot-scout, mechanism-auditor, quiz-master, ledger-keeper, prototype-smith. Whether this helps people is not yet tested."
+      "description": "One task card per task: you predict first and answer only what only you can decide, the agent builds quietly and stops only at four checkable points (irreversible step, scope change, dead premise, budget), and the completion report grades every frozen prediction. /fu-brief, /fu-catch-up, /fu-debrief, /fu-view. A deterministic fu script lints, freezes and checks the card, keeps the prediction log and renders an optional HTML view; a strict profile serves small models. Measured results use Theory → Measured → Consistent? → Mechanism. One agent, mechanism-auditor, used narrowly. Structured mode and the classic line live on branch v4. Whether this helps people is not yet tested."
     }
   ]
 }

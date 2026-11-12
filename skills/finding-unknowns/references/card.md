@@ -1,141 +1,87 @@
-# The task card
+# Card schema
 
-One card per task. The person and the agent both read it; the agent keeps it current.
+Normative. The fill-in template is in `/fu-brief`; `fu lint` enforces this file. **FAIL**
+blocks `fu render` and, under strict, the Brief-approval ask; **WARN** renders with a chip.
+One format everywhere: lines with fixed keys in a fixed order, nested lists, no tables.
 
-## Files
+## Files under `.finding-unknowns/`
 
-| Path | Content | Committed |
-|---|---|---|
-| `.finding-unknowns/tasks/{slug}.md` | The card | yes |
-| `.finding-unknowns/tasks/{slug}.deltas.md` | Every delta, append-only | yes |
-| `.finding-unknowns/predictions/{slug}.md` | Research claim cards and run tables (`results.md`) | yes |
-| `.finding-unknowns/profile.md` | `mode: ship | learn` (default ship), `commits: yes | no` | no |
-| `.finding-unknowns/unknowns-ledger.md`, `unknowns-spec-{slug}.md` | Structured mode: ledger and spec | yes, with the card |
-| `.finding-unknowns/prototypes/`, `change-report.md`, `implementation-notes.md` | Directions (`brief.md`) and structured-mode files, when used | no |
-| `.finding-unknowns/predictions-log.md` | One line per graded prediction | no |
-| `.finding-unknowns/logs/` | Command output and other detail | no |
+- `tasks/{slug}.md`: the card · committed by `fu freeze`
+- `tasks/{slug}.deltas.md`: every delta, append-only, the only place deltas live · committed
+- `predictions/{slug}.md`: a claim file (`results.md`) · committed
+- `decisions.md`: answers only the person could give, at most 30 lines · committed
+- `profile.md`: `mode: ship | learn` · `strict: no | yes` · `view: yes | no` (absent until
+  offered) · `commits: yes | no` · `guard: off | log | ask` (default `ask`) · local
+- `predictions-log.md`: written by `fu log` only · local
+- `logs/`, `view/`: command output, guard records, HTML · local
 
-Gitignore lines:
+Gitignore lines: `.finding-unknowns/logs/`, `.finding-unknowns/view/`,
+`.finding-unknowns/profile.md`, `.finding-unknowns/predictions-log.md`.
 
-```
-.finding-unknowns/logs/
-.finding-unknowns/profile.md
-.finding-unknowns/predictions-log.md
-.finding-unknowns/prototypes/
-.finding-unknowns/change-report.md
-.finding-unknowns/implementation-notes.md
-```
+## Card
 
-**4.x projects** ignore the whole `.finding-unknowns/` directory, which hides the card.
-Offer once, in the first message of `/fu-brief`, to replace that line with the lines above. Until the person agrees, cards are
-not committed and their Timing reads `self-reported`.
-
-## Template
-
-The live part (header, Deltas, Model changes, Open) stays within about 40 lines. The
-frozen Brief and the Debrief are not counted.
+Times are `YYYY-MM-DD HH:MM`, local. Header, five lines in this order:
 
 ```
-# {task}
+# {slug}
 Goal: {one line} · State: {briefing | building | waiting on you | debriefed}
-Next decision that needs you: {one line, or "none"}
-Mode: {ship | learn} · Structured: {no | yes | cartographer} · Last seen by you: {date}, after delta D{n}
-Timing: Brief frozen {date}, commit {hash} | self-reported
-
-## Brief (frozen {date})
-Approach: {choice} because {one-line why}; {one line per further decision}
-Your predictions:  P1 {claim} ({confidence}) · falsifier: … · should not change: …
-Agent predictions: A1 {claim} · falsifier: … · should not change: …
-  (or: "No real prediction here; contract only")
-Stop-points: irreversible action · scope change · dead premise · budget > {k}× {estimate}
-Contract:
-| claim | check (can fail) | does NOT prove | lane |
-
-## Amendments (append-only)
-M1 {date} {what changed in the approach or a premise} · why · {decided-for-you | confirmed}
-
-## Deltas (this session; earlier sessions rolled up)
-S1 rollup: {at most three lines}
-D7 {date} {deviation | surprise | decided-for-you}: {one line} → {evidence path}
-
-## Model changes (at most five live lines)
-You expected X → it is Y, because Z  [shown, not confirmed | confirmed]
-
-## Open
-{unchecked items, pending decisions, pending runs}
-
-## Debrief ({date}; graded by {fresh context | same-context — weaker})
-| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
-Evidence: {commands run → output, trimmed} · Did NOT prove: … · Not checked: …
+Needs you: {X} (recommendation: {Y}; settles {Z}) | nothing
+Mode: {ship | learn} · Last seen by you: {time}, after D{n} | never
+Timing: draft | Brief frozen {time}, commit {hash} | self-reported
 ```
 
-## Rules
+- `Needs you` exists once, here; the Debrief updates it (FAIL if twice). `Timing` and the
+  Brief heading's time are written by `fu freeze`.
+- Sections in order: `## Brief (draft)` or `## Brief (frozen {time})`, `## Amendments`,
+  `## Deltas`, `## Model changes`, `## Open`, `## Debrief (…)`.
+- The live part (header to Open) stays within 40 lines (WARN); a new line first replaces
+  the line it supersedes.
 
-- **Predictions vs contract.** A prediction is a claim about something the agent does
-  not control. "The tests will pass" is a contract check, not a prediction.
-- **Every prediction** has a falsifier and a "should not change" half. Magnitude and
-  location where they can be honestly given.
-- **The person predicts first**, with a confidence, before the agent's prediction is
-  shown. "No idea" is a valid answer and is recorded as such.
-- **The Brief is never edited after it freezes.** Amendments are dated and append-only:
-  - dead premise, no reversible path: a stop; the person confirms the Amendment;
-  - dead premise, reversible path: the agent may amend and continue, tagged
-    `decided-for-you`, shown at the next stop;
-  - every original prediction is still graded. An Amendment explains a miss; it never
-    removes one.
-- **Deltas** are one line each with an evidence pointer, appended to `{slug}.deltas.md`.
-  The card shows the current session's; at a session's end they are replaced on the
-  card by a three-line rollup.
-- **Last seen** is updated by the agent, only after `/fu-catch-up` or `/fu-debrief` has shown
-  the card to the person.
-- **Several open cards:** commands accept a slug; without one, take the most recently
-  changed card and say so in one line (no question).
-- **Model changes** stay `shown, not confirmed` until the person confirms. An
-  explanation delivered is not an explanation understood.
-- **Detail goes to `logs/`**; the card holds pointers.
+**Brief lines** (FAIL unless noted):
 
-## Committing
+- `Approach:` then `  - {decision} because {why}`.
+- Prediction: `{ID} ({you | agent} · {confidence}) "{claim}"`, then `  - falsifier: …` and
+  `  - should not change: …`. `P{n}` is the person's and must be quoted; `A{n}` is the
+  agent's. No answer: exactly `P: none given`. Confidence: `low | medium | high | no idea |
+  not given`.
+- `P{n}`/`A{n}` name predictions only. Every one cited anywhere is defined in the Brief;
+  premises are named in words.
+- `Stop-points: irreversible · scope · dead-premise · budget > {k}× {estimate}`.
+- ``Irreversible: `{exact command}` ``, one line per irreversible step.
+- Contract item `C{n} {claim}`, then `  - check: …`, `  - does NOT prove: …`,
+  `  - lane: reversible | wide | irreversible`; an irreversible item adds `  - post-check: …`.
+  A check containing an `Irreversible:` command fails. Lanes: `reversible` contained and
+  cheap to undo; `wide` undoable but touches shared surface; `irreversible` as SKILL.md.
+- `Check files: {paths} | none`.
 
-The commit hash is evidence of when the predictions were written, which the agent cannot
-quietly rewrite later. A squash merge or rewritten history removes it, so the hash and
-date also go on the header's Timing line, written after the commit, never inside the
-Brief (a hash cannot appear in the commit that produces it, and adding it later would
-edit the frozen Brief).
+**Deltas file**, one line each:
+`D{n} {time} {deviation | surprise | decided-for-you}: {text} → {evidence path}`, then
+` · cost if wrong: {text}` (required on `decided-for-you`), then optional
+` [stop: irreversible | scope | dead-premise | budget]`. A `D{n}` line inside the card
+fails; a missing `HH:MM` warns. The card's `## Deltas` holds `Latest: D{n}` and
+`Rollup:` with at most three lines.
 
-**When:** the Brief freezes; each stop; after the Debrief. Paths: the card, its deltas
-file and, for a research claim, `predictions/{slug}.md`; with `Structured: cartographer`,
-also `unknowns-ledger.md` and `unknowns-spec-{slug}.md`. Create the deltas file (a
-one-line header) when the Brief freezes, so every path exists at the first commit.
+**Amendment**: `M{n} {time} · after D{n} · {decided-for-you | confirmed}: {what changed} ·
+why: {text}`. No `after D{n}`: WARN.
 
-**Skip checks, run before anything is staged.** Skip the commit, write
-`timing: self-reported` and say so in one line when:
+**Model changes**: `- You expected X → it is Y, because Z [shown, not confirmed |
+confirmed]`, at most five, in this section only (WARN elsewhere).
 
-- this is not a git repository;
-- a path is ignored;
-- a merge, rebase or cherry-pick is in progress, or HEAD is detached;
-- other changes are already staged (a commit hook could act on the person's work);
-- `profile.md` says `commits: no` (the Brief announces the commit; a "no" is recorded
-  there).
+**Debrief** (a re-grade appends another; `fu log` reads the last): heading
+`## Debrief ({time}; graded by fresh context | same-context — weaker)`, then `Evidence:`, every Brief prediction (P before A, ID line identical to the Brief) with
+`  - measured:`, `  - consistent?: consistent | partly | inconsistent | can't tell |
+post-hoc fit`, `  - mechanism: {text} [verified | supported | inferred | untested]`; then
+`Integrity:` (three lines), `Did NOT prove:`, `Not checked:` (at least one item),
+`Bottom line:` with `  - holds:`, `  - did not hold:`, `  - stops at:`. IDs under `holds`
+are `consistent`; every `partly` or `inconsistent` ID is under `did not hold`. WARN: a
+mechanism verb stronger than its tier; "all", "every" or "works" under `holds` while a row
+missed.
 
-**Commit:**
+## Strict caps (FAIL under `strict: yes`)
 
-```
-git add -- <paths> && git commit --only -m "chore(card): {brief | stop | debrief} {slug}" -- <paths>
-```
+Card at most 600 words; at most 3 predictions per side; at most 5 contract items; at most
+20 words per field; live part at most 40 lines.
 
-- `--only` commits these paths alone; nothing else is staged.
-- Never `--no-verify`. If a hook fails or a signing prompt would block, run
-  `git reset -q -- <paths>` so nothing is left in the person's index, and fall back to
-  `self-reported`.
+## Prediction log line
 
-## Prediction log
-
-After each Debrief, append one line per graded prediction to
-`.finding-unknowns/predictions-log.md`:
-
-```
-{date} · {slug} · {P1 | A1} · {you | agent} · {consistent | partly | inconsistent | can't tell} · {confidence, if given}
-```
-
-The person's hit rate over time is a learning signal. An agent hit rate near 100 % means
-its predictions are too soft.
+`{YYYY-MM-DD} · {slug} · {ID} · {you | agent} · {consistent?} · {confidence}`

@@ -5,7 +5,7 @@ Checks that have broken before in this repo: frontmatter that fails to parse, un
 malformed SVGs, broken relative links, unbalanced code fences or <details>, version and
 count drift between plugin.json, README badges and the hero diagram, em dashes in the
 Chinese README and tutorial, en/zh README structure drift, Chinese diagrams with live (un-outlined)
-CJK text, and a broken install script.
+CJK text, a broken install script, and runtime text over its word budget.
 
 Usage: python3 scripts/validate.py   (exit 1 on any failure)
 """
@@ -22,12 +22,26 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-DOCS = ["README.md", "README.zh.md", "CLAUDE.md", "AGENTS.md", "EXAMPLES.md",
+DOCS = ["README.md", "README.zh.md", "CLAUDE.md", "CLAUDE.next.md", "AGENTS.md", "EXAMPLES.md",
         "CONTRIBUTING.md", "CHANGELOG.md", "docs/ARCHITECTURE.md", "docs/recordings/itsdangerous-blindspot.md", "docs/GLOSSARY.md",
-        "docs/TUTORIAL.md", "docs/TUTORIAL.zh.md"]
+        "docs/TUTORIAL.md", "docs/TUTORIAL.zh.md", "docs/results-examples.md"]
 DOCS += sorted(str(Path(p).relative_to(ROOT)) for p in glob.glob(str(ROOT / "docs/field-notes/*.md"))
                + glob.glob(str(ROOT / "docs/design/*.md"))
                + glob.glob(str(ROOT / "docs/evals/*/README.md")))
+# Word budgets for runtime text (wc -w), from the 5.2 design. Commands are counted together,
+# without fenced blocks in fu-brief.md (the card template lives there).
+BUDGETS = {"CLAUDE.md": 82, "CLAUDE.next.md": 82, "skills/finding-unknowns/SKILL.md": 700,
+           "skills/finding-unknowns/references/brief.md": 350,
+           "skills/finding-unknowns/references/debrief.md": 450,
+           "skills/finding-unknowns/references/results.md": 1200,
+           "skills/finding-unknowns/references/view.md": 150,
+           "agents/mechanism-auditor.md": 500}
+COMMANDS_BUDGET = 450
+# Phase 3 of 5.2 rewrites these docs. Until CHANGELOG.md has an entry for this version, their
+# problems are reported as PENDING and do not fail the run; the entry ends the grace period.
+PHASE3_VERSION = "5.2.0"
+PHASE3_FILES = ("README.md", "README.zh.md", "CHANGELOG.md", "EXAMPLES.md", "docs/ARCHITECTURE.md",
+                "docs/GLOSSARY.md", "docs/TUTORIAL.md", "docs/TUTORIAL.zh.md", "assets/")
 CJK = re.compile(r"[一-鿿　-〿＀-￯]")   # ideographs + CJK/full-width punctuation
 errors: list[str] = []
 
@@ -153,10 +167,35 @@ def check_install_script() -> None:
         fail(f"install.sh: {result.stderr.strip()}")
 
 
+def check_budgets() -> None:
+    for rel, limit in BUDGETS.items():
+        words = len(read(rel).split())
+        if words > limit:
+            fail(f"{rel}: {words} words, budget {limit}")
+    total = 0
+    for path in sorted(glob.glob(str(ROOT / "commands/*.md"))):
+        text = Path(path).read_text(encoding="utf-8")
+        if Path(path).name == "fu-brief.md":
+            text = re.sub(r"```.*?```", "", text, flags=re.S)
+        total += len(text.split())
+    if total > COMMANDS_BUDGET:
+        fail(f"commands/*.md: {total} words without the card template, budget {COMMANDS_BUDGET}")
+
+
+def phase3_pending() -> bool:
+    version = json.loads(read(".claude-plugin/plugin.json"))["version"]
+    return version == PHASE3_VERSION and f"## [{version}]" not in read("CHANGELOG.md")
+
+
 def main() -> int:
+    global errors
     for check in (check_frontmatter, check_json, check_svgs, check_docs, check_readme_pair,
-                  check_versions_and_counts, check_install_script):
+                  check_versions_and_counts, check_install_script, check_budgets):
         check()
+    if phase3_pending():
+        pending = [e for e in errors if e.startswith(PHASE3_FILES)]
+        errors = [e for e in errors if not e.startswith(PHASE3_FILES)]
+        print("\n".join(f"PENDING (phase 3 docs) {e}" for e in pending))
     if errors:
         print("\n".join(f"FAIL {e}" for e in errors))
         print(f"\n{len(errors)} problem(s)")

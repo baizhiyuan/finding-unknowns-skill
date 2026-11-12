@@ -1,168 +1,94 @@
 ---
 name: finding-unknowns
-description: "Use when the user says 'brief me', 'catch me up', 'where were we', 'what am I missing', 'did it match what we expected' or 'is this result consistent'; runs /fu-brief, /fu-catch-up or /fu-debrief; or an open card exists under .finding-unknowns/tasks/. Keeps one task card: predictions frozen before the work, a quiet build with four stop-points, a debrief graded by a fresh context. Not for typos, one-liners or tasks the user says to just do."
-aliases: []
+description: "Use on /fu-brief, /fu-catch-up, /fu-debrief or /fu-view; on 'brief me', 'catch me up', 'where were we' or 'did it match what we expected'; or when an open card exists under .finding-unknowns/tasks/. One task card: the person predicts first, a quiet build with four stop-points, every prediction graded. Not for typos or one-liners."
 metadata:
   credits:
-    discovery: "Thariq Shihipar — A Field Guide to Fable: Finding Your Unknowns (https://x.com/trq212/status/2073100352921215386)"
-    handoff: "Addy Osmani — Critical thinking when agents do the work (https://x.com/addyosmani/status/2117512471930167377)"
-    results: "Theory → Measured → Consistent? → Mechanism, from the author's own research practice (baizhiyuan)"
-    cognitive-surrender: "Shaw & Nave, Thinking—Fast, Slow, and Artificial (SSRN 6097646); cognitive debt: Margaret-Anne Storey"
-    design: "docs/design/5.0.md, after an advisor review by Fable 5.2"
+    discovery: "Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns (https://x.com/trq212/status/2073100352921215386)"
+    handoff: "Addy Osmani, Critical thinking when agents do the work (https://x.com/addyosmani/status/2117512471930167377)"
+    results: "Theory → Measured → Consistent? → Mechanism, from the author's research practice (baizhiyuan)"
 ---
 
 # Finding Unknowns
 
-*Discovery distilled from Thariq Shihipar's "A Field Guide to Fable: Finding Your
-Unknowns"; the handoff from Addy Osmani's "Critical thinking when agents do the work".
-Community skill; not affiliated with or endorsed by Anthropic.*
+*After Thariq Shihipar and Addy Osmani (credits above). Community skill; not affiliated
+with or endorsed by Anthropic.*
 
-<Purpose>
-Help the person own the work: know what is being done and why, predict what should
-happen, and see where reality differed. One **task card** per task carries this across
-sessions. Interrupt only at four checkable stop-points; everything else goes on the card.
-Spend words only where they change a decision or the person's model.
-</Purpose>
+The person predicts, you build quietly, the evidence grades both. One **card**,
+`.finding-unknowns/tasks/{slug}.md`, carries the task across sessions.
 
-<Use_When>
-- `/fu-brief`, `/fu-catch-up`, `/fu-debrief`, or the phrases in the description
-- The person is starting work they will have to stand behind, in territory they or you
-  do not know well
-- A session starts and `.finding-unknowns/tasks/` holds an open card
-- A measured result is planned or comes back (load `references/results.md`)
-</Use_When>
+## Tools and memory
 
-<Do_Not_Use_When>
-- Typos, one-liners, obvious fixes, lookups: just do them. No card, no question
-- The person says "just do it": state the single biggest risk in one line, then proceed.
-  An irreversible step still gets the build rule.
-- Pure option generation with a clear goal: brainstorm directly
-</Do_Not_Use_When>
+- `fu` means `python3 "{base}/../../scripts/fu.py"`, `{base}` being this skill's base
+  directory. Never do by hand what a `fu` subcommand does. If `fu` cannot start, say so in
+  one line; Timing is then `self-reported` and integrity `not run`.
+- Read `.finding-unknowns/profile.md` and `decisions.md` before the Brief.
 
-<Always>
-- **Territory first.** Never ask what the code, docs or data can answer; look first.
-  Never report a fact as absent or "needs device check" without searching: cite the hit
-  (say if it is only a draft) or the search that came back empty.
-- **Remote targets** (device, server, hosted service): cite the recorded access path
-  (host entry, user, route; never key material, no network probe unless asked) or say
-  none is recorded. A record can predate a migration: the first step of any plan
-  touching the target confirms the login reaches the intended machine.
-- **Priors are recorded before checks.** A prior stated later (a follow-up that assumes
-  an answer) is checked like the first, inline or with a scoped scout pass. Findings that
-  contradict a prior are surprises: list every one, never absorb them.
-- **A check must be able to fail**, and each check states what it does NOT prove.
-  "Looks good", "no errors" and "the model is confident" are not checks. Checks named in
-  the contract are not edited by the implementer.
-- **No protocol narration.** Do not announce modes, levels or routing. Show the person
-  the card, the question, or the evidence.
-- **Short by default.** A Debrief is no longer than a plain answer; detail on request.
-- **"No significant unknowns"** and **"no real prediction here"** are valid results.
-</Always>
+## Always
 
-<Steps>
+- **Look before asking.** Never ask what code, docs or data answer.
+- **Ask only what only the person can decide**, in one batch, each with your recommended
+  answer worded so "yes" accepts it. Never re-ask an answer in `decisions.md`; add each new
+  one there, quoted and dated (at most 30 lines).
+- **Never write the person's prediction.** Quote their words; no answer is `P: none given`.
+  The prediction ask carries no recommendation.
+- **A check must be able to fail** and says what it does NOT prove. The builder never
+  edits contract check files.
+- **No protocol narration.** Short by default; "no real prediction here" is valid.
 
-## The card
+## /fu-brief
 
-Path `.finding-unknowns/tasks/{slug}.md`. Template, file layout, gitignore lines and the
-commit procedure: `references/card.md`. The frozen Brief is never edited; changes go to
-dated, append-only Amendments, and every original prediction is still graded.
+The command holds the procedure and the card template. Ship mode unless the person asks
+to learn. Show the Brief in full in the reply; freeze it with `fu freeze` on the person's
+yes. The frozen Brief is never edited; changes go to dated Amendments.
 
-## /fu-brief — create and freeze the card
+## Building: quiet
 
-1. **Mode: `ship` unless the person asks to learn.** Never ask for it; record `learn` in
-   `.finding-unknowns/profile.md` only when the person says so. Read 4.x files in place and
-   offer once to fold them into a card. If `.gitignore` hides `.finding-unknowns/`
-   entirely, offer once to replace that line (`references/card.md`); never
-   silently.
-2. **The person predicts first.** A silent, read-only look at the repository may come
-   first; nothing from it is shown. Then, in one message, ask what they expect, with a
-   confidence (one skippable question in ship mode, up to three in learn mode), plus step 1's offers and any
-   choice the repository cannot answer (audience, out of scope, definition of done,
-   business preferences): at most three questions in that message. This is their prior:
-   record it before any sweep; never ask for it again. Predictions are claims about what
-   you do not control (where the bug is, a number, an outcome), each with a falsifier and
-   a "should not change" half. Things you make true belong in the contract.
-3. **Map the territory.** Use the instruments in `references/brief.md` as the gap
-   requires: blind-spot pass (`blindspot-scout` for a real sweep, given the prior so it
-   reports Surprises), divergent directions, references, interview, a plan that leads
-   with the decisions likely to change. After the sweep, at most one bundled follow-up
-   before the Brief.
-4. **Write the Brief:** approach with a one-line why per decision, the person's
-   predictions and then yours, the four stop-points with this task's budget multiple, and
-   the contract (claim · check · does NOT prove · lane). Say that the card will be
-   committed; declining is remembered in `profile.md`.
-5. **Freeze on the person's yes** to the Brief and its contract. Commit per
-   `references/card.md`, then write the Timing line in the header.
+Stop for the person only at:
 
-## Building — quiet by default
+1. **Irreversible step**: data rewritten or dropped, deletion, production, money,
+   publication, commitments to people; classify upward when unsure. Its exact command is
+   on a Brief `Irreversible:` line. Show it, wait for a yes to that command ("go ahead" is
+   not one), run it once. Its contract checks are dry runs; nothing re-executes it.
+2. **Scope change** outside the Brief.
+3. **Dead premise**: a Brief premise or a falsifier fired and no reversible path remains.
+   Two failed fixes that share an assumption: log the assumption and test it; a third
+   failure is this stop.
+4. **Budget** past the agreed multiple.
 
-Stop for the person only at these points:
+Everything else: take the most reversible option and append a delta to
+`{slug}.deltas.md` (a `decided-for-you` delta states its cost if wrong). At each stop:
+`fu freeze {slug} --stage stop`.
 
-1. **Irreversible action.** Lanes: `reversible` (contained, cheap to undo) · `wide`
-   (undoable, touches shared surface) · `irreversible` (data rewritten or dropped,
-   deletion, production data, money, external publication, commitments to people).
-   Classify upward when unsure; downgrading from `irreversible` needs the person's yes.
-   **Build rule:** prepare the exact command; the person runs it or says yes to that
-   command (a general "go ahead" is not one); run the contract's post-check before the
-   item closes. Confidence never substitutes for the person here.
-2. **Scope change:** outside the Brief's approach or contract.
-3. **Dead premise:** a Brief premise or a prediction's falsifier fired and no reversible
-   path remains. The Amendment is confirmed by the person.
-4. **Budget:** overrun past the agreed multiple.
+**A turn ends** with a completion report or a stop-point request; never an optional
+question, a menu, or a request to commit the person's code (leave it uncommitted).
 
-**How a turn ends once the build has started:** with a completion report, or with a
-request at one of the four stop-points. Never with an optional question, a menu of
-follow-ups, or a request to commit the person's code (leave code uncommitted and say so);
-optional follow-ups go under Open.
+## Completion report = Debrief
 
-Everything else: take the most reversible option, log a one-line delta
-(`deviation | surprise | decided-for-you`, with an evidence pointer), keep going. A dead
-premise with a reversible path left gets an Amendment tagged `decided-for-you`, shown at
-the next stop. Commit the card at each stop (`references/card.md`). At a session's end,
-roll the deltas up to three lines on the card.
+When the carded work is done, the completion report is the Debrief:
+`references/debrief.md`. Measured results: `references/results.md`. `/fu-debrief` is for
+late results and re-grading.
 
-## /fu-catch-up — re-orient without restarting
+## /fu-catch-up
 
-1. Several open cards: take the most recently changed and say so in one line.
-   4.x files and no card: offer once to fold them into one.
-2. **Recall before showing, in learn mode only:** two or three questions from the deltas
-   and wrong predictions since Last seen (`references/debrief.md`).
-3. Show only what changed after Last seen: state, deltas, Amendments, model changes,
-   the next decision that needs the person. Reconcile with the files and runs first;
-   never summarise an old summary.
-4. Update Last seen.
+Named card, else the most recently changed open one (say which). Reconcile it with the
+files and runs; show only what changed after Last seen, and `Needs you`; update Last
+seen. Recall questions only on request: two or three on application, from misses and
+deltas since Last seen; no pass mark.
 
-## /fu-debrief — grade against the frozen card
+## Modes (profile.md)
 
-Read `references/debrief.md`. Quote each prediction by ID, never restate it; a fresh
-context (`mechanism-auditor`) given the frozen card and artifact paths fills Measured and
-Consistent?; you write only the Mechanism with its tier; the person's predictions are
-graded first; explanation goes on the rows that missed; evidence block (what each check
-did NOT prove; not checked: never empty); model changes marked `shown, not confirmed`
-until the person confirms; append to the prediction log; commit. End with the bottom
-line and "Needs you: X (recommendation: Y)" stated, not asked; no menus, no further work
-unless asked.
-For measured results, the card's rows use `references/results.md`.
+- **learn**, only on request: missed rows get a short why with one example; stop
+  explaining a behaviour once the person predicts it correctly.
+- **strict** (`strict: yes`, when the person says "strict"): fill the template only;
+  `fu lint` enforces the caps in `references/card.md` and must pass before the
+  Brief-approval ask.
 
-## Structured mode (optional)
+## References
 
-Only on request ("structured mode", `/fu-brief --structured`, `/fu-cartographer`): load
-`references/structured.md` first and record the flag on the card. Its Routing, Depth
-and Packet-size lines override *No protocol narration*; its interview and ledger rules
-replace the question limits above; card, stop-points and grading still apply. Never by
-default.
-
-</Steps>
-
-<References>
 | File | Load when |
 |---|---|
-| `references/card.md` | creating, committing or migrating a card |
-| `references/brief.md` | running a discovery instrument or writing the contract |
-| `references/debrief.md` | `/fu-debrief`, a handoff, recall questions |
-| `references/results.md` | a benchmark, backtest, A/B test, training run or reproducible failure; any measured prediction |
-| `references/results-examples.md` | an example card is needed |
-| `references/structured.md` | structured mode only (on request) |
-| `references/cartographer.md` | Cartographer mode only (`/fu-cartographer`) |
-| `references/handoff-full.md` | structured mode or a Cartographer merge |
-</References>
+| `references/brief.md` | questions, predictions, the contract |
+| `references/card.md` | `fu lint` fails; a card written outside `/fu-brief` |
+| `references/debrief.md` | the work completes; `/fu-debrief` |
+| `references/results.md` | benchmark, backtest, A/B test, training run, reproducible failure |
+| `references/view.md` | a complex task's Brief-approval ask; `/fu-view` |

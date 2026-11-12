@@ -1,109 +1,67 @@
 # Debrief
 
-The Debrief compares what happened with what the frozen card predicted, and hands the
-work back so the person can judge it. One agent wrote both the predictions and the work,
-so honesty here is structural, not a promise of self-criticism.
+One agent wrote the predictions and the work, so honesty here is structural.
 
 ## Steps
 
-1. **Read the frozen card**, its Amendments and its deltas file. Quote each prediction
-   by ID, verbatim. Never restate a prediction in new words.
-2. **Integrity checks** (the grader runs them):
-   - the frozen Brief on the card matches the freeze commit (`git show {hash}:{card}`);
-   - the contract's check files are unchanged since the freeze (`git diff {hash} -- {files}`);
-   - every diff hunk is explained by a delta, an Amendment or a contract item; any other
-     hunk is an **unlogged deviation** and is listed.
-
-   With `timing: self-reported`, say that these checks could not run.
-3. **Fresh-context grading.** Give `mechanism-auditor` (or any fresh subagent) the frozen
-   card and the paths of the artifacts behind every result: not the build transcript and
-   not your conclusions. It fills **Measured** and **Consistent?** for every prediction
-   and names, per row, the strongest alternative explanation and the cheapest check that
-   would tell them apart. Without subagents, grade it yourself and label the Debrief
+1. Run `fu integrity {slug}`; its three lines go in verbatim.
+2. **Grader.** Irreversible lane, measured result, or on request: `mechanism-auditor`
+   gets the frozen card, deltas file and artifact paths, never the transcript or your
+   claims, and fills `measured` and `consistent?`. Otherwise grade yourself:
    `same-context — weaker`.
-4. **Grade the person's predictions first.** Then the agent's.
-5. **Write the Mechanism** for each row, with its tier: `verified` (a test that would have
-   come out differently if the mechanism were false) · `supported` · `inferred` ·
-   `untested`. When the evidence cannot separate a pipeline problem from a wrong idea,
-   say so and name the check that would.
-6. **Explain at the point of error.** Rows where a prediction missed get the explanation,
-   the person's own misses first. In learn mode, a short why with one concrete example;
-   in ship mode, one line. A correct, confident prediction needs no explanation.
-7. **Model changes:** "You expected X → it is Y, because Z", at most five, each
-   `shown, not confirmed` until the person confirms.
-8. **Evidence block** (below), then Open: what the person needs to decide.
-9. **Append to the prediction log; commit** per `card.md`; update Last seen.
+3. Grade every Brief prediction, the person's first, quoted exactly as frozen. An
+   Amendment never removes a miss.
+4. Write `mechanism` with its tier. Explain misses only, the person's first, in one line.
+5. Card `Model changes`: `You expected X → it is Y, because Z`, `shown, not confirmed`
+   until the person confirms; no verdicts or numbers.
+6. Fill the card's Debrief section and its header `Needs you`; then `fu lint {slug}`,
+   `fu log {slug}`, `fu freeze {slug} --stage debrief`; update Last seen.
 
-If the card's header says `Structured: yes` or `Structured: cartographer`, use the full
-nine-section packet (`handoff-full.md`) in place of the default view; the steps above
-still apply.
+## Field rules
 
-For measured results (benchmarks, backtests, A/B tests, training runs, load tests), the
-rows follow `results.md`: verdict labels, the interval rule, the two verdicts.
+- A row runs claim → evidence → boundary: the quote; `measured` with its path and only
+  the number the verdict rests on; `mechanism`.
+- The verb matches the tier: `verified` is or causes; `supported` fits; `inferred` may;
+  `untested` opens with "untested:". One hedge per claim. A verdict word is never upgraded:
+  `consistent` is not "confirmed".
+- `Did NOT prove`: `{check} → leaves open: {part of which claim} · still holds: {…}`.
+- `Bottom line` IDs match the rows.
+- `Needs you` names what the answer settles.
+- The terminal never hides a miss, a fired falsifier, an unlogged hunk or
+  `same-context — weaker`.
+- A rewrite for clarity changes words only; verdicts, tiers, quotes, numbers and
+  `Not checked` stay.
 
-## Default view
+## Reply
 
-One screen, no longer than a plain answer would be. Detail on request.
+Nested lists, fixed keys, this order; no tables. Consistent rows: ID line and
+`consistent?` only.
 
 ```
-Evidence: `{command}` → {output, trimmed} · {artifact paths}
-
-| ID | Prediction (quoted) | Measured | Consistent? | Mechanism [tier] |
-|----|---------------------|----------|-------------|------------------|
-
-Did NOT prove: {one line per check; flag tests written in the same context as the code}
-Not checked: {at least one item; never empty}
-Model changes: {at most five lines}
-Bottom line: {one line: what holds, what did not}
-Needs you: {X} (recommendation: {Y})   # "Needs you: nothing" when nothing is pending
+Evidence:
+  - `{command}` → {output, trimmed}
+P1 (you · medium) "{quoted}"
+  - measured: {value} ({path})
+  - consistent?: inconsistent
+  - mechanism: {text} [inferred]
+Integrity: {three fu integrity lines}
+Did NOT prove: {lines}
+Not checked: {at least one}
+Model changes: {at most five}
+Bottom line:
+  - holds: {claim} ({IDs})
+  - did not hold: {claim} ({IDs}) | none
+  - stops at: {boundary}
+Needs you: {X} (recommendation: {Y}; settles {Z}) | nothing
 ```
 
-`Consistent?` is one of `consistent · partly · inconsistent · can't tell`; `post-hoc fit`
-when the prediction was written after the result was seen.
+Add `fu log`'s calibration line when it prints one.
 
 ## Rules
 
-- **Evidence first, then the summary, then `Needs you`.** The commands actually run and
-  their actual output come before any prose about them; the bottom line comes after them.
-  A check that was not run is reported as not run.
-- **Every check states what it did not prove.** A test written by the context that wrote
-  the code can share its mistake and still pass; say when that is the case.
-- **"Not checked" is never empty.**
-- **End with the bottom line**, then "Needs you: X (recommendation: Y)" as one line,
-  stated, not asked ("Needs you: nothing" when nothing is pending). No request to reply, no menus, no further work unless the person
-  asks.
-- **High-consequence decisions** (what to build, ship or not, who it affects): two or
-  three options with trade-offs are written under Open on the card; the reply carries
-  only the single recommendation line. The decision stays with the person.
-- **No rescue.** An Amendment or a good story explains a miss; it does not turn it into
-  a hit.
-- **Hit rate.** If the agent's predictions are consistent on nearly every card, they are
-  too soft; say so when the log shows it.
-
-## Surrender signals
-
-Name the signal once, plainly, with the evidence; then the person decides. No lectures.
-
-- approval of a large change with no question about any listed decision or unchecked item;
-- the agent's own tests offered as the only evidence for the agent's own code;
-- "just tell me what to do" on a decision whose consequences fall on other people;
-- reasoning from another agent's summary instead of the source.
-
-## Recall questions (`/fu-catch-up`)
-
-Asked before the card is shown, so the person practises recall and a stale Brief shows
-up.
-
-- Drawn from the deltas and the wrong predictions since Last seen; `quiz-master` may draft
-  them from the card and the diff.
-- Learn mode: two or three. Ship mode: none.
-- Application, not vocabulary: "Which workload should benefit least, and why?", never
-  "what is the function called?".
-- A two-sentence teach-back counts in place of the questions.
-- There is no pass mark and no gate. A wrong answer becomes a line under Model changes.
-
-## The prediction habit
-
-Before asking for work, write what you expect. Afterwards, name one thing that was not
-checked. The card makes this the default; outside a card, offer it once when the person
-asks how to keep their own judgement sharp.
+- Evidence first; `Needs you` last, stated, not asked. No menu, no further work.
+- High-consequence decisions: options under Open; the reply gives one recommendation.
+- **No rescue.** A good story explains a miss, never turns it into a hit.
+- **Surrender signals**, named once with evidence: a large change approved without a
+  question; your own tests as the only evidence for your code; "just tell me" on a
+  decision that falls on others.
