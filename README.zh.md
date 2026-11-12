@@ -88,7 +88,7 @@ curl -fsSL https://raw.githubusercontent.com/baizhiyuan/finding-unknowns-skill/m
 5.2 按这些数字重建了插件（[设计文档](docs/design/5.2.md)）：
 
 - **减少回合。** 不再问模式，不再问是否提交，回忆性问题只在你要求时才提；完成报告本身就是复盘，不再单独占用一个回合；问题一次问完，每个都附带推荐答案。
-- **不可逆操作交给代码把关。** 确切命令写在任务卡上；防护钩子在它执行前请你确认，并标出第二次执行；格式检查拒绝任何会重新执行它的验收检查。
+- **不可逆操作绑定到一条命令。** 确切命令写在任务卡上，只有你在对话中同意这条命令后才会执行；防护钩子再加一道 Claude Code 的权限确认提示，并标出第二次执行；格式检查拒绝任何会重新执行它的验收检查。
 - **例行记录交给脚本。** 冻结、完整性检查、格式检查、预测记录、列表和 HTML 视图都由 fu 脚本（Python 标准库）完成，不再由模型手工处理。
 - **加载的内容更少。** 结构化模式、Cartographer 模式和五个子代理中的四个已移除（保留在 `v4` 分支）。评判子代理只在最需要的地方使用。
 - **你的原话归你。** 智能体从不替你写预测；你没有给出预测时，任务卡记为 `P: none given`。
@@ -104,7 +104,7 @@ curl -fsSL https://raw.githubusercontent.com/baizhiyuan/finding-unknowns-skill/m
 56 个词不够用时，再考虑插件：
 
 - **跨会话的工作。** 任务卡是文件，计划、预测和进展在重启后依然保留；`/fu-catch-up` 只显示有变化的部分。
-- **含不可逆操作的工作。** 对外发布、生产环境迁移、删除数据、转账。任务卡写明确切命令，防护钩子在执行前请你确认。
+- **含不可逆操作的工作。** 对外发布、生产环境迁移、删除数据、转账。任务卡写明确切命令，只有你同意这条命令后才会执行。
 - **希望预测得到评判。** 你的预测在动手前通过 git 提交冻结，完成后逐条评判并写入预测记录；日积月累，你能看到自己预测的校准情况。
 - **实测结果。** 基准测试、回测、A/B 测试和模型训练，附停止规则和噪声底（`references/results.md`）。
 
@@ -114,7 +114,7 @@ curl -fsSL https://raw.githubusercontent.com/baizhiyuan/finding-unknowns-skill/m
 
 下一个版本为 **v5.2.0**，目前尚未发布：发布之前，插件市场提供的仍是 v4.3.2，5.2 只能从 `v5` 分支通过 `install.sh` 安装。
 
-`install.sh` 会把技能、命令、子代理和脚本复制到 `~/.claude/`，但**不安装防护钩子**（钩子只随插件提供）。这种安装方式下，不可逆操作只有在你在对话中同意那条确切命令后才会执行。
+`install.sh` 会把技能、命令、子代理和脚本复制到 `~/.claude/`，但**不安装防护钩子**（钩子只随插件提供）。不可逆操作同样只有在你在对话中同意那条确切命令后才会执行，只是少了第二道确认提示和执行记录。
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -199,21 +199,21 @@ grep -h '"version"' ~/.claude/plugins/cache/finding-unknowns-skill/finding-unkno
 
 ### 四个打断点：其余情况只记一行
 
-<p align="center"><img src="assets/zh/stop-points.svg" alt="四个打断点；不可逆操作写明确切命令，由防护钩子请你确认，只执行一次，相关检查只做试运行；其余情况记录在案" width="100%"></p>
+<p align="center"><img src="assets/zh/stop-points.svg" alt="四个打断点；不可逆操作写明确切命令，你在对话中同意后只执行一次，相关检查只做试运行；其余情况记录在案" width="100%"></p>
 
-1. **不可逆操作：** 改写或删除数据、删除文件、生产环境、资金、对外发布、对他人的承诺。确切命令写在简报（或注明日期的修订）中的 `Irreversible:` 行上，只执行一次，验收标准中针对它的检查只做试运行（dry run）。装有防护钩子时，权限确认提示就是打断点，你的回答就是同意与否；没有钩子时，智能体会停下，只有你在对话中明确同意这条命令，它才会执行（“继续吧”不算）。
+1. **不可逆操作：** 改写或删除数据、删除文件、生产环境、资金、对外发布、对他人的承诺。确切命令写在简报（或注明日期的修订）中的 `Irreversible:` 行上，只执行一次，验收标准中针对它的检查只做试运行（dry run）。智能体每次都会在这里停下，只有你在对话中明确同意这条命令，它才会执行，且只执行一次（“继续吧”不算）。防护钩子弹出的权限确认提示是第二道确认，不能代替你的同意。
 2. **范围变化：** 超出简报约定的范围。
 3. **前提失效：** 简报中的前提或某个反证条件已被推翻，且没有可以撤回的做法。两次修复因同一个假设而失败时，先记下这个假设并加以检验；第三次失败即触发这个打断点。
 4. **预算超支：** 超出简报中约定的倍数。
 
 ### 防护钩子：只提醒，不拦截
 
-防护钩子是插件自带的 Bash `PreToolUse` 钩子。某条命令与未完成任务卡上的 `Irreversible:` 行相符时，它返回 `ask`，Claude Code 随即弹出原生的权限确认提示，显示确切命令和对应的任务卡。命令执行过之后，再次尝试会重新请你确认，并提示“already ran once at {time}; a post-check must not re-execute it”（已于某时执行过一次，事后检查不得重新执行）。通用的破坏性命令（`rm -rf`、强制推送、`reset --hard`、`DROP TABLE`）只以哈希形式记录，开启严格配置后才会请你确认。
+防护钩子是插件自带的 Bash `PreToolUse` 钩子，是你在对话中同意之外的第二道保险，不能代替你的同意。某条命令与未完成任务卡上的 `Irreversible:` 行相符时，它返回 `ask`，Claude Code 随即弹出原生的权限确认提示，显示确切命令和对应的任务卡。每次执行都会被记录；再次尝试会重新请你确认，并提示“already ran once at {time}; a post-check must not re-execute it”（已于某时执行过一次，事后检查不得重新执行），`fu integrity` 也会报告 `Irreversible runs: … ran 2 times`。通用的破坏性命令（`rm -rf`、强制推送、`reset --hard`、`DROP TABLE`）只以哈希形式记录，开启严格配置后才会请你确认。
 
 - **只作提醒。** 它只请你确认，从不拒绝。出错时放行：遇到任何错误、没有任务卡或命令不匹配时，它什么也不做。经由其他主机执行的命令（`ssh host '…'`）不在它的识别范围内。
-- **强制约束**要靠 Claude Code 自身的权限系统：在用户级或托管设置中为这条确切命令添加 `ask` 规则，智能体无法修改这些设置。例如 `{"permissions": {"ask": ["Bash(python publish.py build/quotes.json)"]}}`。
+- **跳过权限模式**（bypassPermissions，即 `--dangerously-skip-permissions`）：我们于 2026-11-12 实测，Claude Code 在这种模式下会忽略钩子返回的 `ask`，因此防护钩子此时不输出任何内容，只记录执行；第二次执行仍会出现在 `fu integrity` 和完成报告中。在其他模式下运行 `claude -p` 时无人应答，`ask` 会变成拒绝，所以 `guard: ask` 下任务卡上的不可逆命令无法在这种运行中执行。
+- **强制约束**要靠 Claude Code 自身的权限系统：在用户级或托管设置中为这条确切命令添加规则，智能体无法修改这些设置。例如 `{"permissions": {"ask": ["Bash(python publish.py build/quotes.json)"]}}`；改用 `deny` 则直接禁止。按 Claude Code 的[权限模式文档](https://code.claude.com/docs/en/permission-modes)，显式的 `ask` 规则在所有模式下（包括跳过权限模式）都会弹出确认（无人应答时则拒绝），`deny` 规则在所有模式下都会拦截。这一点我们尚未自行验证。
 - **模式：** 在 `.finding-unknowns/profile.md` 中设置 `guard: off | log | ask`。插件安装默认为 `ask`，`install.sh` 安装默认为 `off`。
-- **尚未验证：** `ask` 在 bypass-permissions 模式下的表现，以及一次实际运行。在无人应答的 `claude -p` 中，Claude Code 会拒绝该调用，智能体会读到原因。
 
 ### 完成报告即复盘：证据在前，结论在后
 

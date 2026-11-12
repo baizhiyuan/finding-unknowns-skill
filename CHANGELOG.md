@@ -30,23 +30,28 @@ its header): [docs/design/5.2.md](docs/design/5.2.md); the script's contract:
   - `freeze`: commits the card at `brief`, `stop`, `resume` and `debrief`, owns `State`
     and `Timing`, never uses `--no-verify`, and falls back to `self-reported`;
   - `integrity`: three lines (Brief against its freeze commit, check files, unlogged
-    hunks);
+    hunks), plus `Irreversible runs:` when a card-named command ran more than once;
   - `log`: the prediction log and a calibration line from five graded predictions;
   - `list`: open cards as nested lists in the terminal;
   - `render`: the HTML view (decision first, then a one-row strip of what happened in
     order) and a task-list page with a calibration stat line; fixed templates, everything
     escaped, no script, a CSP.
   - An optional `bin/fu` wrapper for `PATH`.
-- **The guard hook** (`hooks/hooks.json`, plugin install only):
+- **The guard hook** (`hooks/hooks.json`, plugin install only), a second safety net
+  behind the chat yes:
   - `PreToolUse` on Bash asks (`ask`) before a command that matches an open card's
     `Irreversible:` line;
   - `PostToolUse` and `PostToolUseFailure` record each run, so a second attempt asks
     again with "already ran once";
   - generic destructive patterns are logged as hashes and ask only under the strict
     profile.
+  - Under `permission_mode` `bypassPermissions` it prints nothing and only records:
+    tested 2026-11-12, Claude Code ignores a hook's `ask` there (the command runs with no
+    prompt), and in `claude -p` under `default` the `ask` becomes a denial.
   - It is advisory: it never denies and fails open. Hard enforcement is a Claude Code
-    `permissions.ask` rule in user or managed settings. `guard: off | log | ask` in
-    `profile.md`. Not yet verified: `ask` under bypass-permissions mode, and one live run.
+    `permissions.ask` or `permissions.deny` rule in user or managed settings, which
+    Claude Code's permission-modes docs say apply in bypass mode too (not tested here).
+    `guard: off | log | ask` in `profile.md`.
 - **Strict profile** for small models (`strict: yes`, `fu init --strict`): template only,
   lint caps that must pass before the Brief-approval ask, destructive commands ask.
   Untested.
@@ -66,8 +71,10 @@ its header): [docs/design/5.2.md](docs/design/5.2.md); the script's contract:
 - **The person's prediction** is quoted verbatim or recorded as `P: none given`; the
   agent never writes it.
 - **The irreversible step:** the exact command goes on a Brief `Irreversible:` line; its
-  checks are dry runs; it runs once. With the guard, the permission prompt is the yes;
-  without it, only a chat yes to that exact command.
+  checks are dry runs; it runs once. It always stops first: only a chat yes to that
+  exact command runs it, with or without the guard (whose prompt is a second check). An
+  earlier 5.2 draft let the guard's prompt stand in for the yes; under bypass-permissions
+  mode that ran the command with no yes at all.
 - **The completion report is the Debrief;** `/fu-debrief` is for late results and
   re-grades. This removes the turn where 8 of 17 of 5.0's M4 failures began.
 - **The card format:** lines with fixed keys in a fixed order and nested lists, no tables.

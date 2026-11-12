@@ -87,7 +87,8 @@ Check files: tests/test_export_resume.py
 P1 is about something the agent does not control: how the database behaves. "The tests
 pass" is something the agent makes true, so it is a contract check (C1), with what it
 does not prove. Nothing on this Brief is irreversible, so there is no `Irreversible:`
-line; if there were, the guard hook would ask before that exact command ran.
+line; if there were, the agent would stop before that exact command and run it only
+after your chat yes to it.
 
 ## 3. A stop-point (30 seconds)
 
@@ -103,10 +104,11 @@ Brief · `CREATE INDEX CONCURRENTLY orders_created_at_id ON orders (created_at, 
 ```
 
 The index is a scope change and also irreversible (production). It was not on the frozen
-Brief, so the guard has no line to match: the agent stops, and only your chat yes to that
-exact command would run it. You reply: "Not now; I'll run it in Thursday's maintenance
-window." It goes to Open, unexecuted. Had you said yes, the agent would add it under a dated
-Amendment with an `Irreversible:` line, and the guard would then ask before it runs.
+Brief: the agent stops, and only your chat yes to that exact command would run it. You
+reply: "Not now; I'll run it in Thursday's maintenance window." It goes to Open,
+unexecuted. Had you said yes, the agent would add it under a dated Amendment with an
+`Irreversible:` line and run it once; the guard hook would show Claude Code's prompt as a
+second check and record the run.
 
 ## 4. Next session: `/fu-catch-up` (30 seconds)
 

@@ -140,7 +140,7 @@ Rule IDs (stable; the renderer shows WARN as chips):
 | `model-changes` | FAIL | `## Model changes` lines read `- You expected X → it is Y, because Z [shown, not confirmed \| confirmed]`, at most five |
 | `model-changes-place` | WARN | a `You expected … →` line or Model changes heading outside its section |
 | `live-length` | WARN (FAIL strict) | header to Open > 40 non-blank lines, a frozen Brief's lines not counted |
-| `debrief-form` | FAIL | heading `## Debrief ({time}; graded by fresh context \| same-context — weaker)`; blocks `Evidence:` (≥ 1 bullet), prediction rows, `Integrity:` (exactly the three `fu integrity` lines), `Did NOT prove:` (each `{check} → leaves open: {…} · still holds: {…}`), `Not checked:`, `Bottom line:`, in that order; nothing else |
+| `debrief-form` | FAIL | heading `## Debrief ({time}; graded by fresh context \| same-context — weaker)`; blocks `Evidence:` (≥ 1 bullet), prediction rows, `Integrity:` (the three `fu integrity` lines, then any `Irreversible runs:` lines), `Did NOT prove:` (each `{check} → leaves open: {…} · still holds: {…}`), `Not checked:`, `Bottom line:`, in that order; nothing else |
 | `debrief-coverage` | FAIL | every Brief prediction graded once, ID line identical to the Brief, P before A, with `measured`, `consistent?`, `mechanism` in order; with `P: none given` there is no P row (a `P: none given` line may stand in its place) |
 | `verdict` | FAIL | `consistent?` in `consistent · partly · inconsistent · can't tell · post-hoc fit` (`post-hoc fit (not a test)` accepted); mechanism ends with `[verified\|supported\|inferred\|untested]` |
 | `not-checked` | FAIL | `Not checked` has at least one item |
@@ -185,12 +185,13 @@ any write) replaces the header's `Needs you`; `--stage resume` sets it to `nothi
 ### `fu integrity [slug]`
 
 Needs a card with a `Timing: … commit {hash}` header (a claim file alone: exit 2). Prints
-exactly three lines:
+three lines, then one more per `Irreversible:` line that ran more than once:
 
 ```
 Brief vs freeze: unchanged | edited: lines {a-b}, …
 Check files: unchanged | changed: {paths}[ · created after the freeze: {paths}] | created after the freeze: {paths} | none named
 Unlogged hunks: none | {path}:{start}-{end}, …
+Irreversible runs: `{command}` ran {n} times[ ({k} failed)]; expected once
 ```
 
 - Brief: the `## Brief` block in the working tree vs `git show {hash}:{card}`; line numbers
@@ -203,6 +204,11 @@ Unlogged hunks: none | {path}:{start}-{end}, …
   when its path or file name equals a path token (`[\w./-]+`, `:line` and trailing dots
   dropped) in the deltas file, an Amendment, the Approach or the contract; a substring is
   not a match. This is a mechanical approximation; the Debrief lists what it prints.
+- Irreversible runs: records in `logs/approvals.jsonl` for this card grouped by the
+  `Irreversible:` line they matched (`line_sha256`, exact and variant runs alike); a line
+  with two or more is printed and is a finding. The guard records runs in every
+  permission mode, so a second run under `bypassPermissions`, where nothing prompts,
+  shows here and in the Debrief.
 - `self-reported`, `draft` or no commit: each line reads `not run (timing: {value})`;
   exit 3. Git failing or the commit unreadable: `not run ({reason})`; exit 3. Any
   finding: exit 1. Clean: exit 0.
@@ -271,13 +277,22 @@ from `predictions-log.md` when a side has n ≥ 5. Exit 0; no `.finding-unknowns
 ### `fu guard pre|post` (hook entry)
 
 Reads the Claude Code hook JSON on stdin (`tool_name`, `tool_input.command`, `cwd`,
-`hook_event_name`). Always exits 0, never writes to stderr, prints nothing but an `ask`
-decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
-`.finding-unknowns/` above `cwd`, no card or no match prints nothing. Never returns `deny`.
+`hook_event_name`, `permission_mode`). Always exits 0, never writes to stderr, prints
+nothing but an `ask` decision; any error, malformed input, bad arguments, a non-`Bash`
+tool, no `.finding-unknowns/` above `cwd`, no card or no match prints nothing. Never
+returns `deny`.
 
-- **Advisory.** The guard asks; it never denies and fails open. Hard enforcement is a
-  Claude Code `permissions.ask` rule for the exact command in user or managed settings,
-  which the agent cannot edit.
+- **A second safety net, not the yes.** The person's chat yes to the exact command is
+  always the stop-point's answer (SKILL.md). The guard adds the native prompt as a second,
+  cheap confirmation in modes that show one, records each run and flags a second. It
+  never denies and fails open.
+- **Hard enforcement** is a Claude Code permission rule for the exact command in user or
+  managed settings, which the agent cannot edit: `permissions.ask`
+  (`["Bash(python publish.py build/quotes.json)"]`) or `permissions.deny`. Per the
+  permission-modes docs (code.claude.com/docs/en/permission-modes, read 2026-11-12), a call matched by an explicit
+  ask rule gets "a prompt or a denial" in every mode, `bypassPermissions` included, and
+  "deny rules block in every mode"; allow rules have no effect there. Not tested here
+  (the hook's `ask` was).
 - **Per-card isolation.** Collects ``Irreversible: `…` `` commands from open cards (Brief or Amendments; adding one mid-build is a scope stop-point the person confirms); a card
   that cannot be read (invalid UTF-8 is replaced, a dangling symlink or unreadable file is
   skipped) does not stop the others. The prior-run lookup and each log write fail on their
@@ -307,7 +322,8 @@ decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
     in order.
   - **Known gap**: a command passed to another host, e.g. `ssh host 'python publish.py …'`, is
     not read; the guard sees only `ssh`.
-- **pre**, on a match with `guard: ask`, prints
+- **pre**, on a match with `guard: ask` and `permission_mode` other than
+  `bypassPermissions`, prints
 
   ```json
   {"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "ask",
@@ -319,8 +335,10 @@ decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
   `logs/approvals.jsonl` already holds this normalised command's hash, or an exact run of
   the same `Irreversible:` line, for this card, the reason is
   `card {slug}: `{command}` already ran once at {time}[ and failed (it may have partly run)]; a post-check must not re-execute it · {card path}`.
-  With `guard: log` the match is appended to `logs/guard.jsonl` as
-  `{"time", "slug", "sha256", "would": "ask"}` and nothing is printed.
+  With `guard: log`, or under `bypassPermissions`, the match is appended to
+  `logs/guard.jsonl` as `{"time", "slug", "sha256", "would": "ask"}` (plus
+  `"permission_mode": "bypassPermissions"`, and `"already_ran": {time}` when the
+  prior-run lookup above found one) and nothing is printed.
 - **post** (`PostToolUse`, and `PostToolUseFailure` for a run that failed), on a match:
   appends `{"sha256": sha256(normalised command), "line_sha256": …, "exact": …, "time": …,
   "slug": …}` (plus `"failed": true` from `PostToolUseFailure`) to `logs/approvals.jsonl`,
@@ -330,17 +348,15 @@ decision; any error, malformed input, bad arguments, a non-`Bash` tool, no
   recursive and force flags, `git … push` with `-f`/`--force*`/`+ref`, `git … reset
   --hard`) and a linear regex for `DROP TABLE|DATABASE|SCHEMA|INDEX|VIEW`: appended to
   `logs/guard.jsonl` as `{"time", "pattern", "sha256"}` only (never the command text);
-  they ask only under `strict: yes` with `guard: ask`.
+  they ask only under `strict: yes` with `guard: ask`, and not under `bypassPermissions`.
 - `guard: off` does nothing.
-- **The prompt is the yes.** With `guard: ask` and a working native prompt, the person's
-  answer to the permission prompt is the per-command yes for a card-named irreversible
-  command; the prompt shows the exact command and the reason (with a `[plugin:…]` source
-  label). No separate chat yes is needed.
-- **Hosts and modes** (Claude Code hooks reference, checked 2026-11-12): `ask` "prompts the
-  user to confirm" and the reason is shown in the prompt; in a `-p` run where no one can
-  answer, Claude Code denies the call and Claude reads the reason in the tool result. Under
-  `auto` mode an `ask` normally goes to the prompt. The reference says nothing about `ask`
-  under `bypassPermissions`; that, and one live run, remain to verify before release. If
-  `ask` cannot surface there, the fallback (deny with a message telling the agent to stop
-  and show the command) is a design change to record here. Tier 0 replays recorded
-  hook JSON through `guard pre|post`.
+- **Permission modes** (tested 2026-11-12 with a minimal plugin hook returning `ask`,
+  `claude -p`): under `--permission-mode bypassPermissions` the `ask` is ignored and the
+  command runs with no prompt and no denial; under `default` in `-p`, where no one can
+  answer, the `ask` becomes a denial and Claude reads the reason in the tool result. In
+  interactive modes the hooks reference says `ask` "prompts the user to confirm" with the
+  reason shown. So the guard prints nothing under `bypassPermissions` (an ask there does
+  nothing) and only records; the chat yes is what holds the step in every mode. In a
+  `-p` run outside `bypassPermissions` the `ask` denies even after the chat yes, so with
+  `guard: ask` the step cannot run there: run it interactively, or set `guard: log` for
+  that run. Tier 0 replays recorded hook JSON through `guard pre|post`.

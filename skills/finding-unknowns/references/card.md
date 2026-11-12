@@ -20,9 +20,13 @@ fixed order, nested lists, no tables.
 - `predictions-log.md`: written by `fu log` only · local
 - `logs/`, `view/`: command output, guard records, HTML · local
 
-The guard is advisory: it asks, never denies, and fails open. Hard enforcement is a
-Claude Code `permissions.ask` rule for the exact command in a settings file the agent
-cannot edit (user or managed settings).
+The guard is a second safety net, never the yes (that is the person's chat yes to the
+exact command): it asks, never denies, fails open, records each run and flags a second
+one. Under `bypassPermissions` Claude Code ignores a hook's ask, so the guard only
+records. Hard enforcement is a Claude Code `permissions.ask` or `permissions.deny` rule
+for the exact command in a settings file the agent cannot edit (user or managed
+settings); the permission-modes docs say ask rules still prompt and deny rules still
+block under `bypassPermissions`.
 
 Gitignore lines: `.finding-unknowns/logs/`, `.finding-unknowns/view/`,
 `.finding-unknowns/profile.md`, `.finding-unknowns/predictions-log.md`.
@@ -82,7 +86,7 @@ until the first delta) and `Rollup:` with at most three lines.
 why: {text}`. No `after D{n}`: WARN. An irreversible step found mid-build is registered by
 an ``Irreversible: `{exact command}` `` line directly under its `M{n}` entry (same form as
 in the Brief; nowhere else outside the Brief); adding one is a scope stop-point, so the
-person confirms it first, and the guard then asks for that command.
+person confirms it first; the command itself still waits for its own chat yes.
 
 **Model changes**: `- You expected X → it is Y, because Z [shown, not confirmed |
 confirmed]`, at most five, in this section only (WARN elsewhere).
@@ -91,7 +95,7 @@ confirmed]`, at most five, in this section only (WARN elsewhere).
 `## Debrief ({time}; graded by fresh context | same-context — weaker)`, then `Evidence:`, every Brief prediction (P before A, ID line identical to the Brief) with
 `  - measured:`, `  - consistent?: consistent | partly | inconsistent | can't tell |
 post-hoc fit`, `  - mechanism: {text} [verified | supported | inferred | untested]`; then
-`Integrity:` (three lines), `Did NOT prove:`, `Not checked:` (at least one item),
+`Integrity:` (the `fu integrity` lines), `Did NOT prove:`, `Not checked:` (at least one item),
 `Bottom line:` with `  - holds:`, `  - did not hold:`, `  - stops at:`. Every graded ID
 appears exactly once: `consistent` under `holds`; `partly` and `inconsistent` under `did
 not hold`; `can't tell` and `post-hoc fit` under `stops at`. WARN: a

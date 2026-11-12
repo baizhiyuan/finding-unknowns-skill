@@ -64,7 +64,7 @@ Everything the plugin writes is under `.finding-unknowns/`; `.gitignore` is neve
               ┌───────────────────────── quiet build ◄────────────────────────┘
               │   deltas → {slug}.deltas.md
               │   stop-point → fu freeze --stage stop ──► your answer ──► --stage resume
-              │   card-named irreversible command → guard asks → runs once → approvals.jsonl
+              │   irreversible command → stop → your chat yes → runs once → approvals.jsonl
               ▼
 completion report = Debrief ──► fu integrity · fu lint · fu log · fu freeze --stage debrief
 /fu-catch-up: what changed since Last seen · /fu-debrief: late results, re-grade · /fu-view: fu render
@@ -84,7 +84,7 @@ completion report = Debrief ──► fu integrity · fu lint · fu log · fu fr
    with a completion report or a stop, never a menu or an optional question; the person's
    code is left uncommitted.
 3. **Debrief.** The completion report of carded work is the Debrief. `fu integrity`
-   prints three lines; the auditor grades when the card has an irreversible lane, a
+   prints three lines (four if a card-named command ran twice); the auditor grades when the card has an irreversible lane, a
    measured result, or the person asks; every prediction is graded, the person's first;
    `fu log` appends to the prediction log; `fu freeze --stage debrief` closes the card.
 4. **Catch-up.** The named card, else the most recently changed open one: only what
@@ -101,16 +101,20 @@ run table; no verdict before the stopping rule is met.
   segment with those commands, exactly or as a variant. The card's own dry-run checks
   are exempt.
 - **Ask.** On a match with `guard: ask` it returns `permissionDecision: "ask"` with the
-  card and command as the reason. The native prompt is the stop-point; the person's
-  answer is the per-command yes.
-- **Once.** `fu guard post` records each run (failed ones too) in `logs/approvals.jsonl`
-  and moves the card from `waiting on you` to `building`. A second attempt asks again
-  with "already ran once".
+  card and command as the reason. The stop-point and its yes are in chat (SKILL.md); the
+  native prompt is a second check. Under `permission_mode` `bypassPermissions`, where
+  Claude Code ignores a hook's ask (tested 2026-11-12), it prints nothing and records the
+  match in `logs/guard.jsonl`.
+- **Once.** `fu guard post` records each run (failed ones too) in `logs/approvals.jsonl`,
+  in every permission mode, and moves the card from `waiting on you` to `building`. A
+  second attempt asks again with "already ran once"; `fu integrity` prints
+  `Irreversible runs: … ran {n} times` for the Debrief.
 - **Log only.** Generic destructive patterns are recorded as hashes in
   `logs/guard.jsonl`; they ask only under the strict profile.
 - **Advisory.** It never denies and fails open. Hard enforcement is a Claude Code
-  `permissions.ask` rule for the exact command in user or managed settings. Not yet
-  verified: `ask` under bypass-permissions mode, and one live run.
+  `permissions.ask` or `permissions.deny` rule for the exact command in user or managed
+  settings; Claude Code's permission-modes docs say explicit ask rules still prompt and
+  deny rules still block under `bypassPermissions` (documented, not tested here).
 
 ## Stop-points and lanes
 

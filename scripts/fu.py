@@ -65,6 +65,7 @@ GIT_TIMEOUT = 120
 GIT_COMMIT_TIMEOUT = 15 * 60   # a commit runs the person's hooks; a slow one is not an error
 MAX_READ_BYTES = 1024 * 1024    # cards, profile and logs are read to this size at most
 MAX_UNTRACKED_BYTES = 5 * 1024 * 1024
+BYPASS = "bypassPermissions"   # hook permission_mode in which Claude Code ignores an ask
 
 HEADER_SLUG = re.compile(r"^# (\S+)$")
 HEADER_GOAL = re.compile(r"^Goal: (.+) · State: (.+)$")
@@ -969,8 +970,10 @@ def _parse_debrief(head: str, hl: int, body: list, f: str, lint: Lint) -> dict:
             elif want == 2:
                 d["integrity"] = bullets
                 keys = ("Brief vs freeze:", "Check files:", "Unlogged hunks:")
-                if len(bullets) != 3 or any(not b[1].startswith(k) for b, k in zip(bullets, keys)):
-                    lint.add("FAIL", f, ln, "debrief-form", "Integrity holds the three `fu integrity` lines (Brief vs freeze, Check files, Unlogged hunks)")
+                extra = bullets[3:]
+                if len(bullets) < 3 or any(not b[1].startswith(k) for b, k in zip(bullets, keys)) \
+                        or any(not b[1].startswith("Irreversible runs:") for b in extra):
+                    lint.add("FAIL", f, ln, "debrief-form", "Integrity holds the `fu integrity` lines (Brief vs freeze, Check files, Unlogged hunks, then any Irreversible runs)")
             elif want == 3:
                 d["not_proved"] = bullets
                 for sl, st in bullets:
@@ -1671,7 +1674,28 @@ def _integrity(root: Path, card: Path, slug: str, text: str, commit: str) -> int
         print("Unlogged hunks: %s" % ", ".join(hunks))
     else:
         print("Unlogged hunks: none")
+    findings += _repeat_runs(card.parent.parent, slug, text)
     return 1 if findings else 0
+
+
+def _repeat_runs(fu: Path, slug: str, text: str) -> int:
+    """Print `Irreversible runs:` for each Irreversible line with more than one recorded run
+    (the guard records runs in every permission mode). Returns the number printed."""
+    counts = {}
+    for rec in read_approvals(fu, slug):
+        counts.setdefault(rec.get("line_sha256"), []).append(bool(rec.get("failed")))
+    seen, n = set(), 0
+    for line in text.splitlines():
+        im = IRREVERSIBLE_RE.match(line) if len(line) <= MAX_LINE else None
+        key = sha(norm_command(im.group(1))) if im else None
+        runs = counts.get(key, [])
+        if key in seen or len(runs) < 2:
+            continue
+        seen.add(key)
+        n += 1
+        failed = " (%d failed)" % sum(runs) if any(runs) else ""
+        print("Irreversible runs: `%s` ran %d times%s; expected once" % (clean(im.group(1), 120), len(runs), failed))
+    return n
 
 
 def _line_count(path: Path) -> int:
@@ -2401,6 +2425,8 @@ def _guard(phase: str, raw: str):
     hits.sort(key=lambda h: not h[1])
     norm = norm_command(command)
     when = now_str()
+    # Claude Code ignores a hook's ask under bypassPermissions (tested 2026-11-12): record only
+    bypass = data.get("permission_mode") == BYPASS
     if phase == "post":
         failed = data.get("hook_event_name") == "PostToolUseFailure"
         for idx, exact in hits:
@@ -2424,15 +2450,19 @@ def _guard(phase: str, raw: str):
         else:
             what = "irreversible step" if exact else "variant of the irreversible step"
             reason = "card %s: %s `%s` · %s" % (clean(slug, 80), what, shown, where)
-        if mode != "ask":
-            _quietly(_append_jsonl, fu, fu / "logs" / "guard.jsonl",
-                     {"time": when, "slug": slug, "sha256": sha(norm), "would": "ask"})
+        if mode != "ask" or bypass:
+            rec = {"time": when, "slug": slug, "sha256": sha(norm), "would": "ask"}
+            if bypass:
+                rec["permission_mode"] = BYPASS
+            if prior:
+                rec["already_ran"] = prior[0]
+            _quietly(_append_jsonl, fu, fu / "logs" / "guard.jsonl", rec)
             return None
         return _ask(reason)
     name = destructive(command)
     if name:
         _quietly(_append_jsonl, fu, fu / "logs" / "guard.jsonl", {"time": when, "pattern": name, "sha256": sha(norm)})
-        if mode == "ask" and profile.get("strict") == "yes":
+        if mode == "ask" and not bypass and profile.get("strict") == "yes":
             return _ask("finding-unknowns (strict): destructive pattern `%s`" % name)
     return None
 

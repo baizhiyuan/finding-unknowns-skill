@@ -289,8 +289,9 @@ def stops(zh):
              T("Checked against the card, never against the agent's sense of what feels risky.", "对照任务卡核对，而不是由智能体凭感觉判断风险高低。"))
     rows = [
         ("1", T("Irreversible step", "不可逆操作"), T("data rewritten or deleted · production · money · publishing · promises", "改写或删除数据、生产环境、资金、对外发布、对他人的承诺"),
-         T("Exact command on an Irreversible: line; runs once.", "确切命令写在 Irreversible: 行上，只执行一次。"),
-         T("Guard asks, or a chat yes to that exact command; dry-run checks.", "由防护钩子请你确认，无钩子时须你在对话中同意；检查只做试运行。")),
+         T("Only your chat yes to the exact command runs it, once.", "只有你在对话中同意这条确切命令，它才执行一次。"),
+         T("On an Irreversible: line; a guard prompt is a second check; dry-run checks.",
+           "命令写在 Irreversible: 行上；权限确认提示只是第二道确认；检查只做试运行。")),
         ("2", T("Scope change", "范围变化"), T("outside the Brief", "超出简报约定的范围"),
          T("You decide whether the scope changes.", "由你决定是否改变范围。"), ""),
         ("3", T("Dead premise, no way back", "前提失效且无退路"), T("a premise died or a falsifier fired; no reversible path left", "简报前提不成立或反证条件已触发，且无可逆做法"),

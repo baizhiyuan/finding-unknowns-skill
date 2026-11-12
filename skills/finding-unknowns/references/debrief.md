@@ -2,7 +2,7 @@
 
 ## Steps
 
-1. Run `fu integrity {slug}`; its three lines go in verbatim.
+1. Run `fu integrity {slug}`; its lines go in verbatim.
 2. **Grader.** Irreversible lane, measured result, or on request: `mechanism-auditor`
    gets artifact paths and the frozen card (`git show {brief commit}:{card}` plus
    Amendments and deltas file; no Debrief or Model changes), never the transcript or your
@@ -43,7 +43,7 @@ P1 (you · medium) "{quoted}"
   - measured: {value} ({path})
   - consistent?: inconsistent
   - mechanism: {text} [inferred]
-Integrity: {three fu integrity lines}
+Integrity: {the fu integrity lines}
 Did NOT prove: {lines}
 Not checked: {at least one}
 Model changes: {at most five}

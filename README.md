@@ -117,9 +117,10 @@ replication (baselines already caught 22 to 23 of 25 traps), and the skills cost
 - **Fewer turns.** No mode question, no commit question, recall questions only on
   request; the completion report *is* the Debrief, so there is no separate debrief turn;
   questions come once, in one batch, each with a recommended answer.
-- **The irreversible step moved into code.** The command is named on the card; a guard
-  hook asks before it runs and flags a second run; a lint rule rejects a contract check
-  that would re-run it.
+- **The irreversible step is bound to one command.** The command is named on the card
+  and runs only after your chat yes to it; a guard hook adds Claude Code's prompt as a
+  second check and flags a second run; a lint rule rejects a contract check that would
+  re-run it.
 - **Bookkeeping moved into a script.** Freezing, integrity checks, lint, the prediction
   log, lists and the HTML view are done by `fu`, a stdlib Python script, not by the model.
 - **Less to load.** Structured mode, Cartographer and four of the five agents were cut
@@ -142,7 +143,7 @@ Use the plugin when the 56 words are not enough:
 - **Work that spans sessions.** The card is a file; the plan, the predictions and what
   happened survive a restart, and `/fu-catch-up` shows only what changed.
 - **An irreversible step.** Publishing, a production migration, deleting data, sending
-  money. The card names the exact command, and the guard hook asks before it runs.
+  money. The card names the exact command; it runs only after your yes to it.
 - **Predictions you want graded.** Your predictions are frozen in a git commit before the
   work, graded afterwards, and logged so you can see your own calibration over time.
 - **Measured results.** Benchmarks, backtests, A/B tests and training runs, with a
@@ -156,8 +157,9 @@ Next release: **v5.2.0**. It is not released yet: until it is, the marketplace s
 v4.3.2, and 5.2 is available only from branch `v5` through `install.sh`.
 
 `install.sh` copies the skill, the commands, the agent and the script into
-`~/.claude/`, **without the guard hook** (hooks ship with the plugin only). With that
-install, an irreversible step runs only after your chat yes to the exact command.
+`~/.claude/`, **without the guard hook** (hooks ship with the plugin only). An
+irreversible step still runs only after your chat yes to the exact command; you lose the
+second prompt and the run records.
 
 ```bash
 git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
@@ -257,13 +259,13 @@ Without the auditor, the Debrief is graded in the same context and says so
 
 ### Four stop-points
 
-<p align="center"><img src="assets/stop-points.svg" alt="The four stop-points; the irreversible step names its exact command, the guard hook asks, it runs once and its checks are dry runs; everything else is logged" width="100%"></p>
+<p align="center"><img src="assets/stop-points.svg" alt="The four stop-points; the irreversible step names its exact command and runs once, after your chat yes to it; its checks are dry runs; everything else is logged" width="100%"></p>
 
 1. **Irreversible step:** data rewritten or dropped, deletion, production, money,
    publication, commitments to people. The exact command is on the Brief's (or a dated
-   Amendment's) `Irreversible:` line; it runs once; its contract checks are dry runs. With the guard
-   hook, the permission prompt is the stop and your answer is the yes. Without it, the
-   agent stops and only a chat yes to that exact command runs it ("go ahead" is not one).
+   Amendment's) `Irreversible:` line; its contract checks are dry runs. The agent always
+   stops here, and only your chat yes to that exact command runs it, once ("go ahead" is
+   not one). The guard hook's prompt, where it appears, is a second check, not the yes.
 2. **Scope change** outside the Brief.
 3. **Dead premise:** a premise or a falsifier fired and no reversible path remains. Two
    failed fixes that share an assumption mean the assumption is logged and tested; a third
@@ -272,23 +274,31 @@ Without the auditor, the Debrief is graded in the same context and says so
 
 ### The guard hook
 
-A `PreToolUse` hook on Bash, shipped with the plugin. When a command matches an
-`Irreversible:` line on an open card, it returns `ask`: Claude Code shows its native
-permission prompt with the exact command and the card. After the command has run, a
-second attempt asks again with "already ran once at {time}; a post-check must not
-re-execute it". Generic destructive patterns (`rm -rf`, force-push, `reset --hard`,
-`DROP TABLE`) are only logged, as hashes, unless the strict profile is on.
+A `PreToolUse` hook on Bash, shipped with the plugin: a second safety net behind your
+chat yes, never a replacement for it. When a command matches an `Irreversible:` line on
+an open card, it returns `ask`: Claude Code shows its native permission prompt with the
+exact command and the card. Every run is recorded; a second attempt asks again with
+"already ran once at {time}; a post-check must not re-execute it", and `fu integrity`
+reports `Irreversible runs: … ran 2 times`. Generic destructive patterns (`rm -rf`,
+force-push, `reset --hard`, `DROP TABLE`) are only logged, as hashes, unless the strict
+profile is on.
 
 - **Advisory.** It asks; it never denies. It fails open: any error, no card or no match,
   and it does nothing. A command run through another host (`ssh host '…'`) is not read.
-- **Hard enforcement** is Claude Code's own permission system: an `ask` rule for the exact
+- **Bypass-permissions mode** (`--dangerously-skip-permissions`): Claude Code ignores a
+  hook's `ask` there (tested 2026-11-12), so the guard prints nothing and only records the
+  run; a second run still shows in `fu integrity` and the Debrief. Under `claude -p` in
+  other modes, where no one can answer, the `ask` becomes a denial, so a card-named step
+  cannot run there with `guard: ask`.
+- **Hard enforcement** is Claude Code's own permission system: a rule for the exact
   command in user or managed settings, which the agent cannot edit, for example
-  `{"permissions": {"ask": ["Bash(python publish.py build/quotes.json)"]}}`.
+  `{"permissions": {"ask": ["Bash(python publish.py build/quotes.json)"]}}`, or `deny` to
+  block it outright. Claude Code's
+  [permission-modes docs](https://code.claude.com/docs/en/permission-modes) say an explicit
+  `ask` rule still prompts (or denies, where no one can answer) in every mode, bypass
+  included, and deny rules block in every mode. We have not tested that ourselves.
 - **Modes:** `guard: off | log | ask` in `.finding-unknowns/profile.md`. The default is
   `ask` with the plugin, `off` with `install.sh`.
-- **Not yet verified:** how `ask` behaves under bypass-permissions mode, and a live run.
-  Under `claude -p`, where no one can answer, Claude Code denies the call and the agent
-  reads the reason.
 
 ### Completion report = Debrief
 

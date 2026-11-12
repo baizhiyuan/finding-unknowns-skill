@@ -44,13 +44,15 @@ Name it, so the Brief gets an `Irreversible:` line with the exact command:
 build/quotes.json`. Publishing can only happen once.
 ```
 
-The contract's checks for that step are dry runs (`--dry-run`, plan output). With the
-plugin's guard hook, Claude Code asks you before the exact command runs, and asks again if
-anything tries to run it a second time. With `install.sh` (no hook), the agent stops and
-waits for your chat yes to that exact command.
+The contract's checks for that step are dry runs (`--dry-run`, plan output). The agent
+stops and waits for your chat yes to that exact command, then runs it once. With the
+plugin's guard hook, Claude Code also shows its permission prompt as a second check (not
+under bypass-permissions mode, where it ignores a hook's ask), and anything that tries to
+run it a second time is flagged.
 
 For enforcement the agent cannot edit, add a permission rule to your user settings
-(`~/.claude/settings.json`):
+(`~/.claude/settings.json`); Claude Code's docs say an explicit `ask` rule prompts even in
+bypass-permissions mode:
 
 ```json
 { "permissions": { "ask": ["Bash(python publish.py build/quotes.json)"] } }

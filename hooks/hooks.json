@@ -1,5 +1,5 @@
 {
-  "description": "finding-unknowns guard: asks before a Bash command named on an open card's Irreversible: line and records each run, failed runs included; logs generic destructive patterns. Advisory: fails open, never denies.",
+  "description": "finding-unknowns guard, a second check behind the chat yes: asks before a Bash command named on an open card's Irreversible: line (only records under bypassPermissions, where an ask is ignored) and records each run, failed runs included; logs generic destructive patterns. Advisory: fails open, never denies.",
   "hooks": {
     "PreToolUse": [
       {

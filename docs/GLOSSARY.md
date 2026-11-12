@@ -79,8 +79,9 @@ Chinese README.
   deletion, production, money, publication, commitments to people). Classify upward when
   unsure.
 - **Irreversible step** — named on a Brief `Irreversible:` line with its exact command;
-  its checks are dry runs; it runs once; a `post-check` closes it. With the guard hook
-  the permission prompt is the yes; without it, only a chat yes to that exact command.
+  its checks are dry runs; it runs once, only after a chat yes to that exact command; a
+  `post-check` closes it. The guard hook's permission prompt is a second check, never the
+  yes.
 - **Dead premise** — a Brief premise or a falsifier fired and no reversible path remains.
   Two failed fixes that share an assumption: log and test it; a third failure is the stop.
 
@@ -89,11 +90,13 @@ Chinese README.
 - **`fu` script** — `scripts/fu.py`, Python standard library only: `init`, `lint`,
   `freeze`, `integrity`, `log`, `list`, `render`, and `guard` for the hook. Everything
   deterministic; the model never does by hand what `fu` does.
-- **Guard hook** — `hooks/hooks.json`, plugin install only. Asks (`ask`) before a Bash
-  command that matches an open card's `Irreversible:` line, records each run, asks again
-  on a second run. Advisory: never denies, fails open.
-- **Hard enforcement** — a Claude Code `permissions.ask` rule for the exact command in
-  user or managed settings, which the agent cannot edit.
+- **Guard hook** — `hooks/hooks.json`, plugin install only. A second safety net: asks
+  (`ask`) before a Bash command that matches an open card's `Irreversible:` line, records
+  each run, asks again on a second run. Under `bypassPermissions`, where Claude Code
+  ignores a hook's ask, it only records. Advisory: never denies, fails open.
+- **Hard enforcement** — a Claude Code `permissions.ask` or `permissions.deny` rule for
+  the exact command in user or managed settings, which the agent cannot edit; per Claude
+  Code's docs, these apply in bypass-permissions mode too.
 - **Strict profile** — `strict: yes`, set with `fu init --strict` or on request. Template
   only; `fu lint` caps must pass before the Brief-approval ask; generic destructive
   commands also ask. Meant for small models; untested.
@@ -109,7 +112,8 @@ Chinese README.
   a measured result, or on request; otherwise the Debrief is labelled
   `same-context — weaker`.
 - **Integrity** — three lines from `fu integrity`: the Brief against its freeze commit,
-  the check files, and changed hunks no delta or Amendment names.
+  the check files, and changed hunks no delta or Amendment names; plus
+  `Irreversible runs:` when a card-named command ran more than once.
 - **Bottom line** — `holds` (consistent IDs), `did not hold` (partly, inconsistent),
   `stops at` (can't tell, post-hoc fit). Every graded ID appears once.
 - **Theory → Measured → Consistent? → Mechanism** (理论预期 → 实测 → 是否一致 → 机理) —

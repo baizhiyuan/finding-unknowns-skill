@@ -168,6 +168,12 @@ class LintRules(Workspace):
                   "  - post-check: `python publish.py build/quotes.json` raises FileExistsError")
         self.assertIn("irreversible-check", rules(self.lint().stdout, "FAIL"))
 
+    def test_integrity_may_carry_irreversible_runs_lines_after_the_three(self):
+        self.edit("  - Unlogged hunks: none\n", "  - Unlogged hunks: none\n  - Irreversible runs: `%s` ran 2 times; expected once\n" % IRR)
+        self.assertNotIn("debrief-form", rules(self.lint().stdout, "FAIL"))
+        self.edit("  - Irreversible runs:", "  - Something else:")
+        self.assertIn("debrief-form", rules(self.lint().stdout, "FAIL"))
+
     def test_dry_run_check_is_allowed(self):
         self.assertNotIn("irreversible-check", self.lint().stdout)
 
@@ -302,8 +308,8 @@ class LintRules(Workspace):
 
 # --------------------------------------------------------------------------- guard
 
-def hook(command, cwd, event="PreToolUse", tool="Bash"):
-    data = {"session_id": "t", "cwd": str(cwd), "permission_mode": "default", "hook_event_name": event,
+def hook(command, cwd, event="PreToolUse", tool="Bash", mode="default"):
+    data = {"session_id": "t", "cwd": str(cwd), "permission_mode": mode, "hook_event_name": event,
             "tool_name": tool, "tool_input": {"command": command, "description": "x"}, "tool_use_id": "toolu_1"}
     if event == "PostToolUse":
         data["tool_response"] = {"stdout": "", "stderr": "", "interrupted": False}
@@ -317,14 +323,14 @@ class GuardBase(Workspace):
         text = self.card.read_text(encoding="utf-8").replace("State: debriefed", "State: waiting on you")
         self.card.write_text(text, encoding="utf-8")
 
-    def pre(self, command, cwd=None):
-        r = run(["guard", "pre"], self.tmp, stdin=hook(command, cwd or self.tmp))
+    def pre(self, command, cwd=None, mode="default"):
+        r = run(["guard", "pre"], self.tmp, stdin=hook(command, cwd or self.tmp, mode=mode))
         self.assertEqual(r.returncode, 0)
         self.assertEqual(r.stderr, "")
         return json.loads(r.stdout) if r.stdout.strip() else None
 
-    def post(self, command):
-        r = run(["guard", "post"], self.tmp, stdin=hook(command, self.tmp, "PostToolUse"))
+    def post(self, command, mode="default"):
+        r = run(["guard", "post"], self.tmp, stdin=hook(command, self.tmp, "PostToolUse", mode=mode))
         self.assertEqual((r.returncode, r.stdout, r.stderr), (0, "", ""))
 
 
@@ -413,6 +419,32 @@ class Guard(GuardBase):
         prof.write_text(prof.read_text(encoding="utf-8").replace("strict: no", "strict: yes"), encoding="utf-8")
         out = self.pre("git reset --hard HEAD~1")
         self.assertEqual(out["hookSpecificOutput"]["permissionDecision"], "ask")
+
+    def test_bypass_mode_prints_nothing_but_records(self):
+        # Claude Code ignores a hook's ask under bypassPermissions; the guard only records
+        self.assertIsNone(self.pre(IRR, mode="bypassPermissions"))
+        rec = json.loads((self.fu / "logs" / "guard.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+        self.assertEqual((rec["slug"], rec["would"], rec["permission_mode"]), ("quote-export", "ask", "bypassPermissions"))
+        self.assertNotIn("already_ran", rec)
+        self.post(IRR, mode="bypassPermissions")
+        first = json.loads((self.fu / "logs" / "approvals.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+        self.assertIsNone(self.pre(IRR, mode="bypassPermissions"))
+        rec = json.loads((self.fu / "logs" / "guard.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+        self.assertEqual(rec["already_ran"], first["time"])
+        self.assertNotIn("publish", json.dumps(rec))
+
+    def test_bypass_mode_strict_destructive_is_logged_not_asked(self):
+        prof = self.fu / "profile.md"
+        prof.write_text(prof.read_text(encoding="utf-8").replace("strict: no", "strict: yes"), encoding="utf-8")
+        self.assertIsNone(self.pre("git reset --hard HEAD~1", mode="bypassPermissions"))
+        rec = json.loads((self.fu / "logs" / "guard.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+        self.assertEqual(rec["pattern"], "reset --hard")
+
+    def test_default_and_other_modes_still_ask(self):
+        for mode in ("default", "acceptEdits", "auto", "plan"):
+            out = self.pre(IRR, mode=mode)
+            self.assertEqual(out["hookSpecificOutput"]["permissionDecision"], "ask", mode)
+        self.assertFalse((self.fu / "logs" / "guard.jsonl").exists())
 
     def test_never_denies(self):
         src = FU.read_text(encoding="utf-8")
@@ -985,6 +1017,21 @@ class Freeze(FreezeBase):
         lines = run(["integrity", "search-export"], self.tmp).stdout.splitlines()
         self.assertRegex(lines[0], r"^Brief vs freeze: edited: lines \d+")
         self.assertEqual(lines[2], "Unlogged hunks: none")
+
+    def test_integrity_flags_a_second_run_of_the_irreversible_command(self):
+        self.assertEqual(self.freeze().returncode, 0)
+        self.assertEqual(len(run(["integrity", "search-export"], self.tmp).stdout.splitlines()), 3)
+        text = self.card.read_text(encoding="utf-8")
+        stops = next(t for t in text.splitlines() if t.startswith("Stop-points:"))
+        self.card.write_text(text.replace(stops, stops + "\nIrreversible: `%s`" % IRR, 1), encoding="utf-8")
+        for _ in range(2):  # run twice under bypassPermissions: no prompt, both recorded
+            r = run(["guard", "post"], self.tmp, stdin=hook(IRR, self.tmp, "PostToolUse", mode="bypassPermissions"))
+            self.assertEqual((r.returncode, r.stdout), (0, ""))
+        r = run(["integrity", "search-export"], self.tmp)
+        lines = r.stdout.splitlines()
+        self.assertEqual(len(lines), 4)
+        self.assertEqual(lines[3], "Irreversible runs: `%s` ran 2 times; expected once" % IRR)
+        self.assertEqual(r.returncode, 1)
 
     def test_integrity_not_run_when_self_reported(self):
         text = self.card.read_text(encoding="utf-8").replace("Timing: draft", "Timing: self-reported")
