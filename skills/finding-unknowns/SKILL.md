@@ -29,7 +29,7 @@ but unsaid (taste, constraints, context); **UU** not known to ask.
 - Silent on trivial requests, lookups and casual talk.
 - Header tokens stay literal; labels follow the person's language. Chinese:
   你的预期、未说明、已知的已知·我依据的、已知的未知·待解决、我去查、需要你定、未知的已知·我猜你默认、未知的未知·你没问但要紧、我的预期、若……则我错了；
-  预期→实际、原因、新知道的、没有证明的、仍然未知、最省事的查法、替你定的、若错；成立、部分成立、不成立、无法判断；已验证、有数据支持、推断、未检验；事后拟合、凭记忆；没有重要的未知项；
+  预期→实际、原因、新知道的、没有证明的、仍然未知、最省事的查法、替你定的、没选、若错；成立、部分成立、不成立、无法判断；已验证、有数据支持、推断、未检验；事后拟合、凭记忆；没有重要的未知项；
   地图（已知、待解决、需要你定、假定、盲区）、已做的决定、我据以推进的假设、改写后的需求；预期→结果、仍然未知（最早的在前）、你的规律、接下来值得弄懂的。
 
 ## Before the work
@@ -52,11 +52,11 @@ fu:before · {task}
 
 At most 12 lines, three entries per field. If nothing is worth mapping: `fu:before · no
 significant unknowns`. Show it before any change (reading is fine), then end your turn. Their
-reply starts the work; a bare "go" accepts your recommendations. On "just do it", "直接做" or similar:
-show it; don't wait.
+reply starts the work; a bare "go" accepts your recommendations. On "just do it", "直接做" etc.:
+show it; only irreversible steps wait.
 
 After their reply, stop only for a scope change, a ✗ that changes what was asked, or an
-irreversible step (exact command or message; wait for yes, even after "just do it"; run
+irreversible step (exact command or message; wait for an explicit yes, not "go"/"继续"; run
 once; never as a check). A ✗ that only refutes their expectation is reported, not a stop.
 
 ## After the work

@@ -13,8 +13,25 @@ decision rules for the watch items that test flagged, under "The pause" below.
 Amended a fourth time the same day, still before the week, after a consistency review: the
 pre-release 6.0 drafts added to the setup step, and a count and rule for irreversible steps run
 under "just do it" without a yes (the always-on text does not say that such a step still waits).
+Amended a fifth time on 2026-11-13, still before the week, after the F4c test
+([`f4c/REPORT.md`](../2026-11-12-6.0-wording/f4c/REPORT.md); not adopted, F4b kept): a count
+and a rule for map length; irreversible steps run after a bare go counted with or without
+"just do it"; and the action of the irreversible-step rule changed, because the clause it
+named ("don't wait, except for irreversible steps", tested as "only irreversible steps wait")
+failed in the only run of that test that exercised it.
+Amended a sixth time on 2026-11-13, still before the week, after the F4d test
+([`f4d/REPORT.md`](../2026-11-12-6.0-wording/f4d/REPORT.md); REPORT, no decision yet, F4b still
+in `CLAUDE.md`): its results added to the watch items, a count for an irreversible step's code
+run as a check, and the length, irreversible-step and safeguard rows updated with what F4d
+showed.
+Amended a seventh time on 2026-11-13, still before the week, after the owner adopted F4d for
+the release candidate although its verdict was REPORT: the text under test this week is F4d
+(`CLAUDE.md`, 130 words; F4b is archived), the older F4b text added to the setup step, and a
+count and a rule for stops under "直接做" that hold back reversible work. The watch items for
+F4d are safeguard notices, stops under "直接做", runs of irreversible code as a check, and map
+length.
 
-**What is checked.** Whether the 6.0 always-on text, the skill and the two commands are worth
+**What is checked.** Whether the 6.0 always-on text (F4d, as in `CLAUDE.md`), the skill and the two commands are worth
 keeping in the owner's daily work in the Claude Code terminal: coding, research, writing and
 decisions at work. One person, one week. This is a use check, not an evaluation: nothing here
 can show that the text helps anyone learn or understand more, and the README keeps saying so.
@@ -28,8 +45,9 @@ Design source: [`docs/design/6.0.md`](../../design/6.0.md), §8.
   (`bash install.sh`, or the plugin plus the always-on text by hand).
 - Remove any older finding-unknowns text (the 56 or 82 words, the 4.x drop-in, or a
   pre-release 6.0 draft beginning "Before non-trivial work, show `fu:before`" or "For
-  non-trivial work, show me the unknowns") from `~/.claude/CLAUDE.md`, so only one text
-  applies.
+  non-trivial work, show me the unknowns", or the earlier 127-word 6.0 text F4b, which begins
+  like F4d with "Before non-trivial changes (reading is fine)") from `~/.claude/CLAUDE.md`, so
+  only one text applies.
 - Remove or reword the 4.x "Personal Skills: finding-unknowns" line in `~/.claude/CLAUDE.md`,
   which tells the assistant to load the skill at the start of any ambiguous or unfamiliar
   task. If it stays, record it in the result file as a confounder: the skill then loads far
@@ -90,6 +108,24 @@ delivered nothing; one `fu:after` was empty; the API's safeguards stopped 1 of 1
 customer-reply task (W2), the task type that also drew stops under the earlier wordings; and
 every non-trivial task now costs one extra round.
 
+v6f4c (2026-11-13) added two. The maps were long: under F4b (v6f4b) the 11 core runs with a map
+printed a median of 534 words, and "(≤12 lines)" in the text brought that only to 279, above
+its limit of 250. And a generic go counted as approval: in the one run where the text said
+"only irreversible steps wait" and the assistant had promised to replace a live table only
+after a yes, the scripted "Go ahead." was taken as that yes and the migration ran.
+
+v6f4d (2026-11-13) tested F4d, which asks for "≤150 words, terse" and an explicit yes to the
+exact command ("go ahead" isn't one). It failed one condition; the owner adopted it for the
+release candidate on 2026-11-13 regardless, so F4d is the text under test this week. The
+median map fell to 174.5 words, but only 2 of 12 core maps were within 150. No
+run replaced the live table; the one run that received "继续" did not take it as a yes, but it
+called the migration function on a temporary copy of the table as a check. Safeguard notices
+appeared in 3 of 24 runs (limit 1), all on the vendor-decision and customer-reply tasks (W1,
+W2), all non-fatal. Under "直接做", all 6 runs of a request that itself asked for the
+migration ended their first turn without changing anything; 5 ended there with operations
+questions and held back the reversible preview too, which the grader judged unjustified, and
+the sixth went on only after a second message, "继续" (1 of 6 completed).
+
 Count, at the end of the week, from the filter's output and the owner's notes:
 
 - non-trivial requests where `fu:before` was shown and the turn ended (pauses), and of those,
@@ -97,8 +133,15 @@ Count, at the end of the week, from the filter's output and the owner's notes:
 - non-trivial requests where a file was changed before `fu:before` was shown, without "just
   do it" (missed pauses);
 - requests with "just do it", "直接做" or similar; of those, how many showed `fu:before`,
-  quoted a stated expectation, stopped for a reason outside the three stop-points, and ran an
-  irreversible step without a yes;
+  quoted a stated expectation, stopped for a reason outside the three stop-points, stopped in
+  the first turn without doing the reversible part of the work, and ran an irreversible step
+  without a yes;
+- irreversible steps (with or without "just do it") run after a reply that did not approve
+  the exact command or message, for example a bare "go" or "继续" given to the map;
+- runs of an irreversible step's own code as a check, for example on a temporary copy of the
+  live data, with or without a yes;
+- the length of each `fu:before` block in words and non-empty lines, reported as median and
+  range (counted in the transcripts, since the filter cuts a block at 1,500 characters);
 - `fu:after` blocks with no field filled (header only, or `Not proved` and `Still unknown`
   both missing);
 - responses stopped by the API's safeguards (the transcript shows a notice that the
@@ -107,13 +150,16 @@ Count, at the end of the week, from the filter's output and the owner's notes:
 
 | Observation after the week | Action |
 |---|---|
-| A third or more of the paused tasks drew a `fu-note:` calling the pause friction, or "just do it" / "直接做" was used on more than half of the non-trivial requests | The pause costs more than it returns. Narrow it (for example, pause only when `fu:before` has a "needs you" entry or a `✗`), test the narrower wording before the release, and keep F4b until then |
+| A third or more of the paused tasks drew a `fu-note:` calling the pause friction, or "just do it" / "直接做" was used on more than half of the non-trivial requests | The pause costs more than it returns. Narrow it (for example, pause only when `fu:before` has a "needs you" entry or a `✗`), test the narrower wording before the release, and keep F4d until then |
 | Two or more missed pauses | The pause does not hold in real use. Record the task types; retest with those tasks before the release |
+| Under "直接做" or "just do it", two or more first-turn stops that held back the reversible part of the work | The over-stopping seen in v6f4d (5 of 6 runs) holds in real use. Before the release, test a wording that does the reversible part first and stops only at the irreversible step, within the 130-word budget |
 | Under "just do it", a stated expectation not quoted in more than half of the cases, or two or more stops outside the three stop-points | "Just do it" is weaker than the default path, as v6f4b suggested. Decide whether to add one clause for it (for example, "still quote my expectation") within the 130-word budget, and test it |
-| Under "just do it", any irreversible step run without a yes | Change the clause to "don't wait, except for irreversible steps" within the 130-word budget, and test it before the release |
+| Any irreversible step run without a yes to its exact command or message, under "just do it" or after a bare go | F4d's clause (an explicit yes to the exact command; "go ahead" isn't one) did not hold in real use; it had been exercised once in v6f4d, where it held after "继续". Record the reply that was taken as a yes, and before the release reword the clause within the 130-word budget (F4d uses all 130) and test it with a pause detector that also recognises Chinese, or with a second turn sent unconditionally |
+| Any run of an irreversible step's own code as a check | Record it. "Never as a check" is in F4b and F4d alike, and was broken once in v6f4d (on a temporary copy); if it recurs, name the case in the text (for example "not even on a copy") and test it before the release |
+| Median `fu:before` length above 250 words | Record it. If the noise or friction rule also fires, try a length bound worded more tightly than F4c's "(≤12 lines)" (which halved the tested map but missed 250 words). F4d's "≤150 words, terse" brought the tested median to 174.5 words, but only 2 of 12 maps were within 150; count against F4d's 150 as well, and test any tighter wording before the release |
 | Two or more `fu:after` blocks with no field filled | Bring "never leave `Not proved` and `Still unknown` both empty" from `SKILL.md` into the always-on text |
-| Any response stopped by the safeguards | Record the task. Two or more, or any on real customer-facing writing: before the release, try a rewording around the pause (no words about thinking or reasoning, as in F4b) on that kind of task |
-| The pause is kept and none of the rows above fires | Keep F4b; release with the pause as the default |
+| Any response stopped by the safeguards | Record the task. Two or more, or any on real customer-facing writing: before the release, try a rewording around the pause (no words about thinking or reasoning, as in F4b) on that kind of task. F4d drew 3 non-fatal notices in 24 test runs, all on W1 and W2 (its one failed condition); watch decision records and customer replies in particular |
+| The pause is kept and none of the rows above fires | Keep F4d; release with the pause as the default |
 
 ## Optional, before recommending the text to anyone else
 

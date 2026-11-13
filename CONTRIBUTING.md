@@ -42,6 +42,13 @@ wording fixes, evidence from real use, documentation and diagrams.
 
   Never hand-edit `assets/zh/*.svg`; it is overwritten on every build. Chinese wording follows
   [`docs/GLOSSARY.md`](docs/GLOSSARY.md).
+- **Release candidates.** During a release candidate the version fields (`plugin.json`,
+  `marketplace.json`, the version-check line) keep the plain `X.Y.Z` that `validate.py`
+  checks; the badges, the hero, the README alt texts and status lines, the manifest
+  descriptions and the CHANGELOG `[X.Y.Z]` compare link name the candidate. At the final
+  release, change all of these: set `VERSION` in `scripts/diagrams/hero.py`, regenerate both
+  heroes (the Chinese one through `outline_cjk.py`), and update the badges, the alt texts, the
+  status lines, the manifest descriptions and the compare link.
 - **Attribution.** Preserve the attribution to the original essay. Do not represent this
   project as affiliated with Anthropic.
 

@@ -140,8 +140,9 @@ with open(target, "w", encoding="utf-8", newline="") as f:
     f.write(new)
 print(action.format(target))
 PY
-  if grep -qE 'ask me (once )?to predict|\.finding-unknowns/|# finding-unknowns \(passive drop-in\)|show me the unknowns|Before non-trivial work, show `fu:before`' "$TARGET"; then
-    echo "Note: $TARGET still holds an older finding-unknowns text (4.x, 5.x or a 6.0 draft, outside the markers)."
+  # Look only outside our markers: a hand-pasted copy of the current text counts too.
+  if sed "\#$BEGIN#,\#$END#d" "$TARGET" | grep -qE 'ask me (once )?to predict|\.finding-unknowns/|# finding-unknowns \(passive drop-in\)|show me the unknowns|Before non-trivial work, show `fu:before`|Before non-trivial changes \(reading is fine\)'; then
+    echo "Note: $TARGET still holds an older finding-unknowns text or a hand-pasted copy of this one (outside the markers)."
     echo "      Remove it by hand; both texts would apply."
   fi
 fi

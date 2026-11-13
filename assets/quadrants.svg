@@ -4,12 +4,12 @@
 <rect x="0.5" y="0.5" width="1199" height="699" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <rect x="0.5" y="0.5" width="1199" height="699" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" letter-spacing="1">// THE FOUR QUADRANTS</text>
-<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" font-weight="700" fill="#141413">Keep your own map of what you know</text>
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" font-weight="700" fill="#141413">Keep your own map of what you know and do not know</text>
 <text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">fu:before shows where the unknowns are. fu:after shows what moved. Only evidence moves anything.</text>
-<text x="375" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#5E5D59" text-anchor="middle" letter-spacing="1.5">YOU ARE AWARE</text>
-<text x="905" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#5E5D59" text-anchor="middle" letter-spacing="1.5">YOU ARE NOT AWARE</text>
-<text x="92" y="291" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#5E5D59" text-anchor="middle" letter-spacing="1.5" transform="rotate(-90 92 291)">YOU KNOW</text>
-<text x="92" y="499" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#5E5D59" text-anchor="middle" letter-spacing="1.5" transform="rotate(-90 92 499)">YOU DON'T KNOW</text>
+<text x="375" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#5E5D59" text-anchor="middle" letter-spacing="1.5">YOU ARE AWARE</text>
+<text x="905" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#5E5D59" text-anchor="middle" letter-spacing="1.5">YOU ARE NOT AWARE</text>
+<text x="94" y="291" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#141413" text-anchor="middle" letter-spacing="2" transform="rotate(-90 94 291)">YOU KNOW</text>
+<text x="94" y="499" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#141413" text-anchor="middle" letter-spacing="2" transform="rotate(-90 94 499)">YOU DON'T KNOW</text>
 <rect x="120" y="196" width="510" height="190" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <rect x="120" y="210" width="4" height="162" rx="2" fill="#B1ADA1"/>
 <rect x="144" y="218" width="60" height="60" rx="12" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>

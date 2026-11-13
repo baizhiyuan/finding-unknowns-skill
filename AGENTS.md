@@ -28,9 +28,11 @@ The design and its owner decisions are in `docs/design/6.0.md`.
 - The person's expectation is quoted, never written for them.
 - `Not proved` and `Still unknown` are never both empty; nothing follows `fu:after`.
 - The look-back never reads a transcript whole, and only reads transcripts when asked.
-- The README's evidence section says that the 6.0 always-on text was chosen only in wording
-  tests with a simulated user, that its changes relative to the 82 words are unmeasured, and
-  that nobody has measured learning or understanding, until a check says otherwise.
+- The README's evidence section says that the 6.0 always-on text was tested only in wording
+  tests with a simulated user, that the shipped text's own test did not confirm it (REPORT:
+  safeguard notices in 3 of 24 runs, limit 1) and the owner adopted it regardless, that its
+  changes relative to the 82 words are unmeasured, and that nobody has measured learning or
+  understanding, until a check says otherwise.
 - YAML frontmatter values containing `:` must be quoted.
 - Preserve the attribution (Thariq Shihipar / @trq212; Addy Osmani) and the non-affiliation
   disclaimer in both READMEs. Neutral credit only.

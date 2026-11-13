@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="t d">
-<title id="t">How finding-unknowns runs</title><desc id="d">Before non-trivial changes the assistant shows the map (fu:before) and waits for your reply ("just do it" skips the wait). Then it works, stops only for a scope change, a falsified premise that changes the task or an irreversible step, and shows what moved (fu:after). The look-back runs only when you ask. Nothing is written to disk.</desc>
+<title id="t">How finding-unknowns runs</title><desc id="d">Before non-trivial changes the assistant shows the map (fu:before), then the turn ends: a pause until you reply. "go" accepts the recommended answers; corrections change the plan. "just do it" skips the wait; only irreversible steps still wait. Then it works, stops only for a scope change, a falsified premise that changes the task or an irreversible step, which runs only after an explicit yes (a bare "go" is not one), and shows what moved (fu:after). The look-back runs only when you ask. Nothing is written to disk unless you say "save".</desc>
 <defs>
 <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
 <marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
@@ -12,109 +12,125 @@
 <rect x="0.5" y="0.5" width="1199" height="679" rx="18" fill="url(#dots)" opacity="0.5"/>
 <text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// HOW IT RUNS</text>
 <text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Map, your reply, then what moved</text>
-<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">The always-on text runs the first three steps on every non-trivial request; the look-back runs only when you ask.</text>
-<rect x="40" y="150" width="262" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">The first four steps run on every non-trivial request (the always-on text carries their core; the skill adds the details); the look-back runs only when you ask.</text>
+<rect x="40" y="150" width="192" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <circle cx="57" cy="160" r="4.5" fill="#D97757"/><path d="M49 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="74" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · guess in the request</text>
-<path d="M171 178L171 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-<rect x="326" y="150" width="262" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
-<circle cx="343" cy="160" r="4.5" fill="#D97757"/><path d="M335 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="360" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · reply: go, or answers</text>
-<path d="M457 178L457 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-<rect x="612" y="150" width="262" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
-<circle cx="629" cy="160" r="4.5" fill="#D97757"/><path d="M621 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="646" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · read what is not proved</text>
-<path d="M743 178L743 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-<rect x="898" y="150" width="262" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
-<circle cx="915" cy="160" r="4.5" fill="#D97757"/><path d="M907 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="932" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · ask; fu-note: any time</text>
-<path d="M1029 178L1029 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-<rect x="40" y="192" width="262" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
-<path d="M40 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H40z" fill="#D97757"/>
-<text x="58" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">BEFORE</text>
-<text x="284" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">before any change</text>
-<text x="58" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:before</text>
-<path d="M304 352L324 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
-<rect x="326" y="192" width="262" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
-<path d="M326 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H326z" fill="#788C5D"/>
-<text x="344" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">WORK</text>
-<text x="570" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">after your reply</text>
-<path d="M590 352L610 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
-<rect x="612" y="192" width="262" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
-<path d="M612 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H612z" fill="#D97757"/>
-<text x="630" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">AFTER</text>
-<text x="856" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">after the result</text>
-<text x="630" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:after</text>
-<path d="M876 352L896 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)" stroke-dasharray="4 4"/>
-<rect x="898" y="192" width="262" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
-<path d="M898 204a12 12 0 0 1 12 -12h238a12 12 0 0 1 12 12v0H898z" fill="#D4A27F"/>
-<text x="916" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">LOOK-BACK</text>
-<text x="1142" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" text-anchor="end">when you ask</text>
-<text x="916" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">/fu-lookback</text>
-<rect x="58" y="270" width="30" height="30" rx="6" fill="#F5DDD1"/>
-<text x="73.0" y="290.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">KK</text>
-<text x="98" y="283" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Relying on</text>
-<text x="98" y="301" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">each with its source; ✗ if wrong</text>
+<text x="74" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · say your guess</text>
+<path d="M148.0 178L148.0 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<rect x="257" y="150" width="214" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<circle cx="274" cy="160" r="4.5" fill="#D97757"/><path d="M266 172a8 7 0 0 1 16 0z" fill="#D97757"/>
+<text x="291" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · go or corrections</text>
+<path d="M364.0 178L364.0 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<rect x="667" y="150" width="257" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<circle cx="684" cy="160" r="4.5" fill="#D97757"/><path d="M676 172a8 7 0 0 1 16 0z" fill="#D97757"/>
+<text x="701" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · read what is not proved</text>
+<path d="M816.0 178L816.0 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<rect x="945" y="150" width="214" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<circle cx="962" cy="160" r="4.5" fill="#D97757"/><path d="M954 172a8 7 0 0 1 16 0z" fill="#D97757"/>
+<text x="979" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · ask; add fu-note:</text>
+<path d="M1052.0 178L1052.0 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+<rect x="40" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M40 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H40z" fill="#D97757"/>
+<text x="148.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">before any change</text>
+<text x="58" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">BEFORE</text>
+<text x="58" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:before</text>
+<path d="M258 352L274 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+<rect x="276" y="192" width="176" height="340" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
+<path d="M276 204a12 12 0 0 1 12 -12h152a12 12 0 0 1 12 12v12H276z" fill="#141413"/>
+<text x="364.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">the turn ends</text>
+<text x="294" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">PAUSE</text>
+<path d="M454 352L470 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+<rect x="472" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M472 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H472z" fill="#788C5D"/>
+<text x="580.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">after your reply</text>
+<text x="490" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">WORK</text>
+<path d="M690 352L706 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+<rect x="708" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M708 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H708z" fill="#D97757"/>
+<text x="816.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">after the result</text>
+<text x="726" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">AFTER</text>
+<text x="726" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:after</text>
+<path d="M926 352L942 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)" stroke-dasharray="4 4"/>
+<rect x="944" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
+<path d="M944 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H944z" fill="#D4A27F"/>
+<text x="1052.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">when you ask</text>
+<text x="962" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">LOOK-BACK</text>
+<text x="962" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">/fu-lookback</text>
+<text x="58" y="290" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#C15F3C" font-weight="700">You expect</text>
+<text x="58" y="308" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">quoted, or "not stated"</text>
 <rect x="58" y="320" width="30" height="30" rx="6" fill="#F5DDD1"/>
-<text x="73.0" y="340.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">KU</text>
-<text x="98" y="333" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Open</text>
-<text x="98" y="351" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">I find out, or you decide</text>
-<rect x="58" y="370" width="30" height="30" rx="6" fill="#F5DDD1"/>
-<text x="73.0" y="390.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">UK</text>
-<text x="98" y="383" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">I assume you want</text>
-<text x="98" y="401" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">a guess you can react to</text>
-<rect x="58" y="420" width="30" height="30" rx="6" fill="#D97757"/>
-<text x="73.0" y="440.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">UU</text>
-<text x="98" y="433" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">You did not ask</text>
-<text x="98" y="451" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">but it matters; at most 3</text>
-<text x="58" y="488" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#C15F3C" font-weight="700">I expect …; wrong if …</text>
-<text x="58" y="508" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">your expectation: quoted, or not stated</text>
-<text x="344" y="266" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#C15F3C" font-weight="700">Waits for your reply</text>
-<text x="344" y="285" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">"go" accepts the recommendations</text>
-<text x="344" y="303" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">say "just do it" to skip the wait</text>
-<text x="344" y="326" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Then stops only for:</text>
-<circle cx="350" cy="339" r="4" fill="#D97757"/>
-<text x="362" y="344" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">a scope change</text>
-<circle cx="350" cy="359" r="4" fill="#D97757"/>
-<text x="362" y="364" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">a falsified premise</text>
-<text x="362" y="380" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">that changes the task</text>
-<circle cx="350" cy="395" r="4" fill="#D97757"/>
-<text x="362" y="400" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">an irreversible step</text>
-<rect x="342" y="410" width="230" height="64" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2"/>
-<text x="356" y="429" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#C15F3C" font-weight="700">Irreversible step:</text>
-<text x="356" y="446" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">exact command, your yes,</text>
-<text x="356" y="463" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">run once, never as a check</text>
-<rect x="342" y="480" width="230" height="46" rx="10" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1"/>
-<text x="356" y="498" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#788C5D" font-weight="700">Everything else:</text>
-<text x="356" y="516" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">proceed; report in fu:after</text>
-<circle cx="636" cy="281" r="4" fill="#B1ADA1"/>
-<text x="650" y="286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Expected → found</text>
-<text x="650" y="305" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">a verdict; why only on a miss</text>
-<circle cx="636" cy="327" r="4" fill="#B1ADA1"/>
-<text x="650" y="332" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Now known</text>
-<text x="650" y="351" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">with evidence</text>
-<circle cx="636" cy="373" r="4" fill="#D97757"/>
-<text x="650" y="378" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#C15F3C" font-weight="600">Not proved</text>
-<text x="650" y="397" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">what each check leaves open</text>
-<circle cx="636" cy="419" r="4" fill="#B1ADA1"/>
-<text x="650" y="424" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Still unknown</text>
-<text x="650" y="443" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">cheapest way to find out</text>
-<circle cx="636" cy="465" r="4" fill="#B1ADA1"/>
-<text x="650" y="470" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Decided for you</text>
-<text x="650" y="489" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">what you did not ask for</text>
-<text x="630" y="516" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#B1ADA1">then the turn ends</text>
-<circle cx="922" cy="281" r="4" fill="#B1ADA1"/>
-<text x="936" y="286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">This session, or 7 days</text>
-<text x="936" y="305" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">of transcripts, filtered</text>
-<circle cx="922" cy="327" r="4" fill="#B1ADA1"/>
-<text x="936" y="332" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Quotes, never rebuilds</text>
-<text x="936" y="351" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">fu: blocks and fu-note: lines</text>
-<circle cx="922" cy="373" r="4" fill="#B1ADA1"/>
-<text x="936" y="378" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Your pattern</text>
-<text x="936" y="397" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">after 5 graded expectations</text>
-<circle cx="922" cy="419" r="4" fill="#B1ADA1"/>
-<text x="936" y="424" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Worth learning next</text>
-<text x="936" y="443" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">one item, first step</text>
+<text x="73.0" y="340.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">KK</text>
+<text x="98" y="333" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Relying on</text>
+<text x="98" y="351" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">each sourced; ✗ if wrong</text>
+<rect x="58" y="362" width="30" height="30" rx="6" fill="#F5DDD1"/>
+<text x="73.0" y="382.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">KU</text>
+<text x="98" y="375" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Open</text>
+<text x="98" y="393" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">I find out, or you decide</text>
+<rect x="58" y="404" width="30" height="30" rx="6" fill="#F5DDD1"/>
+<text x="73.0" y="424.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">UK</text>
+<text x="98" y="417" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">I assume you want</text>
+<text x="98" y="435" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">a guess you can react to</text>
+<rect x="58" y="446" width="30" height="30" rx="6" fill="#D97757"/>
+<text x="73.0" y="466.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">UU</text>
+<text x="98" y="459" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">You did not ask</text>
+<text x="98" y="477" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">but it matters; at most 3</text>
+<text x="58" y="498" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#C15F3C" font-weight="700">I expect …; wrong if …</text>
+<text x="58" y="516" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">mine, and what would disprove it</text>
+<text x="294" y="280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Your reply starts</text>
+<text x="294" y="299" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">the work.</text>
+<rect x="288" y="334" width="152" height="70" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.2"/>
+<text x="300" y="354" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#788C5D" font-weight="700">"go"</text>
+<text x="300" y="373" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">accepts the</text>
+<text x="300" y="390" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">recommended answers</text>
+<rect x="288" y="414" width="152" height="70" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="300" y="434" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#C15F3C" font-weight="700">"just do it"</text>
+<text x="300" y="453" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">skips the wait,</text>
+<text x="300" y="470" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">not irreversible steps*</text>
+<text x="290" y="503" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#5E5D59">* only after an explicit</text>
+<text x="290" y="518" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#5E5D59">yes; "go" is not one</text>
+<text x="490" y="290" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Stops only for:</text>
+<circle cx="496" cy="309" r="4" fill="#D97757"/>
+<text x="508" y="314" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">a scope change</text>
+<circle cx="496" cy="331" r="4" fill="#D97757"/>
+<text x="508" y="336" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">a falsified premise</text>
+<text x="508" y="353" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">that changes the task</text>
+<circle cx="496" cy="370" r="4" fill="#D97757"/>
+<text x="508" y="375" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">an irreversible step</text>
+<rect x="488" y="392" width="184" height="72" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2"/>
+<text x="502" y="412" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#C15F3C" font-weight="700">Irreversible step:</text>
+<text x="502" y="430" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">exact command, explicit yes,</text>
+<text x="502" y="448" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">run once, never as a check</text>
+<rect x="488" y="472" width="184" height="50" rx="10" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1"/>
+<text x="502" y="492" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#788C5D" font-weight="700">Everything else:</text>
+<text x="502" y="510" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">proceed; report in fu:after</text>
+<circle cx="732" cy="281" r="4" fill="#B1ADA1"/>
+<text x="746" y="286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Expected → found</text>
+<text x="746" y="305" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">a verdict; why only on a miss</text>
+<circle cx="732" cy="327" r="4" fill="#B1ADA1"/>
+<text x="746" y="332" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Now known</text>
+<text x="746" y="351" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">with evidence</text>
+<circle cx="732" cy="373" r="4" fill="#D97757"/>
+<text x="746" y="378" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#C15F3C" font-weight="600">Not proved</text>
+<text x="746" y="397" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">what each check leaves open</text>
+<circle cx="732" cy="419" r="4" fill="#B1ADA1"/>
+<text x="746" y="424" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Still unknown</text>
+<text x="746" y="443" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">cheapest way to find out</text>
+<circle cx="732" cy="465" r="4" fill="#B1ADA1"/>
+<text x="746" y="470" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Decided for you*</text>
+<text x="746" y="489" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">what you did not ask for</text>
+<text x="726" y="516" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59">then the turn ends</text>
+<circle cx="968" cy="281" r="4" fill="#B1ADA1"/>
+<text x="982" y="286" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">This session, or 7 days</text>
+<text x="982" y="305" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">of transcripts, filtered</text>
+<circle cx="968" cy="327" r="4" fill="#B1ADA1"/>
+<text x="982" y="332" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Quotes, never rebuilds</text>
+<text x="982" y="351" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">fu: blocks and fu-note: lines</text>
+<circle cx="968" cy="373" r="4" fill="#B1ADA1"/>
+<text x="982" y="378" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Your pattern</text>
+<text x="982" y="397" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">after 5 graded expectations</text>
+<circle cx="968" cy="419" r="4" fill="#B1ADA1"/>
+<text x="982" y="424" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Worth learning next</text>
+<text x="982" y="443" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">one item, first step</text>
 <rect x="40" y="556" width="1120" height="96" rx="10" fill="#F5DDD1" stroke="#F5DDD1" stroke-width="1"/>
 <rect x="40" y="556" width="5" height="96" rx="2.5" fill="#D97757"/>
 <rect x="60" y="570" width="230" height="28" rx="14" fill="#D97757"/>
