@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="652" viewBox="0 0 1200 652" role="img" aria-labelledby="t d">
 <title id="t">How finding-unknowns runs</title><desc id="d">Before non-trivial changes the assistant shows the map (fu:before), then the turn ends: a pause until you reply. "go" accepts the recommended answers; corrections change the plan. "just do it" skips the wait; only irreversible steps still wait. Then it works, stops only for a scope change, a falsified premise that changes the task or an irreversible step, which runs only after an explicit yes (a bare "go" is not one), and shows what moved (fu:after). The look-back runs only when you ask. Nothing is written to disk unless you say "save".</desc>
 <defs>
 <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
@@ -8,11 +8,11 @@
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
 <linearGradient id="spec" x1="0" x2="1"><stop offset="0" stop-color="#788C5D"/><stop offset="0.5" stop-color="#D4A27F"/><stop offset="1" stop-color="#B5442E"/></linearGradient>
 </defs>
-<rect x="0.5" y="0.5" width="1199" height="679" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
-<rect x="0.5" y="0.5" width="1199" height="679" rx="18" fill="url(#dots)" opacity="0.5"/>
-<text x="40" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" letter-spacing="1">// HOW IT RUNS</text>
+<rect x="0.5" y="0.5" width="1199" height="651" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="651" rx="18" fill="url(#dots)" opacity="0.5"/>
+<g transform="translate(0 -28)">
 <text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">Map, your reply, then what moved</text>
-<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">The first four steps run on every non-trivial request (the always-on text carries their core; the skill adds the details); the look-back runs only when you ask.</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">The first four steps run on every non-trivial request; the look-back runs only when you ask.</text>
 <rect x="40" y="150" width="192" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <circle cx="57" cy="160" r="4.5" fill="#D97757"/><path d="M49 172a8 7 0 0 1 16 0z" fill="#D97757"/>
 <text x="74" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#141413" font-weight="700">YOU · say your guess</text>
@@ -32,7 +32,7 @@
 <rect x="40" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <path d="M40 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H40z" fill="#D97757"/>
 <text x="148.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">before any change</text>
-<text x="58" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">BEFORE</text>
+<text x="58" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">THE MAP</text>
 <text x="58" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:before</text>
 <path d="M258 352L274 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <rect x="276" y="192" width="176" height="340" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
@@ -48,7 +48,7 @@
 <rect x="708" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <path d="M708 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H708z" fill="#D97757"/>
 <text x="816.0" y="208.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">after the result</text>
-<text x="726" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">AFTER</text>
+<text x="726" y="244" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#141413" font-weight="700">WHAT MOVED</text>
 <text x="726" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:after</text>
 <path d="M926 352L942 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)" stroke-dasharray="4 4"/>
 <rect x="944" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
@@ -116,7 +116,7 @@
 <text x="746" y="424" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Still unknown</text>
 <text x="746" y="443" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">cheapest way to find out</text>
 <circle cx="732" cy="465" r="4" fill="#B1ADA1"/>
-<text x="746" y="470" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Decided for you*</text>
+<text x="746" y="470" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413" font-weight="600">Decided for you</text>
 <text x="746" y="489" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">what you did not ask for</text>
 <text x="726" y="516" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59">then the turn ends</text>
 <circle cx="968" cy="281" r="4" fill="#B1ADA1"/>
@@ -139,4 +139,5 @@
 <rect x="60" y="612" width="230" height="28" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2"/>
 <text x="175" y="631" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">TRIVIAL REQUESTS</text>
 <text x="310" y="631" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#141413">Lookups and casual talk get no block at all.</text>
+</g>
 </svg>

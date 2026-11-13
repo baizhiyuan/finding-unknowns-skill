@@ -11,38 +11,47 @@
 
 <p align="center"><strong>Keep your own map of what you know and do not know, and update it only on evidence.</strong></p>
 
-<p align="center"><em>6.0 release candidate (<code>v6.0.0-rc.1</code>). Tested only in wording tests with a simulated user, where it missed one pre-registered condition and was adopted by the owner; not yet compared with the earlier 82-word text; no one has measured learning.</em></p>
+<p align="center"><em>6.0 release candidate (<code>v6.0.0-rc.1</code>)</em></p>
 
 <p align="center">
   <a href="#what-it-looks-like">Example</a> ·
   <a href="#the-four-quadrants">The map</a> ·
   <a href="#how-it-runs">How it runs</a> ·
   <a href="#install">Install</a> ·
-  <a href="#what-the-evals-show">Evidence</a> ·
+  <a href="#evidence">Evidence</a> ·
   <a href="README.zh.md">中文</a>
 </p>
 
 ---
 
-- **What happens:** before a non-trivial change, the assistant prints `fu:before`, a map of
-  what the work rests on and what is still open, and ends its turn. Your reply starts the
-  work, which ends with `fu:after`: what moved on the map.
-- **What it looks like:** a nested list in the terminal ([example below](#what-it-looks-like)).
-- **What it costs:** one extra round per non-trivial task. "Just do it" or "直接做" in the
-  request skips the wait; only an irreversible step still waits, for an explicit yes ("go
-  ahead" or "继续" is not one). In tests, "直接做" still stopped too often
-  ([details](#how-it-runs)).
-- **What it is:** 130 words of always-on text in your `CLAUDE.md`, plus an optional skill with
-  two commands. No hooks, no agents; nothing is written to disk unless you say "save".
-- **How sure anyone is:** the text was tested in pre-registered wording tests with a simulated
-  user, one model and 3 runs per task. It failed one of its 11 conditions (safeguard notices in
-  3 of 24 runs, limit 1), and the owner adopted it for the release candidate regardless. It has not been compared with the 82-word text it would
-  replace, and no one has measured whether it helps a person learn.
+Before a non-trivial change, the assistant shows `fu:before`: a short map of what the work
+rests on and what is still open. Then it ends its turn. Your reply starts the work, which ends
+with `fu:after`: what moved on the map. Both are nested lists in the terminal
+([example](#what-it-looks-like)).
+
+It is 130 words of always-on text in your `CLAUDE.md`, plus an optional skill with two
+commands. There are no hooks and no agents, and nothing is written to disk unless you say
+"save".
+
+The cost is one extra round per non-trivial task. "Just do it" or "直接做" in the request
+skips the wait; only an irreversible step still waits, for an explicit yes ("go ahead" or
+"继续" is not one). In the wording tests, the assistant still stopped too often after "直接做"
+([details](#how-it-runs)).
+
+**How well tested.** The shipped text has been through pre-registered wording tests only: a
+simulated user, one model, 3 runs per task. It failed one of its 11 pre-registered conditions,
+because the API's safeguards flagged more runs than the limit allowed. It was shipped as the
+release candidate anyway. It has not been compared with the 82-word text it would replace, and
+no one has measured whether it helps a person learn. The counts are in
+[docs/EVIDENCE.md](docs/EVIDENCE.md#known-limits-of-the-release-candidate).
 
 To install, paste the always-on text into `CLAUDE.md` or run `install.sh`: see
 [Install](#install).
 
 ## What it looks like
+
+Both examples below are illustrative. They were written to show the skill's template and are
+not excerpts from a session.
 
 You write: *"I think the 500s on /export come from the new CSV encoder; fix it."* The assistant
 reads the code and the logs, then replies:
@@ -84,7 +93,7 @@ The `✗` refutes your premise but not the request (the 500s still need fixing),
 continues and the miss is reported afterwards. A `✗` that changes what you asked for is a stop.
 
 <details>
-<summary><b>A work decision</b></summary>
+<summary><b>A work decision (illustrative)</b></summary>
 
 You write: *"We log about 40 million events a day and run Postgres today. Postgres or ClickHouse for our event analytics? One page for the team."*
 
@@ -121,12 +130,11 @@ fu:after · recommend a store for event analytics
 
 </details>
 
-**Real maps run longer than this one.** The example follows the skill's template (at most 12
-lines; templates in [`SKILL.md`](skills/finding-unknowns/SKILL.md)). Everyday runs do not load
-the skill: in the one test of the shipped text (v6f4d), which asks for at most 150 words, the
-12 maps on the four core tasks had 145 to 281 words (median 174.5; 2 of 12 within 150), counted
-from the heading to the end of the message. Labels and layout may also differ from the
-template.
+Maps in the tests ran longer than these examples. The examples follow the skill's template, which
+allows at most 12 lines ([`SKILL.md`](skills/finding-unknowns/SKILL.md)), and everyday runs do
+not load the skill. The shipped text asks for at most 150 words; in its one test, most maps on
+the four core tasks were longer than that ([map length](docs/EVIDENCE.md#map-length)). Labels
+and layout may also differ from the template.
 
 ## The four quadrants
 
@@ -135,10 +143,10 @@ template.
 </p>
 
 You hand work and decisions to an assistant every day. Each exchange can leave you knowing
-more, or it can quietly replace your judgment with the assistant's output. finding-unknowns
-keeps one thing in view: **your own map of what you know and do not know.** The assistant
-shows that map before non-trivial changes, waits once for your reply, and shows what moved on
-the map afterwards.
+more, or it can replace your judgment with the assistant's output without your noticing.
+finding-unknowns keeps one thing in view: **your own map of what you know and do not know.**
+The assistant shows the map before non-trivial changes, waits once for your reply, and shows
+what moved on it afterwards.
 
 An unknown lives in one of four places, and each needs a different move:
 
@@ -160,23 +168,25 @@ ask for.
 </p>
 
 This applies to non-trivial work in the Claude Code terminal: coding, research, writing, a
-decision at work. Trivial requests, lookups and casual talk get nothing.
+decision at work. Trivial requests, lookups and casual talk get no block.
 
-- **Why the pause:** without it, the map was mostly announced and not shown, above all on
-  non-coding work. With it, the map appeared before the first change in almost every core test
-  run ([evidence](#what-the-evals-show)).
-- **How to skip:** put "just do it" or "直接做" in the request, and the assistant does not
-  wait; only an irreversible step still waits for your explicit yes. In the test of the
-  shipped text, "直接做" on a request that itself asked for an irreversible step, replacing a
-  live table (6 runs): no run replaced the live table (0 of 6), but all 6 ended their first
-  turn without changing anything. 5 ended there with questions and held back the reversible
-  part too, which the grader judged unjustified; the sixth did it only after a second message,
-  "继续" (1 of 6 completed). With "Just do it, I'm in a hurry." the map came before the first
-  change in 0 of 3 runs.
+The pause exists because, without it, the map was mostly announced and not shown, above all on
+non-coding work. With it, the map appeared before the first change in almost every core test
+run ([Evidence](#evidence)).
 
-**The rules.** Everyday runs see only the always-on text. The labels, the layout and the finer
-rules (size limits, `why` lines only where an expectation failed) live in the skill, which
-loads only when you ask for it.
+To skip the wait, put "just do it" or "直接做" in the request. Only an irreversible step still
+waits for your explicit yes. Under "just do it" the shipped text is weaker. Its test included
+a "直接做" request that itself asked for an irreversible step, replacing a live table, in six
+runs. No run replaced the live table, but every run ended its first turn without changing
+anything. All but one ended there with questions and held back the reversible part too, which
+the grader judged unjustified; the other did the reversible part only after a second message,
+"继续". With "Just do it, I'm in a hurry.", in three runs, the map never came before the first
+change. The counts are in
+[docs/EVIDENCE.md](docs/EVIDENCE.md#直接做-and-irreversible-steps).
+
+Everyday runs see only the always-on text. The labels, the layout and the finer rules (size
+limits, `why` lines only where an expectation failed) live in the skill, which loads only when
+you ask for it. The main rules:
 
 - **Your expectation is quoted, never written for you.** If you gave none, the slot says
   `not stated` and nobody asks. The empty slot is the nudge: put your guess in the request
@@ -186,28 +196,28 @@ loads only when you ask for it.
 - **After your reply, few stops:** a scope change, a falsified premise that changes the task,
   or an irreversible step. A `✗` that only refutes your expectation is reported, not a stop.
 - **An irreversible step** (in code, or sending, paying, publishing, deleting) is shown as the
-  exact command or message, as the only question; it runs once, only after your explicit yes,
+  exact command or message, as the only question. It runs once, only after your explicit yes,
   and never as a check. A generic "go ahead" or "继续" is not a yes: approve the step by
-  naming it. Under an earlier variant without that clause (F4c), the one run that got "Go
-  ahead." took it as the yes. Under the shipped text, the one run that got "继续" asked for an
+  naming it. Under an earlier variant without that clause, the one run that got "Go ahead."
+  took it as the yes. Under the shipped text, the one run that got "继续" asked for an
   explicit yes instead, but in the same turn ran the migration code on a temporary copy of the
   table, which goes against "never as a check".
 - **Nothing follows `fu:after`,** no menu and no question. Nothing is written to disk unless
   you say "save"; the conversation is the record.
 
-**The tradeoff: one pause, then few stops.** The price is reading the map before you say go and
-reading `fu:after` at the end: above all, what each check did not prove. If you would rather be
+The tradeoff is one pause, then few stops. The price is reading the map before you say go and
+reading `fu:after` at the end, above all what each check did not prove. If you would rather be
 asked before each assumption as it comes up, this is the wrong default for you.
 
 ## Install
 
-**The always-on text is the product.** It runs on every non-trivial request. The skill and the
-two commands load only when you ask for an interview or a look-back; the plugin alone changes
-nothing until you ask.
+The always-on text is the product. It applies to every non-trivial request. The skill and the
+two commands load only when you ask for an interview or a look-back, so the plugin alone
+changes nothing until you ask.
 
-**This is a release candidate.** Until the own-use week and the comparison with the 82 words
-are done, `main` and the plugin marketplace stay on 4.3.2 with the 82 words. Install 6.0 by
-cloning branch `v6` (tag `v6.0.0-rc.1`). Using 4.x (Cartographer, `keep-the-reasoning`, the
+This is a release candidate. Until the own-use week and the comparison with the 82-word text
+are done, `main` and the plugin marketplace stay on 4.3.2 with the 82-word text. Install 6.0
+by cloning branch `v6` (tag `v6.0.0-rc.1`). Using 4.x (Cartographer, `keep-the-reasoning`, the
 agents)? Stay on 4.x: see [how](docs/HISTORY.md#how-to-stay-on-4x).
 
 ### The always-on text
@@ -219,8 +229,8 @@ or to a project's `CLAUDE.md`, or let `install.sh` do it:
 
 Keep only one finding-unknowns text in your `CLAUDE.md`, and remove any older one:
 
-- the 56 words beginning "Before building, ask me to predict";
-- the 82 words beginning "Before non-trivial work, ask me once to predict";
+- the 56-word text beginning "Before building, ask me to predict";
+- the 82-word text beginning "Before non-trivial work, ask me once to predict";
 - a pre-release 6.0 draft beginning "Before non-trivial work, show `fu:before`";
 - an earlier 6.0 text (127 words) beginning "Before non-trivial changes (reading is fine), show
   `fu:before` in your reply";
@@ -243,7 +253,8 @@ If you pasted the always-on text by hand, remove it first or run with `--no-clau
 <summary><b>What <code>install.sh</code> does</b></summary>
 
 - copies `SKILL.md`, `fu-interview.md` and `fu-lookback.md` into `~/.claude` (or
-  `$CLAUDE_CONFIG_DIR`), saving a same-name file that is not ours as `<file>.<timestamp>.bak`;
+  `$CLAUDE_CONFIG_DIR`), saving a same-name file from another source as
+  `<file>.<timestamp>.bak`;
 - appends the always-on text to `~/.claude/CLAUDE.md` between
   `<!-- finding-unknowns:always-on -->` markers (after saving `CLAUDE.md.<timestamp>.bak`), or
   replaces the text between them on a later run; it never edits text outside the markers and
@@ -309,34 +320,35 @@ last seven days of Claude Code transcripts in the current project for `fu:` bloc
 whole. It prints what you expected against what turned out, what became known, what is still
 open, and, from five graded expectations, your pattern.
 
-**`fu-note:`** Type a line starting `fu-note:` when a block taught you something, annoyed you
-or missed something (`fu-note: noise`, `fu-note: missed that the API is rate-limited`). The
-assistant ignores it; the look-back finds it.
+A look-back reaches only as far back as Claude Code keeps transcripts (`cleanupPeriodDays`).
+After a long session is compacted, `fu:after` re-reads `fu:before` from the transcript or marks
+the quote `from memory`.
 
-**Limits.** A look-back reaches only as far back as Claude Code keeps transcripts
-(`cleanupPeriodDays`). After a long session is compacted, `fu:after` re-reads `fu:before` from
-the transcript or marks the quote `from memory`.
+You can leave the look-back a note. Type a line starting `fu-note:` when a block taught you
+something, annoyed you or missed something (`fu-note: noise`,
+`fu-note: missed that the API is rate-limited`). The assistant ignores the line; the look-back
+finds it.
 
 ## Principles
 
-**The map is yours.** The four quadrants come from Thariq Shihipar's field guide. Showing them
-is not a score: you see where your unknowns are before the work starts, and decide which to
+The map is yours. The four quadrants come from Thariq Shihipar's field guide. Showing them is
+not a score: you see where your unknowns are before the work starts, and decide which to
 chase.
 
 <p align="center">
-  <img src="assets/slide.svg" alt="The slide, after Addy Osmani: offloading (delegate the work, keep ownership), then deferral (the output becomes the next input), then cognitive surrender (the output quietly becomes your own belief). Under each step, what is meant to interrupt it: the pause after fu:before; You expect (predict before you look); Not proved and Still unknown. Why these fields exist; whether they slow the slide is not measured." width="100%">
+  <img src="assets/slide.svg" alt="The slide, after Addy Osmani: offloading (delegate the work, keep ownership), then deferral (the output becomes the next input), then cognitive surrender (the output becomes your &quot;known&quot; without an update step). Under each step, what is meant to interrupt it: the pause after fu:before; You expect (predict before you look); Not proved and Still unknown. Why these fields exist; whether they slow the slide is not measured." width="100%">
 </p>
 
-**Critical thinking is the rule for updating the map.** Addy Osmani describes a slide across
-many handoffs: **offloading** (you delegate and keep ownership), then **deferral** (the output
-becomes the next input), then **cognitive surrender** (the output quietly becomes your own
-belief). Three habits interrupt it, and each has a field: **predict before you look**
-(`You expect`), **say what a check did not prove** (`Not proved`), and **say what is still
-unknown** (`Still unknown`).
+Critical thinking is the rule for updating the map. Addy Osmani describes a slide across many
+handoffs: **offloading** (you delegate and keep ownership), then **deferral** (the output
+becomes the next input), then **cognitive surrender** (the output becomes your own belief with
+no update step). Three habits interrupt it, and each has a field: predict before you look
+(`You expect`), say what a check did not prove (`Not proved`), and say what is still unknown
+(`Still unknown`).
 
-**Theory before result.** The owner's research practice reports every measured result as
-theory → measured → consistent? → mechanism. In `fu:after` this is one row: expected → found →
-verdict → why.
+The `Expected → found` row comes from empirical research practice, where every measured result
+is reported as theory → measured → consistent? → mechanism. In `fu:after` this is one row:
+expected → found → verdict → why.
 
 | Habit | The field that trains it |
 |---|---|
@@ -347,89 +359,83 @@ verdict → why.
 | Read what a check leaves open before accepting the result | `Not proved` |
 | Choose on purpose which unknown to chase | `Still unknown`, with the cheapest way to find out |
 
-No quiz, no recall questions, no lecture. When you ask to be taught, the assistant stops when
-you can predict the behaviour.
+There is no quiz, no recall question and no lecture. When you ask to be taught, the assistant
+stops when you can predict the behaviour.
 
-## What the evals show
+## Evidence
 
 | | |
 |---|---|
 | **What was tested** | Whether the 6.0 always-on text makes the map appear before the first change, pauses once, lets the work finish and keeps its guards |
-| **With whom** | A simulated user whose second reply was a fixed "Go ahead." ("继续" in one v6f4d task); one model (`claude-sonnet-5-5`); 3 runs per task; eight pre-registered tests on 2026-11-12 and 2026-11-13 |
-| **Result** | The shipped text (the current `CLAUDE.md`, F4d) showed the map before the first change in 12 of 12 runs on the four core tasks and completed the work in 12 of 12. It failed one of its 11 pre-registered conditions (safeguard notices in 3 of 24 runs, limit 1); the owner adopted it regardless |
+| **With whom** | A simulated user whose second reply was a fixed "Go ahead." ("继续" in one task); one model (`claude-sonnet-5-5`); 3 runs per task; eight pre-registered wording tests on 2026-11-12 and 2026-11-13 |
+| **Result** | In its one test, the shipped text showed the map before the first change in every run on the four core tasks and completed the work in every one. It failed one of its 11 pre-registered conditions: the API's safeguards flagged more runs than the limit allowed. Every flag was a safeguard notice, and each flagged run continued and completed. It was shipped as the release candidate anyway |
 | **What it does not show** | Anything about a real person, a comparison with the 82-word text, or learning |
 
-- **Why the pause is believed to work:** one result moves between sessions by about 4 runs in
-  12 (one earlier text showed the map first in 8, then 5, then 4 of 12). The pause's 11 of 12
-  under two earlier texts, and 12 of 12 under the shipped text, are above that spread.
-- **Maps are long, and bounding them has only partly worked:** the first text with the pause
-  (F4b) gave a median map of 534 words, and a variant capping it at 12 lines a median of 279
-  (limit 250). The shipped text asks for at most 150 words and reached a median of 174.5,
-  within the limit of 250, but only 2 of 12 maps were within 150.
+The pause, not chance, is believed to make the map appear, for this reason: the result of one
+earlier text without the pause moved between sessions by about a third of its runs, and the
+results with the pause, under two earlier texts and under the shipped text, are above that
+spread.
 
-**What these tests do not show:**
+Maps are long, and bounding them has only partly worked. Under the first adopted text with
+the pause, the median map ran to more than 500 words. An earlier variant that capped the map
+at 12 lines roughly halved the median, which stayed above the test's limit of 250 words. The
+shipped text asks for at most 150 words. Its median was within the 250-word limit, but most of
+its maps were over 150 words.
 
-- **The reply after the pause was simulated:** always a fixed generic go ("Go ahead."; "继续"
-  in one v6f4d task), with no answers or corrections. Completion means only that the assistant continues after an uninformative go.
-- **One model, 3 runs per task.** The rules are screening rules, not significance tests; one
-  run either way could have changed several verdicts, including the safety condition, which
-  the shipped text failed (3 of 24 against a limit of 1) and an earlier text passed with no
-  slack (1 of 18). The shipped text was tested in a single-arm test that did not confirm it;
-  its comparison with the earlier texts is across sessions and not randomised.
-- **Grading of the earlier tests was weaker than pre-registered:** up to v6f4b, some graders
-  could see which text a run used, and later ones lacked the task key and inferred beliefs
-  from the prompt. The test of the shipped text was graded blind, with the key. The
-  visibility, pause, completion and safety counts are mechanical and not affected.
-- **Under "just do it" the text is weaker:** with "Just do it, I'm in a hurry." the map
-  appeared before the first change in 0 of 3 runs, and 2 of 3 completed (the third stopped
-  over a premise, which the grader judged justified). With "直接做" on a request that asked
-  for an irreversible step, all 6 runs ended their first turn without changing anything; 5
-  ended there without the reversible part (judged unjustified), and the sixth did it only
-  after a second message, "继续"; 1 of 6 completed.
+Three limits of method apply to all of this. The reply after the pause was always a fixed
+generic go ("Go ahead."; "继续" in one task), with no answers or corrections, so completion
+means only that the assistant continues after an uninformative go. There was one model and 3
+runs per task: the decision rules are screening rules, not significance tests, and one run
+either way could have changed several verdicts, including the safety condition that the
+shipped text failed. And the shipped text was tested in a single-arm test that did not confirm
+it; its comparison with the earlier texts is across sessions and not randomised. The earlier
+tests were also graded less strictly than pre-registered
+([details](docs/EVIDENCE.md#what-these-tests-do-not-show)).
 
-**Known limits of the release candidate:**
+The release candidate has three more known limits. Subagents and headless runs load a
+user-level `CLAUDE.md` too, with nobody to reply to `fu:before`; whether they end their turn on
+the map is untested, and a check is planned before 6.0.0. With 3 runs per task, it is not known
+whether the wording of the shipped text makes the safeguards flag more runs; they flagged
+fewer under the two texts tested before it. And "non-trivial" was tested only at its edges, so
+small changes in between are where the pause may feel like friction.
 
-- **Subagents and headless runs** load a user-level `CLAUDE.md` too, with nobody to reply to
-  `fu:before`; whether they end their turn on the map is untested (a check is planned before
-  6.0.0).
-- **The API's safeguards** flagged 3 of 24 runs of the shipped text, on the vendor-choice and
-  customer-reply tasks, against a pre-registered limit of 1: the one condition it failed. All
-  three were notices, and each run continued and completed. With 3 runs per task it is not
-  known whether the wording raises the rate (the earlier texts: 1 of 18 and 0 of 21).
-- **"Non-trivial"** was tested only at its edges; small changes in between are where the
-  pause may feel like friction.
+Two things decide the final release. The first is one week of everyday use by one person, with
+decision rules written in advance ([PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md)). The
+second is a planned comparison of three texts on the same tasks: none, the 82-word text and
+the shipped text.
 
-**Against the 82 words, 6.0 is unmeasured.** The new text is 48 words longer; it drops the file
-of predictions, "ask me once to predict" and the budget-overrun stop. **Nobody has measured
-whether any of this helps a person learn or understand more.** Every number here comes from
-simulated users.
-
-**What decides the final release:**
-
-- **One week of the owner's own use,** with decision rules written in advance
-  ([PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md)).
-- **A planned comparison of three texts:** none, the 82 words and the 6.0 text.
-
-Every test, the replication spread, Stage 0, Tier 1 and the changes against the 82 words:
+Every test with its counts, the spread between sessions, the two earlier evaluations (Stage 0
+and Tier 1) and each change against the 82-word text are in
 [docs/EVIDENCE.md](docs/EVIDENCE.md).
 
 ## Compared with
 
-**The 82-word text on `main`.** It asks you once to predict the outcome, writes both
-predictions to a file and grades them afterwards; it shows no four-quadrant map. It is the text
-Tier 1 checked, and it stays on `main` until the comparison above.
+The 82-word text on `main` asks you once to predict the outcome, writes both predictions to a
+file and grades them afterwards. It shows no four-quadrant map. It is the text Tier 1 checked,
+and it stays on `main` until the planned comparison is done. The shipped text is 48 words
+longer: it drops the file of predictions, "ask me once to predict" and the budget-overrun
+stop, and adds the four fields, the two headers and the pause
+([each change](docs/EVIDENCE.md#against-the-82-words-60-is-unmeasured)).
 
-**The Karpathy-style `CLAUDE.md`** in
+The Karpathy-style `CLAUDE.md` in
 [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) asks when
 uncertain; this one gathers its questions into `fu:before`, asks once, then proceeds. Use one,
 or say in your `CLAUDE.md` which one wins. The skill's `Decided for you` field takes one idea
 from it, as disclosure rather than a prohibition. Its evidence is thin: the one
-placebo-controlled audit we found (skill-receipts Audit #4) measured only its simplicity
-rules, which produced 4.8 % fewer lines than no instructions, within noise; accuracy was
-unchanged.
+placebo-controlled audit found for it measured only its simplicity rules, which produced
+slightly fewer lines than no instructions, within noise, with accuracy unchanged
+([source and figure](docs/EVIDENCE.md#the-karpathy-style-claudemd)).
 
-**OMC's `deep-interview`** is the better tool when you want a gated specification that feeds
-an execution pipeline; `/fu-interview` ends with a map and does not start the work.
+OMC's `deep-interview` is the better tool when you want a gated specification that feeds an
+execution pipeline. `/fu-interview` ends with a map and does not start the work.
+
+## Works well with
+
+finding-unknowns stays one skill and two commands, and bundles nothing else. Two skill sets,
+installed separately, cover work it leaves alone:
+[nature-skills](https://github.com/Yuan1z0825/nature-skills) (Apache-2.0) for academic writing,
+polishing and figures, and [frontend-slides](https://github.com/zarazhangrui/frontend-slides)
+(MIT) for HTML slide decks. Neither is required, and `install.sh` installs neither.
 
 ## History
 
@@ -456,9 +462,9 @@ finding-unknowns-skill/
 ├── .claude-plugin/               Plugin and marketplace manifests
 ├── install.sh                    Installer (skill, commands, always-on text; retires 4.x files)
 ├── assets/                       Diagrams (SVG); assets/zh/ holds the Chinese versions
-├── docs/                         EVIDENCE, HISTORY, GLOSSARY, design/, evals/, field-notes/
+├── docs/                         EVIDENCE, HISTORY, GLOSSARY, COPY, design/, evals/, field-notes/
 ├── scripts/                      validate.py (CI checks), Chinese-diagram and diagram scripts
-└── tests/                        install.sh and the look-back filter
+└── tests/                        install.sh, the look-back filter and the copy lint
 ```
 
 </details>
@@ -479,11 +485,15 @@ Released under the [MIT License](LICENSE).
   and changes, one from the `deep-interview` skill in
   [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode): a progress line every
   round, shown here as counts, with no clarity score.
-- **Expected → found → verdict → why:** the owner's own empirical research practice
-  (`theory-vs-result`, on branch `v4`).
-- **Reporting the choices and changes you did not ask for** (`Decided for you`) adapts one idea from the
-  Karpathy-style `CLAUDE.md` by Jiayuan Zhang ([andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)), written
+- **Expected → found → verdict → why:** the `theory-vs-result` skill of the 4.x line (branch
+  `v4`), which records an empirical research practice.
+- **Reporting the choices and changes you did not ask for** (`Decided for you`) adapts one
+  idea from the Karpathy-style `CLAUDE.md` by Jiayuan Zhang
+  ([andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)), written
   from Andrej Karpathy's [post of 2026-01-26](https://x.com/karpathy/status/2015883857489522876).
+- **The copy rules** in [docs/COPY.md](docs/COPY.md) adapt several ideas, reworded for this
+  repository, from the `nature-shared` core files of
+  [nature-skills](https://github.com/Yuan1z0825/nature-skills) (Apache-2.0).
 
 **Disclaimer.** This is an independent community project. It is not affiliated with,
 authorised by, or endorsed by Anthropic.

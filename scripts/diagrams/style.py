@@ -12,6 +12,7 @@ CJK = re.compile(r"[　-〿一-鿿＀-￯]")
 
 INK, SUB, ACC, ORG, PAPER, PANEL, EDGE = "#141413", "#5E5D59", "#C15F3C", "#D97757", "#FAF9F5", "#F0EEE6", "#E3DFD3"
 PINK, GRN, SAND, RED, MUTE, BLUE = "#F5DDD1", "#788C5D", "#D4A27F", "#B5442E", "#B1ADA1", "#6A9BCC"
+KICKER_H = 28  # the height the removed kicker line used to take above each title
 
 DEFS = """<defs>
 <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
@@ -45,6 +46,7 @@ class Fig:
         self.w, self.h, self.zh = w, h, zh
         self.title, self.desc = title, desc
         self.o: list[str] = []
+        self.lift = 0
 
     # --- text -----------------------------------------------------------------
     def text(self, x, y, txt, size=15, fill=INK, family=SANS, weight=None, anchor=None, extra=""):
@@ -65,8 +67,9 @@ class Fig:
         self.text(x, y, t, size, fill, MONO, weight, anchor, extra)
 
     # --- page furniture ---------------------------------------------------------
-    def header(self, kicker, title, subtitle):
-        self.mono(40, 52, kicker, 14 if not self.zh else 13, ACC, "700", spacing="1" if not self.zh else None)
+    def header(self, title, subtitle):
+        """Title and subtitle. There is no kicker line; the content moves up by its height."""
+        self.lift = KICKER_H
         self.text(40, 92 if not self.zh else 96, title, 32, INK, SERIF, "700")
         self.sans(40, 118 if not self.zh else 126, subtitle, 15, SUB)
 
@@ -123,8 +126,12 @@ class Fig:
         self.o.append(s)
 
     def svg(self) -> str:
-        head = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.w}" height="{self.h}" viewBox="0 0 {self.w} {self.h}" '
+        h = self.h - self.lift
+        head = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.w}" height="{h}" viewBox="0 0 {self.w} {h}" '
                 f'role="img" aria-labelledby="t d">\n<title id="t">{esc(self.title)}</title><desc id="d">{esc(self.desc)}</desc>\n'
-                f'{DEFS}\n<rect x="0.5" y="0.5" width="{self.w - 1}" height="{self.h - 1}" rx="18" fill="{PAPER}" stroke="{EDGE}"/>\n'
-                f'<rect x="0.5" y="0.5" width="{self.w - 1}" height="{self.h - 1}" rx="18" fill="url(#dots)" opacity="0.5"/>\n')
-        return head + "\n".join(self.o) + "\n</svg>\n"
+                f'{DEFS}\n<rect x="0.5" y="0.5" width="{self.w - 1}" height="{h - 1}" rx="18" fill="{PAPER}" stroke="{EDGE}"/>\n'
+                f'<rect x="0.5" y="0.5" width="{self.w - 1}" height="{h - 1}" rx="18" fill="url(#dots)" opacity="0.5"/>\n')
+        body = "\n".join(self.o)
+        if self.lift:
+            body = f'<g transform="translate(0 -{self.lift})">\n{body}\n</g>'
+        return head + body + "\n</svg>\n"

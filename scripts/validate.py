@@ -8,6 +8,13 @@ README badges, the hero diagram and the CHANGELOG, em dashes in the Chinese READ
 structure drift, Chinese diagrams with live (un-outlined) CJK text, and a broken install script.
 
 Usage: python3 scripts/validate.py   (exit 1 on any failure)
+
+Opt-in copy lint (docs/COPY.md), not run by default or in CI:
+       python3 scripts/validate.py --copy   (exit 1 on any finding)
+It flags internal labels and the author persona in README.md and README.zh.md (作者 is allowed
+under a credits or licence heading), the same fraction appearing more than twice in one README (it
+counts repeated numbers, not claims), and SVG marks in assets/ that do not pair one label with one
+footnote.
 """
 from __future__ import annotations
 
@@ -23,7 +30,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ["README.md", "README.zh.md", "CLAUDE.md", "AGENTS.md", "CONTRIBUTING.md", "CHANGELOG.md",
-        "docs/GLOSSARY.md"]
+        "docs/GLOSSARY.md", "docs/COPY.md"]
 DOCS += sorted(str(Path(p).relative_to(ROOT)) for p in glob.glob(str(ROOT / "docs/field-notes/*.md"))
                + glob.glob(str(ROOT / "docs/design/*.md"))
                + glob.glob(str(ROOT / "docs/evals/*/README.md"))
@@ -198,6 +205,119 @@ def check_install_script() -> None:
         fail(f"install.sh: {result.stderr.strip()}")
 
 
+# --- Copy lint (opt-in: --copy). Rules in docs/COPY.md. -------------------------------------------
+COPY_READMES = ("README.md", "README.zh.md")
+COPY_MAX_FRACTION_REPEATS = 2
+# Run ids first, so W2-F4d-1 is reported once rather than also as F4d.
+COPY_LABEL = re.compile(r"\b[A-Z]\d+-[A-Z]\w*-\d+\b|\bF4[a-d]\b|\bv6f\w+")
+COPY_FRACTIONS = (  # each yields (N, M) for "N of M"
+    (re.compile(r"(?<![\w/.])(\d+) of (\d+)(?!\w)"), lambda m: (m.group(1), m.group(2))),
+    (re.compile(r"(?<![\w/.:-])(\d+)/(\d+)(?![\w/]|\.\w)"), lambda m: (m.group(1), m.group(2))),
+    (re.compile(r"(\d+)\s*[次个张项条][^\d\s，。；、（）()]{0,4}中[，,]?[有的]?\s*(\d+)"),
+     lambda m: (m.group(2), m.group(1))),
+)
+COPY_PERSONA = re.compile(r"(?i)\bthe owner\b|(?<!原)作者")
+# 作者 names a third party under these headings, so it is not the author persona there.
+COPY_CREDITS_HEADING = re.compile(r"(?i)credit|licen[cs]e|acknowledg|致谢|鸣谢|许可")
+COPY_HEADING = re.compile(r"^(#{1,6})\s+(.*)$", re.M)
+SVG_LABEL_MARK = re.compile(r"(\*+|[†‡§])$")
+SVG_FOOTNOTE_MARK = re.compile(r"^(\*+|[†‡§])\s")
+
+
+def mask_code(text: str) -> str:
+    """Blank fenced code blocks but keep their newlines, so line numbers stay true."""
+    return re.sub(r"```.*?```", lambda m: "\n" * m.group(0).count("\n"), text, flags=re.S)
+
+
+def line_of(text: str, pos: int) -> int:
+    return text.count("\n", 0, pos) + 1
+
+
+def credits_spans(prose: str) -> list[tuple[int, int]]:
+    """Character ranges of sections whose heading names credits or a licence, subsections included."""
+    headings = [(m.start(), len(m.group(1)), m.group(2)) for m in COPY_HEADING.finditer(prose)]
+    spans = []
+    for i, (start, level, title) in enumerate(headings):
+        if COPY_CREDITS_HEADING.search(title):
+            end = next((s for s, lv, _ in headings[i + 1:] if lv <= level), len(prose))
+            spans.append((start, end))
+    return spans
+
+
+def copy_readme_findings(rel: str, text: str) -> list[tuple[str, str]]:
+    found: list[tuple[str, str]] = []
+    for m in COPY_LABEL.finditer(text):
+        found.append(("label", f"{rel}:{line_of(text, m.start())}: internal label {m.group(0)!r}"))
+    prose = mask_code(text)
+    credits = credits_spans(prose)
+    for m in COPY_PERSONA.finditer(prose):
+        if m.group(0) == "作者" and any(start <= m.start() < end for start, end in credits):
+            continue
+        found.append(("persona", f"{rel}:{line_of(prose, m.start())}: author persona {m.group(0)!r}"))
+    seen: dict[tuple[str, str], list[int]] = {}
+    for pattern, key in COPY_FRACTIONS:
+        for m in pattern.finditer(prose):
+            seen.setdefault(key(m), []).append(line_of(prose, m.start()))
+    for (n, total), lines in sorted(seen.items(), key=lambda kv: (int(kv[0][1]), int(kv[0][0]))):
+        if len(lines) > COPY_MAX_FRACTION_REPEATS:
+            where = ", ".join(str(ln) for ln in sorted(lines))
+            found.append(("fraction", f"{rel}: '{n} of {total}' appears {len(lines)} times "
+                                      f"(limit {COPY_MAX_FRACTION_REPEATS}), lines {where}; this counts "
+                                      f"repeated numbers, not claims, so check whether they are one claim"))
+    return found
+
+
+def svg_text(text: str) -> list[str]:
+    return [t.strip() for t in re.findall(r"<(?:text|tspan)[^>]*>([^<]*)", text) if t.strip()]
+
+
+def copy_svg_findings(rel: str, text: str) -> list[tuple[str, str]]:
+    labels: dict[str, list[str]] = {}
+    notes: dict[str, int] = {}
+    for t in svg_text(text):
+        note = SVG_FOOTNOTE_MARK.match(t)
+        if note:
+            notes[note.group(1)] = notes.get(note.group(1), 0) + 1
+            continue
+        mark = SVG_LABEL_MARK.search(t)
+        if mark:
+            labels.setdefault(mark.group(1), []).append(t)
+    found = []
+    for mark in sorted(set(labels) | set(notes)):
+        marked, count = labels.get(mark, []), notes[mark] if mark in notes else 0
+        if count > 1:
+            found.append(("svg-mark", f"{rel}: mark {mark!r} has {count} footnotes; one mark, one footnote"))
+        if not marked:
+            found.append(("svg-mark", f"{rel}: footnote mark {mark!r} is used by no label"))
+        elif len(marked) > count:
+            found.append(("svg-mark", f"{rel}: {len(marked)} label(s) marked {mark!r} but "
+                                      f"{count} footnote(s): {', '.join(map(repr, marked))}"))
+    return found
+
+
+def copy_findings(root: Path = ROOT) -> list[tuple[str, str]]:
+    found = []
+    for rel in COPY_READMES:
+        found += copy_readme_findings(rel, (root / rel).read_text(encoding="utf-8"))
+    for path in sorted(glob.glob(str(root / "assets/**/*.svg"), recursive=True)):
+        rel = str(Path(path).relative_to(root))
+        found += copy_svg_findings(rel, Path(path).read_text(encoding="utf-8"))
+    return found
+
+
+def copy_main() -> int:
+    found = copy_findings()
+    if not found:
+        print("validate --copy: no findings")
+        return 0
+    print("\n".join(f"COPY [{rule}] {msg}" for rule, msg in found))
+    counts: dict[str, int] = {}
+    for rule, _ in found:
+        counts[rule] = counts.get(rule, 0) + 1
+    print(f"\n{len(found)} finding(s): " + ", ".join(f"{r} {c}" for r, c in sorted(counts.items())))
+    return 1
+
+
 def main() -> int:
     for check in (check_file_set, check_budgets, check_frontmatter, check_text_consistency, check_json,
                   check_svgs, check_docs, check_readme_pair, check_versions, check_install_script):
@@ -211,4 +331,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(copy_main() if "--copy" in sys.argv[1:] else main())
