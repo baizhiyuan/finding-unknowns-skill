@@ -79,7 +79,7 @@ def hero(zh: bool) -> str:
              "with a recommended answer), the reply \"go\", and fu:after (what the checks did not prove, what is "
              "still unknown).",
              "横幅：finding-unknowns，看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 "
-             "fu:before（引用的你的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after"
+             "fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after"
              "（检查没有证明的、仍然未知的）。")
     o: list[str] = []
     o.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" '
@@ -91,10 +91,7 @@ def hero(zh: bool) -> str:
     o.append(CONTOURS)
     o.append("</g>")
     # left column
-    if zh:
-        text(o, 56, 84, f"[ CLAUDE CODE 技能 · {VERSION} ]", 15, ACC, ZH, "500")
-    else:
-        text(o, 56, 84, f"[ CLAUDE CODE SKILL · {VERSION} ]", 15, ACC, MONO, "700", extra=' letter-spacing="1.5"')
+    text(o, 56, 84, T(f"{VERSION} · for Claude Code", f"{VERSION} · 用于 Claude Code"), 15, ACC, MONO, "700")
     text(o, 54, 166, "finding-unknowns", 64, INK, SERIF, "700")
     if zh:
         text(o, 56, 214, "看清自己知道什么、不知道什么，", 22, INK, ZH, "500")

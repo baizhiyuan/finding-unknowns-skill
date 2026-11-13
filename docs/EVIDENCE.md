@@ -1,8 +1,12 @@
 # What the evals show
 
-The full evidence behind finding-unknowns 6.0. The [README](../README.md#what-the-evals-show)
+The full evidence behind finding-unknowns 6.0. The [README](../README.md#evidence)
 carries a summary; this page carries every test, the limits and the earlier evaluations.
 Chinese: [EVIDENCE.zh.md](EVIDENCE.zh.md).
+
+The READMEs use plain names where this page and the archive use test labels: "the shipped
+text" is F4d, "the first adopted text with the pause" is F4b, and "an earlier variant" is F4c
+([GLOSSARY.md](GLOSSARY.md#the-texts)).
 
 **Nobody has measured whether any of this helps a person learn or understand more.** Every
 number on this page comes from simulated users.
@@ -13,7 +17,7 @@ number on this page comes from simulated users.
 |---|---|
 | **What was tested** | Whether the 6.0 always-on text makes the map appear before the first change, pauses once, lets the work finish and keeps its guards |
 | **With whom** | A simulated user whose second reply was a fixed "Go ahead." ("继续" in one v6f4d task); one model (`claude-sonnet-5-5`); 3 runs per task; eight pre-registered tests (listed as seven items; item 5 holds v6f4 and v6f4b) on 2026-11-12 and 2026-11-13 |
-| **Result** | The shipped text (the current `CLAUDE.md`, F4d) showed the map before the first change in 12 of 12 runs on the four core tasks and completed the work in 12 of 12. It failed one of its 11 pre-registered conditions (safeguard notices in 3 of 24 runs, limit 1); the owner adopted it for the release candidate regardless |
+| **Result** | The shipped text (the current `CLAUDE.md`, F4d) showed the map before the first change in 12 of 12 runs on the four core tasks and completed the work in 12 of 12. It failed one of its 11 pre-registered conditions (safeguard notices in 3 of 24 runs, limit 1); it was shipped as the release candidate anyway |
 | **What it does not show** | Anything about a real person, a comparison with the 82-word text, or learning |
 
 ## The eight wording tests
@@ -30,21 +34,21 @@ records and reports: [evals/2026-11-12-6.0-wording](evals/2026-11-12-6.0-wording
 3. **"Show `fu:before` without stopping": adopted,** 8 of 12 against 3 of 12 (4 of the 8
    passes changed nothing); non-coding (W1) 0 of 3 under each text.
 4. **"As reply text, not thinking": rejected;** non-coding 0 of 6 for both. That the map stayed
-   in hidden reasoning is inferred, not observed. The owner then allowed one pause.
+   in hidden reasoning is inferred, not observed. One pause was then allowed.
 5. **One pause after `fu:before`.** With "as visible reply text, not thinking": inconclusive,
    the safeguards stopped 8 of 18 runs (5 fatally). Without it, F4b: confirmed and adopted,
    the shipped text until item 7, map first in 11 of 12 core runs (5 of 6 non-coding; 1 of 3 under "just do it"), completed
    11 of 12, no guard failure in the 11 graded (the 12th was stopped by the safeguards and
    counted as a failure, within the limit), no pause on a typo fix (0 of 3), 1 of 18 runs
    stopped by the safeguards.
-6. **F4c (archive row 5c), a length bound and an irreversible exception: not confirmed;
+6. **F4c (archive row 5c), a length bound (at most 12 lines) and an irreversible exception: not confirmed;
    F4b kept.** Median map 279 words against a limit of 250 (F4b: 534).
    After a "直接做" request for a live-table migration, the one run that received a generic
    "Go ahead." ran it. The other nine conditions held, including no safeguard stop in 21 runs.
 7. **F4d (archive row 5d), a word bound and a yes to the exact command ("go ahead" isn't
-   one): not confirmed (REPORT); adopted by the owner on 2026-11-13, now the shipped text.**
-   The safeguards stopped 3 of 24 runs against a limit of 1, none fatally, all on the
-   non-coding tasks; with 3 runs per task it cannot tell whether the wording raises the rate
+   one): not confirmed (REPORT); adopted on 2026-11-13, now the shipped text.**
+   The safeguards flagged 3 of 24 runs against a limit of 1, all three as notices that
+   stopped no run, all on the non-coding tasks; with 3 runs per task it cannot tell whether the wording raises the rate
    or this is noise. The other ten conditions held:
    median map 174.5 words (only 2 of 12 within the 150 it asks for), map first in 12 of 12
    core runs, completed 12 of 12, and no run replaced the live table (0 of 6). The one run
@@ -176,9 +180,16 @@ the four fields, the two headers and the pause. Every change below is unmeasured
 
 > Before non-trivial work, ask me once to predict the outcome and decide what only I can (recommend an answer); then give yours. Write both, with what would prove each wrong, in `.finding-unknowns/tasks/`. While building, stop only for scope changes, a falsified premise, a budget overrun, or an irreversible step: show the exact command, await my yes, run it once, never as a check. Log other deviations there. Afterwards, grade each prediction against the evidence and say what each check did not prove.
 
+## The Karpathy-style `CLAUDE.md`
+
+The README compares finding-unknowns with the Karpathy-style `CLAUDE.md` and calls its evidence
+thin. The one placebo-controlled audit found for it (skill-receipts Audit #4) measured only its
+simplicity rules: 4.8 % fewer lines than no instructions, within noise, with accuracy
+unchanged. Source: the review recorded in [design/6.0.md](design/6.0.md).
+
 ## What decides the final release
 
-- **One week of the owner's own use,** with decision rules written in advance
+- **One week of everyday use by one person,** with decision rules written in advance
   ([PLAN.md](evals/2026-11-12-6.0-own-use/PLAN.md)). 6.0.0 is kept and released if a block
   changes a decision or corrects a belief in at least three sessions. If a third or more of
   the `fu-note:` lines say `noise`, the non-trivial bar is raised or the noisiest field cut; if

@@ -20,7 +20,7 @@
 <ellipse cx="640" cy="120" rx="110" ry="50" opacity="0.7"/><ellipse cx="620" cy="330" rx="100" ry="45" opacity="0.7"/>
 </g>
 </g>
-<text x="56" y="84" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#C15F3C" font-weight="700" letter-spacing="1.5">[ CLAUDE CODE SKILL · v6.0.0-rc.1 ]</text>
+<text x="56" y="84" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#C15F3C" font-weight="700">v6.0.0-rc.1 · for Claude Code</text>
 <text x="54" y="166" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#141413" font-weight="700">finding-unknowns</text>
 <text x="56" y="212" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#141413">Keep your own map of what you know and do not know,</text>
 <text x="56" y="240" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">and update it only on evidence.</text>

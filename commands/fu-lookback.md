@@ -3,4 +3,4 @@ description: "Look back over fu:before / fu:after blocks and fu-note: lines: wha
 argument-hint: "[7d | session id]"
 ---
 
-Look back over: $ARGUMENTS (default: this session; `7d` means the last seven days). Use the finding-unknowns skill, section "Look-back".
+Look back over: $ARGUMENTS (empty: this session; `7d`: the last seven days; otherwise a session id). Use the finding-unknowns skill, section "Look-back".

@@ -21,14 +21,15 @@ but unsaid (taste, constraints, context); **UU** not known to ask.
 - Facts are your job. Ask only what only they can answer, recommending an answer "yes" accepts.
 - Quote their expectation verbatim; never write one for them. Your guess at it goes under UK.
 - Never manufacture entries. Omit an empty field, except `You expect`.
-- Explain only where an expectation failed, or when asked. Teach until they can predict.
+- Explain only where an expectation failed, or when asked. Teach until they can predict
+  the behaviour.
 - Write nothing to disk unless they say "save".
 - `fu-note:` lines are their own notes: do not reply or change course.
 - In an interview or look-back, print no `fu:before` or `fu:after`. Nothing follows
   `fu:after`, `fu:interview` or `fu:lookback`.
 - Silent on trivial requests, lookups and casual talk.
 - Header tokens stay literal; labels follow the person's language. Chinese:
-  你的预期、未说明、已知的已知·我依据的、已知的未知·待解决、我去查、需要你定、未知的已知·我猜你默认、未知的未知·你没问但要紧、我的预期、若……则我错了；
+  你的预期、未说明、已知的已知·我依据的、已知的未知·待解决、我去查、需要你定、我建议、未知的已知·我猜你默认、未知的未知·你没问但要紧、我的预期、若……则我错了；
   预期→实际、原因、新知道的、没有证明的、仍然未知、最省事的查法、替你定的、没选、若错；成立、部分成立、不成立、无法判断；已验证、有数据支持、推断、未检验；事后拟合、凭记忆；没有重要的未知项；
   地图（已知、待解决、需要你定、假定、盲区）、已做的决定、我据以推进的假设、改写后的需求；预期→结果、仍然未知（最早的在前）、你的规律、接下来值得弄懂的。
 
@@ -56,8 +57,9 @@ reply starts the work; a bare "go" accepts your recommendations. On "just do it"
 show it; only irreversible steps wait.
 
 After their reply, stop only for a scope change, a ✗ that changes what was asked, or an
-irreversible step (exact command or message; wait for an explicit yes, not "go"/"继续"; run
-once; never as a check). A ✗ that only refutes their expectation is reported, not a stop.
+irreversible step (exact command or message, as your only question; needs an explicit yes,
+not "go"/"继续"; run once; never as a check). A ✗ that only refutes their expectation is
+reported, not a stop.
 
 ## After the work
 
@@ -78,10 +80,10 @@ fu:after · {task}
 ```
 
 At most 15 lines, after the result; small work gets only `Not proved` and `Still unknown`,
-never both empty. `why` only on a miss. `Decided for you`: omit when none; never pad. If the
-before-block left your context, re-read it from the transcript or mark quotes `from memory`.
+never both empty. `why` only on `partly` or `did not hold`. `Decided for you`: never pad. If
+`fu:before` left your context, re-read the transcript or mark quotes `from memory`.
 Measured results: an expectation written after seeing data is `post-hoc`; a difference
-inside the noise is `can't tell`.
+inside noise is `can't tell`.
 
 ## Interview
 
@@ -92,7 +94,7 @@ inside the noise is `can't tell`.
    - KU: a decision only they can make, with your recommendation.
    - UK: two contrasting concrete options; which is closer, and what is wrong with the other?
    - UU: what an expert would ask, why it matters, your best answer.
-   - At most one "what do you expect?" per round, first, unrecommended.
+   - At most one "what do you expect?" per round, first, no recommendation.
 4. After each round: `Map: known {n} · open {n} ({n} needing you) · assumed {n} · blind spots {n}`
 5. Stop when the rest is cheaper to learn by doing, you can predict their next three
    answers, or they say stop. After three rounds, say how many questions remain and ask
@@ -141,9 +143,10 @@ for path in sys.argv[1:]:
 EOF
 ```
 
-- Prints nothing, yet `grep -c fu:` finds hits? Inspect one short line (the layout may
-  have changed); otherwise report no blocks.
-- Quote; do not reconstruct. Skip template placeholders (`{…}`).
+- Prints nothing, yet `grep -c fu:` finds hits? Inspect one short line (layout may have
+  changed); otherwise report no blocks.
+- Quote; do not reconstruct. Skip placeholders (`{…}`). `Your pattern` needs ≥5
+  graded expectations.
 
 ```
 fu:lookback · {scope}
@@ -153,7 +156,7 @@ fu:lookback · {scope}
   - {fact} — {date} · {evidence}
 - Still unknown (oldest first)
   - {item} — open {n} days · {cheapest way to find out}
-- Your pattern (5 or more graded expectations)
+- Your pattern
   - stated {k} of {m}; held {h} of {k}; misses cluster in {area}
   - accepted with no question about "Not proved": {a} of {b}
 - Worth learning next: {one item} — {first step}

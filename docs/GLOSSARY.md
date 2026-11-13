@@ -14,7 +14,22 @@ branch `v4`.
 | KU, known unknowns | 已知的未知 | A question the person can name. Either the assistant finds it out, or it needs the person |
 | UK, unknown knowns | 未知的已知 | What the person knows but did not say: taste, constraints, context. The assistant guesses it out loud |
 | UU, unknown unknowns | 未知的未知 | What the person did not know to ask. At most three entries, each with why it matters |
-| non-trivial | 非琐碎 | Work where being wrong costs more than reading a short block. Trivial requests, lookups and casual talk get no block |
+| non-trivial | 有分量（的工作、改动、任务） | Work where being wrong costs more than reading a short block. Trivial (琐碎的) requests, lookups and casual talk get no block. The literal 非琐碎 is not used |
+
+## The texts
+
+Reader-facing text uses these names. The test labels in the last column appear only in
+`docs/EVIDENCE.md` and the archive.
+
+| Term | 中文 | Meaning | Archive label |
+|---|---|---|---|
+| the always-on text | 常驻文字 | The paragraph in `CLAUDE.md` that applies to every non-trivial request; in 6.0, 130 words | |
+| the shipped text | 发布版文字 | The always-on text of this release, the current `CLAUDE.md` | F4d |
+| the first adopted text with the pause | 最早采用的带停顿版文字 | The 6.0 text adopted before the shipped one (127 words). An earlier text with the pause was tested first and was inconclusive | F4b |
+| an earlier variant | 早先的变体 | The variant with a 12-line bound and no explicit-yes clause; not adopted | F4c |
+| the 82-word text | 82 词版文字 | The always-on text on `main`, checked by Tier 1 | |
+| the 56-word text | 56 词版文字 | The text Stage 0 measured | |
+| run | 次（“测了 3 次”） | One session of a test. In Chinese prose it is counted, not named: 运行 is kept for the verb and for the mode 无界面运行 (headless runs) | |
 
 ## Blocks and headers
 
@@ -86,7 +101,7 @@ The header tokens stay literal in every language; the look-back searches for the
 | Term | 中文 | Meaning |
 |---|---|---|
 | the pause | 改动之前的停顿 | After `fu:before` on non-trivial work the turn ends; the person's reply (a go, answers, corrections) starts the work. Reading comes before it; changes wait for it |
-| "just do it" | “直接做” | Said in the request (or similar wording): the assistant does not wait, and the skill still asks for `fu:before`; only an irreversible step still waits, for an explicit yes. The always-on text says this since F4d (adopted 2026-11-13). In the test of F4d, "直接做" on a request that asked for an irreversible step: no run replaced the live table (0 of 6), but all 6 ended their first turn without changing anything; 5 ended there, which the grader judged unjustified, and the sixth went on only after a second message, "继续"; with "Just do it, I'm in a hurry." the map came before the first change in 0 of 3 runs. An earlier variant without the explicit-yes clause (F4c, not adopted) took "Go ahead." as the yes in its one run that received it |
+| "just do it" | “直接做” | Said in the request (or similar wording): the assistant does not wait, and the skill still asks for `fu:before`; only an irreversible step still waits, for an explicit yes. The shipped text says this (adopted 2026-11-13). In its test, "直接做" on a request that asked for an irreversible step: no run replaced the live table (0 of 6), but all 6 ended their first turn without changing anything; 5 ended there, which the grader judged unjustified, and the sixth went on only after a second message, "继续"; with "Just do it, I'm in a hurry." the map came before the first change in 0 of 3 runs. An earlier variant without the explicit-yes clause (not adopted) took "Go ahead." as the yes in its one run that received it |
 | stop-point | 打断点 | One of three reasons to stop after the person's reply: a scope change (范围变化), a falsified premise that changes the task (前提失效), an irreversible step (不可逆操作). A refuted expectation is reported, not a stop |
 | irreversible step | 不可逆操作 | Shown as the exact command or message, as the only question; run once, only after the person's explicit yes, never as a check. Outside code: sending, paying, publishing, deleting |
 | explicit yes | 明确同意 | A yes to the named irreversible step or its exact command. A generic "go ahead" or "继续" is not one |
@@ -98,12 +113,13 @@ The header tokens stay literal in every language; the look-back searches for the
 |---|---|---|
 | Stage 0 | Stage 0（第 0 阶段评测） | The simulated-user evaluation of 2026-11-11. Kept as a proper name in Chinese text |
 | Tier 1 | Tier 1（第 1 级回归检验） | The regression check of the 82-word text, 2026-11-12. Kept as a proper name in Chinese text |
-| wording tests | 措辞测试 | The eight pre-registered tests of 2026-11-12 and 2026-11-13 that led to the 6.0 always-on text (C1, A/B, F2, F3, F4, F4b, F4c, F4d; `docs/EVIDENCE.md` lists them as seven items, item 5 holding F4 and F4b). The shipped text is F4d, adopted by the owner on 2026-11-13 although its verdict was REPORT (one of 11 conditions failed: safeguard notices in 3 of 24 runs, limit 1); F4b, the text before it, is archived; `docs/evals/2026-11-12-6.0-wording/` |
+| wording tests | 措辞测试 | The eight pre-registered tests of 2026-11-12 and 2026-11-13 that led to the 6.0 always-on text (C1, A/B, F2, F3, F4, F4b, F4c, F4d; `docs/EVIDENCE.md` lists them as seven items, item 5 holding F4 and F4b). The shipped text is F4d, adopted on 2026-11-13 although its verdict was REPORT (one of 11 conditions failed: safeguard notices in 3 of 24 runs, limit 1); F4b, the first adopted text with the pause, is archived; `docs/evals/2026-11-12-6.0-wording/` |
 | safeguard stop | 安全拦截 | The API's safeguard stopping a response (category `reasoning_extraction` in these tests); fatal when the one retry is also stopped |
+| safeguard notice | 安全提示 | A safeguard flag that does not stop the run: the run continues and can complete. 安全拦截 is not used for it. "Flagged" (被标记) covers notices and stops together |
 
 ## Critical thinking
 
 | Term | 中文 | Meaning |
 |---|---|---|
 | offloading → deferral → cognitive surrender | 委托 → 依赖 → 放弃判断 | Addy Osmani's slide across many handoffs: the output becomes your "known" without an update step |
-| theory → measured → consistent? → mechanism | 理论预期 → 实测 → 是否一致 → 机理 | The owner's research practice; in 6.0, one row of `fu:after` |
+| theory → measured → consistent? → mechanism | 理论预期 → 实测 → 是否一致 → 机理 | An empirical research practice, recorded in the 4.x skill `theory-vs-result`; in 6.0, one row of `fu:after` |

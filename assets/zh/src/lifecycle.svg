@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns 的运行方式</title><desc id="d">做非琐碎的改动之前，助手先列出地图（fu:before），然后结束这一轮，停下来等你回复。回复“继续”即采纳建议答案，也可以给出纠正。说“直接做”则不等待，只有不可逆操作仍要等待。之后开始执行，只在范围变化、前提失效以致任务改变或不可逆操作时停下，不可逆操作要等你明确同意才执行（笼统的“继续”不算），最后说明地图上的变化（fu:after）。回顾只在你要求时进行。除非你说“保存”，否则不往磁盘写任何东西。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="652" viewBox="0 0 1200 652" role="img" aria-labelledby="t d">
+<title id="t">finding-unknowns 的运行方式</title><desc id="d">除琐碎请求外，助手在做改动之前先列出地图（fu:before），然后结束这一轮，等你回复。回复“继续”即采纳建议答案，回复纠正则计划随之调整。说“直接做”则不等待，只有不可逆操作仍要等待。之后开始执行，只在范围变化、前提失效以致任务改变或不可逆操作时停下，不可逆操作要等你明确同意才执行（笼统的“继续”不算），最后说明地图上的变化（fu:after）。回顾只在你要求时进行。你不说“保存”，什么都不写入磁盘。</desc>
 <defs>
 <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
 <marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
@@ -8,11 +8,11 @@
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
 <linearGradient id="spec" x1="0" x2="1"><stop offset="0" stop-color="#788C5D"/><stop offset="0.5" stop-color="#D4A27F"/><stop offset="1" stop-color="#B5442E"/></linearGradient>
 </defs>
-<rect x="0.5" y="0.5" width="1199" height="679" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
-<rect x="0.5" y="0.5" width="1199" height="679" rx="18" fill="url(#dots)" opacity="0.5"/>
-<text x="40" y="52" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700">// 运行方式</text>
+<rect x="0.5" y="0.5" width="1199" height="651" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="651" rx="18" fill="url(#dots)" opacity="0.5"/>
+<g transform="translate(0 -28)">
 <text x="40" y="96" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="32" fill="#141413" font-weight="700">先列地图，等你回复，再说明变化</text>
-<text x="40" y="126" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">前四步在每次非琐碎的请求中执行（常驻文字写明要点，细节在技能里）；回顾只在你要求时进行。</text>
+<text x="40" y="126" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">前四步每次请求都执行，琐碎请求除外；回顾只在你要求时进行。</text>
 <rect x="40" y="150" width="168" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <circle cx="57" cy="160" r="4.5" fill="#D97757"/><path d="M49 172a8 7 0 0 1 16 0z" fill="#D97757"/>
 <text x="74" y="169" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#141413" font-weight="700">你：在需求里写上猜测</text>
@@ -27,12 +27,12 @@
 <path d="M816.0 178L816.0 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
 <rect x="936" y="150" width="233" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
 <circle cx="953" cy="160" r="4.5" fill="#D97757"/><path d="M945 172a8 7 0 0 1 16 0z" fill="#D97757"/>
-<text x="970" y="169" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#141413" font-weight="700">你：主动要求；随时写 fu-note:</text>
+<text x="970" y="169" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#141413" font-weight="700">你：提出要求；随时写 fu-note:</text>
 <path d="M1052.0 178L1052.0 192" stroke="#141413" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
 <rect x="40" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <path d="M40 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H40z" fill="#D97757"/>
 <text x="148.0" y="208.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">改动之前</text>
-<text x="58" y="244" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="21" fill="#141413" font-weight="700">动手之前</text>
+<text x="58" y="244" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="21" fill="#141413" font-weight="700">地图</text>
 <text x="58" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:before</text>
 <path d="M258 352L274 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
 <rect x="276" y="192" width="176" height="340" rx="12" fill="#F5DDD1" stroke="#D97757" stroke-width="1.5" filter="url(#sh)"/>
@@ -48,7 +48,7 @@
 <rect x="708" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
 <path d="M708 204a12 12 0 0 1 12 -12h192a12 12 0 0 1 12 12v12H708z" fill="#D97757"/>
 <text x="816.0" y="208.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="11" fill="#FAF9F5" font-weight="700" text-anchor="middle">给出结果后</text>
-<text x="726" y="244" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="21" fill="#141413" font-weight="700">完成之后</text>
+<text x="726" y="244" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="21" fill="#141413" font-weight="700">变化</text>
 <text x="726" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:after</text>
 <path d="M926 352L942 352" stroke="#D97757" stroke-width="2.5" fill="none" marker-end="url(#ah)" stroke-dasharray="4 4"/>
 <rect x="944" y="192" width="216" height="340" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
@@ -61,7 +61,7 @@
 <rect x="58" y="320" width="30" height="30" rx="6" fill="#F5DDD1"/>
 <text x="73.0" y="340.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">KK</text>
 <text x="98" y="333" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">我依据的</text>
-<text x="98" y="351" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">注明来源；标出被推翻的</text>
+<text x="98" y="351" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">逐条注明来源；错的会标出</text>
 <rect x="58" y="362" width="30" height="30" rx="6" fill="#F5DDD1"/>
 <text x="73.0" y="382.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">KU</text>
 <text x="98" y="375" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">待解决</text>
@@ -69,7 +69,7 @@
 <rect x="58" y="404" width="30" height="30" rx="6" fill="#F5DDD1"/>
 <text x="73.0" y="424.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">UK</text>
 <text x="98" y="417" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">我猜你默认</text>
-<text x="98" y="435" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">说出猜测，供你表态</text>
+<text x="98" y="435" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">把猜测说出来，由你纠正</text>
 <rect x="58" y="446" width="30" height="30" rx="6" fill="#D97757"/>
 <text x="73.0" y="466.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#FAF9F5" font-weight="700" text-anchor="middle">UU</text>
 <text x="98" y="459" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">你没问但要紧</text>
@@ -80,8 +80,8 @@
 <text x="294" y="299" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">工作才开始。</text>
 <rect x="288" y="334" width="152" height="70" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.2"/>
 <text x="300" y="354" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#788C5D" font-weight="700">回复“继续”</text>
-<text x="300" y="373" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">即采纳建议答案；</text>
-<text x="300" y="390" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">也可以给出纠正</text>
+<text x="300" y="373" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">即采纳</text>
+<text x="300" y="390" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">建议答案</text>
 <rect x="288" y="414" width="152" height="70" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2" stroke-dasharray="4 3"/>
 <text x="300" y="434" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700">说“直接做”</text>
 <text x="300" y="453" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">则不等待，</text>
@@ -99,13 +99,13 @@
 <rect x="488" y="392" width="184" height="72" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2"/>
 <text x="502" y="412" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700">不可逆操作：</text>
 <text x="502" y="430" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">给出确切命令，明确同意后</text>
-<text x="502" y="448" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">只执行一次，绝不当检查跑</text>
+<text x="502" y="448" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">只执行一次，绝不拿它当检查</text>
 <rect x="488" y="472" width="184" height="50" rx="10" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1"/>
 <text x="502" y="492" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#788C5D" font-weight="700">其余情况：</text>
 <text x="502" y="510" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">继续做，在 fu:after 中报告</text>
 <circle cx="732" cy="281" r="4" fill="#B1ADA1"/>
 <text x="746" y="286" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">预期 → 实际</text>
-<text x="746" y="305" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">给出结论；只在落空处写原因</text>
+<text x="746" y="305" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">给出判定；不符才写原因</text>
 <circle cx="732" cy="327" r="4" fill="#B1ADA1"/>
 <text x="746" y="332" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">新知道的</text>
 <text x="746" y="351" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">附证据</text>
@@ -116,12 +116,12 @@
 <text x="746" y="424" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">仍然未知</text>
 <text x="746" y="443" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">附最省事的查法</text>
 <circle cx="732" cy="465" r="4" fill="#B1ADA1"/>
-<text x="746" y="470" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">替你定的*</text>
+<text x="746" y="470" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">替你定的</text>
 <text x="746" y="489" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">你没要求的选择和改动</text>
 <text x="726" y="516" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">然后这一轮结束</text>
 <circle cx="968" cy="281" r="4" fill="#B1ADA1"/>
-<text x="982" y="286" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">当前会话或最近 7 天</text>
-<text x="982" y="305" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">会话记录经过滤后读取</text>
+<text x="982" y="286" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">当前会话，或最近 7 天</text>
+<text x="982" y="305" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">的会话记录，筛选后读取</text>
 <circle cx="968" cy="327" r="4" fill="#B1ADA1"/>
 <text x="982" y="332" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413" font-weight="600">只引用，不补写</text>
 <text x="982" y="351" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59">fu: 区块与 fu-note: 行</text>
@@ -135,8 +135,9 @@
 <rect x="40" y="556" width="5" height="96" rx="2.5" fill="#D97757"/>
 <rect x="60" y="570" width="230" height="28" rx="14" fill="#D97757"/>
 <text x="175" y="589" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#141413" font-weight="700" text-anchor="middle">对话即记录</text>
-<text x="310" y="589" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413">除非你说“保存”，否则不往磁盘写任何东西。</text>
+<text x="310" y="589" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413">你不说“保存”，什么都不写入磁盘。</text>
 <rect x="60" y="612" width="230" height="28" rx="14" fill="#FFFFFF" stroke="#D97757" stroke-width="1.2"/>
-<text x="175" y="631" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">琐碎的请求</text>
+<text x="175" y="631" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#C15F3C" font-weight="700" text-anchor="middle">琐碎请求</text>
 <text x="310" y="631" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#141413">简单查询和闲聊不输出任何区块。</text>
+</g>
 </svg>

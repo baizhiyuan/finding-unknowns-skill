@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="672" viewBox="0 0 1200 672" role="img" aria-labelledby="t d">
 <title id="t">四个象限</title><desc id="d">按你是否知道答案、是否意识到问题划分的 2×2 矩阵。每个象限标出助手在动手前怎样处理它，以及它在 fu:before 中对应的栏目；fu:after 报告哪些有了变化。</desc>
 <defs><filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter><pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern></defs>
-<rect x="0.5" y="0.5" width="1199" height="699" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
-<rect x="0.5" y="0.5" width="1199" height="699" rx="18" fill="url(#dots)" opacity="0.5"/>
-<text x="40" y="52" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C">// 四个象限</text>
+<rect x="0.5" y="0.5" width="1199" height="671" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="671" rx="18" fill="url(#dots)" opacity="0.5"/>
+<g transform="translate(0 -28)">
 <text x="40" y="94" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="30" font-weight="700" fill="#141413">看清自己知道什么、不知道什么</text>
 <text x="40" y="124" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">fu:before 标出未知项在哪里，fu:after 说明哪些有了变化。只有证据能改动这张地图。</text>
 <text x="375" y="180" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="700" fill="#5E5D59" text-anchor="middle">你意识到</text>
@@ -24,7 +24,7 @@
 <rect x="144" y="218" width="60" height="60" rx="12" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>
 <text x="174" y="258" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="700" fill="#141413" text-anchor="middle">KK</text>
 <text x="222" y="242" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="22" font-weight="700" fill="#141413">已知的已知</text>
-<text x="222" y="266" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#5E5D59">你所依据的事实和看法</text>
+<text x="222" y="266" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#5E5D59">你依据的</text>
 <path d="M144 294H606" stroke="#E3DFD3" stroke-width="1" stroke-opacity="0.6"/>
 <text x="144" y="322" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="700" fill="#141413">→ 逐条注明来源，能查的就查</text>
 <text x="144" y="345" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">风险在于自以为知道，被推翻的会单独标出</text>
@@ -38,7 +38,7 @@
 <text x="752" y="266" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#5E5D59">你知道却没有说出口的</text>
 <path d="M674 294H1136" stroke="#E3DFD3" stroke-width="1" stroke-opacity="0.6"/>
 <text x="674" y="322" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="700" fill="#141413">→ 把猜测说出来，由你来纠正</text>
-<text x="674" y="345" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">品味、约束、背景：表态比写规格省力</text>
+<text x="674" y="345" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">品味、约束、背景：纠正猜测比从头写清要求省事</text>
 <rect x="674" y="354" width="177" height="24" rx="12" fill="#F5DDD1"/>
 <text x="762.5" y="371" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C" text-anchor="middle">未知的已知 · 我猜你默认</text>
 <rect x="120" y="404" width="510" height="190" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1" filter="url(#sh)"/>
@@ -46,7 +46,7 @@
 <rect x="144" y="426" width="60" height="60" rx="12" fill="#FFFFFF" stroke="#B1ADA1" stroke-width="1.5"/>
 <text x="174" y="466" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="700" fill="#141413" text-anchor="middle">KU</text>
 <text x="222" y="450" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="22" font-weight="700" fill="#141413">已知的未知</text>
-<text x="222" y="474" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#5E5D59">说得出来的待定问题</text>
+<text x="222" y="474" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#5E5D59">说得出来的问题</text>
 <path d="M144 502H606" stroke="#E3DFD3" stroke-width="1" stroke-opacity="0.6"/>
 <text x="144" y="530" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="700" fill="#141413">→ 能查的去查，只有你能定的附上建议</text>
 <text x="144" y="553" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">事实由助手查清，只把决定交给你</text>
@@ -65,8 +65,8 @@
 <text x="769.0" y="579" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C" text-anchor="middle">未知的未知 · 你没问但要紧</text>
 <rect x="120" y="612" width="1040" height="62" rx="12" fill="#FFFFFF" stroke="#E3DFD3"/>
 <rect x="120" y="624" width="4" height="38" rx="2" fill="#D97757"/>
-<text x="144" y="649" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#C15F3C">事后</text>
-<text x="200" y="650" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" font-weight="500" fill="#141413">fu:after · 预期 → 实际 · 新知道的 · 没有证明的 · 仍然未知 · 替你定的</text>
+<text x="144" y="650" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" font-weight="500" fill="#141413">fu:after · 预期 → 实际 · 新知道的 · 没有证明的 · 仍然未知 · 替你定的</text>
 <text x="1136" y="638" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59" text-anchor="end">不打分，不写文件</text>
 <text x="1136" y="657" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" font-weight="500" fill="#C15F3C" text-anchor="end">这张地图留在对话里</text>
+</g>
 </svg>
