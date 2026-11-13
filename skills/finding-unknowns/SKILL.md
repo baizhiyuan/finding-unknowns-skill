@@ -21,11 +21,11 @@ but unsaid (taste, constraints, context); **UU** not known to ask.
 - Facts are your job. Ask only what only they can answer, recommending an answer "yes" accepts.
 - Quote their expectation verbatim; never write one for them. Your guess at it goes under UK.
 - Never manufacture entries. Omit an empty field, except `You expect`.
-- Explain only where an expectation failed, or when asked. Teach until they can predict
+- Explain only failed expectations, or when asked. Teach until they can predict
   the behaviour.
 - Write nothing to disk unless they say "save".
-- `fu-note:` lines are their own notes: do not reply or change course.
-- In an interview or look-back, print no `fu:before` or `fu:after`. Nothing follows
+- `fu-note:` lines: do not reply or change course.
+- Interviews and look-backs print no `fu:before` or `fu:after`. Nothing follows
   `fu:after`, `fu:interview` or `fu:lookback`.
 - Silent on trivial requests, lookups and casual talk.
 - Header tokens stay literal; labels follow the person's language. Chinese:
@@ -54,12 +54,13 @@ fu:before · {task}
 At most 12 lines, three entries per field. If nothing is worth mapping: `fu:before · no
 significant unknowns`. Show it before any change (reading is fine), then end your turn. Their
 reply starts the work; a bare "go" accepts your recommendations. On "just do it", "直接做" etc.:
-show it; only irreversible steps wait.
+show it, don't end the turn; do reversible work on recommended answers, list them; only
+irreversible steps wait.
 
-After their reply, stop only for a scope change, a ✗ that changes what was asked, or an
+After their reply, stop only for a scope change, a ✗ changing what was asked, or an
 irreversible step (exact command or message, as your only question; needs an explicit yes,
-not "go"/"继续"; run once; never as a check). A ✗ that only refutes their expectation is
-reported, not a stop.
+not "go"/"继续"; run once; never test-run it or its code, even on copies). A ✗ refuting only
+their expectation is reported, not a stop.
 
 ## After the work
 
@@ -88,7 +89,7 @@ inside noise is `can't tell`.
 ## Interview
 
 1. Ask, in their words: what they want, what they expect, what they are least sure of. Wait.
-2. Find out what you can yourself. Print the map.
+2. Find out what you can; print the map.
 3. Rounds of up to three independent questions, most costly-if-wrong first:
    - KK: "You said {X}. What would you see if it were false?"
    - KU: a decision only they can make, with your recommendation.
@@ -97,7 +98,7 @@ inside noise is `can't tell`.
    - At most one "what do you expect?" per round, first, no recommendation.
 4. After each round: `Map: known {n} · open {n} ({n} needing you) · assumed {n} · blind spots {n}`
 5. Stop when the rest is cheaper to learn by doing, you can predict their next three
-   answers, or they say stop. After three rounds, say how many questions remain and ask
+   answers, or they say stop. After three rounds, say how many questions remain; ask
    whether to continue. If two rounds move nothing, change the kind of question.
 6. Print this; do not start the work:
 
@@ -117,8 +118,8 @@ fu:interview · {topic}
 ## Look-back
 
 - This session: the conversation; if compacted, filter the newest file in `$P`.
-- `7d`: filter `$(find "$P" -maxdepth 1 -name '*.jsonl' -mtime -7)`; drop blocks dated over
-  seven days ago. A session id: `"$P/{id}.jsonl"`. Never read a transcript whole:
+- `7d`: filter `$(find "$P" -maxdepth 1 -name '*.jsonl' -mtime -7)`; drop blocks over seven
+  days old. A session id: `"$P/{id}.jsonl"`. Never read a transcript whole:
 
 ```
 P="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects/$(pwd | sed 's/[^A-Za-z0-9]/-/g')"
@@ -143,8 +144,8 @@ for path in sys.argv[1:]:
 EOF
 ```
 
-- Prints nothing, yet `grep -c fu:` finds hits? Inspect one short line (layout may have
-  changed); otherwise report no blocks.
+- Prints nothing, yet `grep -c fu:` finds hits? Inspect one short line;
+  otherwise report no blocks.
 - Quote; do not reconstruct. Skip placeholders (`{…}`). `Your pattern` needs ≥5
   graded expectations.
 

@@ -7,7 +7,7 @@
     {
       "name": "finding-unknowns",
       "source": "./",
-      "description": "Installs the finding-unknowns skill and two commands (/fu-interview, /fu-lookback); the 130-word always-on text that does the everyday work is added to CLAUDE.md by install.sh or by hand. With that text, the assistant shows a four-quadrant map (KK, KU, UK, UU) before non-trivial changes and waits once for your reply (fu:before), then shows what moved after the work (fu:after). Release candidate v6.0.0-rc.1 (branch v6).",
+      "description": "Installs the finding-unknowns skill and two commands (/fu-interview, /fu-lookback); the 140-word always-on text that does the everyday work is added to CLAUDE.md by install.sh or by hand. With that text, the assistant shows a four-quadrant map (KK, KU, UK, UU) before non-trivial changes and waits once for your reply (fu:before), then shows what moved after the work (fu:after). Release candidate v6.0.0-rc.2 (branch v6).",
       "version": "6.0.0"
     }
   ]

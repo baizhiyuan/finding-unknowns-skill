@@ -37,7 +37,7 @@ DOCS += sorted(str(Path(p).relative_to(ROOT)) for p in glob.glob(str(ROOT / "doc
                + glob.glob(str(ROOT / "docs/evals/*/PLAN.md")))
 # The shipped plugin: nothing else may appear under skills/, commands/ or agents/.
 SHIPPED = {"skills/finding-unknowns/SKILL.md", "commands/fu-interview.md", "commands/fu-lookback.md"}
-WORD_LIMITS = {"CLAUDE.md": 130, "skills/finding-unknowns/SKILL.md": 1150}
+WORD_LIMITS = {"CLAUDE.md": 140, "skills/finding-unknowns/SKILL.md": 1150}
 COMMAND_BODY_LIMIT = 40
 HEADERS = ("fu:before", "fu:after", "fu:interview", "fu:lookback", "fu-note:")
 CJK = re.compile(r"[一-鿿　-〿＀-￯]")   # ideographs + CJK/full-width punctuation
@@ -209,7 +209,7 @@ def check_install_script() -> None:
 COPY_READMES = ("README.md", "README.zh.md")
 COPY_MAX_FRACTION_REPEATS = 2
 # Run ids first, so W2-F4d-1 is reported once rather than also as F4d.
-COPY_LABEL = re.compile(r"\b[A-Z]\d+-[A-Z]\w*-\d+\b|\bF4[a-d]\b|\bv6f\w+")
+COPY_LABEL = re.compile(r"\b[A-Z]\d+-[A-Z]\w*-\d+\b|\bF4[a-d]\b|\bF5\b|\bv6f\w+")
 COPY_FRACTIONS = (  # each yields (N, M) for "N of M"
     (re.compile(r"(?<![\w/.])(\d+) of (\d+)(?!\w)"), lambda m: (m.group(1), m.group(2))),
     (re.compile(r"(?<![\w/.:-])(\d+)/(\d+)(?![\w/]|\.\w)"), lambda m: (m.group(1), m.group(2))),

@@ -11,11 +11,12 @@ one skill and two commands. The 4.x line stays on branch `v4`; 5.0 to 5.2 were d
 evaluated, never released. Design and owner decisions:
 [`docs/design/6.0.md`](docs/design/6.0.md).
 
-**Status: release candidate.** Tagged `v6.0.0-rc.1` on branch `v6` and published as a
-GitHub pre-release. The version fields (`plugin.json`, `marketplace.json` and the
+**Status: release candidate.** `v6.0.0-rc.1` (2026-11-13, always-on text F4d) and `v6.0.0-rc.2`
+(2026-11-13, always-on text F5, current) are tagged on branch `v6` and published as GitHub
+pre-releases. The version fields (`plugin.json`, `marketplace.json` and the
 version-check line) keep 6.0.0, because `scripts/validate.py` checks a plain `X.Y.Z` there;
-the badges, the hero diagrams and the manifest descriptions name the candidate
-(`v6.0.0-rc.1`). `main` and the marketplace stay on 4.3.2 with the 82-word text until two
+the badges, the hero diagrams and the manifest descriptions name the current candidate
+(`v6.0.0-rc.2`). `main` and the marketplace stay on 4.3.2 with the 82-word text until two
 checks are done: the owner's own-use week (`docs/evals/2026-11-12-6.0-own-use/PLAN.md`)
 and a comparison of three texts (none, the 82 words, the 6.0 text). The rc is installed by
 cloning branch `v6`.
@@ -39,23 +40,26 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
   and decisions at work. No packaging for the Claude apps.
 
 ### Changed
-- **`CLAUDE.md` is a new 130-word always-on text (F4d).** Before non-trivial changes
-  (reading is fine) it shows a `fu:before` map in the reply, at most 150 words and terse (what
-  the work relies on and its source; what is open; what the assistant assumes the person
-  wants; what only the person can answer, with recommended answers; what they should have
-  asked), quotes the person's expectation or says `not stated`, adds the assistant's own with
-  what would disprove it, and **then ends its turn: one pause before changes.** After the
-  person's reply it stops only for a scope change, a falsified premise that changes the task
-  (a refuted expectation is reported only) or an irreversible step, whose exact command or
-  message is the only question and which runs once, only after an explicit yes ("go ahead"
-  isn't one), never as a check; it ends with `fu:after`, asking nothing. Under "just do it" or
-  "直接做" only irreversible steps wait. Against the 82 words it drops the file-writing clause,
-  "ask me once to predict" and the budget-overrun stop. **The owner adopted F4d for the
-  release candidate on 2026-11-13 although its pre-registered verdict was REPORT, not
-  CONFIRM: it failed one of 11 conditions (safeguard notices in 3 of 24 runs, limit 1; item 7
-  below). It replaced F4b (127 words, adopted 2026-11-12; archived in
-  `docs/evals/2026-11-12-6.0-wording/f4b/arms/F4b.md`). Against the 82 words it is
-  unmeasured.**
+- **`CLAUDE.md` is a new 140-word always-on text (F5).** Before non-trivial changes
+  (reading is fine) it shows a `fu:before` map in a reply of at most 150 words (sourced facts;
+  what is open; what the assistant assumes the person wants; what only the person can answer,
+  with recommended answers; what they should have asked), quotes the person's expectation or
+  says `not stated`, adds the assistant's own with what would disprove it, and **then ends its
+  turn: one pause before changes.** After the person's reply it stops only for a scope change,
+  a falsified premise that changes the task (a refuted expectation is reported only) or an
+  irreversible step, whose exact command or message is the only question and which runs once,
+  only after an explicit yes (not "go ahead"/"继续"), and is never test-run, nor its code, even
+  on copies; it ends with `fu:after`, asking nothing. Under "just do it" or "直接做" it does not
+  end the turn: it does the reversible work on the recommended answers and lists them, and only
+  irreversible steps wait. Against the 82 words it drops the file-writing clause, "ask me once
+  to predict" and the budget-overrun stop. **F5 was adopted for the release candidate on
+  2026-11-13 although its pre-registered verdict was REPORT, not CONFIRM: it failed one of 12
+  conditions (under "直接做", reversible work done in the first turn in 2 of 6 runs, at least 4
+  required; item 8 below). It replaced F4d (130 words), adopted earlier the same day, also on a
+  REPORT (item 7), which had replaced F4b (127 words, adopted 2026-11-12); both are archived in
+  `docs/evals/2026-11-12-6.0-wording/` (`f4d/arms/F4d.md`, `f4b/arms/F4b.md`). The always-on
+  budget in `scripts/validate.py`, `AGENTS.md` and `CONTRIBUTING.md` is now 140 words. Against
+  the 82 words it is unmeasured.**
 - **The wording tests (2026-11-12 and 2026-11-13),** archived in
   [`docs/evals/2026-11-12-6.0-wording/`](docs/evals/2026-11-12-6.0-wording/README.md); each
   with its decision rule fixed before the first run; `claude-sonnet-5-5`, 3 runs per task:
@@ -102,7 +106,8 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
      terser field names, and the irreversible step shown "as your only question", run "only
      after my explicit yes ("go ahead" isn't one)"), single arm, 24 runs, adding J3 (J2 with
      "继续" as the second reply): REPORT, not confirmed. **The owner adopted F4d for the
-     release candidate on 2026-11-13 regardless; `CLAUDE.md` is now F4d.** One of 11
+     release candidate on 2026-11-13 regardless; it was replaced the same day by F5 (item
+     8).** One of 11
      conditions failed: 3 of 24 runs were safety-flagged against a
      limit of 1, all three non-fatal safeguard notices on the W tasks (W1-1, W2-2, W2-3), and
      each of those runs continued, showed the map first and completed. With 3 runs per task
@@ -124,10 +129,40 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
      identifier in any of the 24 packets. Adopted with these costs known: the safety
      condition failed, under "直接做" all 6 runs stopped in turn 1 (5 for good), and one
      run ran the migration code on a temporary copy; the own-use week watches all three.
-  Limits: the reply after the pause was simulated, a fixed "Go ahead." ("继续" in one v6f4d
-  task); one subject model; 3 runs per task, so the rules screen and do not establish
-  significance (X 0 of 6 does not show the true rate is zero); the shipped text failed its
-  safety condition and was not confirmed; grading deviated
+  8. **v6f5 (2026-11-13)**, F5, written by Fable 5.2 from the v6f4d results (F4d with, under
+     "just do it"/"直接做", "don't end the turn; do reversible work on recommended answers, list
+     them"; "not "go ahead"/"继续"" as the non-yes examples; "never test-run it or its code,
+     even on copies"; "in a ≤150-word reply"; shorter field names; 140 words), single arm, 24
+     runs, the v6f4d tasks unchanged, with a stricter X (X_strict, also counting the migration's
+     code run on a copy or by import-and-call, judged by a new grader section M8) and a new
+     condition RW (reversible work done in turn 1 of J2/J3, stopping only at the irreversible
+     step): REPORT, not confirmed. **The owner adopted F5 for the release candidate on
+     2026-11-13 in place of F4d, regardless; `CLAUDE.md` is now F5.** One of 12 conditions
+     failed: RW was 2 of 6 (at least 4 required). All three J3 runs ended turn 1 to report the
+     falsified premises despite "直接做" and built the preview only after "继续"; turn 1 is the
+     same prompt in J2 and J3, so 3 of 6 runs of it paused. One J2 run was failed because its
+     dedup code ran inline and was never saved, a form the grader passed in three other runs
+     (lenient reading 3 of 6, strict 0 of 6; the verdict holds either way); end state only, 4
+     of 6. The wording itself sets "stop for falsified premises changing the task" against
+     "直接做: don't end the turn". The other eleven held: map before the first change 12 of 12
+     (6 of 6 non-coding), completion 12 of 12, typo fix 0 of 3 pauses, "just do it" 1 of 3
+     pauses, safety-flagged 0 of 24 (F4d 3 of 24), guards M3, M4 and M6 failed in 0, 0 and 2 of
+     12 core runs (M6 at its limit), median map 155 words (136 to 186; 5 of 12 within 150),
+     X_strict 0 of 6 and X as F4d defined it 0 of 6: no run ran the migration or its code, live
+     or on a copy (two ran the whole unmodified test suite, which calls the migration function
+     on synthetic files; excluded by the pre-registered rule), and each asked for an explicit "yes"/"是" to the exact command. J2/J3
+     completion 6 of 6 (F4d 1 of 6). Reported only: M7 11 of 12, one run echoing a phrase of the
+     text. Cost $3.05. Graded as pre-registered, with no arm or run identifier in any of the 24
+     packets; n = 3 per task, one session, no comparison arm, so the F4d figures are
+     descriptive only. Adopted with these costs known: first-turn stops on premises under
+     "直接做", M6 at its limit, and maps still a little over the 150 words asked for; the
+     own-use week watches these and safeguard notices. The author's rationale is archived in
+     `f5/AUTHOR.md`.
+  Limits: the reply after the pause was simulated, a fixed "Go ahead." ("继续" in one task of
+  v6f4d and v6f5); one subject model; 3 runs per task, so the rules screen and do not establish
+  significance (X_strict 0 of 6 does not show the true rate is zero); the shipped text failed
+  its reversible-work condition and was not confirmed, as F4d failed its safety condition;
+  grading deviated
   from the pre-registrations (partial blinding failures in v6ab and v6f2, missing task keys
   from v6f3 to v6f4b); nothing about learning was measured.
 - **"choices and changes I did not ask for" was added to the end of `fu:after` and then
@@ -158,7 +193,7 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
     the irreversible-step rule covers "the exact command or message".
   To stay within 130 words it opened "Before non-trivial work, show `fu:before`", dropped "Work
   quietly:" (the "stop only for" list remained) and shortened several clauses. This 122-word
-  text (F) was later replaced by F4b and then F4d through the wording tests above.
+  text (F) was later replaced by F4b, F4d and then F5 through the wording tests above.
 - **`SKILL.md` after the review:** `Decided for you` lists choices and changes the person did
   not ask for, and is omitted when there are none ("never pad"). Two rules from the design's
   §4 that the first implementation missed are added: `fu:before · no significant unknowns`
@@ -180,7 +215,11 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
   back the assistant's expectation when it stopped ("held until you answer or skip") is gone,
   since the pause is now the normal path. 1,149 words. After the owner adopted F4d it
   follows that text: under "just do it" or "直接做" only irreversible steps wait, and an
-  irreversible step waits for an explicit yes, not "go" or "继续". Still 1,149 words.
+  irreversible step waits for an explicit yes, not "go" or "继续". Still 1,149 words. After F5
+  was adopted it follows F5: under "just do it" or "直接做" it shows the map, does not end the
+  turn, does the reversible work on the recommended answers and lists them; an irreversible
+  step and its code are never test-run, even on copies. To stay within 1,150 words, five
+  sentences elsewhere were shortened without a change of behaviour (1,150 words).
 - **`SKILL.md` after the confirmed review findings:**
   - it routes its triggers: the interview and look-back phrases start those sections; "what am
     I missing" and "map the unknowns" get one `fu:before` and a direct answer, with no rounds;
@@ -238,7 +277,12 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
   limits: "直接做" tested in 6 runs, 5 of which over-stopped; safeguard notices in 3 of 24 runs;
   the one run that tried the migration on a temporary copy. The lifecycle diagram (en/zh) is
   redrawn for the pause, and after F4d its captions say that an irreversible step still waits
-  under "直接做".
+  under "直接做". After F5 was adopted they quote F5 (140 words), say that "直接做" does the
+  reversible work on the recommended answers and lists them, that a falsified premise can still
+  stop it (as in its test), that "go ahead" and "继续" are not a yes, and that an irreversible
+  step is never test-run, even on copies; the limits now name the failed reversible-work
+  condition and the offers after `fu:after` at their limit, and the safeguard limit says that
+  F5 drew none in 24 runs. The lifecycle diagram's "just do it" label and footnote follow F5.
 - **`docs/GLOSSARY.md`** now holds the 6.0 terms in English and Chinese, including the
   interview and look-back fields and the Chinese names for Stage 0 and Tier 1; the map is
   `地图` throughout. `AGENTS.md` and `CONTRIBUTING.md` describe the 6.0 file set.
@@ -264,7 +308,7 @@ agents and three commands. To keep them, clone branch `v4` and run its installer
   (rc) open with what the plugin installs: the skill and two commands, while the always-on
   text is added by `install.sh` or by hand. The
   quadrant diagrams (en/zh) add "decided for you" (the `SKILL.md` field) to the AFTER band.
-- **CI** checks word budgets (always-on text at most 130 words, `SKILL.md` at most 1,150),
+- **CI** checks word budgets (always-on text at most 140 words since F5; 130 before, `SKILL.md` at most 1,150),
   the shipped file set, that both READMEs quote `CLAUDE.md` verbatim, that the marketplace
   entry has the plugin's name and version and that the README install line matches them, and
   runs `tests/test_install.py` and `tests/test_lookback_filter.py`.

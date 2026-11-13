@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns v6.0.0-rc.1</title><desc id="d">横幅：finding-unknowns，看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after（检查没有证明的、仍然未知的）。</desc>
+<title id="t">finding-unknowns v6.0.0-rc.2</title><desc id="d">横幅：finding-unknowns，看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after（检查没有证明的、仍然未知的）。</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
 <filter id="fog" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter>
@@ -20,7 +20,7 @@
 <ellipse cx="640" cy="120" rx="110" ry="50" opacity="0.7"/><ellipse cx="620" cy="330" rx="100" ry="45" opacity="0.7"/>
 </g>
 </g>
-<text x="56" y="84" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#C15F3C" font-weight="700">v6.0.0-rc.1 · 用于 Claude Code</text>
+<text x="56" y="84" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#C15F3C" font-weight="700">v6.0.0-rc.2 · 用于 Claude Code</text>
 <text x="54" y="166" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#141413" font-weight="700">finding-unknowns</text>
 <text x="56" y="214" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="22" fill="#141413" font-weight="500">看清自己知道什么、不知道什么，</text>
 <text x="56" y="248" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#5E5D59" font-weight="400">只凭证据更新这张地图。</text>

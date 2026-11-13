@@ -33,12 +33,13 @@ def lifecycle(zh: bool) -> str:
     f = Fig(1200, 680, T("How finding-unknowns runs", "finding-unknowns 的运行方式"),
             T("Before non-trivial changes the assistant shows the map (fu:before), then the turn ends: a pause until "
               "you reply. \"go\" accepts the recommended answers; corrections change the plan. \"just do it\" skips the "
-              "wait; only irreversible steps still wait. Then it works, stops only for a scope change, a falsified "
+              "wait: it does the reversible work on the recommended answers and lists them; only irreversible steps "
+              "still wait. Then it works, stops only for a scope change, a falsified "
               "premise that changes the task or an irreversible step, which runs only after an explicit yes (a bare "
-              "\"go\" is not one), and shows what moved (fu:after). The look-back runs only when you ask. Nothing is written to disk unless you say \"save\".",
+              "\"go\" is not one) and is never test-run, even on a copy, and shows what moved (fu:after). The look-back runs only when you ask. Nothing is written to disk unless you say \"save\".",
               "除琐碎请求外，助手在做改动之前先列出地图（fu:before），然后结束这一轮，等你回复。回复“继续”即采纳建议答案，"
-              "回复纠正则计划随之调整。说“直接做”则不等待，只有不可逆操作仍要等待。之后开始执行，"
-              "只在范围变化、前提失效以致任务改变或不可逆操作时停下，不可逆操作要等你明确同意才执行（笼统的“继续”不算），"
+              "回复纠正则计划随之调整。说“直接做”则不结束这一轮，按建议答案先做可逆的部分并列出，只有不可逆操作仍要等待。之后开始执行，"
+              "只在范围变化、前提失效以致任务改变或不可逆操作时停下，不可逆操作要等你明确同意才执行（笼统的“继续”不算），副本上也不试跑，"
               "最后说明地图上的变化（fu:after）。回顾只在你要求时进行。"
               "你不说“保存”，什么都不写入磁盘。"), zh)
     f.header(T("Map, your reply, then what moved", "先列地图，等你回复，再说明变化"),
@@ -95,17 +96,18 @@ def lifecycle(zh: bool) -> str:
     x = XS[1]
     for k, line in enumerate(T(["Your reply starts", "the work."], ["你回复之后，", "工作才开始。"])):
         f.text(x + 18, 280 + k * 19, line, 14, INK, SANS, "600")
-    f.rect(x + 12, 334, GATE - 24, 70, "#FFFFFF", GRN, 1.2, 10)
-    f.text(x + 24, 354, T("\"go\"", "回复“继续”"), 13, GRN, SANS, "700")
+    f.rect(x + 12, 328, GATE - 24, 70, "#FFFFFF", GRN, 1.2, 10)
+    f.text(x + 24, 348, T("\"go\"", "回复“继续”"), 13, GRN, SANS, "700")
     for k, line in enumerate(T(["accepts the", "recommended answers"], ["即采纳", "建议答案"])):
-        f.text(x + 24, 373 + k * 17, line, 12, SUB, SANS)
-    f.rect(x + 12, 414, GATE - 24, 70, "#FFFFFF", ORG, 1.2, 10, dash="4 3")
-    f.text(x + 24, 434, T("\"just do it\"", "说“直接做”"), 13, ACC, SANS, "700")
-    for k, line in enumerate(T(["skips the wait,", "not irreversible steps*"], ["则不等待，", "不可逆操作除外*"])):
-        f.text(x + 24, 453 + k * 17, line, 12, SUB, SANS)
-    for k, line in enumerate(T(["* only after an explicit", "yes; \"go\" is not one"],
-                               ["* 要等你明确同意，", "笼统的“继续”不算"])):
-        f.text(x + 14, 503 + k * 15, line, 11, SUB, SANS)
+        f.text(x + 24, 367 + k * 17, line, 12, SUB, SANS)
+    # "just do it": no end of turn; the reversible work first; only irreversible steps wait (CLAUDE.md)
+    f.rect(x + 12, 406, GATE - 24, 70, "#FFFFFF", ORG, 1.2, 10, dash="4 3")
+    f.text(x + 24, 426, T("\"just do it\"", "说“直接做”"), 13, ACC, SANS, "700")
+    for k, line in enumerate(T(["no pause: does the", "reversible work first*"], ["不结束这一轮，", "先做可逆的部分*"])):
+        f.text(x + 24, 445 + k * 17, line, 12, SUB, SANS)
+    for k, line in enumerate(T(["* on recommended answers,", "listed; irreversible steps", "wait; \"go\" is not a yes"],
+                               ["* 按建议答案做，并列出；", "不可逆操作要等你明确", "同意，笼统的“继续”不算"])):
+        f.text(x + 14, 494 + k * 14, line, 11, SUB, SANS)
     # the work
     x = XS[2]
     f.text(x + 18, 290, T("Stops only for:", "只在以下情况停下："), 14, INK, SANS, "600")
@@ -123,7 +125,7 @@ def lifecycle(zh: bool) -> str:
     f.rect(x + 16, 392, bw, 72, "#FFFFFF", ORG, 1.2, 10)
     f.text(x + 30, 412, T("Irreversible step:", "不可逆操作："), 13, ACC, SANS, "700")
     f.text(x + 30, 430, T("exact command, explicit yes,", "给出确切命令，明确同意后"), 12, SUB, SANS)
-    f.text(x + 30, 448, T("run once, never as a check", "只执行一次，绝不拿它当检查"), 12, SUB, SANS)
+    f.text(x + 30, 448, T("run once, never test-run", "只执行一次，副本上也不试跑"), 12, SUB, SANS)
     f.rect(x + 16, 472, bw, 50, "#FFFFFF", EDGE, 1, 10)
     f.text(x + 30, 492, T("Everything else:", "其余情况："), 13, GRN, SANS, "700")
     f.text(x + 30, 510, T("proceed; report in fu:after", "继续做，在 fu:after 中报告"), 12, SUB, SANS)

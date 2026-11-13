@@ -21,7 +21,7 @@ wording fixes, evidence from real use, documentation and diagrams.
   machinery (agents, installed scripts, hooks, files written by the skill) without evidence
   that the short text alone falls short; 5.x added such machinery and was never released.
   `install.sh` is the only script, and the look-back runs one inline filter.
-- **Size.** The always-on text stays at or below 130 words and `SKILL.md` at or below 1,150;
+- **Size.** The always-on text stays at or below 140 words and `SKILL.md` at or below 1,150;
   CI enforces both.
 - **Evidence.** Claims in the README about what the text does must point to a report in
   `docs/evals/`. If nothing measured it, say so.
