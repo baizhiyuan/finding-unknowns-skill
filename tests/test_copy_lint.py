@@ -23,14 +23,14 @@ def rules(found: list[tuple[str, str]]) -> list[str]:
 
 class ReadmeLintTest(unittest.TestCase):
     def test_flags_test_arm_variant_and_run_id_labels(self) -> None:
-        text = "Arm F4d passed.\nSee v6f4b.\nRun W2-F4d-1 stopped.\n"
+        text = "Arm F4d passed.\nSee v6f4b.\nRun W2-F4d-1 stopped.\nF5 shipped.\n"
         found = validate.copy_readme_findings("README.md", text)
-        self.assertEqual(rules(found), ["label"] * 3)
+        self.assertEqual(rules(found), ["label"] * 4)
         self.assertIn("README.md:3:", found[2][1])
         self.assertIn("'W2-F4d-1'", found[2][1])
 
     def test_ignores_label_like_words(self) -> None:
-        text = "F4 key, F4e, xF4d, v6.0.0-rc.1, T1-T8 and run 2-3-4.\n"
+        text = "F4 key, F4e, xF4d, F50, xF5, v6.0.0-rc.1, T1-T8 and run 2-3-4.\n"
         self.assertEqual(validate.copy_readme_findings("README.md", text), [])
 
     def test_flags_owner_persona_in_both_languages(self) -> None:

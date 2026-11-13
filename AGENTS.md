@@ -12,7 +12,7 @@ The design and its owner decisions are in `docs/design/6.0.md`.
 
 | Path | Role | Rule |
 |------|------|------|
-| `CLAUDE.md` | The always-on text | At most 130 words (CI checks). It is quoted verbatim in both READMEs; change all three together. Any change in meaning is a behaviour change: say so in the CHANGELOG and note that it is unmeasured |
+| `CLAUDE.md` | The always-on text | At most 140 words (CI checks). It is quoted verbatim in both READMEs; change all three together. Any change in meaning is a behaviour change: say so in the CHANGELOG and note that it is unmeasured |
 | `skills/finding-unknowns/SKILL.md` | Templates, interview, look-back with the inline transcript filter | The only place procedure lives. At most 1,150 words (CI checks). The filter is tested as written (`tests/test_lookback_filter.py`) |
 | `commands/fu-interview.md`, `commands/fu-lookback.md` | Opt-in entry points | Thin: name the skill section and pass `$ARGUMENTS`. Never restate procedure. Never name a command after the skill |
 | `install.sh` | Installer | Installs the 6.0 files; retires 4.x files only when they carry this project's marker; backs up anything else before replacing it; never edits `CLAUDE.md` outside its marker comments. Tested by `tests/test_install.py` in temporary config directories |

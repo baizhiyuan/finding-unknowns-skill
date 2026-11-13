@@ -12,7 +12,7 @@ import sys
 from style import ACC, EDGE, INK, MONO, MUTE, ORG, PANEL, PAPER, PINK, RED, SAND, SERIF, SANS, SUB, GRN, ZH, esc, tw
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "."
-VERSION = "v6.0.0-rc.1"
+VERSION = "v6.0.0-rc.2"
 W, H = 1200, 420
 CARD_X, CARD_Y, CARD_W, CARD_H = 640, 34, 524, 352
 LINE = 22

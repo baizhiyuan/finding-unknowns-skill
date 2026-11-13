@@ -1,17 +1,17 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="finding-unknowns v6.0.0-rc.1: keep your own map of what you know and do not know, and update it only on evidence. A terminal card shows fu:before for a bug fix (your quoted expectation, a premise marked ✗, a question that needs you, with a recommended answer), the reply &quot;go&quot;, then fu:after (what the checks did not prove, what is still unknown)" width="100%">
+  <img src="assets/hero.svg" alt="finding-unknowns v6.0.0-rc.2: keep your own map of what you know and do not know, and update it only on evidence. A terminal card shows fu:before for a bug fix (your quoted expectation, a premise marked ✗, a question that needs you, with a recommended answer), the reply &quot;go&quot;, then fu:after (what the checks did not prove, what is still unknown)" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-6.0.0--rc.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 6.0.0-rc.1">
+  <img src="https://img.shields.io/badge/version-6.0.0--rc.2-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="version 6.0.0-rc.2">
   <img src="https://img.shields.io/badge/status-release_candidate-B8860B?style=for-the-badge&labelColor=F0EEE6" alt="status: release candidate">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT license">
 </p>
 
 <p align="center"><strong>Keep your own map of what you know and do not know, and update it only on evidence.</strong></p>
 
-<p align="center"><em>6.0 release candidate (<code>v6.0.0-rc.1</code>)</em></p>
+<p align="center"><em>6.0 release candidate (<code>v6.0.0-rc.2</code>)</em></p>
 
 <p align="center">
   <a href="#what-it-looks-like">Example</a> ·
@@ -29,19 +29,20 @@ rests on and what is still open. Then it ends its turn. Your reply starts the wo
 with `fu:after`: what moved on the map. Both are nested lists in the terminal
 ([example](#what-it-looks-like)).
 
-It is 130 words of always-on text in your `CLAUDE.md`, plus an optional skill with two
+It is 140 words of always-on text in your `CLAUDE.md`, plus an optional skill with two
 commands. There are no hooks and no agents, and nothing is written to disk unless you say
 "save".
 
 The cost is one extra round per non-trivial task. "Just do it" or "直接做" in the request
-skips the wait; only an irreversible step still waits, for an explicit yes ("go ahead" or
-"继续" is not one). In the wording tests, the assistant still stopped too often after "直接做"
+skips the wait: the assistant does the reversible work on its recommended answers and lists
+them, and only an irreversible step waits, for an explicit yes ("go ahead" or "继续" is not
+one). In the wording tests, a falsified premise could still stop it after "直接做"
 ([details](#how-it-runs)).
 
 **How well tested.** The shipped text has been through pre-registered wording tests only: a
-simulated user, one model, 3 runs per task. It failed one of its 11 pre-registered conditions,
-because the API's safeguards flagged more runs than the limit allowed. It was shipped as the
-release candidate anyway. It has not been compared with the 82-word text it would replace, and
+simulated user, one model, 3 runs per task. It failed one of its 12 pre-registered conditions:
+after "直接做", fewer runs than required did the reversible work in the first turn. It was
+shipped as the release candidate anyway. It has not been compared with the 82-word text it would replace, and
 no one has measured whether it helps a person learn. The counts are in
 [docs/EVIDENCE.md](docs/EVIDENCE.md#known-limits-of-the-release-candidate).
 
@@ -132,8 +133,9 @@ fu:after · recommend a store for event analytics
 
 Maps in the tests ran longer than these examples. The examples follow the skill's template, which
 allows at most 12 lines ([`SKILL.md`](skills/finding-unknowns/SKILL.md)), and everyday runs do
-not load the skill. The shipped text asks for at most 150 words; in its one test, most maps on
-the four core tasks were longer than that ([map length](docs/EVIDENCE.md#map-length)). Labels
+not load the skill. The shipped text asks for a reply of at most 150 words; in its one test,
+more than half of the maps on the four core tasks were longer than that
+([map length](docs/EVIDENCE.md#map-length)). Labels
 and layout may also differ from the template.
 
 ## The four quadrants
@@ -164,7 +166,7 @@ ask for.
 ## How it runs
 
 <p align="center">
-  <img src="assets/lifecycle.svg" alt="How it runs: before any change, fu:before shows the four quadrants and both expectations; then a pause: the turn ends and your reply starts the work (&quot;go&quot; accepts the recommended answers; &quot;just do it&quot; skips the wait, except that an irreversible step still waits for an explicit yes, and a bare &quot;go&quot; is not one); after your reply, the work stops only for a scope change, a falsified premise that changes the task or an irreversible step; after the result, fu:after shows expected against found, now known, not proved, still unknown and what you did not ask for; the look-back runs only when you ask. The conversation is the record." width="100%">
+  <img src="assets/lifecycle.svg" alt="How it runs: before any change, fu:before shows the four quadrants and both expectations; then a pause: the turn ends and your reply starts the work (&quot;go&quot; accepts the recommended answers; &quot;just do it&quot; means no pause: the reversible work is done first, on the recommended answers, which are listed, and an irreversible step still waits for an explicit yes, which a bare &quot;go&quot; is not); after your reply, the work stops only for a scope change, a falsified premise that changes the task or an irreversible step, which is never test-run, even on a copy; after the result, fu:after shows expected against found, now known, not proved, still unknown and what you did not ask for; the look-back runs only when you ask. The conversation is the record." width="100%">
 </p>
 
 This applies to non-trivial work in the Claude Code terminal: coding, research, writing, a
@@ -174,15 +176,17 @@ The pause exists because, without it, the map was mostly announced and not shown
 non-coding work. With it, the map appeared before the first change in almost every core test
 run ([Evidence](#evidence)).
 
-To skip the wait, put "just do it" or "直接做" in the request. Only an irreversible step still
-waits for your explicit yes. Under "just do it" the shipped text is weaker. Its test included
-a "直接做" request that itself asked for an irreversible step, replacing a live table, in six
-runs. No run replaced the live table, but every run ended its first turn without changing
-anything. All but one ended there with questions and held back the reversible part too, which
-the grader judged unjustified; the other did the reversible part only after a second message,
-"继续". With "Just do it, I'm in a hurry.", in three runs, the map never came before the first
-change. The counts are in
-[docs/EVIDENCE.md](docs/EVIDENCE.md#直接做-and-irreversible-steps).
+To skip the wait, put "just do it" or "直接做" in the request. The assistant then does not
+end its turn: it does the reversible work on its recommended answers and lists them, and only
+an irreversible step waits for your explicit yes. A falsified premise can still stop it, because
+the text also says to stop for one that changes the task. Its test included a "直接做" request
+that itself asked for an irreversible step, replacing a live table, in six runs. No run replaced
+the table or ran its code, even on a copy; each ended by asking for an explicit yes to the exact
+command. Half of the runs ended their first turn to report falsified premises and did the
+reversible part only after a second message, "继续". Fewer runs than the rule required did the
+reversible part in the first turn: the one condition the shipped text failed. With "Just do
+it, I'm in a hurry.", in three runs, the map never came before the first change. The counts are
+in [docs/EVIDENCE.md](docs/EVIDENCE.md#直接做-and-irreversible-steps).
 
 Everyday runs see only the always-on text. The labels, the layout and the finer rules (size
 limits, `why` lines only where an expectation failed) live in the skill, which loads only when
@@ -197,11 +201,13 @@ you ask for it. The main rules:
   or an irreversible step. A `✗` that only refutes your expectation is reported, not a stop.
 - **An irreversible step** (in code, or sending, paying, publishing, deleting) is shown as the
   exact command or message, as the only question. It runs once, only after your explicit yes,
-  and never as a check. A generic "go ahead" or "继续" is not a yes: approve the step by
-  naming it. Under an earlier variant without that clause, the one run that got "Go ahead."
-  took it as the yes. Under the shipped text, the one run that got "继续" asked for an
-  explicit yes instead, but in the same turn ran the migration code on a temporary copy of the
-  table, which goes against "never as a check".
+  and it is never test-run, nor its code, even on a copy. A generic "go ahead" or "继续" is not
+  a yes: approve the step by naming it. Under an earlier variant without that clause, the one
+  run that got "Go ahead." took it as the yes. Under the previous shipped text, the one run
+  that got "继续" asked for an explicit yes, but ran the migration code on a temporary copy of
+  the table as a check; the shipped text names that case, and no run of it did so (two ran the project's whole
+  test suite, which calls the migration function on synthetic files; the pre-registered
+  count excludes that).
 - **Nothing follows `fu:after`,** no menu and no question. Nothing is written to disk unless
   you say "save"; the conversation is the record.
 
@@ -217,15 +223,15 @@ changes nothing until you ask.
 
 This is a release candidate. Until the own-use week and the comparison with the 82-word text
 are done, `main` and the plugin marketplace stay on 4.3.2 with the 82-word text. Install 6.0
-by cloning branch `v6` (tag `v6.0.0-rc.1`). Using 4.x (Cartographer, `keep-the-reasoning`, the
+by cloning branch `v6` (tag `v6.0.0-rc.2`). Using 4.x (Cartographer, `keep-the-reasoning`, the
 agents)? Stay on 4.x: see [how](docs/HISTORY.md#how-to-stay-on-4x).
 
 ### The always-on text
 
-Append the text of [`CLAUDE.md`](CLAUDE.md) (130 words) to your user-level `~/.claude/CLAUDE.md`,
+Append the text of [`CLAUDE.md`](CLAUDE.md) (140 words) to your user-level `~/.claude/CLAUDE.md`,
 or to a project's `CLAUDE.md`, or let `install.sh` do it:
 
-> Before non-trivial changes (reading is fine), show `fu:before` (≤150 words, terse) in your reply, then end your turn: relied on, sourced; open questions; assumed want; only-I-can-answer (recommend answers); what I should've asked. Quote my expectation or "not stated"; never invent one. Give yours and what would disprove it. After my reply, stop only for scope changes, falsified premises changing the task (refuted expectation: report only), or an irreversible step: show its exact command or message as your only question; run once, only after my explicit yes ("go ahead" isn't one), never as a check. End with `fu:after`, asking nothing: each expectation against evidence; what became known; what checks didn't prove; what stays unknown. Omit empty fields. "Just do it"/"直接做" etc.: only irreversible steps wait. Skip trivial requests; ignore `fu-note:` lines.
+> Before non-trivial changes (reading is fine), show `fu:before` in a ≤150-word reply, then end your turn: sourced facts; open questions; assumed want; only-I-can-answer (recommend answers); what I should've asked. Quote my expectation or "not stated"; never invent one. Give yours and what would disprove it. After my reply, stop only for scope changes, falsified premises changing the task (refuted expectation: report only), or an irreversible step: show its exact command or message as your only question; run once, only after my explicit yes (not "go ahead"/"继续"); never test-run it or its code, even on copies. End with `fu:after`, asking nothing: expectations against evidence; now known; what checks didn't prove; still unknown. Omit empty fields. "Just do it"/"直接做" etc.: don't end the turn; do reversible work on recommended answers, list them; only irreversible steps wait. Skip trivial requests; ignore `fu-note:` lines.
 
 Keep only one finding-unknowns text in your `CLAUDE.md`, and remove any older one:
 
@@ -234,6 +240,8 @@ Keep only one finding-unknowns text in your `CLAUDE.md`, and remove any older on
 - a pre-release 6.0 draft beginning "Before non-trivial work, show `fu:before`";
 - an earlier 6.0 text (127 words) beginning "Before non-trivial changes (reading is fine), show
   `fu:before` in your reply";
+- the previous 6.0 text (130 words) beginning "Before non-trivial changes (reading is fine),
+  show `fu:before` (≤150 words, terse)";
 - the 4.x drop-in headed `# finding-unknowns (passive drop-in)`;
 - a 4.x "Personal Skills: finding-unknowns" line, which `install.sh` does not detect; remove
   it by hand.
@@ -367,37 +375,40 @@ stops when you can predict the behaviour.
 | | |
 |---|---|
 | **What was tested** | Whether the 6.0 always-on text makes the map appear before the first change, pauses once, lets the work finish and keeps its guards |
-| **With whom** | A simulated user whose second reply was a fixed "Go ahead." ("继续" in one task); one model (`claude-sonnet-5-5`); 3 runs per task; eight pre-registered wording tests on 2026-11-12 and 2026-11-13 |
-| **Result** | In its one test, the shipped text showed the map before the first change in every run on the four core tasks and completed the work in every one. It failed one of its 11 pre-registered conditions: the API's safeguards flagged more runs than the limit allowed. Every flag was a safeguard notice, and each flagged run continued and completed. It was shipped as the release candidate anyway |
+| **With whom** | A simulated user whose second reply was a fixed "Go ahead." ("继续" in one task); one model (`claude-sonnet-5-5`); 3 runs per task; nine pre-registered wording tests on 2026-11-12 and 2026-11-13 |
+| **Result** | In its one test, the shipped text showed the map before the first change in every run on the four core tasks and completed the work in every one. It failed one of its 12 pre-registered conditions, added for that test: after "直接做", too few runs did the reversible work in the first turn and stopped only at the irreversible step. It was shipped as the release candidate anyway |
 | **What it does not show** | Anything about a real person, a comparison with the 82-word text, or learning |
 
 The pause, not chance, is believed to make the map appear, for this reason: the result of one
 earlier text without the pause moved between sessions by about a third of its runs, and the
-results with the pause, under two earlier texts and under the shipped text, are above that
+results with the pause, under three earlier texts and under the shipped text, are above that
 spread.
 
 Maps are long, and bounding them has only partly worked. Under the first adopted text with
 the pause, the median map ran to more than 500 words. An earlier variant that capped the map
 at 12 lines roughly halved the median, which stayed above the test's limit of 250 words. The
-shipped text asks for at most 150 words. Its median was within the 250-word limit, but most of
-its maps were over 150 words.
+previous shipped text asked for at most 150 words, and most of its maps were longer. The
+shipped text asks for a reply of at most 150 words; its median was just above that, and more
+than half of its maps were over it.
 
 Three limits of method apply to all of this. The reply after the pause was always a fixed
 generic go ("Go ahead."; "继续" in one task), with no answers or corrections, so completion
 means only that the assistant continues after an uninformative go. There was one model and 3
 runs per task: the decision rules are screening rules, not significance tests, and one run
-either way could have changed several verdicts, including the safety condition that the
-shipped text failed. And the shipped text was tested in a single-arm test that did not confirm
-it; its comparison with the earlier texts is across sessions and not randomised. The earlier
+either way could have changed several verdicts, including the condition that the shipped
+text failed. And the shipped text was tested in a single-arm test that did not confirm it, with
+no comparison arm; its comparison with the earlier texts is across sessions and not randomised. The earlier
 tests were also graded less strictly than pre-registered
 ([details](docs/EVIDENCE.md#what-these-tests-do-not-show)).
 
-The release candidate has three more known limits. Subagents and headless runs load a
+The release candidate has four more known limits. Subagents and headless runs load a
 user-level `CLAUDE.md` too, with nobody to reply to `fu:before`; whether they end their turn on
-the map is untested, and a check is planned before 6.0.0. With 3 runs per task, it is not known
-whether the wording of the shipped text makes the safeguards flag more runs; they flagged
-fewer under the two texts tested before it. And "non-trivial" was tested only at its edges, so
-small changes in between are where the pause may feel like friction.
+the map is untested, and a check is planned before 6.0.0. Some runs ended with an offer or a
+question after `fu:after`, as many as its condition allowed. With 3 runs per task, it is not
+known whether the wording changes how often the API's safeguards flag runs: they flagged none
+under the shipped text and more than the limit allowed under the text before it. And
+"non-trivial" was tested only at its edges, so small changes in between are where the pause
+may feel like friction.
 
 Two things decide the final release. The first is one week of everyday use by one person, with
 decision rules written in advance ([PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md)). The
@@ -412,7 +423,7 @@ and Tier 1) and each change against the 82-word text are in
 
 The 82-word text on `main` asks you once to predict the outcome, writes both predictions to a
 file and grades them afterwards. It shows no four-quadrant map. It is the text Tier 1 checked,
-and it stays on `main` until the planned comparison is done. The shipped text is 48 words
+and it stays on `main` until the planned comparison is done. The shipped text is 58 words
 longer: it drops the file of predictions, "ask me once to predict" and the budget-overrun
 stop, and adds the four fields, the two headers and the pause
 ([each change](docs/EVIDENCE.md#against-the-82-words-60-is-unmeasured)).
@@ -455,7 +466,7 @@ How to stay on 4.x and the 5.x detail: [docs/HISTORY.md](docs/HISTORY.md).
 
 ```
 finding-unknowns-skill/
-├── CLAUDE.md                     The always-on text (130 words)
+├── CLAUDE.md                     The always-on text (140 words)
 ├── skills/finding-unknowns/
 │   └── SKILL.md                  Templates, interview, look-back with the transcript filter
 ├── commands/                     fu-interview.md, fu-lookback.md

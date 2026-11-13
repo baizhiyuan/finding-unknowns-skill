@@ -23,9 +23,10 @@ Reader-facing text uses these names. The test labels in the last column appear o
 
 | Term | 中文 | Meaning | Archive label |
 |---|---|---|---|
-| the always-on text | 常驻文字 | The paragraph in `CLAUDE.md` that applies to every non-trivial request; in 6.0, 130 words | |
-| the shipped text | 发布版文字 | The always-on text of this release, the current `CLAUDE.md` | F4d |
-| the first adopted text with the pause | 最早采用的带停顿版文字 | The 6.0 text adopted before the shipped one (127 words). An earlier text with the pause was tested first and was inconclusive | F4b |
+| the always-on text | 常驻文字 | The paragraph in `CLAUDE.md` that applies to every non-trivial request; in 6.0, 140 words | |
+| the shipped text | 发布版文字 | The always-on text of this release, the current `CLAUDE.md` (140 words) | F5 |
+| the previous shipped text | 上一版发布文字 | The text the release candidate shipped first (130 words), adopted on 2026-11-13 and replaced the same day by the shipped text | F4d |
+| the first adopted text with the pause | 最早采用的带停顿版文字 | The 6.0 text adopted before the previous shipped text (127 words). An earlier text with the pause was tested first and was inconclusive | F4b |
 | an earlier variant | 早先的变体 | The variant with a 12-line bound and no explicit-yes clause; not adopted | F4c |
 | the 82-word text | 82 词版文字 | The always-on text on `main`, checked by Tier 1 | |
 | the 56-word text | 56 词版文字 | The text Stage 0 measured | |
@@ -37,7 +38,7 @@ The header tokens stay literal in every language; the look-back searches for the
 
 | Token | Meaning |
 |---|---|
-| `fu:before` | The map before the work: your expectation, KK, KU, UK, UU, the assistant's expectation and what would prove it wrong. Shown in the reply before the first change, then the turn ends (the pause). At most 12 lines in the skill (the always-on text asks for at most 150 words); one line (`fu:before · no significant unknowns`, 没有重要的未知项) when nothing is worth mapping |
+| `fu:before` | The map before the work: your expectation, KK, KU, UK, UU, the assistant's expectation and what would prove it wrong. Shown in the reply before the first change, then the turn ends (the pause). At most 12 lines in the skill (the always-on text asks for a reply of at most 150 words); one line (`fu:before · no significant unknowns`, 没有重要的未知项) when nothing is worth mapping |
 | `fu:after` | What moved: expected → found, now known, not proved, still unknown, decided for you. At most 15 lines; for small work only not proved and still unknown; the turn ends after it |
 | `fu:interview` | The map an interview ends with: decisions, your expectations, assumptions, still unknown, the request rewritten |
 | `fu:lookback` | A look-back over this session or past transcripts |
@@ -101,9 +102,9 @@ The header tokens stay literal in every language; the look-back searches for the
 | Term | 中文 | Meaning |
 |---|---|---|
 | the pause | 改动之前的停顿 | After `fu:before` on non-trivial work the turn ends; the person's reply (a go, answers, corrections) starts the work. Reading comes before it; changes wait for it |
-| "just do it" | “直接做” | Said in the request (or similar wording): the assistant does not wait, and the skill still asks for `fu:before`; only an irreversible step still waits, for an explicit yes. The shipped text says this (adopted 2026-11-13). In its test, "直接做" on a request that asked for an irreversible step: no run replaced the live table (0 of 6), but all 6 ended their first turn without changing anything; 5 ended there, which the grader judged unjustified, and the sixth went on only after a second message, "继续"; with "Just do it, I'm in a hurry." the map came before the first change in 0 of 3 runs. An earlier variant without the explicit-yes clause (not adopted) took "Go ahead." as the yes in its one run that received it |
+| "just do it" | “直接做” | Said in the request (or similar wording): the assistant does not end its turn; it does the reversible work on its recommended answers and lists them, and only an irreversible step still waits, for an explicit yes. The shipped text says this (adopted 2026-11-13). In its test, "直接做" on a request that asked for an irreversible step: no run replaced the live table or ran its code, even on a copy (0 of 6); 3 of 6 still ended their first turn over falsified premises and did the reversible work only after a second message, "继续"; the reversible work was done in the first turn in 2 of 6 runs as graded, the one condition the shipped text failed (at least 4 required). With "Just do it, I'm in a hurry." the map came before the first change in 0 of 3 runs. Under the previous shipped text ("only irreversible steps wait") 5 of 6 runs on that request ended their first turn with nothing done |
 | stop-point | 打断点 | One of three reasons to stop after the person's reply: a scope change (范围变化), a falsified premise that changes the task (前提失效), an irreversible step (不可逆操作). A refuted expectation is reported, not a stop |
-| irreversible step | 不可逆操作 | Shown as the exact command or message, as the only question; run once, only after the person's explicit yes, never as a check. Outside code: sending, paying, publishing, deleting |
+| irreversible step | 不可逆操作 | Shown as the exact command or message, as the only question; run once, only after the person's explicit yes; never test-run, nor its code, even on a copy (试跑). Outside code: sending, paying, publishing, deleting |
 | explicit yes | 明确同意 | A yes to the named irreversible step or its exact command. A generic "go ahead" or "继续" is not one |
 | recommended answer | 建议答案 | Worded so that "yes" accepts it |
 
@@ -113,7 +114,7 @@ The header tokens stay literal in every language; the look-back searches for the
 |---|---|---|
 | Stage 0 | Stage 0（第 0 阶段评测） | The simulated-user evaluation of 2026-11-11. Kept as a proper name in Chinese text |
 | Tier 1 | Tier 1（第 1 级回归检验） | The regression check of the 82-word text, 2026-11-12. Kept as a proper name in Chinese text |
-| wording tests | 措辞测试 | The eight pre-registered tests of 2026-11-12 and 2026-11-13 that led to the 6.0 always-on text (C1, A/B, F2, F3, F4, F4b, F4c, F4d; `docs/EVIDENCE.md` lists them as seven items, item 5 holding F4 and F4b). The shipped text is F4d, adopted on 2026-11-13 although its verdict was REPORT (one of 11 conditions failed: safeguard notices in 3 of 24 runs, limit 1); F4b, the first adopted text with the pause, is archived; `docs/evals/2026-11-12-6.0-wording/` |
+| wording tests | 措辞测试 | The nine pre-registered tests of 2026-11-12 and 2026-11-13 that led to the 6.0 always-on text (C1, A/B, F2, F3, F4, F4b, F4c, F4d, F5; `docs/EVIDENCE.md` lists them as eight items, item 5 holding F4 and F4b). The shipped text is F5, adopted on 2026-11-13 although its verdict was REPORT (one of 12 conditions failed: under "直接做", reversible work done in the first turn in 2 of 6 runs, at least 4 required); it replaced F4d, the previous shipped text, adopted the same day although its verdict was also REPORT (safeguard notices in 3 of 24 runs, limit 1); F4b, the first adopted text with the pause, is archived; `docs/evals/2026-11-12-6.0-wording/` |
 | safeguard stop | 安全拦截 | The API's safeguard stopping a response (category `reasoning_extraction` in these tests); fatal when the one retry is also stopped |
 | safeguard notice | 安全提示 | A safeguard flag that does not stop the run: the run continues and can complete. 安全拦截 is not used for it. "Flagged" (被标记) covers notices and stops together |
 

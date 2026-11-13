@@ -1,17 +1,17 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v6.0.0-rc.1：看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after（检查没有证明的、仍然未知的）" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v6.0.0-rc.2：看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after（检查没有证明的、仍然未知的）" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-6.0.0--rc.1-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 6.0.0-rc.1">
+  <img src="https://img.shields.io/badge/version-6.0.0--rc.2-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 6.0.0-rc.2">
   <img src="https://img.shields.io/badge/status-release_candidate-B8860B?style=for-the-badge&labelColor=F0EEE6" alt="状态：候选版本">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
 </p>
 
 <p align="center"><strong>看清自己知道什么、不知道什么，只凭证据更新这张地图。</strong></p>
 
-<p align="center"><em>6.0 候选版本（<code>v6.0.0-rc.1</code>）</em></p>
+<p align="center"><em>6.0 候选版本（<code>v6.0.0-rc.2</code>）</em></p>
 
 <p align="center">
   <a href="#输出示例">示例</a> ·
@@ -28,11 +28,11 @@
 
 做有分量的改动之前，助手先给出 `fu:before`：一张简短的地图，列出这项工作依据什么、还有哪些问题没解决，然后结束这一轮。你回复之后才开工，收尾时给出 `fu:after`，说明地图上哪些地方变了。两个区块都是终端里的嵌套列表，见[输出示例](#输出示例)。
 
-它由两部分组成：写进 `CLAUDE.md` 的一段常驻文字（英文，130 词），以及一个可选的技能和两个命令。没有钩子，没有子代理；你不说“保存”，就不往磁盘写任何东西。
+它由两部分组成：写进 `CLAUDE.md` 的一段常驻文字（英文，140 词），以及一个可选的技能和两个命令。没有钩子，没有子代理；你不说“保存”，就不往磁盘写任何东西。
 
-代价是每个有分量的任务多一轮来回。在需求里写上“直接做”或“Just do it”，助手就不再等待；只有不可逆操作仍要等你明确同意，笼统的“go ahead”或“继续”不算。措辞测试里，即使写了“直接做”，助手还是停得太多（详见[运行方式](#运行方式)）。
+代价是每个有分量的任务多一轮来回。在需求里写上“直接做”或“Just do it”，助手就不再等待：按建议答案先做可逆的部分，并列出用了哪些答案；只有不可逆操作仍要等你明确同意，笼统的“go ahead”或“继续”不算。措辞测试里，即使写了“直接做”，前提失效仍可能让助手停下（详见[运行方式](#运行方式)）。
 
-**测到什么程度。** 发布版文字只经过事先登记的措辞测试：用户是模拟的，只用了一个模型，每个任务测 3 次。事先登记的 11 项条件中有 1 项没有通过，原因是 API 安全机制标记的次数超过了上限。候选版本仍然采用了这段文字。它还没有和它要取代的 82 词版文字比较过，也没有人测量过它能否帮助人学到东西。具体数字见 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md#候选版本的已知局限)。
+**测到什么程度。** 发布版文字只经过事先登记的措辞测试：用户是模拟的，只用了一个模型，每个任务测 3 次。事先登记的 12 项条件中有 1 项没有通过：写了“直接做”时，在第一轮就做完可逆部分的次数不够。候选版本仍然采用了这段文字。它还没有和它要取代的 82 词版文字比较过，也没有人测量过它能否帮助人学到东西。具体数字见 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md#候选版本的已知局限)。
 
 安装方法：把常驻文字贴进 `CLAUDE.md`，或者运行 `install.sh`，见[安装](#安装)。
 
@@ -115,7 +115,7 @@ fu:after · 为事件分析选择存储
 
 </details>
 
-测试中的地图比这两个例子长。例子按技能里的模板写成，模板限定不超过 12 行（见 [`SKILL.md`](skills/finding-unknowns/SKILL.md)），而日常使用并不加载技能。发布版文字要求地图不超过 150 词；它只测过一次，那次测试里，四个核心任务上的地图大多超过了这个长度（见[地图长度](docs/EVIDENCE.zh.md#地图长度)）。栏目名称和版式也可能与模板不同。
+测试中的地图比这两个例子长。例子按技能里的模板写成，模板限定不超过 12 行（见 [`SKILL.md`](skills/finding-unknowns/SKILL.md)），而日常使用并不加载技能。发布版文字要求给出地图的那条回复不超过 150 词；它只测过一次，那次测试里，四个核心任务上的地图有一半以上超过了这个长度（见[地图长度](docs/EVIDENCE.zh.md#地图长度)）。栏目名称和版式也可能与模板不同。
 
 ## 四个象限
 
@@ -139,21 +139,21 @@ fu:after · 为事件分析选择存储
 ## 运行方式
 
 <p align="center">
-  <img src="assets/zh/lifecycle.svg" alt="运行方式：做任何改动之前，fu:before 列出四个象限和双方的预期；随后是停顿：这一轮结束，你回复之后工作才开始（回复“继续”即采纳建议答案；说“直接做”则不等待，只有不可逆操作仍要等你明确同意，笼统的“继续”不算）；收到回复后，执行时只在范围变化、前提失效以致任务改变或不可逆操作时停下；给出结果后，fu:after 说明预期与实际、新知道的、没有证明的、仍然未知的，以及你没要求的选择和改动；回顾只在你要求时进行。对话即记录。" width="100%">
+  <img src="assets/zh/lifecycle.svg" alt="运行方式：做任何改动之前，fu:before 列出四个象限和双方的预期；随后是停顿：这一轮结束，你回复之后工作才开始（回复“继续”即采纳建议答案；说“直接做”则不停顿，按建议答案先做可逆的部分并列出，只有不可逆操作仍要等你明确同意，笼统的“继续”不算）；收到回复后，执行时只在范围变化、前提失效以致任务改变或不可逆操作时停下，不可逆操作在副本上也不试跑；给出结果后，fu:after 说明预期与实际、新知道的、没有证明的、仍然未知的，以及你没要求的选择和改动；回顾只在你要求时进行。对话即记录。" width="100%">
 </p>
 
 适用范围是 Claude Code 终端里有分量的工作：写代码、调研、写作、工作中的决策。琐碎的请求、简单查询和闲聊不会触发任何区块。
 
 之所以要停一次，是因为不停的话，助手多半只说要给出地图，却没有真的列出来，非编程任务尤其如此。加上停顿之后，核心任务的测试里几乎每次都是先给出地图再动手（见[证据](#证据)）。
 
-想跳过等待，就在需求里写上“直接做”（或“Just do it”）；只有不可逆操作仍要等你明确同意。写了“直接做”的情况下，发布版文字效果较弱。测试里有一条需求本身就要求不可逆操作（替换在用的数据表），并且写了“直接做”，一共测了 6 次。没有一次替换了在用的数据表，但每一次都在第一轮停下，什么也没改。其中只有一次在收到第二条消息“继续”之后做了可逆的部分；其余几次停下来提问，连可逆的部分也没做，就此结束，评分者判为不合理的停顿。另一条需求写的是“Just do it, I'm in a hurry.”，测了 3 次，没有一次在第一次改动之前给出地图。逐项数字见 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md#直接做与不可逆操作)。
+想跳过等待，就在需求里写上“直接做”（或“Just do it”）。助手不会结束这一轮，而是按建议答案先做可逆的部分，并列出用了哪些答案；只有不可逆操作仍要等你明确同意。前提失效仍可能让它停下，因为文字同时规定，前提失效以致任务改变时要停下。测试里有一条需求本身就要求不可逆操作（替换在用的数据表），并且写了“直接做”，一共测了 6 次。没有一次替换了数据表，也没有一次运行它的代码，副本上也没有；每一次最后都给出确切命令，请求明确同意。其中一半在第一轮停下，报告前提失效，收到第二条消息“继续”之后才做可逆的部分。在第一轮就做完可逆部分的次数没有达到规则的要求，这是发布版文字唯一没有通过的条件。另一条需求写的是“Just do it, I'm in a hurry.”，测了 3 次，没有一次在第一次改动之前给出地图。逐项数字见 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md#直接做与不可逆操作)。
 
 日常使用只读取常驻文字。栏目名称、版式和更细的规则（长度上限、只在预期落空处写“原因”）都在技能里，你要求时才加载。主要规则如下：
 
 - **你的预期只引用，不代写。** 你没说预期，这一栏就写“未说明”，助手也不追问。空着的这一栏本身就是提醒：提需求时顺手写上你的猜测（“我觉得是 X，请做 Y”），或者在停顿时补上。
 - **只有你能回答的问题才交给你，** 并附上建议答案，措辞保证你回一个“是”就算采纳。事实由助手自己去查。
 - **收到回复之后很少再停：** 只在范围变化、前提失效以致任务改变，或遇到不可逆操作时停下。`✗` 如果只是推翻了你的预期，助手如实报告，不因此停下。
-- **不可逆操作**（无论是代码里的，还是发送、付款、发布、删除这类操作）要给出确切的命令或消息，并且作为唯一的问题提出；得到你的明确同意之后才执行，只执行一次，绝不拿它当检查来跑。笼统的“go ahead”或“继续”不算同意，同意时请点明是哪一步。早先的变体没有这一句，测试中唯一收到“Go ahead.”的那一次就把它当成了同意。换成发布版文字后，唯一收到“继续”的那一次没有把它当成同意，而是要求明确同意；但它在同一轮里拿数据表的临时副本试跑了迁移代码，违背了“绝不拿它当检查”。
+- **不可逆操作**（无论是代码里的，还是发送、付款、发布、删除这类操作）要给出确切的命令或消息，并且作为唯一的问题提出；得到你的明确同意之后才执行，只执行一次；它和它的代码一律不试跑，副本上也不行。笼统的“go ahead”或“继续”不算同意，同意时请点明是哪一步。早先的变体没有这一句，测试中唯一收到“Go ahead.”的那一次就把它当成了同意。上一版发布文字下，唯一收到“继续”的那一次要求明确同意，却拿数据表的临时副本试跑了迁移代码，当作检查；发布版文字点明了这种情况，测试中没有一次这样做（有 2 次运行了项目原有的整套测试，其中一个测试会在合成文件上调用迁移函数，事先登记的口径不把这算在内）。
 - **`fu:after` 之后不再有任何内容，** 没有菜单，也不再提问。你不说“保存”，就不往磁盘写任何东西；对话本身就是记录。
 
 取舍是停一次，之后少打断。代价是你要在回复“继续”之前读一遍地图，最后再读 `fu:after`，尤其是每项检查没有证明什么。如果你更希望助手每遇到一个假设都先问你，这个默认做法不适合你。
@@ -162,18 +162,18 @@ fu:after · 为事件分析选择存储
 
 核心是常驻文字，它对每个有分量的请求都生效。技能和两个命令只在你要求访谈或回顾时加载，所以只装插件的话，在你提出要求之前什么都不会变。
 
-目前是候选版本。自用一周和与 82 词版文字的比较完成之前，`main` 分支和插件市场仍停留在 4.3.2，用的是 82 词版文字。安装 6.0 请克隆 `v6` 分支（标签 `v6.0.0-rc.1`）。还在用 4.x（Cartographer、`keep-the-reasoning`、子代理）的话，请留在 4.x，[方法见这里](docs/HISTORY.zh.md#怎样留在-4x)。
+目前是候选版本。自用一周和与 82 词版文字的比较完成之前，`main` 分支和插件市场仍停留在 4.3.2，用的是 82 词版文字。安装 6.0 请克隆 `v6` 分支（标签 `v6.0.0-rc.2`）。还在用 4.x（Cartographer、`keep-the-reasoning`、子代理）的话，请留在 4.x，[方法见这里](docs/HISTORY.zh.md#怎样留在-4x)。
 
 ### 常驻文字
 
-把 [`CLAUDE.md`](CLAUDE.md) 里的文字（130 词）追加到用户级的 `~/.claude/CLAUDE.md`，或某个项目的 `CLAUDE.md`，也可以交给 `install.sh` 完成。全文如下，使用时保留英文原文：
+把 [`CLAUDE.md`](CLAUDE.md) 里的文字（140 词）追加到用户级的 `~/.claude/CLAUDE.md`，或某个项目的 `CLAUDE.md`，也可以交给 `install.sh` 完成。全文如下，使用时保留英文原文：
 
-> Before non-trivial changes (reading is fine), show `fu:before` (≤150 words, terse) in your reply, then end your turn: relied on, sourced; open questions; assumed want; only-I-can-answer (recommend answers); what I should've asked. Quote my expectation or "not stated"; never invent one. Give yours and what would disprove it. After my reply, stop only for scope changes, falsified premises changing the task (refuted expectation: report only), or an irreversible step: show its exact command or message as your only question; run once, only after my explicit yes ("go ahead" isn't one), never as a check. End with `fu:after`, asking nothing: each expectation against evidence; what became known; what checks didn't prove; what stays unknown. Omit empty fields. "Just do it"/"直接做" etc.: only irreversible steps wait. Skip trivial requests; ignore `fu-note:` lines.
+> Before non-trivial changes (reading is fine), show `fu:before` in a ≤150-word reply, then end your turn: sourced facts; open questions; assumed want; only-I-can-answer (recommend answers); what I should've asked. Quote my expectation or "not stated"; never invent one. Give yours and what would disprove it. After my reply, stop only for scope changes, falsified premises changing the task (refuted expectation: report only), or an irreversible step: show its exact command or message as your only question; run once, only after my explicit yes (not "go ahead"/"继续"); never test-run it or its code, even on copies. End with `fu:after`, asking nothing: expectations against evidence; now known; what checks didn't prove; still unknown. Omit empty fields. "Just do it"/"直接做" etc.: don't end the turn; do reversible work on recommended answers, list them; only irreversible steps wait. Skip trivial requests; ignore `fu-note:` lines.
 
 <details>
 <summary><b>中文大意</b></summary>
 
-做有分量的改动之前（阅读不受此限），先在回复里给出 `fu:before`（不超过 150 词，力求简短），然后结束这一轮：依据什么，并注明来源；待解决的问题；猜我默认想要什么；只有我能回答的（给出建议答案）；我本该问却没问的。我说过预期就引用原话，没说过就写“未说明”，绝不替我编造。再给出你的预期，以及什么情况能证明它错了。收到我的回复后，只在范围变化、前提失效以致任务改变（预期被推翻只需报告），或遇到不可逆操作时停下：把它确切的命令或消息作为你唯一的问题；只有在我明确同意之后才执行（“go ahead”不算同意），只执行一次，绝不拿它当检查。最后以 `fu:after` 收尾，不再提问：每条预期与证据对照的结果；新知道了什么；检查没有证明什么；还有什么仍然未知。栏目为空就省略。我说“Just do it”、“直接做”之类的话时，只有不可逆操作需要等待。琐碎的请求跳过这些；以 `fu-note:` 开头的行不予理会。
+做有分量的改动之前（阅读不受此限），先给出 `fu:before`，这条回复不超过 150 词，然后结束这一轮：有来源的事实；待解决的问题；猜我默认想要什么；只有我能回答的（给出建议答案）；我本该问却没问的。我说过预期就引用原话，没说过就写“未说明”，绝不替我编造。再给出你的预期，以及什么情况能证明它错了。收到我的回复后，只在范围变化、前提失效以致任务改变（预期被推翻只需报告），或遇到不可逆操作时停下：把它确切的命令或消息作为你唯一的问题；只有在我明确同意之后才执行（“go ahead”或“继续”不算同意），只执行一次；它和它的代码一律不试跑，副本上也不行。最后以 `fu:after` 收尾，不再提问：预期与证据对照的结果；新知道的；检查没有证明的；仍然未知的。栏目为空就省略。我说“Just do it”、“直接做”之类的话时，不要结束这一轮：按建议答案先做可逆的部分，并列出这些答案；只有不可逆操作需要等待。琐碎的请求跳过这些；以 `fu-note:` 开头的行不予理会。
 
 </details>
 
@@ -183,6 +183,7 @@ fu:after · 为事件分析选择存储
 - 以“Before non-trivial work, ask me once to predict”开头的 82 词版文字；
 - 以“Before non-trivial work, show `fu:before`”开头的 6.0 发布前草稿；
 - 以“Before non-trivial changes (reading is fine), show `fu:before` in your reply”开头的早先 6.0 文字（127 词）；
+- 以“Before non-trivial changes (reading is fine), show `fu:before` (≤150 words, terse)”开头的上一版 6.0 文字（130 词）；
 - 标题为 `# finding-unknowns (passive drop-in)` 的 4.x 文字；
 - 4.x 的“Personal Skills: finding-unknowns”一行，`install.sh` 识别不出，加过的话请手动删除。
 
@@ -279,17 +280,17 @@ ls "$C/plugins/cache/finding-unknowns-skill/finding-unknowns/" 2>/dev/null \
 | | |
 |---|---|
 | **测了什么** | 6.0 的常驻文字能否让地图在第一次改动之前出现、只停一次、把工作做完，并守住各项护栏 |
-| **怎么测的** | 模拟用户，第二次回复固定为英文的“Go ahead.”（有一个任务用的是“继续”）；一个模型（`claude-sonnet-5-5`）；每个任务 3 次；2026-11-12 和 2026-11-13 共八次事先登记的措辞测试 |
-| **结果** | 发布版文字只测过一次。在这次测试里，四个核心任务上每一次都先给出地图再改动，也都完成了工作。事先登记的 11 项条件中有 1 项没有通过：API 安全机制标记的次数超过了上限。被标记的几次都只是安全提示，工作照常继续并完成。候选版本仍然采用了这段文字 |
+| **怎么测的** | 模拟用户，第二次回复固定为英文的“Go ahead.”（有一个任务用的是“继续”）；一个模型（`claude-sonnet-5-5`）；每个任务 3 次；2026-11-12 和 2026-11-13 共九次事先登记的措辞测试 |
+| **结果** | 发布版文字只测过一次。在这次测试里，四个核心任务上每一次都先给出地图再改动，也都完成了工作。事先登记的 12 项条件中有 1 项没有通过，这一项是为这次测试新加的：写了“直接做”时，在第一轮就做完可逆部分、只在不可逆操作前停下的次数不够。候选版本仍然采用了这段文字 |
 | **不能说明什么** | 真实用户的情况、与 82 词版文字的比较、对学习的作用 |
 
-认为地图的出现靠的是停顿而不是偶然，理由如下：早先有一版不带停顿的文字，同一个结果在不同会话之间的差距约占测试次数的三分之一；带停顿的结果，无论出自两版早先的文字还是发布版文字，都高出了这个波动幅度。
+认为地图的出现靠的是停顿而不是偶然，理由如下：早先有一版不带停顿的文字，同一个结果在不同会话之间的差距约占测试次数的三分之一；带停顿的结果，无论出自三版早先的文字还是发布版文字，都高出了这个波动幅度。
 
-地图偏长，限制长度只收到部分效果。最早采用的带停顿版文字给出的地图，中位数超过 500 词。早先的变体把地图限定在 12 行以内，中位数降了将近一半，仍然超过测试设定的 250 词上限。发布版文字要求不超过 150 词，中位数在 250 词的上限之内，但多数地图仍然超过 150 词。
+地图偏长，限制长度只收到部分效果。最早采用的带停顿版文字给出的地图，中位数超过 500 词。早先的变体把地图限定在 12 行以内，中位数降了将近一半，仍然超过测试设定的 250 词上限。上一版发布文字要求不超过 150 词，多数地图仍然超过这个长度。发布版文字要求给出地图的那条回复不超过 150 词，中位数略高于 150 词，一半以上的地图超过了它。
 
-以上结果都受三处方法局限的约束。停顿之后的回复始终是一句笼统的同意（英文的“Go ahead.”，有一个任务用的是“继续”），不带任何回答或纠正，所以“完成”只说明助手收到一句不含信息的同意之后会接着做。只用了一个模型，每个任务 3 次：判定规则是筛查规则，不是显著性检验，多一次或少一次就可能改变好几个结论，包括发布版文字没有通过的那项安全条件。发布版文字是在一次单组测试里测的，那次测试没有确认它；它与早先几版文字的比较跨了不同会话，没有随机分组。此外，早先几次测试的评分不如事先登记的方案严格（[详情](docs/EVIDENCE.zh.md#这些测试不能说明的)）。
+以上结果都受三处方法局限的约束。停顿之后的回复始终是一句笼统的同意（英文的“Go ahead.”，有一个任务用的是“继续”），不带任何回答或纠正，所以“完成”只说明助手收到一句不含信息的同意之后会接着做。只用了一个模型，每个任务 3 次：判定规则是筛查规则，不是显著性检验，多一次或少一次就可能改变好几个结论，包括发布版文字没有通过的那项条件。发布版文字是在一次单组测试里测的，那次测试没有确认它，也没有对照组；它与早先几版文字的比较跨了不同会话，没有随机分组。此外，早先几次测试的评分不如事先登记的方案严格（[详情](docs/EVIDENCE.zh.md#这些测试不能说明的)）。
 
-候选版本另有三处已知局限。子代理和无界面运行同样会加载用户级的 `CLAUDE.md`，却没有人回复 `fu:before`；它们会不会停在地图上还没有测过，计划在 6.0.0 之前检查。每个任务只测 3 次，无法判断发布版文字的措辞是否让安全机制标记得更多；此前测过的两版文字被标记的次数更少。“有分量”的界线只测了两端，介于两者之间的小改动，可能让人觉得停顿多余。
+候选版本另有四处已知局限。子代理和无界面运行同样会加载用户级的 `CLAUDE.md`，却没有人回复 `fu:before`；它们会不会停在地图上还没有测过，计划在 6.0.0 之前检查。有几次在 `fu:after` 之后又提出了建议或问题，次数正好达到这项条件允许的上限。每个任务只测 3 次，无法判断措辞是否影响 API 安全机制标记的频率：发布版文字一次也没有被标记，上一版发布文字被标记的次数则超过了上限。“有分量”的界线只测了两端，介于两者之间的小改动，可能让人觉得停顿多余。
 
 正式发布取决于两件事。一是一个人在日常工作中使用一周，判定规则已经事先写好（[PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md)）。二是计划中的三组比较，在同样的任务上分别测不加文字、82 词版文字和发布版文字。
 
@@ -297,7 +298,7 @@ ls "$C/plugins/cache/finding-unknowns-skill/finding-unknowns/" 2>/dev/null \
 
 ## 与其他做法的比较
 
-`main` 上 82 词版文字请你先预测一次结果，把双方的预测写进文件，事后逐条评判；它不列四象限地图。它是 Tier 1 检验过的文字，计划中的比较完成之前一直留在 `main` 上。发布版文字比它多 48 词：去掉了“把预测写进文件”、“只问一次，请我预测”和预算超支这个打断点，增加了四个栏目、两个区块和改动之前的停顿（[逐项改动](docs/EVIDENCE.zh.md#与-82-词版文字相比60-的效果未经测量)）。
+`main` 上 82 词版文字请你先预测一次结果，把双方的预测写进文件，事后逐条评判；它不列四象限地图。它是 Tier 1 检验过的文字，计划中的比较完成之前一直留在 `main` 上。发布版文字比它多 58 词：去掉了“把预测写进文件”、“只问一次，请我预测”和预算超支这个打断点，增加了四个栏目、两个区块和改动之前的停顿（[逐项改动](docs/EVIDENCE.zh.md#与-82-词版文字相比60-的效果未经测量)）。
 
 Karpathy 风格的 `CLAUDE.md`（[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)）要求不确定就问；这里把问题集中放进 `fu:before`，只问一次，之后接着做。两份只用一份，或者在你的 `CLAUDE.md` 里写明以哪一份为准。技能里“替你定的”一栏借用了它的一个想法，做法是事后披露，而不是事先禁止。那份文件的效果证据很薄：目前找到的唯一一项设有安慰剂对照的审计只测了其中的简洁原则，代码行数比不加任何指令时略少，落在噪声范围内，准确率没有变化（[出处和数字](docs/EVIDENCE.zh.md#karpathy-风格的-claudemd)）。
 
@@ -320,7 +321,7 @@ finding-unknowns 保持一个技能加两个命令，不捆绑其他技能。有
 
 ```
 finding-unknowns-skill/
-├── CLAUDE.md                     常驻文字（130 词）
+├── CLAUDE.md                     常驻文字（140 词）
 ├── skills/finding-unknowns/
 │   └── SKILL.md                  模板、访谈、回顾（含会话记录过滤脚本）
 ├── commands/                     fu-interview.md、fu-lookback.md
