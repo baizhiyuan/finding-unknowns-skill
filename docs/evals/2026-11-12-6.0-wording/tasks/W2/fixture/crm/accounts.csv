@@ -1,0 +1,5 @@
+account_id,company,contact_email,plan,plan_since,previous_plan,bank_connection
+A-1031,Harbor Florists,ops@harbor-florists.example,Pro,2025-03-01,Starter,Mercer Bank
+A-1043,Northwind Bakery,dana@northwind-bakery.example,Starter,2026-10-01,Pro,Halcyon Bank
+A-1057,Quayside Optics,finance@quayside-optics.example,Pro,2024-11-15,,Mercer Bank
+A-1062,Lantern Books,hello@lantern-books.example,Starter,2026-02-01,,Halcyon Bank

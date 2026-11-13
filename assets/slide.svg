@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="532" viewBox="0 0 1200 532" role="img" aria-labelledby="t d">
+<title id="t">The slide, and what is meant to interrupt it</title><desc id="d">Addy Osmani's slide across many handoffs: offloading (you delegate and keep ownership), deferral (the output becomes the next input), cognitive surrender (the output becomes your "known" without an update step). Under each step, the part of the map meant to interrupt it: the pause after fu:before keeps ownership with you; You expect records your prediction before the answer exists; Not proved and Still unknown keep a claim from entering the known beyond its evidence. This is why the fields exist; whether they slow the slide has not been measured.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
+<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
+<marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#788C5D"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
+<linearGradient id="spec" x1="0" x2="1"><stop offset="0" stop-color="#788C5D"/><stop offset="0.5" stop-color="#D4A27F"/><stop offset="1" stop-color="#B5442E"/></linearGradient>
+</defs>
+<rect x="0.5" y="0.5" width="1199" height="531" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="531" rx="18" fill="url(#dots)" opacity="0.5"/>
+<g transform="translate(0 -28)">
+<text x="40" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#141413" font-weight="700">The slide, and what is meant to interrupt it</text>
+<text x="40" y="118" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#5E5D59">Across many handoffs, delegating slides into surrender. Under each step, the part of the map meant to stop it.</text>
+<rect x="40" y="214" width="1120" height="22" rx="11" fill="url(#spec)"/>
+<rect x="106.1" y="166" width="98" height="26" rx="13" fill="#D97757"/>
+<text x="155.2" y="183.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700" text-anchor="middle">stay here</text>
+<path d="M155.2 194V210" stroke="#D97757" stroke-width="2.5" marker-end="url(#ah)"/>
+<circle cx="155.2" cy="225" r="11" fill="#FAF9F5" stroke="#141413" stroke-width="3"/>
+<text x="40" y="268" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#788C5D" font-weight="700">offloading</text>
+<text x="40" y="291" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">delegate the work,</text>
+<text x="40" y="309" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">keep ownership</text>
+<text x="420" y="268" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#C15F3C" font-weight="700">deferral</text>
+<text x="420" y="291" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">the output becomes</text>
+<text x="420" y="309" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">the next input</text>
+<path d="M410.0 250L410.0 322" stroke="#E3DFD3" stroke-width="1" fill="none"/>
+<text x="800" y="268" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#B5442E" font-weight="700">cognitive surrender</text>
+<text x="800" y="291" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">the output becomes your "known"</text>
+<text x="800" y="309" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">without an update step</text>
+<path d="M790.0 250L790.0 322" stroke="#E3DFD3" stroke-width="1" fill="none"/>
+<path d="M64 372L64 330" stroke="#788C5D" stroke-width="2" fill="none" marker-end="url(#ahg)"/>
+<text x="76" y="356" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" font-weight="700">keeps you here</text>
+<rect x="40" y="376" width="360" height="124" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="40" y="386" width="5" height="104" rx="2.5" fill="#788C5D"/>
+<text x="62" y="402" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">The pause</text>
+<rect x="62" y="412" width="178" height="24" rx="12" fill="#F5DDD1"/>
+<text x="151.2" y="428.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">fu:before → your reply</text>
+<text x="62" y="458" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">You see the map and answer it before</text>
+<text x="62" y="476" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">anything changes: the decision stays yours.</text>
+<path d="M444 372L444 330" stroke="#C15F3C" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+<text x="456" y="356" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" font-weight="700">interrupts it</text>
+<rect x="420" y="376" width="360" height="124" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="420" y="386" width="5" height="104" rx="2.5" fill="#C15F3C"/>
+<text x="442" y="402" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Predict before you look</text>
+<rect x="442" y="412" width="92" height="24" rx="12" fill="#F5DDD1"/>
+<text x="488.0" y="428.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">You expect</text>
+<text x="442" y="458" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">Your guess is quoted, or "not stated"; the</text>
+<text x="442" y="476" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">output is checked against it before reuse.</text>
+<path d="M824 372L824 330" stroke="#B5442E" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+<text x="836" y="356" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#5E5D59" font-weight="700">interrupts it</text>
+<rect x="800" y="376" width="360" height="124" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="800" y="386" width="5" height="104" rx="2.5" fill="#B5442E"/>
+<text x="822" y="402" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#141413" font-weight="700">Name what the evidence leaves open</text>
+<rect x="822" y="412" width="92" height="24" rx="12" fill="#F5DDD1"/>
+<text x="868.0" y="428.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">Not proved</text>
+<rect x="922.0" y="412" width="114" height="24" rx="12" fill="#F5DDD1"/>
+<text x="978.8" y="428.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">Still unknown</text>
+<text x="822" y="458" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">A claim enters "known" no further than its</text>
+<text x="822" y="476" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#5E5D59">evidence; the open part stays on the map.</text>
+<text x="40" y="530" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#5E5D59">after Addy Osmani's posts on critical thinking when agents do the work.</text>
+<text x="1160" y="530" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="end">Why these fields exist; whether they slow the slide is not measured.</text>
+</g>
+</svg>

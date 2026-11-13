@@ -1,47 +1,67 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="t d">
-<title id="t">finding-unknowns v4.3.2</title><desc id="d">Banner: a pin clearing fog on a dotted map. Map the territory before you build. Keep the reasoning when agents hand it back.</desc>
+<title id="t">finding-unknowns v6.0.0-rc.2</title><desc id="d">Banner: finding-unknowns, keep your own map of what you know and do not know, and update it only on evidence. A terminal card shows fu:before for a bug fix (your quoted expectation, a premise marked ✗, a question that needs you, with a recommended answer), the reply "go", and fu:after (what the checks did not prove, what is still unknown).</desc>
 <defs>
 <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#B1ADA1" opacity="0.28"/></pattern>
-<pattern id="dotsb" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#D97757" opacity="0.75"/></pattern>
 <filter id="fog" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter>
-<clipPath id="clr"><circle cx="930" cy="215" r="105"/></clipPath>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter>
 <clipPath id="frame"><rect width="1200" height="420" rx="18"/></clipPath>
 </defs>
 <rect width="1200" height="420" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
 <g clip-path="url(#frame)">
 <rect width="1200" height="420" fill="url(#dots)"/>
-<g fill="none" stroke="#B1ADA1" stroke-opacity="0.55" stroke-width="1.2">
-<path d="M640 360C700 300 760 330 830 300S960 340 1040 290S1150 260 1210 300"/>
-<path d="M660 330C720 270 770 300 840 270S960 310 1030 260S1140 230 1210 270"/>
-<path d="M690 300C740 245 790 270 850 240S960 280 1020 230S1120 200 1210 240"/>
-<path d="M720 270C770 215 810 240 860 210S960 250 1010 200S1100 170 1210 210"/>
-<ellipse cx="930" cy="215" rx="230" ry="150"/><ellipse cx="930" cy="215" rx="170" ry="108"/>
+<g fill="none" stroke="#B1ADA1" stroke-opacity="0.45" stroke-width="1.2">
+<path d="M560 380C640 320 720 350 800 318S960 360 1050 306S1160 276 1210 312"/>
+<path d="M580 348C660 288 730 318 810 286S960 330 1040 276S1150 246 1210 282"/>
+<path d="M600 316C680 258 740 286 820 254S960 298 1030 246S1140 216 1210 252"/>
+<path d="M620 120C700 70 780 100 860 70S1000 96 1080 56S1170 40 1210 60"/>
+<path d="M600 88C690 40 770 66 850 38S1000 62 1070 26S1160 12 1210 28"/>
 </g>
-<g clip-path="url(#clr)"><rect x="800" y="100" width="260" height="230" fill="url(#dotsb)" opacity="0.5"/></g>
 <g filter="url(#fog)" fill="#F0EEE6">
-<ellipse cx="1090" cy="120" rx="130" ry="70" opacity="0.75"/><ellipse cx="1010" cy="330" rx="150" ry="55" opacity="0.75"/>
-<ellipse cx="780" cy="130" rx="110" ry="50" opacity="0.75"/><ellipse cx="1130" cy="260" rx="90" ry="70" opacity="0.75"/>
-<ellipse cx="760" cy="320" rx="100" ry="45" opacity="0.75"/>
+<ellipse cx="640" cy="120" rx="110" ry="50" opacity="0.7"/><ellipse cx="620" cy="330" rx="100" ry="45" opacity="0.7"/>
 </g>
-<circle cx="930" cy="215" r="105" fill="none" stroke="#D97757" stroke-width="1.5" stroke-dasharray="3 6"/>
-<circle cx="930" cy="215" r="70" fill="none" stroke="#D97757" stroke-opacity="0.5" stroke-width="1"/>
-<g stroke="#D97757" stroke-width="2"><path d="M930 98V118M930 312V332M813 215H833M1027 215H1047"/></g>
-<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#D97757" text-anchor="middle"><text x="930" y="88">N</text></g>
-<ellipse cx="930" cy="262" rx="26" ry="7" fill="#D97757" opacity="0.28"/>
-<path d="M930 262C900 222 890 205 890 186a40 40 0 0 1 80 0c0 19-10 36-40 76z" fill="#D97757"/>
-<circle cx="930" cy="186" r="15" fill="#FAF9F5"/><circle cx="930" cy="186" r="5" fill="#D97757"/>
 </g>
-<text x="56" y="70" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#C15F3C" letter-spacing="1.5">[ CLAUDE CODE SKILL · v4.3.2 ]</text>
-<text x="54" y="152" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#141413">finding-unknowns</text>
-<text x="56" y="198" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#141413">Map the territory before you build.</text>
-<text x="56" y="226" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">Keep the reasoning when agents hand it back.</text>
-<rect x="56" y="262" width="126" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="119.0" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">8 techniques</text>
-<rect x="192" y="262" width="169" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="276.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">Cartographer mode</text>
-<rect x="371" y="262" width="91" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="416.5" y="281.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">5 agents</text>
-<rect x="56" y="300" width="195" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="153.5" y="319.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">+ keep-the-reasoning</text>
-<rect x="261" y="300" width="178" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/><text x="350.0" y="319.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#C15F3C" text-anchor="middle">+ theory-vs-result</text>
-<rect x="56" y="352" width="520" height="40" rx="8" fill="#F0EEE6" stroke="#E3DFD3"/>
-<circle cx="76" cy="372" r="4" fill="#B5442E"/><circle cx="92" cy="372" r="4" fill="#D4A27F"/><circle cx="108" cy="372" r="4" fill="#788C5D"/>
-<text x="128" y="377" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#D97757">$</text>
-<text x="144" y="377" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#141413">/cartographer --deep &quot;migrate billing&quot;</text>
+<text x="56" y="84" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#C15F3C" font-weight="700">v6.0.0-rc.2 · for Claude Code</text>
+<text x="54" y="166" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#141413" font-weight="700">finding-unknowns</text>
+<text x="56" y="212" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#141413">Keep your own map of what you know and do not know,</text>
+<text x="56" y="240" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5E5D59">and update it only on evidence.</text>
+<rect x="56" y="278" width="98" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/>
+<text x="105.0" y="297.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">fu:before</text>
+<rect x="164" y="278" width="89" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/>
+<text x="208.5" y="297.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">fu:after</text>
+<rect x="56" y="316" width="131" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/>
+<text x="121.5" y="335.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">/fu-interview</text>
+<rect x="197" y="316" width="123" height="30" rx="12" fill="#F5DDD1" stroke="#D97757"/>
+<text x="258.5" y="335.9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#C15F3C" font-weight="700" text-anchor="middle">/fu-lookback</text>
+<rect x="640" y="34" width="524" height="352" rx="12" fill="#FFFFFF" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<path d="M640 46a12 12 0 0 1 12 -12h500a12 12 0 0 1 12 12v18H640z" fill="#F0EEE6"/>
+<path d="M640 64H1164" stroke="#E3DFD3"/>
+<circle cx="660" cy="49" r="4" fill="#B5442E"/>
+<circle cx="676" cy="49" r="4" fill="#D4A27F"/>
+<circle cx="692" cy="49" r="4" fill="#788C5D"/>
+<text x="902.0" y="54" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#B1ADA1" text-anchor="middle">claude · ~/shop</text>
+<text x="662" y="92" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:before · fix the 500s on /export</text>
+<text x="662.0" y="114" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="677.6" y="114" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700">You expect: "…come from the new CSV encoder"</text>
+<text x="662.0" y="136" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="677.6" y="136" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700">KK · relying on</text>
+<text x="677.6" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="693.2" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B5442E" font-weight="700">✗</text>
+<text x="708.8000000000001" y="158" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413">the 500s began with the encoder change — logs: 3 Nov</text>
+<text x="662.0" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="677.6" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700">KU · open</text>
+<text x="677.6" y="202" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="693.2" y="202" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413">drop empty fields? — needs you; I would pick "no"</text>
+<rect x="662" y="218" width="92" height="28" rx="14" fill="#F5DDD1" stroke="#D97757" stroke-width="1.2"/>
+<circle cx="679" cy="228" r="4.5" fill="#D97757"/><path d="M671 240a8 7 0 0 1 16 0z" fill="#D97757"/>
+<text x="696" y="237" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413" font-weight="700">go</text>
+<text x="768" y="237" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#5E5D59">you reply; "go" accepts the recommended "no"</text>
+<text x="662" y="270" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#C15F3C" font-weight="700">fu:after · fix the 500s on /export</text>
+<text x="662.0" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="677.6" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700">Not proved</text>
+<text x="677.6" y="314" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="693.2" y="314" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413">the new test covers NUL → leaves open other control chars</text>
+<text x="662.0" y="336" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="677.6" y="336" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#5E5D59" font-weight="700">Still unknown</text>
+<text x="677.6" y="358" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#B1ADA1">-</text>
+<text x="693.2" y="358" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#141413">a background job for export? — count exports &gt; 10 s · you</text>
 </svg>

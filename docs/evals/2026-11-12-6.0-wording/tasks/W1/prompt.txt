@@ -1,0 +1,1 @@
+Pick vendor X or Y for our log storage using the docs in this repo, and write the decision record in decisions/log-storage.md using the template. I think Y is cheaper.

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="532" viewBox="0 0 1200 532" role="img" aria-labelledby="t d">
+<title id="t">滑落的过程，以及用来打断它的环节</title><desc id="d">Addy Osmani 描述的多次交接中的滑落：委托（把工作交出去，责任仍在自己），依赖（直接拿输出当下一步的依据），放弃判断（输出没有经过更新地图这一步，就成了你的“已知”）。每一步下方是用来打断它的环节：fu:before 之后的停顿让决定仍由你来做；“你的预期”在答案出现之前记下你的预测；“没有证明的”和“仍然未知”让写进“已知”的内容不超出证据。这是设置这些栏目的理由；它们能否减缓滑落，尚未测量。</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#D97757"/></marker>
+<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#B1ADA1"/></marker>
+<marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#788C5D"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#141413" flood-opacity="0.08"/></filter>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#B1ADA1" opacity="0.35"/></pattern>
+<linearGradient id="spec" x1="0" x2="1"><stop offset="0" stop-color="#788C5D"/><stop offset="0.5" stop-color="#D4A27F"/><stop offset="1" stop-color="#B5442E"/></linearGradient>
+</defs>
+<rect x="0.5" y="0.5" width="1199" height="531" rx="18" fill="#FAF9F5" stroke="#E3DFD3"/>
+<rect x="0.5" y="0.5" width="1199" height="531" rx="18" fill="url(#dots)" opacity="0.5"/>
+<g transform="translate(0 -28)">
+<text x="40" y="96" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="32" fill="#141413" font-weight="700">滑落的过程，以及用来打断它的环节</text>
+<text x="40" y="126" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#5E5D59">交接多了，委托会一步步滑向放弃判断。每一步下方是用来拦住它的那部分地图。</text>
+<rect x="40" y="214" width="1120" height="22" rx="11" fill="url(#spec)"/>
+<rect x="115.2" y="166" width="80" height="26" rx="13" fill="#D97757"/>
+<text x="155.2" y="183.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#141413" font-weight="700" text-anchor="middle">停在这里</text>
+<path d="M155.2 194V210" stroke="#D97757" stroke-width="2.5" marker-end="url(#ah)"/>
+<circle cx="155.2" cy="225" r="11" fill="#FAF9F5" stroke="#141413" stroke-width="3"/>
+<text x="40" y="268" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#788C5D" font-weight="700">委托</text>
+<text x="40" y="291" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">把工作交出去，</text>
+<text x="40" y="309" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">责任仍在自己</text>
+<text x="420" y="268" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#C15F3C" font-weight="700">依赖</text>
+<text x="420" y="291" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">直接拿输出</text>
+<text x="420" y="309" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">当下一步的依据</text>
+<path d="M410.0 250L410.0 322" stroke="#E3DFD3" stroke-width="1" fill="none"/>
+<text x="800" y="268" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" fill="#B5442E" font-weight="700">放弃判断</text>
+<text x="800" y="291" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">输出没有经过更新地图这一步，</text>
+<text x="800" y="309" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">就成了你的“已知”</text>
+<path d="M790.0 250L790.0 322" stroke="#E3DFD3" stroke-width="1" fill="none"/>
+<path d="M64 372L64 330" stroke="#788C5D" stroke-width="2" fill="none" marker-end="url(#ahg)"/>
+<text x="76" y="356" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59" font-weight="700">让你停在这里</text>
+<rect x="40" y="376" width="360" height="124" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="40" y="386" width="5" height="104" rx="2.5" fill="#788C5D"/>
+<text x="62" y="402" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">改动之前的停顿</text>
+<rect x="62" y="412" width="154" height="24" rx="12" fill="#F5DDD1"/>
+<text x="139.2" y="428.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">fu:before → 你的回复</text>
+<text x="62" y="458" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">你看过地图并作出回答之后，助手才动手：</text>
+<text x="62" y="476" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">决定仍由你来做。</text>
+<path d="M444 372L444 330" stroke="#C15F3C" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+<text x="456" y="356" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59" font-weight="700">打断这一步</text>
+<rect x="420" y="376" width="360" height="124" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="420" y="386" width="5" height="104" rx="2.5" fill="#C15F3C"/>
+<text x="442" y="402" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">先预测，再看答案</text>
+<rect x="442" y="412" width="68" height="24" rx="12" fill="#F5DDD1"/>
+<text x="476.0" y="428.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">你的预期</text>
+<text x="442" y="458" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">只引用你的原话，否则写“未说明”；</text>
+<text x="442" y="476" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">输出先与它对照，再拿去当下一步的依据。</text>
+<path d="M824 372L824 330" stroke="#B5442E" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+<text x="836" y="356" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#5E5D59" font-weight="700">打断这一步</text>
+<rect x="800" y="376" width="360" height="124" rx="12" fill="#F0EEE6" stroke="#E3DFD3" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="800" y="386" width="5" height="104" rx="2.5" fill="#B5442E"/>
+<text x="822" y="402" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="15" fill="#141413" font-weight="700">说清证据没有覆盖的部分</text>
+<rect x="822" y="412" width="80" height="24" rx="12" fill="#F5DDD1"/>
+<text x="862.0" y="428.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">没有证明的</text>
+<rect x="910.0" y="412" width="68" height="24" rx="12" fill="#F5DDD1"/>
+<text x="944.0" y="428.5" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#C15F3C" font-weight="700" text-anchor="middle">仍然未知</text>
+<text x="822" y="458" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">证据支持到哪里，“已知”就写到哪里；</text>
+<text x="822" y="476" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#5E5D59">没解决的部分留在地图上。</text>
+<text x="40" y="530" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" fill="#5E5D59">参考 Addy Osmani 关于智能体代劳时保持批判性思维的帖子。</text>
+<text x="1160" y="530" font-family="Noto Sans SC, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" fill="#C15F3C" font-weight="600" text-anchor="end">这是设置这些栏目的理由；它们能否减缓滑落，尚未测量。</text>
+</g>
+</svg>
