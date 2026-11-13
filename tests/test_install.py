@@ -125,11 +125,23 @@ class InstallTest(unittest.TestCase):
         for old in ("Before building, ask me to predict the outcome, then give yours.\n",
                     "# finding-unknowns (passive drop-in)\n\nNotes go under `.finding-unknowns/` at the root.\n",
                     "Before non-trivial work, show `fu:before`: what you rely on, sourced.\n",
-                    "For non-trivial work, show me the unknowns. Before starting, one short list.\n"):
+                    "For non-trivial work, show me the unknowns. Before starting, one short list.\n",
+                    "Before non-trivial changes (reading is fine), show `fu:before` in your reply, "
+                    "then end your turn.\n"):
             with self.subTest(old=old[:30]):
                 self.write({"CLAUDE.md": old})
                 self.assertIn("older finding-unknowns text", self.install())
                 (self.cfg / "CLAUDE.md").unlink()
+
+    def test_hand_pasted_current_text_is_reported(self) -> None:
+        pasted = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        self.write({"CLAUDE.md": pasted})
+        self.assertIn("older finding-unknowns text", self.install())
+
+    def test_clean_install_reports_no_older_text(self) -> None:
+        self.write({"CLAUDE.md": "# mine\n"})
+        self.install()
+        self.assertNotIn("older finding-unknowns text", self.install())
 
     def test_orphan_begin_marker_is_refused(self) -> None:
         original = f"# a\n{BEGIN}\nstray\n# MY RULES\nkeep this\n"
