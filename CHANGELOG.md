@@ -4,26 +4,29 @@ All notable changes to this project are documented in this file. The format is b
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [6.0.0] - unreleased
+## [6.0.0] - 2026-11-16
 
 A redesign from first principles. 6.0 is three things and no machinery: an always-on text,
 one skill and two commands. The 4.x line stays on branch `v4`; 5.0 to 5.2 were designed and
 evaluated, never released. Design and owner decisions:
 [`docs/design/6.0.md`](docs/design/6.0.md).
 
-**Status: release candidate.** `v6.0.0-rc.1` (2026-11-13, always-on text F4d) and `v6.0.0-rc.2`
-(2026-11-13, always-on text F5, current) are tagged on branch `v6` and published as GitHub
-pre-releases. The version fields (`plugin.json`, `marketplace.json` and the
-version-check line) keep 6.0.0, because `scripts/validate.py` checks a plain `X.Y.Z` there;
-the badges, the hero diagrams and the manifest descriptions name the current candidate
-(`v6.0.0-rc.2`). `main` and the marketplace stay on 4.3.2 with the 82-word text until two
-checks are done: the owner's own-use week (`docs/evals/2026-11-12-6.0-own-use/PLAN.md`)
-and a comparison of three texts (none, the 82 words, the 6.0 text). The rc is installed by
-cloning branch `v6`.
+**Status: released.** Tag `v6.0.0`, on `main` and in the plugin marketplace in place of
+4.3.2. Two pre-releases came first, both tagged on branch `v6` on 2026-11-13 and published as
+GitHub pre-releases: `v6.0.0-rc.1` (always-on text F4d) and `v6.0.0-rc.2` (always-on text F5).
+6.0.0 is the content of `v6.0.0-rc.2` plus documentation fixes: final-release wording in the
+READMEs, badges, hero diagrams, manifest descriptions and docs; no Chinese in the prose of the
+English README and `docs/EVIDENCE.md` outside quotations of the always-on text; and the
+`docs/EVIDENCE.md` heading "Just do it and irreversible steps" with its links. `CLAUDE.md` is
+unchanged. **6.0.0 was released without the two checks that the release-candidate documents
+said would come first:** the own-use week (`docs/evals/2026-11-12-6.0-own-use/PLAN.md`, now a
+plan for after the release) and a comparison of three texts (none, the 82 words, the 6.0
+text). 6.0 has not been compared with the 82-word text, and no one has measured whether it
+helps a person learn. Owner decision of 2026-11-16, recorded in `docs/design/6.0.md`.
 
-**For 4.x plugin users.** Nothing changes during the release candidate. Once 6.0.0 is on
-`main`, `/plugin update` removes the skills `keep-the-reasoning` and `theory-vs-result`, five
-agents and three commands. To keep them, clone branch `v4` and run its installer.
+**For 4.x plugin users.** `/plugin update` now installs 6.0.0, which removes the skills
+`keep-the-reasoning` and `theory-vs-result`, five agents and three commands. To keep them,
+clone branch `v4` and run its installer (`docs/HISTORY.md`).
 
 ### Why
 - **The owner's starting idea had drifted out of sight.** The four quadrants were meant to be
@@ -1128,7 +1131,7 @@ transparency machinery (from oh-my-claudecode), re-based on the four quadrants:
 - Initial release: single skill covering eight techniques for surfacing unknowns before,
   during, and after implementation, with an installer and MIT license.
 
-[6.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/compare/v4.3.2...v6
+[6.0.0]: https://github.com/baizhiyuan/finding-unknowns-skill/compare/v4.3.2...v6.0.0
 [4.3.2]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.2
 [4.3.1]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.1
 [4.3.0]: https://github.com/baizhiyuan/finding-unknowns-skill/releases/tag/v4.3.0

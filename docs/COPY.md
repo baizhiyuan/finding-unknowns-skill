@@ -10,7 +10,7 @@ For `README.md`, `README.zh.md`, `docs/` and diagram text. `CLAUDE.md`, `skills/
 2. **One job per appearance.** A claim may appear in the lead and in the evidence section. A third appearance is deleted.
 3. **Reader or reviewer?** A sentence that defends a number against an objection moves to the evidence file.
 4. **One name per thing,** from [GLOSSARY.md](GLOSSARY.md). No synonyms for variety. No internal labels (test arms, run ids) in reader-facing text.
-5. **Neutral voice.** No "I", no "the owner", no author persona. Decisions are stated impersonally: "It was shipped as the release candidate anyway."
+5. **Neutral voice.** No "I", no "the owner", no author persona. Decisions are stated impersonally: "It was released anyway."
 6. **Examples are real or marked.** Prefer a verbatim excerpt; mark an invented one "illustrative".
 7. **Vary the shape.** At most one bold-label list per section.
 8. **Add one, delete one.** After inserting a sentence, re-read its paragraph for what became redundant.
