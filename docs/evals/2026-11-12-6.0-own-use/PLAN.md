@@ -1,5 +1,12 @@
 # 6.0 own-use week: plan (written 2026-11-12, before the week starts)
 
+**Status (2026-11-16): a plan for after the release.** 6.0.0 was released on 2026-11-16
+before this week was run, by an owner decision recorded in
+[`docs/design/6.0.md`](../../design/6.0.md); the week has not started. The counts and decision
+rules below are unchanged. Read after the release, "release 6.0.0" and "before the release" in
+the actions mean the next 6.0.x release, and a rule that would have held 6.0 back now calls
+for a fix in a later release.
+
 Amended the same day, still before the week, after the Karpathy review: two counts, two
 decision rules and a fourth optional tripwire for the new `fu:after` clause and for layout drift.
 Amended again the same day, still before the week, after the confirmed review findings: how a

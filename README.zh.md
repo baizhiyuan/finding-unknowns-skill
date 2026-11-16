@@ -1,17 +1,17 @@
 <p align="center">
-  <img src="assets/zh/hero.svg" alt="finding-unknowns v6.0.0-rc.2：看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after（检查没有证明的、仍然未知的）" width="100%">
+  <img src="assets/zh/hero.svg" alt="finding-unknowns v6.0.0：看清自己知道什么、不知道什么，只凭证据更新这张地图。终端卡片依次显示修复一个错误时的 fu:before（原话引用的预期，一条被推翻的前提，一个需要你定并附建议答案的问题）、你的回复“继续”，以及 fu:after（检查没有证明的、仍然未知的）" width="100%">
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-Plugin-D97757?style=for-the-badge&labelColor=F0EEE6" alt="Claude Code 插件">
-  <img src="https://img.shields.io/badge/version-6.0.0--rc.2-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 6.0.0-rc.2">
-  <img src="https://img.shields.io/badge/status-release_candidate-B8860B?style=for-the-badge&labelColor=F0EEE6" alt="状态：候选版本">
+  <img src="https://img.shields.io/badge/version-6.0.0-C15F3C?style=for-the-badge&labelColor=F0EEE6" alt="版本 6.0.0">
+  <img src="https://img.shields.io/badge/status-released-B8860B?style=for-the-badge&labelColor=F0EEE6" alt="状态：已发布">
   <img src="https://img.shields.io/badge/license-MIT-788C5D?style=for-the-badge&labelColor=F0EEE6" alt="MIT 许可证">
 </p>
 
 <p align="center"><strong>看清自己知道什么、不知道什么，只凭证据更新这张地图。</strong></p>
 
-<p align="center"><em>6.0 候选版本（<code>v6.0.0-rc.2</code>）</em></p>
+<p align="center"><em>6.0.0 正式版（<code>v6.0.0</code>）</em></p>
 
 <p align="center">
   <a href="#输出示例">示例</a> ·
@@ -32,7 +32,7 @@
 
 代价是每个有分量的任务多一轮来回。在需求里写上“直接做”或“Just do it”，助手就不再等待：按建议答案先做可逆的部分，并列出用了哪些答案；只有不可逆操作仍要等你明确同意，笼统的“go ahead”或“继续”不算。措辞测试里，即使写了“直接做”，前提失效仍可能让助手停下（详见[运行方式](#运行方式)）。
 
-**测到什么程度。** 发布版文字只经过事先登记的措辞测试：用户是模拟的，只用了一个模型，每个任务测 3 次。事先登记的 12 项条件中有 1 项没有通过：写了“直接做”时，在第一轮就做完可逆部分的次数不够。候选版本仍然采用了这段文字。它还没有和它要取代的 82 词版文字比较过，也没有人测量过它能否帮助人学到东西。具体数字见 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md#候选版本的已知局限)。
+**测到什么程度。** 发布版文字只经过事先登记的措辞测试：用户是模拟的，只用了一个模型，每个任务测 3 次。事先登记的 12 项条件中有 1 项没有通过：写了“直接做”时，在第一轮就做完可逆部分的次数不够。6.0.0 仍然照此发布，而且发布之前没有做原定先做的两项检查：一周的日常使用，以及与它所取代的 82 词版文字的比较。所以它没有和 82 词版文字比较过，也没有人测量过它能否帮助人学到东西。具体数字见 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md#已知局限)。
 
 安装方法：把常驻文字贴进 `CLAUDE.md`，或者运行 `install.sh`，见[安装](#安装)。
 
@@ -162,7 +162,7 @@ fu:after · 为事件分析选择存储
 
 核心是常驻文字，它对每个有分量的请求都生效。技能和两个命令只在你要求访谈或回顾时加载，所以只装插件的话，在你提出要求之前什么都不会变。
 
-目前是候选版本。自用一周和与 82 词版文字的比较完成之前，`main` 分支和插件市场仍停留在 4.3.2，用的是 82 词版文字。安装 6.0 请克隆 `v6` 分支（标签 `v6.0.0-rc.2`）。还在用 4.x（Cartographer、`keep-the-reasoning`、子代理）的话，请留在 4.x，[方法见这里](docs/HISTORY.zh.md#怎样留在-4x)。
+6.0.0 已进入 `main` 分支和插件市场，取代了 4.3.2 及其 82 词版文字。还在用 4.x（Cartographer、`keep-the-reasoning`、子代理）的话，可以留在 `v4` 分支上，[方法见这里](docs/HISTORY.zh.md#怎样留在-4x)。
 
 ### 常驻文字
 
@@ -192,7 +192,7 @@ fu:after · 为事件分析选择存储
 `install.sh` 一步装好技能、两个命令和常驻文字：
 
 ```bash
-git clone -b v6 https://github.com/baizhiyuan/finding-unknowns-skill.git
+git clone https://github.com/baizhiyuan/finding-unknowns-skill.git
 cd finding-unknowns-skill && bash install.sh            # 加 --no-claude-md 则不改 CLAUDE.md
 ```
 
@@ -210,10 +210,10 @@ cd finding-unknowns-skill && bash install.sh            # 加 --no-claude-md 则
 <details>
 <summary><b>改用插件方式安装</b></summary>
 
-候选版本期间，GitHub 上的插件市场提供的仍是 4.3.2，所以要把克隆下来的目录添加为本地插件市场（之前添加过 GitHub 上的插件市场的，先运行 `/plugin marketplace remove finding-unknowns-skill`）。以下斜杠命令请**逐条**输入，路径换成你的克隆目录：
+插件从 GitHub 上的插件市场安装。为 4.x 添加过这个插件市场的，按下面的方法更新即可。以下斜杠命令请**逐条**输入：
 
 ```
-/plugin marketplace add ./finding-unknowns-skill
+/plugin marketplace add baizhiyuan/finding-unknowns-skill
 ```
 
 ```
@@ -281,7 +281,7 @@ ls "$C/plugins/cache/finding-unknowns-skill/finding-unknowns/" 2>/dev/null \
 |---|---|
 | **测了什么** | 6.0 的常驻文字能否让地图在第一次改动之前出现、只停一次、把工作做完，并守住各项护栏 |
 | **怎么测的** | 模拟用户，第二次回复固定为英文的“Go ahead.”（有一个任务用的是“继续”）；一个模型（`claude-sonnet-5-5`）；每个任务 3 次；2026-11-12 和 2026-11-13 共九次事先登记的措辞测试 |
-| **结果** | 发布版文字只测过一次。在这次测试里，四个核心任务上每一次都先给出地图再改动，也都完成了工作。事先登记的 12 项条件中有 1 项没有通过，这一项是为这次测试新加的：写了“直接做”时，在第一轮就做完可逆部分、只在不可逆操作前停下的次数不够。候选版本仍然采用了这段文字 |
+| **结果** | 发布版文字只测过一次。在这次测试里，四个核心任务上每一次都先给出地图再改动，也都完成了工作。事先登记的 12 项条件中有 1 项没有通过，这一项是为这次测试新加的：写了“直接做”时，在第一轮就做完可逆部分、只在不可逆操作前停下的次数不够。6.0.0 仍然照此发布 |
 | **不能说明什么** | 真实用户的情况、与 82 词版文字的比较、对学习的作用 |
 
 认为地图的出现靠的是停顿而不是偶然，理由如下：早先有一版不带停顿的文字，同一个结果在不同会话之间的差距约占测试次数的三分之一；带停顿的结果，无论出自三版早先的文字还是发布版文字，都高出了这个波动幅度。
@@ -290,15 +290,15 @@ ls "$C/plugins/cache/finding-unknowns-skill/finding-unknowns/" 2>/dev/null \
 
 以上结果都受三处方法局限的约束。停顿之后的回复始终是一句笼统的同意（英文的“Go ahead.”，有一个任务用的是“继续”），不带任何回答或纠正，所以“完成”只说明助手收到一句不含信息的同意之后会接着做。只用了一个模型，每个任务 3 次：判定规则是筛查规则，不是显著性检验，多一次或少一次就可能改变好几个结论，包括发布版文字没有通过的那项条件。发布版文字是在一次单组测试里测的，那次测试没有确认它，也没有对照组；它与早先几版文字的比较跨了不同会话，没有随机分组。此外，早先几次测试的评分不如事先登记的方案严格（[详情](docs/EVIDENCE.zh.md#这些测试不能说明的)）。
 
-候选版本另有四处已知局限。子代理和无界面运行同样会加载用户级的 `CLAUDE.md`，却没有人回复 `fu:before`；它们会不会停在地图上还没有测过，计划在 6.0.0 之前检查。有几次在 `fu:after` 之后又提出了建议或问题，次数正好达到这项条件允许的上限。每个任务只测 3 次，无法判断措辞是否影响 API 安全机制标记的频率：发布版文字一次也没有被标记，上一版发布文字被标记的次数则超过了上限。“有分量”的界线只测了两端，介于两者之间的小改动，可能让人觉得停顿多余。
+6.0.0 另有四处已知局限。子代理和无界面运行同样会加载用户级的 `CLAUDE.md`，却没有人回复 `fu:before`；它们会不会停在地图上还没有测过，发布之前也没有检查。有几次在 `fu:after` 之后又提出了建议或问题，次数正好达到这项条件允许的上限。每个任务只测 3 次，无法判断措辞是否影响 API 安全机制标记的频率：发布版文字一次也没有被标记，上一版发布文字被标记的次数则超过了上限。“有分量”的界线只测了两端，介于两者之间的小改动，可能让人觉得停顿多余。
 
-正式发布取决于两件事。一是一个人在日常工作中使用一周，判定规则已经事先写好（[PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md)）。二是计划中的三组比较，在同样的任务上分别测不加文字、82 词版文字和发布版文字。
+原定在正式发布之前完成的两项检查都没有做。一个人在日常工作中使用一周，判定规则已经事先写好，现在改为发布之后的计划（[PLAN.md](docs/evals/2026-11-12-6.0-own-use/PLAN.md)）。在同样的任务上分别测不加文字、82 词版文字和发布版文字的三组比较，还没有做。
 
 每一次测试及其数字、结果在会话之间的波动、更早的两次评测（Stage 0 和 Tier 1），以及相对 82 词版文字的每一处改动，都在 [docs/EVIDENCE.zh.md](docs/EVIDENCE.zh.md)。
 
 ## 与其他做法的比较
 
-`main` 上 82 词版文字请你先预测一次结果，把双方的预测写进文件，事后逐条评判；它不列四象限地图。它是 Tier 1 检验过的文字，计划中的比较完成之前一直留在 `main` 上。发布版文字比它多 58 词：去掉了“把预测写进文件”、“只问一次，请我预测”和预算超支这个打断点，增加了四个栏目、两个区块和改动之前的停顿（[逐项改动](docs/EVIDENCE.zh.md#与-82-词版文字相比60-的效果未经测量)）。
+4.3.2 及以前 `main` 上的 82 词版文字请你先预测一次结果，把双方的预测写进文件，事后逐条评判；它不列四象限地图。它是 Tier 1 检验过的文字，6.0 取代了它。发布版文字比它多 58 词：去掉了“把预测写进文件”、“只问一次，请我预测”和预算超支这个打断点，增加了四个栏目、两个区块和改动之前的停顿（[逐项改动](docs/EVIDENCE.zh.md#与-82-词版文字相比60-的效果未经测量)）。
 
 Karpathy 风格的 `CLAUDE.md`（[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)）要求不确定就问；这里把问题集中放进 `fu:before`，只问一次，之后接着做。两份只用一份，或者在你的 `CLAUDE.md` 里写明以哪一份为准。技能里“替你定的”一栏借用了它的一个想法，做法是事后披露，而不是事先禁止。那份文件的效果证据很薄：目前找到的唯一一项设有安慰剂对照的审计只测了其中的简洁原则，代码行数比不加任何指令时略少，落在噪声范围内，准确率没有变化（[出处和数字](docs/EVIDENCE.zh.md#karpathy-风格的-claudemd)）。
 

@@ -25,10 +25,10 @@ Reader-facing text uses these names. The test labels in the last column appear o
 |---|---|---|---|
 | the always-on text | 常驻文字 | The paragraph in `CLAUDE.md` that applies to every non-trivial request; in 6.0, 140 words | |
 | the shipped text | 发布版文字 | The always-on text of this release, the current `CLAUDE.md` (140 words) | F5 |
-| the previous shipped text | 上一版发布文字 | The text the release candidate shipped first (130 words), adopted on 2026-11-13 and replaced the same day by the shipped text | F4d |
+| the previous shipped text | 上一版发布文字 | The text shipped first, in the first 6.0 pre-release (130 words), adopted on 2026-11-13 and replaced the same day by the shipped text | F4d |
 | the first adopted text with the pause | 最早采用的带停顿版文字 | The 6.0 text adopted before the previous shipped text (127 words). An earlier text with the pause was tested first and was inconclusive | F4b |
 | an earlier variant | 早先的变体 | The variant with a 12-line bound and no explicit-yes clause; not adopted | F4c |
-| the 82-word text | 82 词版文字 | The always-on text on `main`, checked by Tier 1 | |
+| the 82-word text | 82 词版文字 | The always-on text on `main` up to 4.3.2, checked by Tier 1 | |
 | the 56-word text | 56 词版文字 | The text Stage 0 measured | |
 | run | 次（“测了 3 次”） | One session of a test. In Chinese prose it is counted, not named: 运行 is kept for the verb and for the mode 无界面运行 (headless runs) | |
 

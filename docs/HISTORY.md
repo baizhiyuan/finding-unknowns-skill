@@ -15,8 +15,7 @@ How finding-unknowns came to 6.0, and how to stay on the classic line. The
 
 ### How to stay on 4.x
 
-During the release candidate nothing changes, since `main` and the marketplace still serve
-4.3.2. Once 6.0.0 is on `main`:
+6.0.0 is on `main` and in the plugin marketplace. To stay on 4.x:
 
 - **A new install:** clone branch `v4` and run its installer.
 
